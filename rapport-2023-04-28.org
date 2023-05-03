@@ -1,0 +1,227 @@
+#+title: Carnet de bord, Université McGill
+#+author: Charles-Édouard Lizotte
+#+date: 28/04/2023
+#+LATEX_CLASS: org-report
+#+CITE_EXPORT: natbib
+#+LANGUAGE: fr
+#+BIBLIOGRAPHY: master-bibliography.bib
+#+OPTIONS: toc:nil title:nil
+
+
+\mytitlepage
+\tableofcontents\newpage
+
+* Système d'équations à résoudre
+
+Dans cette section, nous posons les bases du problème à résoudre, soit trouver la solution du gradient de pression induit à la surface fixe, $\gradient \phi$.
+Dans notre modèle en eau peu profonde, le système d'équations aux différences finies est donné par
+#+NAME: eq:dynamic
+\begin{subequations}
+\begin{align}
+&u^{\pt t+1}_k = u^{\pt t}_k + \Delta t \cdot \qty(G^t_x(x,y) - \pdv{\phi^{t+1/2}}{x})\pt,\\
+&v^{\pt t+1}_k = v^{\pt t}_k + \Delta t \cdot \qty(G^t_y(x,y) - \pdv{\phi^{t+1/2}}{y})\pt;
+\end{align}
+\end{subequations}
+#+NAME: eq:mass
+\begin{equation}
+h^{\pt t+1}_k = h^t_k + \Delta t \cdot \qty(\pdv{(h^t_k u^t_k)}{x} + \pdv{(h^t_k v^t_k)}{y}).
+\end{equation}
+
+Soit $2 \times nk$ expressions pour les équations du mouvement ([[eq:dynamic]]ab) et $k$ expressions pour la conservation de la masse ([[eq:mass]]). 
+Sous cette notations, l'indice au pied $k$ représente le niveau de la couche et l'exposant ($t+1/2$ par exemple) représente le pas de temps.
+Finalement, les termes $G_{x,y}$ sont des termes valise incorporant tout le /RHS/ des équations du mouvement, sans la correction $\gradient \phi$.
+Ces derniers sont donc exprimés par
+\begin{equation}
+\vb{G}^t(x,y) =
+\underbrace{ \bigno\vb{u} \cdot \gradient{\vb{u}}\ }_\text{Advec.}
+\underbrace{ \bigno + \vb{f}\times \vb{u}\ }_\text{Coriolis} 
+\underbrace{ \bigno+\pt \frac{\delta_{(k,1)}\pt \boldsymbol{\tau}_{oc}}{\rho_i h_1}}_\text{Vent}
+\underbrace{ \bigno+\ g'_{k} \gradient(\eta_k)}_\text{Press. hydro.}
+\underbrace{ \bigno+ \vb{D}}_\text{Dissip.}
+\end{equation}
+Finalement, l'équation de continuité pour le système est donnée par la conservation du transport barotrope, de sorte que
+#+NAME: eq:continuity
+\begin{equation}
+\sum_{k=1}^{nk}  \qty(\pdv{(u^t_k\pt h^t_k)}{x} + \pdv{(v^t_k\pt h^t_k)}{y}) = \div{\vb{U}^t_{BT}} = 0,
+\end{equation}
+
+Comme illustré dans la [[http://mitgcm.org/public/r2_manual/final/online_documents/node33.html][documentation du MITgcm]] et/ou pour ceux et celles qui auront lu mon mémoire de maîtrise, il est possible de réarranger les équations [[eq:dynamic]]ab et [[eq:continuity]] de sorte à obtenir une équation de Poisson,
+#+NAME: eq:poisson
+\begin{equation}
+\boxed{\hspace{0.5cm} \pdv[2]{\phi^{t+1/2}}{x} + \pdv[2]{\phi^{t+1/2}}{y} = \frac{1}{2\Delta t}\pt \qty(\pdv{ \tilde{U}_{BT}}{x} + \pdv{\tilde{V}_{BT}}{y}),\hspace{0.5cm} }
+\end{equation}
+où
+\begin{equation}
+\tilde{U}_{BT} = \sum_k^{nk} h_k^t\pt \qty(u^t_k + G^k_x\pt(x,y))\pt,
+\hspace{0.5cm}\&\hspace{0.5cm}
+\tilde{V}_{BT} = \sum_k^{nk} h^t_k\pt \qty(u^t_k + G^k_y\pt(x,y)).
+\end{equation}
+
+Bref, en trouvant la solution à l'équation [[eq:poisson]], nous aurons accomplit un premier pas de temps. \newpage
+
+* Conditions frontières
+
+** Relier le gradient de pression et la frontière physique
+
+#+NAME: fig:finitediff
+#+CAPTION: Illustration du nouveau schéma de différence finit avec $\tilde{\phi}$.
+\begin{wrapfigure}[12]{r}{0.35\textwidth}
+\vspace{-\baselineskip}
+\centering
+\begin{tikzpicture}[scale=3.7]
+\draw[step=1.0,black,dotted] (1,1) grid (2.15,2.15);
+% Flèches en u :
+\foreach \x in {1,2}
+{
+    \draw [-{latex},blue](\x - 0.1 , 1.5 ) --
+              node [below,blue] {$G_x\pt[\x,1]$}
+              (\x + 0.1, 1.5);
+}
+% Flèches en v : 
+\foreach \y in {1,2}
+{
+    \draw [-{latex},red]
+              (1.5, \y - 0.1 ) --
+              (1.5, \y + 0.1);
+    \draw [] (1.5, \y) node [red,right] {$G_y\pt [1,\y]$};
+}
+% Points aux coins
+\foreach \x in {1,2}
+\foreach \y in {1,2}
+{
+    \fill [black] (\x, \y) circle (0.5pt);
+    \draw (\x, \y) node[below] {$\tilde{\phi}\pt[\x,\y]$};
+}
+% Carré
+\filldraw (1.48,1.48) node[below] {$\phi\pt [1,1]$} rectangle (1.52,1.52) ;
+\end{tikzpicture}
+\end{wrapfigure}
+
+
+
+
+Pour résoudre l'équation [[eq:poisson]], il nous faut au moins une condition frontières de type Dirichlet (soit $\phi$ définit aux frontières).
+Par contre, il est aussi possible de résoudre l'équation de Poisson à l'aide d'une condition Neumann (moyennant l'apparition d'une constante d'intégration inconnue), comme illustré dans le [[file:rapport-2023-04-21.org][rapport précédent]].
+Dans le cas qui nous intéresse, nous n'avons malheureusement aucune condition frontière Dirichlet sur la pression $\phi$, mais nous en avons une pour le gradient de $\phi$ aux murs.
+C'est pourquoi allons donc appliquer une condition Neumann.\bigskip
+
+La condition /no normal flow/ aux frontières nécessitent que les équations [[eq:dynamic]]ab satisfassent les relations
+#+NAME: eq:bndy
+\begin{subequations}
+\begin{align}
+&& &\text{(Murs est \& ouest)}
+&&\eval{\pdv{\phi^{\pt t+1/2}}{x}}_{x_0,x_f} =  \Delta t\cdot G^k_x\pt (\{x_0,x_f\},y)\ \forall\ y,&&\\
+&& &\text{(Murs nord \& sud)}
+&&\eval{\pdv{\phi^{\pt t+1/2}}{y}}_{y_0,y_f} =  \Delta t\cdot G^k_y\pt (x,\{y_0,y_f\})\ \forall\ x.&&
+\end{align}
+\end{subequations}
+*N.B.* Notre condition Neumann aux frontières est donc satisfaite par ([[eq:bndy]]ab) pour toutes les couches $k$.
+Il serait donc probablement possible de faire le calcul avec toutes les couches et moyenner la réponse et/ou se vérifier.\bigskip
+
+Le solveur d'équation elliptique à l'étude est MUDPACK (voir le [[file:rapport-2023-04-21.org][rapport précédent]]).
+Généralement, les solveurs d'équations elliptiques ne sont pas /staggered/, c'est-à-dire que la solution $\phi$ et sa dérivée $\partial\phi$ sont définies aux *mêmes points de grille*.
+Par conséquent, il est *impératif* de placer nos points de grille pour $\phi$ sur la frontière si l'on veut avoir une condition frontière.
+
+** La problématique en quelques mots
+
+Deux problèmes découlent de cette situation :
++ L'endroit où nous avons définit la pression $\phi$, ainsi que le /RHS/ de l'équation [[eq:poisson]] n'est pas en contact avec la frontière du modèles (au points $u$ à l'ouest et au points $v$ au sud);
++ Si l'on recentre $\phi$ de sorte à se définir une $\tilde{\phi}$ à la même position que $f$ et $\zeta$, (voir figure [[fig:finitediff]]), alors il faudrait extrapoler et/ou moyenner les termes $G_{\pt x,y}$ pour les obtenir aux murs, car les conditions frontière sur $\pdv*{\phi}{x}\pt \& \pt \pdv*{\phi}{y}$ sont données par les équations [[eq:bndy]]ab.
+
+** Première solution : Moyenner les conditions frontières issues des termes G
+
+Assumons qu'on positionne la pression sur les mêmes points que $\zeta\ \& \ f$, de sorte à définir un $\tilde{\phi}$ dit /unstaggered/, alors il faudrait moyenner les équations [[eq:bndy]] entre les $G_{x,y}$, de sorte à obtenir
+#+NAME: eq:numbndy
+\begin{subequations}
+\begin{align}
+&& &\text{(Murs est \& ouest)}
+&&\eval{\pdv{\tilde{\phi}^{\pt t+1/2}}{x}}_\qty{x_0,\pt x_f}
+= \Delta t\cdot \ymean{G^t_x\pt (\{x_0,x_f\},y)},&&\\
+&& &\text{(Murs nord \& sud)}
+&&\eval{\pdv{\tilde{\phi}^{\pt t+1/2}}{y}}_\qty{y_0,\pt y_f}
+=  \Delta t\cdot \xmean{G^t_y\pt (x,\{y_0,y_f\})},&&
+\end{align}
+\end{subequations}
+où les annotations $\xmean{a}$ et $\ymean{a}$ dénotent les moyennes horizontales d'une quantitée $a$ entre deux points de grilles.
+Concrétement, cette étape est très réaliste.
+Par contre, un lecteur avisé remarquerait que l'on ne peut pas appliquer cette méthode aux coins de notre domaine ($\pt \tilde{\phi}\pt[1,1],\ \tilde{\phi}\pt[1,ny],\ \tilde{\phi}\pt[nx,1]$ et $\tilde{\phi}\pt[nx,ny]\pt$).
+Il faudrait donc extrapoler la valeur de $\tilde{\phi}$ à l'aide d'une expansion en série de Taylor.\bigskip
+
+Finalement, une fois solvé, il faudrait par la suite retrouver le gradient de pression aux points $u\ \&\ v$ en faisant une moyenne à 4 termes, ce qui nous fait perdre beaucoup de temps, mais qui n'est pas insurmontable.
+
+** Seconde solution : extrapoller les conditions frontières à l'aide d'une série de Taylor
+Comme démontré dans le [[file:rapport-2023-04-21.org][rapport précédent]], il serait possible de directement calculer les termes $G$ sur les points de grille $\tilde{\phi}$, en estimant chacune des quantités au mur.
+Par exemple, nous savons que 
+\begin{subequations}
+\begin{align}
+&& &\text{(Murs est \& ouest)}&&
+G^t(\{x_0,x_f\},y) =
+\cancelto{0}{u \cdot \qty(\pdv{u}{x})} + \cancelto{0}{v \cdot \qty(\pdv{u}{y})}
+-\ fv
++\ g'_{k} \qty(\pdv{\eta_k}{x})
++\ D_x
++\delta_\qty(\pt k,1)\pt \qty(\frac{\tau_x}{h_1})&&\\
+%
+&& &\text{(Murs nord \& sud)} &&
+G^t(x,\{y_0,y_f\}) =
+\cancelto{0}{u \cdot \qty(\pdv{v}{x})} + \cancelto{0}{v \cdot \qty(\pdv{v}{y})}
++\ fu
++\ g'_{k} \qty(\pdv{\eta_k}{y})
++\ D_y
++\delta_\qty(\pt k,1)\pt \qty(\frac{\tau_y}{h_1})&&
+\end{align}
+\end{subequations}
+
+En gros,
++ On connait $\tau$ partout, car c,est nous qui le posons, par contre il faudrait interpoler la valeur de $h_1$ aux bords.
++ Il serait nécessaire d'extrapoler $u$ et $v$ aux frontières à l'aide d'une série de Taylor en $\Delta x/2$.
++ Il faudrait trouver un moyen détourné de trouver le gradient de pression hydrostatique $\gradient(\eta_k)$ aux frontières. Surement avec une série de Taylor en $\Delta x/2$ de nouveau.
++ Finalement, il faudrait trouver le coefficient de dissipation, qui est un Laplacien. Mais nous avons déjà eu cette discussion dans le [[file:rapport-2023-04-21.org][rapport précédent]].
+
+Concrétement, il serait donc avisé de ne pas faire ça...
+
+** Troisième solution :
+
+* Test MUDPACK avec
+** Tableau des paramètres du test
+
+#+NAME: tab:1
+#+CAPTION: Tableau contenant l'ensemble des paramètres pour les test avec MUDPACK.
+| Paramètres                   | Symboles       | Valeur |
+|------------------------------+----------------+--------|
+|------------------------------+----------------+--------|
+| Condition mur ouest          | nxa            |      - |
+| Condition mur est            | nxb            |      - |
+| Condition mur nord           | nyc            |      - |
+| Condition mur sud            | nyd            |      - |
+| Nombre premier diviseur en x | ixp            |      2 |
+| Nombre premier diviseur en y | jxq            |      2 |
+| Multiplicateur par 2 en x    | iex            |      9 |
+| Multiplicateur par 2 en y    | jey            |      9 |
+| Nombre de points en x        | nx             |    513 |
+| Nombre de points en y        | ny             |    513 |
+| /Initial guess/              | iguess         |      0 |
+| Nombre de cycles max.        | maxcy          |      5 |
+| Methode                      | method         |      0 |
+| Espace du workspace          | nx\pt\times ny |      - |
+|------------------------------+----------------+--------|
+| position x initiales         | xa             |     0. |
+| position y initiale          | yc             |     0. |
+| position x finale            | xb             |    10. |
+| position y finale            | yd             |    10. |
+| Tolérance de l'erreur        | tolmax         |     0. |
+|------------------------------+----------------+--------|
+| kcycle (valeur conseillée)   | -              |      2 |
+| iprer (valeur conseillée)    | -              |      2 |
+| ipost (valeur conseillée)    | -              |      1 |
+| intpol (valeur conseillée)   | -              |      3 |
+
+
+** Tests avec conditions Dirichlet
+On arrive à un écart d'environ 2\%
+
+
+** Tests avec conditions mixtes
+Avec les conditions mixtes, j'arrive à une erreur d'envirion 3e-3\%, ce qui est quand même bon
+** Tests avec conditions purement Neumann
+Pas encore testé.

@@ -1,0 +1,202 @@
+#+title: Rapport hebdomadaire -- McGill
+#+SUBTITLE: Semaine du 3 avril 2023
+#+author: Charles-Édouard Lizotte
+#+date: 07/03/2023
+#+latex_class: org-report
+#+cite_export: bibtex
+#+BIBLIOGRAPHY: master-bibliography.bib
+
+* DONE Débugger le modèle /shallow water/ à 2 et 3 couches [1/1]
+DEADLINE: <2023-04-04 Tue 19:00>
+
+** Workflow
+Commençons par relancer le modèle pour 5 ans à seulement deux couches.
+De la manière que j'ai tout recodé, il ne suffit qu'à redéfinir le nombre de couches /nz/ à 2 et /H2/ à 3000 mètres.
+Les gravités réduites ont été formulées de sorte à retrouver la même vitesse pour les ondes barocliniques $c_{bc}$.
+En détail, à deux couches
+\begin{equation}
+g_2' = c_{bc} \qty(\frac{H_1+H_2}{H_1H_2}) = g \qty(\frac{\Delta \rho_{1,2}}{\rho_1}),
+\end{equation}
+Donc il est assez simple d'imposer un différentiel de $\rho$ entre les couches, dans le but de fixer la vitesses des ondes barocliniques.
+
+*N.B.* Après quelques heures/journées de travail, j'ai trouvé des erreurs, mais pas les miennes.
+En gros, la /thickness/ était calculée entre deux pas de temps différents.
+Faudrait en glisser un mot à Tianze sur son /git/.
+C'est fait, mais David m'a mentionné que Tianze ne risque malheureusement pas de répondre.
+
+** DONE Rencontre avec David
+SCHEDULED: <2023-04-05 Wed>
+
+J'ai rencontré david pour lui parler du problème, j'ai quelques indices personnels qui pourraient expliquer la convergence dans la zonne anti-cyclonique. 
+Selon lui, c'est normal en /shallow water/ ce genre de truc.
+Comme j'avais remarqué, en /SW/, il y a une /feedback loop/ entre l'épaisseur de la couche supérieure et la valeur du forçage.
+\begin{equation}
+\text{Si } h \downarrow
+\Rightarrow \tau (h) \uparrow
+\Rightarrow u(\tau) \uparrow
+\Rightarrow -\divergence(\vb{u}h) \uparrow
+\end{equation}
+
+Aussi, faut pas oublier que la vorticité et le courant se font advecter.
+C'est probablemet de l'auto-advection et je capotais probablement pour rien, ça reste à voir ça.\\
+
+En gros, David a remarqué que j'avais initialement du bruit dans mes premières simulations mais pas dans les simulations subséquentes à 2 et trois couches.
+Personnellement, je ne croyais pas que c'était un enjeu, considérant qu'il y a souvent du bruit numérique et que les instabilités barocliniques finissent toujours par arriver de toute manière.
+Bref, David m'a convaincu du contraire : ça prend beaucoup de temps pour que ces instabilités finissent par émerger.
+J'ai donc reparti les simulations numériques avec le même bruit qu'avant (de l'ordre de $\mathcal{O}(0.1)$).
+Les résultats étaient identiques, j'en déduis donc qu'il faut absolument *toujours* un peu de bruits.
+
+** Test à trois couches
+Comme David l'a conseillé, on peut fait un simple test où les trois couches ont la même épaisseur et le même $\Delta \rho_{k,k-1}$.
+Ainsi les rayons de déformation sont données par des multiples du rayon de déformation du premier mode.
+Les paramètres de l'expérience sont affichés dans le tableau suivant.
+Les diagrammes de Hovmoler et les snapshot sont affichés en annexe de ce rapport.
+
+#+CAPTION: Valeur des différents paramètres de l'expérience de [cite/l/b:@chen_2021], mais à 3 couches.
+#+NAME: tableau-paramètres
+|----------------------------------------------+------------+--------------------------------------------------------|
+|----------------------------------------------+------------+--------------------------------------------------------|
+| Paramètres                                   | Symbole    | Valeur                                                 |
+|----------------------------------------------+------------+--------------------------------------------------------|
+| Taille du domaine                            | L_x = L_y  | 2000 km                                                |
+| Pas de temps                                 | \Delta t   | 360 s                                                  |
+| Paramètre de Coriolis                        | f          | 7\times10^{-5} s^{-1}                                  |
+| Amplitude du vent                            | \tau_{atm} | 0.1 N m^{-2}                                           |
+| Coefficient de viscosité biharmonique        | A_{bh}     | dx^4 \times10^{-5} s^{-1}                              |
+| Coefficient de frottement au fond            | r_{drag}   | 10^{-7} s^{-1}                                         |
+| Coefficient dissipation du Laplacien inverse | r_{InvLap} | (2\pi/L_y)^2 \times 10^{-6} s^{-1}                     |
+| Épaisseur de la couche en surface            | H_1        | 1000 m                                                 |
+| Épaisseur de la seconde couche               | H_2        | 1000 m                                                 |
+| Épaisseur de la couche au fond               | H_3        | 1000 m                                                 |
+| Densité de l'eau (première couche)           | \rho_1     | 1.0000 kg/m^3                                          |
+| Différence de densité entre les couches      | \Delta\rho | $\frac{\rho_1c_{bc}^2}{g}\qty(\frac{H_1+H_2}{H_1H_2})$ |
+| Vitesse des ondes internes (semi-obsolète)   | c_{bc}     | 2 ms^{-1}                                              |
+| Gravité réduite (seconde couche)             | g_2'       | 8 \times 10^{-2} m/s^2                                 |
+| Gravité réduite (troisième couche)           | g_3'       | 6 \times 10^{-3} m/s^2                                 |
+|----------------------------------------------+------------+--------------------------------------------------------|
+|----------------------------------------------+------------+--------------------------------------------------------|
+
+* DONE Installer et gérer le compte Oxygen fournit pas McGill
+DEADLINE: <2023-04-12 Wed 12:00>
+L'administration m'a crée un compte, il faudrait vérifier tout ça.
+
+This is done using a ssh client (present on mac, linux and windows by default), please ssh to your assigned computer. Your computer name is the name on the sticker on the computer tower. (jet)
+On m'a créé un compte AOS (/Atmospheric and Oceanic Sciences/), donc à partir de maintenant, je peux me connecter partout, tant que je suis sur le réseau de l'université McGill.
+Le VPN ne marchera pas tant que les problèmes bureaucratiques ne seront pas réglé.\\
+
+Essentiellement, mon nom d'utilisateur est /celizotte/, je peux me connecter au service /Jump/ en /bash/ à l'aide de la commande
+#+begin_src bash
+ssh celizotte@jump.meteo.mcgill.ca
+#+end_src 
+et d'ici on peut se connecter sur Oxygen (le réseau à David?) à l'aide de la commande
+#+begin_src bash
+ssh oxygen.meteo.mcgill.ca
+#+end_src 
+
+On m'a aussi fourni un ordinateur dénommé /Jet/. Pour se connecter à Jet, il suffit d'utiliser la commande
+#+begin_src bash
+ssh jet
+#+end_src
+une fois connecté sur Jump. Il faudrait d'ailleurs que je demande à David où est l'ordinateur... parce que je confirme qu'il n'est pas dans mon bureau.
+
+* DONE Coder les mode barotropes et baroclines [3/3]
+DEADLINE: <2023-04-12 Wed 19:00>
+** Rappel théorique : cas analytique du test à trois couches
+Étudions un cas facile pour se permettre de tester notre modèle numérique.
+Assumons trois couches homogènes de 1000 mètres d'épaisseurs avec un différentiel de densité constant (Voir tableau [[params]]).
+
+#+NAME:params
+#+CAPTION: Tableau regroupant les paramètres de notre cas trivial.
+|--------------------------+----------+------------------------|
+|--------------------------+----------+------------------------|
+| Paramètre                | Variable | Valeur                 |
+|--------------------------+----------+------------------------|
+| Épaisseur 1ère couche    | H_1      | H_{tot}/3 = H          |
+| Épaisseur 2ème couche    | H_2      | H_{tot}/3 = H          |
+| Épaisseur 3ème couche    | H_3      | H_{tot}/3 = H          |
+| Densité première couche  | \rho_1   | \rho_1                 |
+| Densité secondec couche  | \rho_2   | \rho_1 + \Delta \rho   |
+| Densité troisième couche | \rho_3   | \rho_1 + 2 \Delta \rho |
+|--------------------------+----------+------------------------|
+|--------------------------+----------+------------------------|
+
+Aux dire de ce que nous avons découvert précédemment dans le dernier [[file:rapport-2023-03-31.org][rapport]], il est possible de créer une matrice représentant notre opérateur linéaire d'épaisseur à l'aide de la méthode des différences finies.
+Rappellons que la surface fixe et le fond plat ajoutent des contraintes sur les premiers et derniers éléments de notre matrice, de sorte que 
+
+#+attr_latex: :mode math :environment pmatrix :math-prefix \mathcal{L}-\Lambda=
+| F_{(1,2)} -\lambda_i             | -F_{(1,2)}                        | 0                    |
+| -F_{(2,2)}                       | F_{(2,3)} + F_{(2,2)} - \lambda_i | -F_{(2,3)}           |
+| 0                                | -F_{(3,3)}                        | F_{(3,3)} -\lambda_i |
+
+Sachant que les $g_j'$ dépendent de $\Delta \rho_{(j,i)} = \rho_j - \rho_{j-1}$, on peut dire que $g_2' = g_3' = g'$.
+De plus, tous les $H_i$ sont identiques, alors on peut simplifier les coefficient $F$, ce qui se traduit mathématiquement par
+\begin{equation}
+F_{(i,j)} = \mathrm{F}\hspace{0.5cm} \forall\hspace{0.5cm} (i,j) : i,j \in \qty{1,2,3}
+\end{equation}
+
+On résoud le problème aux valeurs propres en trouvant le déterminant de cette matrice,
+#+NAME: determinant
+\begin{equation}
+0 = (F-\lambda_i)\qty[(2F - \lambda_i)(F-\lambda_i) - F^2] - F^2(F-\lambda_i).
+\end{equation}
+
+L'équation [[determinant]] se factorise, on retrouve donc
+\begin{align}
+&0 = (F-\lambda_i)\qty[(2F - \lambda_i)(F-\lambda_i) - 2F^2],\nonumber\\
+&0 = (F-\lambda_i)\qty[(\lambda^2_i + 2F^2 - 3 F \lambda_i) - 2F^2],\nonumber\\
+&0 = \lambda_i \qty(F-\lambda_i)\qty(\lambda_i - 3F).
+\end{align}
+Pour finir, nos valeurs propres sont données par
+\begin{align}
+\boxed{\hspace{0.4cm} \lambda_1 = 0,
+\hspace{0.8cm} \lambda_2 = \frac{f_0^2}{g' H}, 
+\hspace{0.8cm} \lambda_3 = \frac{3 f_0^2}{g'H}. \hspace{0.4cm}}   
+\end{align}
+
+** DONE Installer LAPACK 
+Une fois internet revenu chez moi (grosse tempête de verglas), j'ai pu installer LAPACK,
+#+begin_src bash
+sudo apt-get install libblas-dev liblapack-dev
+#+end_src 
+et pour trouver le /path/,
+#+begin_src bash
+dpkg -L liblapack-dev
+#+end_src
+ce qui nous permet d'ajouter
+#+begin_src bash
+lapack_path=/usr/lib/x86_64-linux-gnu/lapack
+#+end_src
+et de linker notre application Fortran avec
+#+begin_src bash
+-lblas -L$lapack_path -llapack
+#+end_src
+
+** DONE Implémenter l'algorithme pour trouver les valeurs propres
+Consiste concrétement à recopier la matrice de l'opérateur linéaire du modèle QG de Louis-Philippe.
+Il fallait juste faire très attention, parce qu'on définissait les gprime au plafond des couches et non au plancher.
+Les fonctions /F(i,j)/ n'étaient donc pas les mêmes.
+Une foit la matrice /A/ créée, on mettait tout ça dans la fonction SEEVG et le tour est joué.
+
+** DONE Calculer les vorticités quasi-géostrophiques baroclines et barotropes
+À partir des fonctions de courant baroclines $\psi_{BC}$, il est possible de retrouver des vorticité quasi-géostrophiques à l'aide de l'équation
+\begin{equation}
+q_{BT}^i = \laplacian \psi_{BT}^i + \Gamma^i \psi_{BT}^i,
+\end{equation}
+cité dans le code de Louis-Philippe.
+Il faudrait donc implémenter ça, mais pour l'instant c'est en /stand by/ parce que les deux ont confirmé que ce n'était pas tant nécessaire.
+  
+
+* Bibliographie
+#+print_bibliography: 
+
+* Annexe
+
+#+NAME: trois-couches
+#+CAPTION: Résultats du test à trois couches (Première couches)
+[[file:figures/tests/2023-04-08_test1.png]]
+
+#+CAPTION: Résultats du test à trois couches (Seconde couches)
+[[file:figures/tests/2023-04-08_test2.png]]
+
+#+CAPTION: Résultats du test à trois couches (Troisième couches)
+[[file:figures/tests/2023-04-08_test3.png]]

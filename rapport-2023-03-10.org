@@ -1,0 +1,76 @@
+#+title: Rapport hebdomadaire -- McGill
+#+SUBTITLE: Semaine du 3 mars 2023
+#+author: Charles-Édouard Lizotte
+#+date: 10/03/2023
+#+latex_class: org-report
+
+* DONE Organisation du travail [3/3]
+DEADLINE: <2023-03-08 Wed>
+Lors de ma maîtrise -- de 2019 à 2022 --, j'ai constaté que mon organisation du travail était extrêmement maladroite.
+Entre-autres, j'avais une grande difficulté à recenser les tâches accomplies ou incomplètes. 
+C'est pourquoi j'ai créé ce /template/ en *org-mode*, un language d'écriture *Emacs* exportable en LaTeX.
+Ces petits résumés agissent principalement comme un cahier de laboratoire. 
+Ils me permettront donc d'écrire ce que j'ai retenu de nos rencontres, les idées à développer et les tâches à accomplir.\\
+
+Tâches : 
+- [X] Apprendre le langage *org-mode* en construisant quelques tutoriels.
+- [X] Commencer à utiliser le *org-agenda*. 
+- [X] Créer ce /template/ en LaTeX et commencer les rapports hebdomadaires.
+
+* Retour sur le modèle /shallow water/ [3/3]
+** DONE Télécharger le modèle /shallow water/ et créer un /git/ [2/2]
+DEADLINE: <2023-03-10 Fri 19:00>
+ 
+Avant tout, il faut se reconnecter sur la grappe de calcul *mingan* pour aller chercher le modèle /shallow-water/. 
+Pour des raisons obscures, mon compte mingan ne fonctionnait plus.
+J'ai du contacter le gestionnaire du soutient technique de l'UQAR, Dany Lemay, pour créer un nouvel identifiant. 
+Sur Pélerin, les commandes de connexion sont maintenant : 
+#+begin_src bash
+   >>> ssh -Y lizoch01@calculs.uqar.ca
+   >>> <mot-de-passe>
+#+end_src
+   
+Une fois connecté sur le noeud /Calculs/, on peut entrer sur /mingan/ à l'aide des commandes
+#+begin_src bash
+   >>> ssh -Y celiz2@mingan.uqar.ca
+   >>> <mot-de-passe>
+#+end_src
+À noter /git/ ne fonctionne plus sur /mingan/, donc il a fallut tout transférer sur le noeud /calculs/ avant de mettre quelque chose sur le /git/.\\
+
+Étapes : 
+- [X] Créer un git et mettre le modèle /shallow-water/ sur /Github/.
+- [X] Déplacement des sous-routines de couplage et d'analyse.
+  - [X] Déplacer toutes les sous-routines d'analyse Python de ma maîtrise sur /Github/ (Y'en a beaucoup)
+  - [X] Télécharger les routines modifiées de Wavewatch III sur le /Github/.
+
+** DONE Ménage /mingan/ et transfert vers /pelerin/ [2/2]
+DEADLINE: <2023-03-10 Fri 19:00>
+Comme la grappe de calculs /mingan/ en est à ses derniers heures de vie, je vais devoir transférer tous mes codes vers /pelerin/.
+Dany Lemay propose avant tout de créer un /git/ pour que ça aille plus rapidement.
+À mentionner que ça fait un bout que j'ai laissé ça tarder, j'aurais peut-être du faire ça vers la fin de ma maîtrise..\\
+
+Étapes : 
++ [X] Vider le /home/celiz2/
+  + [X] Transférer le modèle /shallow-water/ du stage 2016 sur /Github/.
+  + [X] Faire le ménage et supprimer l'ancienne version de Wavewatch III (WW3-Caroline). 
+  + [X] Ramener les routines Python de génération /mapsta/ et de conditions initiales (BoxPy) sur Pelerin.
++ [X] Vider le /share/work/celiz2/ :
+  + [X] Ramener les routines d'analyse Python du modèle couplé sur /Github/.
+  + [X] Filtrer les expériences WW3 à garder et transférer sur le noeud /calculs/. 
+    
+** DONE Rencontre avec David Straub 
+SCHEDULED: <2023-03-10 Fri>
+La tâche consiste principalement à modifier le modèle /shallow-water/ que David et Yanxu Chen avaient codés, soit celui que j'ai utilisé au cours de ma maîtrise.
+Le modèle fonctionne uniquement à 2 couches, car il n'a pas été codé pour en avoir plus, pour l'instant.
+Considérant que les /near-inertial waves/ s'accumulaient dans la première couche, David et Louis-Philippe ont émis l'hypothèse que l'ajout de plusieurs couches pourrait /damper/ la force des ondes quasi-inertielles. 
+L'énergie serait graduellement transmise depuis le haut vers le bas en perdant de l'intensité à chaque /étage/ sous l'effet de la viscosité.\\
+
+1) Le modèle prévois avoir /n/ couches, mais comme la surface est fixe $\eta_1(i,j)=0$, on peut affirmer qu'on utilise tout simplement pas $\eta_1$ ou plutôt que $\eta_1 = 0$ (L390 : /main.f90/). 
+   En gros, on a la variation de l'épaisseur de la couche partout $\Delta h(i,j)$, mais il faut retrouver les $\eta_i$ d'une manière ou d'une autre.
+   On a /n-1/ variations de l'interface, donc il faut trouver un moyen d'imbriquer tout ça dans une /n loop/ qui part du bas. 
+   David a proposé de faire une *do loop* qui part du bas avec un vecteru temporaire qui s'additionne à chaque étape (voir courriel).
+
+2) Va falloir renommer les /RHS-eta/ parce que tous ces /RHS/ décrivent plutôt le comportement de /RHS-d/, soit des épaisseurs $h_k(i,j)$.
+
+3) On va se débarrasser de la couche d'Ekman dans le modèle, car c'est vraiment peu pertinent si on a plusieurs couches. 
+
