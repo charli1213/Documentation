@@ -1,10 +1,15 @@
 #+title: Rapport hebdomadaire -- McGill
-#+SUBTITLE: Semaine du 3 avril 2023
 #+author: Charles-Édouard Lizotte
 #+date: 07/03/2023
-#+latex_class: org-report
-#+cite_export: bibtex
+#+LATEX_CLASS: org-report
+#+CITE_EXPORT: natbib
+#+LANGUAGE: fr
 #+BIBLIOGRAPHY: master-bibliography.bib
+#+OPTIONS: toc:nil title:nil
+
+\mytitlepage
+\tableofcontents\newpage
+
 
 * DONE Débugger le modèle /shallow water/ à 2 et 3 couches [1/1]
 DEADLINE: <2023-04-04 Tue 19:00>
@@ -186,8 +191,8 @@ cité dans le code de Louis-Philippe.
 Il faudrait donc implémenter ça, mais pour l'instant c'est en /stand by/ parce que les deux ont confirmé que ce n'était pas tant nécessaire.
   
 
-* Bibliographie
-#+print_bibliography: 
+
+
 
 * Annexe
 
@@ -200,3 +205,5 @@ Il faudrait donc implémenter ça, mais pour l'instant c'est en /stand by/ parce
 
 #+CAPTION: Résultats du test à trois couches (Troisième couches)
 [[file:figures/tests/2023-04-08_test3.png]]
+
+#+print_bibliography: 

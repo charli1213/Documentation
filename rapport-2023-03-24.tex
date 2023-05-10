@@ -1,19 +1,22 @@
-% Created 2023-04-03 Mon 16:27
+% Created 2023-05-10 mer 14:08
 % Intended LaTeX compiler: pdflatex
+
 % =================================BASE====================================%
-\documentclass{article}
+\documentclass[10pt]{article}
 \usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry} % Marges
 \usepackage[utf8]{inputenc} % Important pour symboles Francophones, é,à,etc.
 \usepackage[T1]{fontenc} % Nécessaire avec FrenchBabel
+%\usepackage{lmodern}
+\renewcommand{\familydefault}{cmr} % La meilleure police (CMU Serif Roman) (Je me suis battu).
 
 \usepackage{natbib} % Bibliographie
-\bibliographystyle{plainnat}
-\usepackage[french, american]{babel} % Environnements en Français.
+\bibliographystyle{abbrvnat}
+
 
 
 \usepackage{amsmath, amssymb, amsthm} % Symb. math. (Mathmode+Textmode) + Beaux théorèmes.
 
-\usepackage{mathtools, cancel} % Utilisation de boîtes \boxed{} + \cancelto{}{}
+\usepackage{mathtools,cancel} % Utilisation de boîtes \boxed{} + \cancelto{}{}
 \usepackage{graphicx, wrapfig} % Géstion des figures.
 \usepackage{hyperref} % Permettre l'utilisation d'hyperliens.
 \usepackage{color} % Permettre l'utilisation des couleurs.
@@ -28,19 +31,37 @@
 \usepackage{lipsum} % For fun
 \usepackage{tikz} % Realisation de figures TIKZ.
 \usepackage{empheq} % Boite autour de MULTIPLE équations
-% =================================BASE====================================%
+
+\usepackage[french]{babel} % Environnements en Français.
+% ==============================BASE-(END)=================================%
 
 
 
 % ================================SETTINGS=================================%
-%%% - Pas d'indentation en début de paragraphe :
+% Pas d'indentation en début de paragraphe :
 \setlength\parindent{0pt} 
-%%% - Couleurs de hyperliens :
-\hypersetup{colorlinks,urlcolor=cyan,citecolor=blue,linkcolor=teal}
-%%% - Numéros d'équations suivent les sections :
+
+% Couleurs de hyperliens :
+\definecolor{mypink}{RGB}{147, 0, 255}
+\hypersetup{colorlinks, urlcolor=mypink, citecolor=mypink, linkcolor=mypink}
+
+% Numéros d'équations suivent les sections :
 \numberwithin{equation}{section} 
-%%% - Les « captions » sont en italique :
+
+% Les « captions » sont en italique et largeur limitée
 \usepackage[textfont = it]{caption} 
+\captionsetup[wrapfigure]{margin=0.5cm}
+
+
+% Retirer le l'écriture en gras dans la table des matières
+\usepackage{tocloft}
+\renewcommand{\cftsecfont}{\normalfont}
+\renewcommand{\cftsecpagefont}{\normalfont}
+
+% Change bullet style
+\usepackage{pifont}
+\usepackage{enumitem}
+\setlist[itemize,1]{label=\ding{224}}
 % ================================SETTINGS=================================%
 
 
@@ -55,11 +76,47 @@
 \newcommand{\jvf}{\hat{\vb{j}}}
 \newcommand{\kvf}{\hat{\vb{k}}}
 
-% Empty frac-Box
-\newcommand{\bigno}{\vphantom{\qty(\frac{d}{q})}}
+\newcommand{\uu}{\vb*{u}}
+\newcommand{\vv}{\vb*{v}}
+\newcommand{\ww}{\vb*{w}}
 
+% Boîte vide pour ajuster les underbrace
+\newcommand{\bigno}{\vphantom{\qty(\frac{d}{q})}}
+\newcommand{\pt}{\hspace{1pt}}
+
+% Moyenne numérique entre deux points de grilles. 
+\newcommand{\xmean}[1]{\overline{#1}^x}
+\newcommand{\ymean}[1]{\overline{#1}^y}
+
+% Tilde over psi
 \newcommand{\tpsi}{\tilde{\psi}}
 % ==============================NEWCOMMANDS================================%
+
+
+
+% ==============================PAGE-TITRE=================================%
+% Titlepage 
+\newcommand{\mytitlepage}{
+\begin{titlepage}
+\begin{center}
+{\Large Contrat Été 2023 \par}
+\vspace{2cm}
+{\Large \MakeUppercase{\thetitle} \par}
+\vspace{2cm}
+RÉALISÉ DANS LE CADRE\\ D'UN PROJET POUR \par
+\vspace{2cm}
+{\Large ISMER--UQAR \par}
+\vspace{2cm}
+{\thedate}
+\end{center}
+\vfill
+Rédaction \\
+{\theauthor}\\
+\url{charles-edouard.lizotte@uqar.ca}\\
+ISMER-UQAR
+\end{titlepage}
+}
+% ==============================PAGE-TITRE=================================%
 
 
 
@@ -67,10 +124,13 @@
 \usepackage{fancyhdr}
 \pagestyle{fancy}
 \setlength{\headheight}{13pt}
+\renewcommand{\headrulewidth}{1.3pt} % Ligne horizontale en haut
 
-\fancyhead[L]{$\cdot$\ \nouppercase{\leftmark} }
-\fancyhead[R]{C.-É. Lizotte\ $\cdot$}
-\fancyfoot[C]{$\cdot$ \thepage\ $\cdot$}
+\fancyhead[R]{\textit{\thetitle}}
+\fancyhead[L]{\ \thepage}
+\fancyfoot[R]{\textit{\theauthor}}
+\fancyfoot[L]{}
+\fancyfoot[C]{} 
 % =================================ENTÊTE==================================%
 \author{Charles-Édouard Lizotte}
 \date{24/03/2023}
@@ -81,18 +141,17 @@
  pdftitle={Rapport hebdomadaire -- McGill},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 27.1 (Org mode 9.6.2)}, 
- pdflang={English}}
+ pdfcreator={Emacs 28.2 (Org mode 9.6.5)}, 
+ pdflang={French}}
 \begin{document}
 
-\maketitle
-\tableofcontents
-
+\mytitlepage
+\tableofcontents\newpage
 
 \section{{\bfseries\sffamily DONE} Transformer le \emph{slab model} en modèle \emph{shallow water} multicouches [3/3]}
-\label{sec:orgde13bcf}
+\label{sec:orgcc26ecb}
 \subsection{\textbf{Cadre théorique} : Retrouver les variations des interfaces eta(k)}
-\label{sec:org1c66ddf}
+\label{sec:org152c6a3}
 En premier lieu, en \emph{shallow water}, l'équation de masse pour chaque couche \(k\) est donnée par
 \begin{equation}
 \pdv{}{t} d_k = \divergence (d_k\vb{u}_k)
@@ -145,7 +204,7 @@ Après avoir calculé les \emph{RHS}, faut donc retouver les \(\eta_k\) à l'aid
 \draw[>=stealth, ->|] (H4) -- (4.3,-4);
 \end{tikzpicture}
 \end{center}
-\caption{\label{org163de37}Illustration d'un modèle \textit{shallow water} à quatre couches (\(n_k = 4\)).}
+\caption{\label{org28ef8f5}Illustration d'un modèle \textit{shallow water} à quatre couches (\(n_k = 4\)).}
 \end{wrapfigure}
 
 En commençant depuis la fin, l'algorithme pour retrouver les \(\eta_k\) à partir des épaisseurs \(d_k\) est donné par
@@ -158,7 +217,7 @@ En commençant depuis la fin, l'algorithme pour retrouver les \(\eta_k\) à part
 
 Pour résumé, de manière générale, entre les couches 2 et \emph{nk-1},
 \begin{equation}
-\label{eq:orgf01b4bc}
+\label{eq:org00aa9bf}
 \eta_k = \eta_{k+1} + (d_k - H_k).
 \end{equation}
 On peut donc toujours prendre la dernières couches et reconstruire les autres \(\eta_{k+1}\).
@@ -167,7 +226,7 @@ Cette technique est employé par toutes les sous-routines qui font usage de la \
 
 
 Mentionnons qu'on regarde les \emph{RHS} des équations du mouvement, soit les dérivées temporelles des quantités \(h\) et \(\eta\).
-En ordre décroissant, il est donc possible de créer une méthode itérative qui appelle le \emph{RHS} du \emph{eta} couche inférieure (\(nk+1\)) à l'aide de la dérivée de l'équation \ref{eq:orgf01b4bc}, soit
+En ordre décroissant, il est donc possible de créer une méthode itérative qui appelle le \emph{RHS} du \emph{eta} couche inférieure (\(nk+1\)) à l'aide de la dérivée de l'équation \ref{eq:org00aa9bf}, soit
 \begin{align}
 (k=nz)\hspace{2cm}    &\Delta \eta_{nz} =\ \Delta h_{nz}\ ;\nonumber\\
 (k=k) \hspace{2cm} &\Delta \eta_{k}\ = \ \Delta h_k\ + \Delta \eta_{k+1}\ ;\\
@@ -180,9 +239,9 @@ En ordre décroissant, il est donc possible de créer une méthode itérative qu
 Pous solutionner ce problème, on utiliserait une méthode d'algèbre linéaire matricielle, mais ça ne devrait pas être très grave si on a peu de couches, selon David.
 
 \subsection{\textbf{Cadre théorique} : Vorticité quasi-géostrophique}
-\label{sec:org7f4aff9}
+\label{sec:orgb6af691}
 \subsubsection{Retrouver la QGPV à partir de la vorticité relative}
-\label{sec:org7b254b6}
+\label{sec:org807caf7}
 
 Dans le système en eau peu profonde, la vorticité potentielle \(Q_k\) est une quantité conservée, de sorte que 
 
@@ -190,7 +249,7 @@ Dans le système en eau peu profonde, la vorticité potentielle \(Q_k\) est une 
 (SWPV) \hspace{1cm} \dv{Q}{t} = \dv{t} \qty(\frac{\zeta + f}{h}) = 0.       
 \end{equation}
 
-Pour retrouver la vorticité potentielle quasi-géostrophique en eau peu profonde (SWQGPV), on applique les trois approximations quasi-géostrophiques (K. Vallis, Goeffrey, 2006, p184), soient
+Pour retrouver la vorticité potentielle quasi-géostrophique en eau peu profonde (SWQGPV), on applique les trois approximations quasi-géostrophiques \citep[, p184]{vallis_2006}, soient
 \begin{itemize}
 \item (1) Les variations de l'épaisseur \emph{h} sont minces;
 \item (2) Le nombre de Rossby est petit;
@@ -216,7 +275,7 @@ Q_k \approx \frac{1}{H_k}  \qty(f + \zeta_k -f_o\frac{h_k'}{H_k}).
 Cette nouvelle quantité \(q_k\) s'appelle la \textbf{vorticité potentielle quasi-géostrophique} (QGPV) et est conservée sur le domaine.
 Soit,
 \begin{equation}
-\label{eq:orgd3c05a7}
+\label{eq:org1b6212f}
 \boxed{q_k \equiv \qty( \beta  y + \zeta_k - f_o \frac{h_k'}{H_k})
 \hspace{0.3cm} \text{où} \hspace{0.3cm}
 \zeta_k = \laplacian \psi_k.}
@@ -230,7 +289,7 @@ La variation de l'interface entre deux couches \(\eta_k'\) peut toujours être e
 \end{equation}
 
 \subsubsection{Généralisation de la QGPV à un modèle à plusieurs couches}
-\label{sec:org8b673da}
+\label{sec:org6e3f199}
 
 Après quelque substitutions algébriques, on parviendra ainsi à une équation générique de la vorticité potentielle quasi-géostrophique en eau peu profonde pour un modèle à plusieurs couches,
 \begin{align}
@@ -245,14 +304,14 @@ Conséquemment, si le terme \(\qty(H_k/H_k)f_0^2 \rightarrow 0\),
 g_k' = g \frac{\rho_k - \rho_{k-1}}{\rho_1}.}
 \end{equation}
 
-\textbf{N.B. 1)} Notre résultat est différent de celui exprimé dans le (K. Vallis, Goeffrey, 2006, p.185) à ce qui attrait aux gravités réduites car nous définissons \(\eta_k\) comme la «plafond» d'une couche \(k\) et non son «plancher».\\[0pt]
+\textbf{N.B. 1)} Notre résultat est différent de celui exprimé dans le \citep[, p.185]{vallis_2006} à ce qui attrait aux gravités réduites car nous définissons \(\eta_k\) comme la «plafond» d'une couche \(k\) et non son «plancher».\\[0pt]
 
-\textbf{N.B. 2)} La formulation \ref{eq:orgd3c05a7} est toujours valides, car c'est la définition de la QGPV à plusieurs couches.
+\textbf{N.B. 2)} La formulation \ref{eq:org1b6212f} est toujours valides, car c'est la définition de la QGPV à plusieurs couches.
 Une version différente existe en milieu continu, mais nous y reviendrons dans les prochains rapports.
 Bref, restons avec cette formulation, ça nous empêchera de se tromper avec les gravités réduites.
 
 \subsubsection{Gravité réduite}
-\label{sec:org2f760b4}
+\label{sec:org451275b}
 
 Pour donner un argument, toujours en se fiant au Vallis, notre formulation de la gravités réduites \(g_i'\) découle du fait que la pression s'additionne à chaque couche, de sorte que 
 \begin{equation}
@@ -264,7 +323,7 @@ lorsque \(\eta_k\) est définit comme le «plafond» d'une couche \(k\).
 Pour une surface fixe, \(\eta_1\) est tout simplement nulle et on rajoute un gradient de pression dans les équations du mouvement.
 
 \subsection{{\bfseries\sffamily DONE} Modifer le schéma numérique pour retrouver les eta(k)}
-\label{sec:orgf8a6f2d}
+\label{sec:org536d1fc}
 Il existe un peu une incertitude entre \emph{eta} et \emph{thickness}, les deux variables s'interchangent lorsqu'on travaille à plus de deux couches et j'ai un peu de difficulté à comprendre ça.
 Il va donc falloir déméler toute cette information-là.
 En premier lieu, nous avons désormais un vecteur \(H(k)\) qui décrit les épaisseurs moyennes de chaque couches (On l'avait déjà, mais on va vraiment s'en servir)
@@ -274,7 +333,7 @@ Ensuite, en suivant le schéma décrit dans les sections précédentes, on va po
 \textbf{N.B.} Finalement, après inspection du code, j'ai abandonnée l'idée d'avoir un \emph{thickness} prédéfinit à la grandeur du code, on va rester avec \emph{eta-k} et calculer \emph{thickness} \emph{on the spot}. Faut juste changer le nom de la variable \emph{RHS-eta} qui définit plutôt \emph{RHS-thickness}. 
 
 \subsection{{\bfseries\sffamily DONE} Modifier les sous-routines de diagnostiques et d'\emph{output} [3/3]}
-\label{sec:orgf96a6df}
+\label{sec:org4fecd04}
 Toutes les routines de diagnostiques ont été créées pour 2 couches uniquement, il faudrait donc modifier les \textbf{do loop} qui contiennent des \emph{k} et \emph{nz}.
 Pour l'essentiel, il faut modifer les fichiers : 
 
@@ -296,14 +355,10 @@ En attendant, la \emph{do loop} des \emph{nz} s'arrête à nz = 2, de sorte que 
 \end{itemize}
 
 \subsection{{\bfseries\sffamily DONE} Gestion des paramètres initiaux}
-\label{sec:org80f4840}
+\label{sec:orgd96027d}
 Faut gosser un peu dans la fonction \emph{initialisation.f90} pour avoir un H(k) et un gprime(k) qui fonctionnent.
 Maintenant, gprime(k) est définit en fonction d'un vecteur rho(k). 
 Tout va être relié dans le fichier de paramètres.
 
-\section{Bibliographie}
-\label{sec:org0fcdab9}
-
-\noindent
-K. Vallis, Goeffrey (2006). \emph{Atmospheric and Oceanic Fluid Dynamic : Fundamentals and Large-scale Circulation}, Cambridge University Press.
+\bibliography{/aos/home/celizotte/Desktop/Documentation/master-bibliography}
 \end{document}

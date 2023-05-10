@@ -1,0 +1,64 @@
+#+title: Carnet de bord, Université McGill
+#+author: Charles-Édouard Lizotte
+#+date: 12/05/2023
+#+LATEX_CLASS: org-report
+#+CITE_EXPORT: natbib
+#+LANGUAGE: fr
+#+BIBLIOGRAPHY: master-bibliography.bib
+#+OPTIONS: toc:nil title:nil
+
+\mytitlepage
+\tableofcontents\newpage
+
+* Nouvelle formulation pour le gradient de pression
+
+David nous a éclairé de sa lumière mardi à 21h43 et nous est arrivé avec un solution super simple mais efficace.
+En premier lieu, on se souvient qu'on définit notre pas de temps /leapfrog/ de manière à ce que
+\begin{equation}
+ \uu^{t+1} = \underbrace{ \uu^{t-1} + (2\Delta t)\cdot \vb*{G}^t}_{\tilde{\uu}} + \gradient{\phi}.
+\end{equation}
+
+On peut décomposer notre courant en deux composantes, soit barotrope et baroclines, de sorte à retrouver
+\begin{subequations}
+\begin{align}
+ & \tilde{\uu}_{BT} = \frac{1}{H} \sum_k^n d_k \tilde{\uu}_k, \\
+ & \tilde{\uu}_{BC} = \tilde{\uu} - \tilde{\uu}_{BT}.
+\end{align}
+\end{subequations}
+
+Puis à l'aide de ce courant barotrope, on peut construire une vorticité barotrope
+\begin{equation}
+ \tilde{\zeta}_{BT} = \kvf \cdot \qty[\curl{\tilde{\uu}_{BT}}].
+\end{equation}
+
+Mais on peut aussi calculer la vorticité de notre futur courant, de sorte à retrouver
+\begin{align}
+& \zeta^{t+1}_{BT} = \kvf \cdot \qty[\curl{\uu^{t+1}_{BT}}],\bigno\nonumber\\
+& \zeta^{t+1}_{BT} = \kvf \cdot \qty[\curl{\tilde{\uu}_{BT} + \gradient{\phi}}],\bigno\nonumber\\
+& \zeta^{t+1}_{BT} = \kvf \cdot \qty[\curl{\tilde{\uu}_{BT}}] + \cancelto{0}{\kvf\cdot\qty[\curl{\gradient{\phi}}]}.
+\end{align}
+Comme le rotationnel d'un gradient est toujours nul, on arrive à la conclusion inévitable que
+\begin{equation}
+ \zeta^{t+1}_{BT} = \tilde{\zeta}_{BT}.
+\end{equation}
+La correspondance entre la vorticité relative est donnée par $\zeta = \laplacian{\psi}$, donc on obtient une nouvelle équation de Poisson donnée par
+\begin{equation}
+\boxed{\hspace{0.3cm}
+ \laplacian{\psi_{BT}} = \kvf \cdot \qty[\curl{\tilde{\uu}_{BT}}]
+ \hspace{0.31cm}\text{avec C.F. Dirichlet}\hspace{0.31cm}
+ \eval{\psi_{BT}\pt}_{x_0,\pt x_f} = \ \eval{\psi_{BT}\pt}_{y_0,\pt y_f} = 0,
+\hspace{0.3cm} }
+\end{equation}
+et en trouvant $\psi_{BT}$ on trouve $\uu_{BT}$. \bigskip
+
+Finalement, on retrouve
+\begin{equation}
+ \uu^{t+1} = \uu_{BT} + \uu_{BC},
+\end{equation}
+où $\uu_{BC} = \tilde{\uu}_{BC}$ car $\gradient{\phi}$ est une composante barotrope.
+
+** Avantages
+Cette méthode a l'avantage de ramener le problème directement aux frontières, tout en oubliant complétement la composante de pression à trouver.
+
+* Bibliographie
+#+print_bibliograpy: 

@@ -1,19 +1,22 @@
-% Created 2023-04-03 Mon 16:34
+% Created 2023-05-10 mer 14:06
 % Intended LaTeX compiler: pdflatex
+
 % =================================BASE====================================%
-\documentclass{article}
+\documentclass[10pt]{article}
 \usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry} % Marges
 \usepackage[utf8]{inputenc} % Important pour symboles Francophones, é,à,etc.
 \usepackage[T1]{fontenc} % Nécessaire avec FrenchBabel
+%\usepackage{lmodern}
+\renewcommand{\familydefault}{cmr} % La meilleure police (CMU Serif Roman) (Je me suis battu).
 
 \usepackage{natbib} % Bibliographie
-\bibliographystyle{plainnat}
-\usepackage[french, american]{babel} % Environnements en Français.
+\bibliographystyle{abbrvnat}
+
 
 
 \usepackage{amsmath, amssymb, amsthm} % Symb. math. (Mathmode+Textmode) + Beaux théorèmes.
 
-\usepackage{mathtools, cancel} % Utilisation de boîtes \boxed{} + \cancelto{}{}
+\usepackage{mathtools,cancel} % Utilisation de boîtes \boxed{} + \cancelto{}{}
 \usepackage{graphicx, wrapfig} % Géstion des figures.
 \usepackage{hyperref} % Permettre l'utilisation d'hyperliens.
 \usepackage{color} % Permettre l'utilisation des couleurs.
@@ -28,19 +31,37 @@
 \usepackage{lipsum} % For fun
 \usepackage{tikz} % Realisation de figures TIKZ.
 \usepackage{empheq} % Boite autour de MULTIPLE équations
-% =================================BASE====================================%
+
+\usepackage[french]{babel} % Environnements en Français.
+% ==============================BASE-(END)=================================%
 
 
 
 % ================================SETTINGS=================================%
-%%% - Pas d'indentation en début de paragraphe :
+% Pas d'indentation en début de paragraphe :
 \setlength\parindent{0pt} 
-%%% - Couleurs de hyperliens :
-\hypersetup{colorlinks,urlcolor=cyan,citecolor=blue,linkcolor=teal}
-%%% - Numéros d'équations suivent les sections :
+
+% Couleurs de hyperliens :
+\definecolor{mypink}{RGB}{147, 0, 255}
+\hypersetup{colorlinks, urlcolor=mypink, citecolor=mypink, linkcolor=mypink}
+
+% Numéros d'équations suivent les sections :
 \numberwithin{equation}{section} 
-%%% - Les « captions » sont en italique :
+
+% Les « captions » sont en italique et largeur limitée
 \usepackage[textfont = it]{caption} 
+\captionsetup[wrapfigure]{margin=0.5cm}
+
+
+% Retirer le l'écriture en gras dans la table des matières
+\usepackage{tocloft}
+\renewcommand{\cftsecfont}{\normalfont}
+\renewcommand{\cftsecpagefont}{\normalfont}
+
+% Change bullet style
+\usepackage{pifont}
+\usepackage{enumitem}
+\setlist[itemize,1]{label=\ding{224}}
 % ================================SETTINGS=================================%
 
 
@@ -55,11 +76,47 @@
 \newcommand{\jvf}{\hat{\vb{j}}}
 \newcommand{\kvf}{\hat{\vb{k}}}
 
-% Empty frac-Box
-\newcommand{\bigno}{\vphantom{\qty(\frac{d}{q})}}
+\newcommand{\uu}{\vb*{u}}
+\newcommand{\vv}{\vb*{v}}
+\newcommand{\ww}{\vb*{w}}
 
+% Boîte vide pour ajuster les underbrace
+\newcommand{\bigno}{\vphantom{\qty(\frac{d}{q})}}
+\newcommand{\pt}{\hspace{1pt}}
+
+% Moyenne numérique entre deux points de grilles. 
+\newcommand{\xmean}[1]{\overline{#1}^x}
+\newcommand{\ymean}[1]{\overline{#1}^y}
+
+% Tilde over psi
 \newcommand{\tpsi}{\tilde{\psi}}
 % ==============================NEWCOMMANDS================================%
+
+
+
+% ==============================PAGE-TITRE=================================%
+% Titlepage 
+\newcommand{\mytitlepage}{
+\begin{titlepage}
+\begin{center}
+{\Large Contrat Été 2023 \par}
+\vspace{2cm}
+{\Large \MakeUppercase{\thetitle} \par}
+\vspace{2cm}
+RÉALISÉ DANS LE CADRE\\ D'UN PROJET POUR \par
+\vspace{2cm}
+{\Large ISMER--UQAR \par}
+\vspace{2cm}
+{\thedate}
+\end{center}
+\vfill
+Rédaction \\
+{\theauthor}\\
+\url{charles-edouard.lizotte@uqar.ca}\\
+ISMER-UQAR
+\end{titlepage}
+}
+% ==============================PAGE-TITRE=================================%
 
 
 
@@ -67,32 +124,33 @@
 \usepackage{fancyhdr}
 \pagestyle{fancy}
 \setlength{\headheight}{13pt}
+\renewcommand{\headrulewidth}{1.3pt} % Ligne horizontale en haut
 
-\fancyhead[L]{$\cdot$\ \nouppercase{\leftmark} }
-\fancyhead[R]{C.-É. Lizotte\ $\cdot$}
-\fancyfoot[C]{$\cdot$ \thepage\ $\cdot$}
+\fancyhead[R]{\textit{\thetitle}}
+\fancyhead[L]{\ \thepage}
+\fancyfoot[R]{\textit{\theauthor}}
+\fancyfoot[L]{}
+\fancyfoot[C]{} 
 % =================================ENTÊTE==================================%
 \author{Charles-Édouard Lizotte}
 \date{17/03/2023}
-\title{Rapport hebdomadaire -- McGill\\\medskip
-\large Semaine du 13 mars 2023}
+\title{Rapport hebdomadaire -- McGill}
 \hypersetup{
  pdfauthor={Charles-Édouard Lizotte},
  pdftitle={Rapport hebdomadaire -- McGill},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 27.1 (Org mode 9.6.2)}, 
- pdflang={English}}
+ pdfcreator={Emacs 28.2 (Org mode 9.6.5)}, 
+ pdflang={French}}
 \begin{document}
 
-\maketitle
-\tableofcontents
-
+\mytitlepage
+\tableofcontents\newpage
 
 \section{Le modèle est en état de fonctionner [2/2]}
-\label{sec:org0a3f6ef}
+\label{sec:orgd1a6b5e}
 \subsection{Mise en contexte}
-\label{sec:orgddda2ba}
+\label{sec:org2e39d57}
 Avant de débuter les changements au modèle \emph{shallow water}, assurons nous 
 \begin{enumerate}
 \item qu'il est compilable;
@@ -102,7 +160,7 @@ Au cours de ma maîtrise, quelques petits problèmes conceptuels et techniques s
 Nous allons donc régler ces problèmes-là et s'assurer que tout marche, avant tout. 
 
 \subsection{{\bfseries\sffamily DONE} Régler le problème des \emph{oldfile}}
-\label{sec:orge5508a9}
+\label{sec:org087ed6b}
 Comme on avait couplé le modèle \emph{shallow water} avec Wavewatch III dans le passé, les \emph{restart files} devaient avoir une forme légèrement différente que dans la version de Tianze.
 Principalement, il fallait ajouter la dérive de Stokes du dernier pas de temps \textbf{à l'intérieur du restart file}.
 À l'époque, la solution que j'avais trouvé était de rajouter une \emph{switch} nommée \textbf{oldfile} dans le fichier de paramètres, \emph{parameter.f90}.
@@ -115,7 +173,7 @@ Comme solution, couplé ou non, les \emph{restart files} vont maintenant conteni
 Et puis, la \emph{switch} \textbf{oldfile} a tout simplement été retirée, maintenant qu'on a supprimé ces vieilles données-là.
 
 \subsection{{\bfseries\sffamily DONE} Régler le bordel des \emph{compile model} et recompiler efficacement}
-\label{sec:org70abb87}
+\label{sec:org894b9ae}
 Un lecteur avisé de mon mémoire aurait remarqué la présence de 3 modèles différents.
 Le tout avec de nombreux fichiers de paramètres associés à chacun.
 C'est pourquoi, lors de ma maîtrise, j'ai du codé plusieurs compilateurs avec plusieurs dossiers et plusieurs listes différentes de paramètres.
@@ -137,7 +195,7 @@ ce qui nous permet d'ajouter
 fftw_path=/usr/share/doc/libfftw3-bin/
 \end{verbatim}
 à motre \emph{makefile} (\emph{compile model} dans notre cas). 
-Pour l'instant, la compilation fonctionne; j'ai lancé un test pour la nuit ce \textit{<2023-03-14 Tue>}.\\[0pt]
+Pour l'instant, la compilation fonctionne; j'ai lancé un test pour la nuit ce \textit{<2023-03-14 mar>}.\\[0pt]
 
 \textbf{Pour que le modèle roule bien}, mentionnons qu'il a besoin de certains dossiers et fichiers, soit 
 \begin{itemize}
@@ -152,9 +210,9 @@ J'ai donc créé un fichier vide prêt à partir.
 
 
 \section{Modifications à apporter au modèle \emph{shallow water} cette semaine [1/1]}
-\label{sec:org41374ae}
+\label{sec:org5b0a1c0}
 \subsection{{\bfseries\sffamily DONE} Retirer la \emph{slab layer}}
-\label{sec:orga60fae1}
+\label{sec:orgb0eaa03}
 Comme on veut un modèle à plusieurs couches, la \emph{slab layer} ne sert plus vraiment à rien.
 Aussi, comme on veut nettoyer le code, retirer la \emph{slab layer} est probablement la première chose à faire. 
 Déjà, Ça va nous débarrasser de quelques sous-routines superflues et beaucoup de variables maintenant inutiles.\\[0pt]
@@ -209,11 +267,11 @@ Vitesse des ondes internes de gravité & c\textsubscript{bc} & 2 ms\textsuperscr
 \end{tabular}
 \end{table}
 
-Le test lancé pendant la fin de semaine devrait nous encourager (Voir figure \ref{fig:org7b3caee}).
+Le test lancé pendant la fin de semaine devrait nous encourager (Voir figure \ref{fig:orgd4708c8}).
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figures/tests/test_SW_2023-03-18.png}
-\caption{\label{fig:org7b3caee}Résultat du test de qualité du modèle. En ordre, diagramme de Hovmoller de la divergence, du rotationnel et du courant dans la première couche.}
+\caption{\label{fig:orgd4708c8}Résultat du test de qualité du modèle. En ordre, diagramme de Hovmoller de la divergence, du rotationnel et du courant dans la première couche.}
 \end{figure}
 \end{document}

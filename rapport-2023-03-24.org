@@ -3,7 +3,13 @@
 #+AUTHOR: Charles-Édouard Lizotte
 #+DATE: 24/03/2023
 #+LATEX_CLASS: org-report
+#+CITE_EXPORT: natbib
+#+LANGUAGE: fr
 #+BIBLIOGRAPHY: master-bibliography.bib
+#+OPTIONS: toc:nil title:nil
+
+\mytitlepage
+\tableofcontents\newpage
 
 * DONE Transformer le /slab model/ en modèle /shallow water/ multicouches [3/3]
 DEADLINE: <2023-03-23 Thu 19:00>
@@ -202,7 +208,5 @@ Pour l'essentiel, il faut modifer les fichiers :
 Faut gosser un peu dans la fonction /initialisation.f90/ pour avoir un H(k) et un gprime(k) qui fonctionnent.
 Maintenant, gprime(k) est définit en fonction d'un vecteur rho(k). 
 Tout va être relié dans le fichier de paramètres.
-
-* Bibliographie
 
 #+print_bibliography:

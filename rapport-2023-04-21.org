@@ -203,7 +203,7 @@ La condition /no normal flow/ est une condition de type Dirichlet qui est caract
 C'est donc une condition d'imperméabilité.
 Mathématiquement, la condition se traduit par
 \begin{equation}
-\vb{u} \cdot \nvf =0,
+\uu \cdot \nvf =0,
 \end{equation}
 où $\nvf$ est le vecteur normal à la frontière.
 Numériquement, on peut énoncer que sur une grille cartésienne la condition /no normal flow/ symbolise

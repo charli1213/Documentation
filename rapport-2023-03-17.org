@@ -1,8 +1,14 @@
 #+title: Rapport hebdomadaire -- McGill
-#+SUBTITLE: Semaine du 13 mars 2023
 #+author: Charles-Édouard Lizotte
 #+date: 17/03/2023
-#+latex_class: org-report
+
+#+LATEX_CLASS: org-report
+#+LANGUAGE: fr
+#+OPTIONS: toc:nil title:nil
+
+
+\mytitlepage
+\tableofcontents\newpage
 
 * Le modèle est en état de fonctionner [2/2]
 ** Mise en contexte

@@ -1,10 +1,14 @@
 #+title: Rapport hebdomadaire -- McGill
-#+SUBTITLE: Semaine du 27 mars 2023
 #+author: Charles-Édouard Lizotte
 #+date: 31/03/2023
-#+latex_class: org-report
-#+cite_export: bibtex
+#+LATEX_CLASS: org-report
+#+CITE_EXPORT: natbib
+#+LANGUAGE: fr
 #+BIBLIOGRAPHY: master-bibliography.bib
+#+OPTIONS: toc:nil title:nil
+
+\mytitlepage
+\tableofcontents\newpage
 
 
 * DONE Run du modèle multicouches
@@ -296,7 +300,7 @@ g_k' = g \qty(\frac{\rho_k - \rho_{k-1}}{\rho_1}).
 \end{equation}
 De plus, cette formulation est consistante avec l'architecture du modèle /shallow-water/ codé par David, Yangxu et Tianze.
 
-* Bibliographie 
+
 #+print_bibliography:
 
 

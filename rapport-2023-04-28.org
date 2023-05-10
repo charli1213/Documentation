@@ -32,17 +32,17 @@ Sous cette notations, l'indice au pied $k$ représente le niveau de la couche et
 Finalement, les termes $G_{x,y}$ sont des termes valise incorporant tout le /RHS/ des équations du mouvement, sans la correction $\gradient \phi$.
 Ces derniers sont donc exprimés par
 \begin{equation}
-\vb{G}^t(x,y) =
-\underbrace{ \bigno\vb{u} \cdot \gradient{\vb{u}}\ }_\text{Advec.}
-\underbrace{ \bigno + \vb{f}\times \vb{u}\ }_\text{Coriolis} 
+\vb*{G}^t(x,y) =
+\underbrace{ \bigno\uu \cdot \gradient{\uu}\ }_\text{Advec.}
+\underbrace{ \bigno + \vb{f}\times \uu\ }_\text{Coriolis} 
 \underbrace{ \bigno+\pt \frac{\delta_{(k,1)}\pt \boldsymbol{\tau}_{oc}}{\rho_i h_1}}_\text{Vent}
 \underbrace{ \bigno+\ g'_{k} \gradient(\eta_k)}_\text{Press. hydro.}
-\underbrace{ \bigno+ \vb{D}}_\text{Dissip.}
+\underbrace{ \bigno+ \vb*{D}}_\text{Dissip.}
 \end{equation}
 Finalement, l'équation de continuité pour le système est donnée par la conservation du transport barotrope, de sorte que
 #+NAME: eq:continuity
 \begin{equation}
-\sum_{k=1}^{nk}  \qty(\pdv{(u^t_k\pt h^t_k)}{x} + \pdv{(v^t_k\pt h^t_k)}{y}) = \div{\vb{U}^t_{BT}} = 0,
+\sum_{k=1}^{nk}  \qty(\pdv{(u^t_k\pt h^t_k)}{x} + \pdv{(v^t_k\pt h^t_k)}{y}) = \div{\vb*{U}^t_{BT}} = 0,
 \end{equation}
 
 Comme illustré dans la [[http://mitgcm.org/public/r2_manual/final/online_documents/node33.html][documentation du MITgcm]] et/ou pour ceux et celles qui auront lu mon mémoire de maîtrise, il est possible de réarranger les équations [[eq:dynamic]]ab et [[eq:continuity]] de sorte à obtenir une équation de Poisson,
@@ -65,7 +65,7 @@ Bref, en trouvant la solution à l'équation [[eq:poisson]], nous aurons accompl
 
 #+NAME: fig:finitediff
 #+CAPTION: Illustration du nouveau schéma de différence finit avec $\tilde{\phi}$.
-\begin{wrapfigure}[12]{r}{0.35\textwidth}
+\begin{wrapfigure}[13]{r}{0.35\textwidth}
 \vspace{-\baselineskip}
 \centering
 \begin{tikzpicture}[scale=3.7]
@@ -215,13 +215,15 @@ Concrétement, il serait donc avisé de ne pas faire ça...
 | iprer (valeur conseillée)    | -              |      2 |
 | ipost (valeur conseillée)    | -              |      1 |
 | intpol (valeur conseillée)   | -              |      3 |
+|------------------------------+----------------+--------|
+
 
 
 ** Tests avec conditions Dirichlet
-On arrive à un écart d'environ 2\%
+On arrive à un écart d'environ 2$\%$
 
 
 ** Tests avec conditions mixtes
-Avec les conditions mixtes, j'arrive à une erreur d'envirion 3e-3\%, ce qui est quand même bon
-** Tests avec conditions purement Neumann
-Pas encore testé.
+Avec les conditions mixtes, j'arrive à une erreur d'envirion 3e-3$\%$, ce qui est quand même bon
+
+#+print_bibliograpy: 

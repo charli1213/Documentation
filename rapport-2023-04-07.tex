@@ -1,4 +1,4 @@
-% Created 2023-04-28 Fri 14:59
+% Created 2023-05-10 mer 14:15
 % Intended LaTeX compiler: pdflatex
 
 % =================================BASE====================================%
@@ -16,7 +16,7 @@
 
 \usepackage{amsmath, amssymb, amsthm} % Symb. math. (Mathmode+Textmode) + Beaux théorèmes.
 
-\usepackage{mathtools, cancel} % Utilisation de boîtes \boxed{} + \cancelto{}{}
+\usepackage{mathtools,cancel} % Utilisation de boîtes \boxed{} + \cancelto{}{}
 \usepackage{graphicx, wrapfig} % Géstion des figures.
 \usepackage{hyperref} % Permettre l'utilisation d'hyperliens.
 \usepackage{color} % Permettre l'utilisation des couleurs.
@@ -32,7 +32,7 @@
 \usepackage{tikz} % Realisation de figures TIKZ.
 \usepackage{empheq} % Boite autour de MULTIPLE équations
 
-\usepackage[french, american]{babel} % Environnements en Français.
+\usepackage[french]{babel} % Environnements en Français.
 % ==============================BASE-(END)=================================%
 
 
@@ -76,9 +76,17 @@
 \newcommand{\jvf}{\hat{\vb{j}}}
 \newcommand{\kvf}{\hat{\vb{k}}}
 
+\newcommand{\uu}{\vb*{u}}
+\newcommand{\vv}{\vb*{v}}
+\newcommand{\ww}{\vb*{w}}
+
 % Boîte vide pour ajuster les underbrace
 \newcommand{\bigno}{\vphantom{\qty(\frac{d}{q})}}
 \newcommand{\pt}{\hspace{1pt}}
+
+% Moyenne numérique entre deux points de grilles. 
+\newcommand{\xmean}[1]{\overline{#1}^x}
+\newcommand{\ymean}[1]{\overline{#1}^y}
 
 % Tilde over psi
 \newcommand{\tpsi}{\tilde{\psi}}
@@ -126,25 +134,24 @@ ISMER-UQAR
 % =================================ENTÊTE==================================%
 \author{Charles-Édouard Lizotte}
 \date{07/03/2023}
-\title{Rapport hebdomadaire -- McGill\\\medskip
-\large Semaine du 3 avril 2023}
+\title{Rapport hebdomadaire -- McGill}
 \hypersetup{
  pdfauthor={Charles-Édouard Lizotte},
  pdftitle={Rapport hebdomadaire -- McGill},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 27.1 (Org mode 9.6.2)}, 
- pdflang={English}}
+ pdfcreator={Emacs 28.2 (Org mode 9.6.5)}, 
+ pdflang={French}}
 \begin{document}
 
-\maketitle
-\tableofcontents
+\mytitlepage
+\tableofcontents\newpage
 
 
 \section{{\bfseries\sffamily DONE} Débugger le modèle \emph{shallow water} à 2 et 3 couches [1/1]}
-\label{sec:orgd45e5c9}
+\label{sec:org87a8305}
 \subsection{Workflow}
-\label{sec:org4cda573}
+\label{sec:orga160628}
 Commençons par relancer le modèle pour 5 ans à seulement deux couches.
 De la manière que j'ai tout recodé, il ne suffit qu'à redéfinir le nombre de couches \emph{nz} à 2 et \emph{H2} à 3000 mètres.
 Les gravités réduites ont été formulées de sorte à retrouver la même vitesse pour les ondes barocliniques \(c_{bc}\).
@@ -160,7 +167,7 @@ Faudrait en glisser un mot à Tianze sur son \emph{git}.
 C'est fait, mais David m'a mentionné que Tianze ne risque malheureusement pas de répondre.
 
 \subsection{{\bfseries\sffamily DONE} Rencontre avec David}
-\label{sec:orgeda10fe}
+\label{sec:orge0e115c}
 J'ai rencontré david pour lui parler du problème, j'ai quelques indices personnels qui pourraient expliquer la convergence dans la zonne anti-cyclonique. 
 Selon lui, c'est normal en \emph{shallow water} ce genre de truc.
 Comme j'avais remarqué, en \emph{SW}, il y a une \emph{feedback loop} entre l'épaisseur de la couche supérieure et la valeur du forçage.
@@ -181,14 +188,14 @@ J'ai donc reparti les simulations numériques avec le même bruit qu'avant (de l
 Les résultats étaient identiques, j'en déduis donc qu'il faut absolument \textbf{toujours} un peu de bruits.
 
 \subsection{Test à trois couches}
-\label{sec:orgcf6a6e0}
+\label{sec:org1cc6251}
 Comme David l'a conseillé, on peut fait un simple test où les trois couches ont la même épaisseur et le même \(\Delta \rho_{k,k-1}\).
 Ainsi les rayons de déformation sont données par des multiples du rayon de déformation du premier mode.
 Les paramètres de l'expérience sont affichés dans le tableau suivant.
 Les diagrammes de Hovmoler et les snapshot sont affichés en annexe de ce rapport.
 
 \begin{table}[htbp]
-\caption{\label{tab:org4cc2bae}Valeur des différents paramètres de l'expérience de \cite{chen_2021}, mais à 3 couches.}
+\caption{\label{tab:org8d85938}Valeur des différents paramètres de l'expérience de \citealp{chen_2021}, mais à 3 couches.}
 \centering
 \begin{tabular}{lll}
 \hline
@@ -216,7 +223,7 @@ Gravité réduite (troisième couche) & g\textsubscript{3}' & 6 \texttimes{} 10\
 \end{table}
 
 \section{{\bfseries\sffamily DONE} Installer et gérer le compte Oxygen fournit pas McGill}
-\label{sec:org746d6ce}
+\label{sec:orgf257aa0}
 L'administration m'a crée un compte, il faudrait vérifier tout ça.
 
 This is done using a ssh client (present on mac, linux and windows by default), please ssh to your assigned computer. Your computer name is the name on the sticker on the computer tower. (jet)
@@ -239,14 +246,14 @@ ssh jet
 une fois connecté sur Jump. Il faudrait d'ailleurs que je demande à David où est l'ordinateur\ldots{} parce que je confirme qu'il n'est pas dans mon bureau.
 
 \section{{\bfseries\sffamily DONE} Coder les mode barotropes et baroclines [3/3]}
-\label{sec:org5f65a13}
+\label{sec:org362ad38}
 \subsection{Rappel théorique : cas analytique du test à trois couches}
-\label{sec:org9e0faa1}
+\label{sec:orgefabdb9}
 Étudions un cas facile pour se permettre de tester notre modèle numérique.
-Assumons trois couches homogènes de 1000 mètres d'épaisseurs avec un différentiel de densité constant (Voir tableau \ref{tab:orgfe6b583}).
+Assumons trois couches homogènes de 1000 mètres d'épaisseurs avec un différentiel de densité constant (Voir tableau \ref{tab:org2e8ef13}).
 
 \begin{table}[htbp]
-\caption{\label{tab:orgfe6b583}Tableau regroupant les paramètres de notre cas trivial.}
+\caption{\label{tab:org2e8ef13}Tableau regroupant les paramètres de notre cas trivial.}
 \centering
 \begin{tabular}{lll}
 \hline
@@ -283,11 +290,11 @@ F_{(i,j)} = \mathrm{F}\hspace{0.5cm} \forall\hspace{0.5cm} (i,j) : i,j \in \qty{
 
 On résoud le problème aux valeurs propres en trouvant le déterminant de cette matrice,
 \begin{equation}
-\label{eq:orgd43187d}
+\label{eq:org6e52748}
 0 = (F-\lambda_i)\qty[(2F - \lambda_i)(F-\lambda_i) - F^2] - F^2(F-\lambda_i).
 \end{equation}
 
-L'équation \ref{eq:orgd43187d} se factorise, on retrouve donc
+L'équation \ref{eq:org6e52748} se factorise, on retrouve donc
 \begin{align}
 &0 = (F-\lambda_i)\qty[(2F - \lambda_i)(F-\lambda_i) - 2F^2],\nonumber\\
 &0 = (F-\lambda_i)\qty[(\lambda^2_i + 2F^2 - 3 F \lambda_i) - 2F^2],\nonumber\\
@@ -301,7 +308,7 @@ Pour finir, nos valeurs propres sont données par
 \end{align}
 
 \subsection{{\bfseries\sffamily DONE} Installer LAPACK}
-\label{sec:org6bd9789}
+\label{sec:orgc5dc3eb}
 Une fois internet revenu chez moi (grosse tempête de verglas), j'ai pu installer LAPACK,
 \begin{verbatim}
 sudo apt-get install libblas-dev liblapack-dev
@@ -320,14 +327,14 @@ et de linker notre application Fortran avec
 \end{verbatim}
 
 \subsection{{\bfseries\sffamily DONE} Implémenter l'algorithme pour trouver les valeurs propres}
-\label{sec:org85922cc}
+\label{sec:org8ae9b7f}
 Consiste concrétement à recopier la matrice de l'opérateur linéaire du modèle QG de Louis-Philippe.
 Il fallait juste faire très attention, parce qu'on définissait les gprime au plafond des couches et non au plancher.
 Les fonctions \emph{F(i,j)} n'étaient donc pas les mêmes.
 Une foit la matrice \emph{A} créée, on mettait tout ça dans la fonction SEEVG et le tour est joué.
 
 \subsection{{\bfseries\sffamily DONE} Calculer les vorticités quasi-géostrophiques baroclines et barotropes}
-\label{sec:org6569089}
+\label{sec:org4bb74b7}
 À partir des fonctions de courant baroclines \(\psi_{BC}\), il est possible de retrouver des vorticité quasi-géostrophiques à l'aide de l'équation
 \begin{equation}
 q_{BT}^i = \laplacian \psi_{BT}^i + \Gamma^i \psi_{BT}^i,
@@ -336,17 +343,16 @@ cité dans le code de Louis-Philippe.
 Il faudrait donc implémenter ça, mais pour l'instant c'est en \emph{stand by} parce que les deux ont confirmé que ce n'était pas tant nécessaire.
 
 
-\section{Bibliographie}
-\label{sec:org538da6b}
-\bibliography{/home/charles-edouard/Desktop/Org-Rapports/master-bibliography}
+
+
 
 \section{Annexe}
-\label{sec:org63fd623}
+\label{sec:org977cfce}
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figures/tests/2023-04-08_test1.png}
-\caption{\label{fig:org821be30}Résultats du test à trois couches (Première couches)}
+\caption{\label{fig:orge430936}Résultats du test à trois couches (Première couches)}
 \end{figure}
 
 \begin{figure}[htbp]
@@ -360,4 +366,6 @@ Il faudrait donc implémenter ça, mais pour l'instant c'est en \emph{stand by} 
 \includegraphics[width=.9\linewidth]{figures/tests/2023-04-08_test3.png}
 \caption{Résultats du test à trois couches (Troisième couches)}
 \end{figure}
+
+\bibliography{/aos/home/celizotte/Desktop/Documentation/master-bibliography}
 \end{document}

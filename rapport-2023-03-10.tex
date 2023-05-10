@@ -1,16 +1,22 @@
-% Created 2023-03-29 Wed 12:51
+% Created 2023-05-10 mer 14:02
 % Intended LaTeX compiler: pdflatex
+
 % =================================BASE====================================%
-\documentclass{article}
+\documentclass[10pt]{article}
 \usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry} % Marges
 \usepackage[utf8]{inputenc} % Important pour symboles Francophones, é,à,etc.
 \usepackage[T1]{fontenc} % Nécessaire avec FrenchBabel
-\usepackage[french, american]{babel} % Environnements en Français.
+%\usepackage{lmodern}
+\renewcommand{\familydefault}{cmr} % La meilleure police (CMU Serif Roman) (Je me suis battu).
+
+\usepackage{natbib} % Bibliographie
+\bibliographystyle{abbrvnat}
+
 
 
 \usepackage{amsmath, amssymb, amsthm} % Symb. math. (Mathmode+Textmode) + Beaux théorèmes.
 
-\usepackage{mathtools, cancel} % Utilisation de boîtes \boxed{} + \cancelto{}{}
+\usepackage{mathtools,cancel} % Utilisation de boîtes \boxed{} + \cancelto{}{}
 \usepackage{graphicx, wrapfig} % Géstion des figures.
 \usepackage{hyperref} % Permettre l'utilisation d'hyperliens.
 \usepackage{color} % Permettre l'utilisation des couleurs.
@@ -24,26 +30,43 @@
 
 \usepackage{lipsum} % For fun
 \usepackage{tikz} % Realisation de figures TIKZ.
-\usepackage{natbib}
-\bibliographystyle{plainnat}
-% =================================BASE====================================%
+\usepackage{empheq} % Boite autour de MULTIPLE équations
+
+\usepackage[french]{babel} % Environnements en Français.
+% ==============================BASE-(END)=================================%
 
 
 
 % ================================SETTINGS=================================%
-%%% - Pas d'indentation en début de paragraphe :
+% Pas d'indentation en début de paragraphe :
 \setlength\parindent{0pt} 
-%%% - Couleurs de hyperliens :
-\hypersetup{colorlinks,urlcolor=cyan,citecolor=blue,linkcolor=teal}
-%%% - Numéros d'équations suivent les sections :
+
+% Couleurs de hyperliens :
+\definecolor{mypink}{RGB}{147, 0, 255}
+\hypersetup{colorlinks, urlcolor=mypink, citecolor=mypink, linkcolor=mypink}
+
+% Numéros d'équations suivent les sections :
 \numberwithin{equation}{section} 
-%%% - Les « captions » sont en italique :
+
+% Les « captions » sont en italique et largeur limitée
 \usepackage[textfont = it]{caption} 
+\captionsetup[wrapfigure]{margin=0.5cm}
+
+
+% Retirer le l'écriture en gras dans la table des matières
+\usepackage{tocloft}
+\renewcommand{\cftsecfont}{\normalfont}
+\renewcommand{\cftsecpagefont}{\normalfont}
+
+% Change bullet style
+\usepackage{pifont}
+\usepackage{enumitem}
+\setlist[itemize,1]{label=\ding{224}}
 % ================================SETTINGS=================================%
 
 
 
-% ================================COMMANDS=================================%
+% ==============================NEWCOMMANDS================================%
 % Degrés Celsius :
 \newcommand{\celsius}{${}^\circ$ C} % \degrée Celsius : Pas mal plus simple qu'utilise le package gensymb qui plante avec tout...
 
@@ -53,7 +76,47 @@
 \newcommand{\jvf}{\hat{\vb{j}}}
 \newcommand{\kvf}{\hat{\vb{k}}}
 
-% ================================COMMANDS=================================%
+\newcommand{\uu}{\vb*{u}}
+\newcommand{\vv}{\vb*{v}}
+\newcommand{\ww}{\vb*{w}}
+
+% Boîte vide pour ajuster les underbrace
+\newcommand{\bigno}{\vphantom{\qty(\frac{d}{q})}}
+\newcommand{\pt}{\hspace{1pt}}
+
+% Moyenne numérique entre deux points de grilles. 
+\newcommand{\xmean}[1]{\overline{#1}^x}
+\newcommand{\ymean}[1]{\overline{#1}^y}
+
+% Tilde over psi
+\newcommand{\tpsi}{\tilde{\psi}}
+% ==============================NEWCOMMANDS================================%
+
+
+
+% ==============================PAGE-TITRE=================================%
+% Titlepage 
+\newcommand{\mytitlepage}{
+\begin{titlepage}
+\begin{center}
+{\Large Contrat Été 2023 \par}
+\vspace{2cm}
+{\Large \MakeUppercase{\thetitle} \par}
+\vspace{2cm}
+RÉALISÉ DANS LE CADRE\\ D'UN PROJET POUR \par
+\vspace{2cm}
+{\Large ISMER--UQAR \par}
+\vspace{2cm}
+{\thedate}
+\end{center}
+\vfill
+Rédaction \\
+{\theauthor}\\
+\url{charles-edouard.lizotte@uqar.ca}\\
+ISMER-UQAR
+\end{titlepage}
+}
+% ==============================PAGE-TITRE=================================%
 
 
 
@@ -61,10 +124,13 @@
 \usepackage{fancyhdr}
 \pagestyle{fancy}
 \setlength{\headheight}{13pt}
+\renewcommand{\headrulewidth}{1.3pt} % Ligne horizontale en haut
 
-\fancyhead[L]{$\cdot$\ \nouppercase{\leftmark} }
-\fancyhead[R]{C.-É. Lizotte\ $\cdot$}
-\fancyfoot[C]{$\cdot$ \thepage\ $\cdot$}
+\fancyhead[R]{\textit{\thetitle}}
+\fancyhead[L]{\ \thepage}
+\fancyfoot[R]{\textit{\theauthor}}
+\fancyfoot[L]{}
+\fancyfoot[C]{} 
 % =================================ENTÊTE==================================%
 \author{Charles-Édouard Lizotte}
 \date{10/03/2023}
@@ -75,16 +141,16 @@
  pdftitle={Rapport hebdomadaire -- McGill},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 27.1 (Org mode 9.6.2)}, 
- pdflang={English}}
+ pdfcreator={Emacs 28.2 (Org mode 9.6.5)}, 
+ pdflang={French}}
 \begin{document}
 
-\maketitle
-\tableofcontents
+\mytitlepage
+\tableofcontents\newpage
 
 
 \section{{\bfseries\sffamily DONE} Organisation du travail [3/3]}
-\label{sec:orgb7234b3}
+\label{sec:org5f71863}
 Lors de ma maîtrise -- de 2019 à 2022 --, j'ai constaté que mon organisation du travail était extrêmement maladroite.
 Entre-autres, j'avais une grande difficulté à recenser les tâches accomplies ou incomplètes. 
 C'est pourquoi j'ai créé ce \emph{template} en \textbf{org-mode}, un language d'écriture \textbf{Emacs} exportable en \LaTeX{}.
@@ -99,9 +165,9 @@ Tâches :
 \end{itemize}
 
 \section{Retour sur le modèle \emph{shallow water} [3/3]}
-\label{sec:orge286cea}
+\label{sec:orgc9899bc}
 \subsection{{\bfseries\sffamily DONE} Télécharger le modèle \emph{shallow water} et créer un \emph{git} [2/2]}
-\label{sec:orgaba24d7}
+\label{sec:orga730bde}
 Avant tout, il faut se reconnecter sur la grappe de calcul \textbf{mingan} pour aller chercher le modèle \emph{shallow-water}. 
 Pour des raisons obscures, mon compte mingan ne fonctionnait plus.
 J'ai du contacter le gestionnaire du soutient technique de l'UQAR, Dany Lemay, pour créer un nouvel identifiant. 
@@ -129,7 +195,7 @@ Une fois connecté sur le noeud \emph{Calculs}, on peut entrer sur \emph{mingan}
 \end{itemize}
 
 \subsection{{\bfseries\sffamily DONE} Ménage \emph{mingan} et transfert vers \emph{pelerin} [2/2]}
-\label{sec:org1330f7a}
+\label{sec:orgeac8376}
 Comme la grappe de calculs \emph{mingan} en est à ses derniers heures de vie, je vais devoir transférer tous mes codes vers \emph{pelerin}.
 Dany Lemay propose avant tout de créer un \emph{git} pour que ça aille plus rapidement.
 À mentionner que ça fait un bout que j'ai laissé ça tarder, j'aurais peut-être du faire ça vers la fin de ma maîtrise..\\[0pt]
@@ -150,7 +216,7 @@ Dany Lemay propose avant tout de créer un \emph{git} pour que ça aille plus ra
 \end{itemize}
 
 \subsection{{\bfseries\sffamily DONE} Rencontre avec David Straub}
-\label{sec:org3445b18}
+\label{sec:org469e8ac}
 La tâche consiste principalement à modifier le modèle \emph{shallow-water} que David et Yanxu Chen avaient codés, soit celui que j'ai utilisé au cours de ma maîtrise.
 Le modèle fonctionne uniquement à 2 couches, car il n'a pas été codé pour en avoir plus, pour l'instant.
 Considérant que les \emph{near-inertial waves} s'accumulaient dans la première couche, David et Louis-Philippe ont émis l'hypothèse que l'ajout de plusieurs couches pourrait \emph{damper} la force des ondes quasi-inertielles. 
