@@ -1,4 +1,4 @@
-% Created 2023-05-10 mer 16:43
+% Created 2023-05-24 mer. 15:05
 % Intended LaTeX compiler: pdflatex
 
 % =================================BASE====================================%
@@ -149,7 +149,7 @@ ISMER-UQAR
 \tableofcontents\newpage
 
 \section{Nouvelle formulation pour le gradient de pression}
-\label{sec:org7d38319}
+\label{sec:org9875166}
 
 David nous a éclairé de sa lumière mardi à 21h43 et nous est arrivé avec un solution super simple mais efficace.
 En premier lieu, on se souvient qu'on définit notre pas de temps \emph{leapfrog} de manière à ce que
@@ -173,7 +173,7 @@ Puis à l'aide de ce courant barotrope, on peut construire une vorticité barotr
 Mais on peut aussi calculer la vorticité de notre futur courant, de sorte à retrouver
 \begin{align}
 & \zeta^{t+1}_{BT} = \kvf \cdot \qty[\curl{\uu^{t+1}_{BT}}],\bigno\nonumber\\
-& \zeta^{t+1}_{BT} = \kvf \cdot \qty[\curl{\tilde{\uu}_{BT} + \gradient{\phi}}],\bigno\nonumber\\
+& \zeta^{t+1}_{BT} = \kvf \cdot \qty[\curl(\tilde{\uu}_{BT} + \gradient{\phi})],\bigno\nonumber\\
 & \zeta^{t+1}_{BT} = \kvf \cdot \qty[\curl{\tilde{\uu}_{BT}}] + \cancelto{0}{\kvf\cdot\qty[\curl{\gradient{\phi}}]}.
 \end{align}
 Comme le rotationnel d'un gradient est toujours nul, on arrive à la conclusion inévitable que
@@ -185,21 +185,78 @@ La correspondance entre la vorticité relative est donnée par \(\zeta = \laplac
 \boxed{\hspace{0.3cm}
  \laplacian{\psi_{BT}} = \kvf \cdot \qty[\curl{\tilde{\uu}_{BT}}]
  \hspace{0.31cm}\text{avec C.F. Dirichlet}\hspace{0.31cm}
- \eval{\psi_{BT}\pt}_{x_0,\pt x_f} = \ \eval{\psi_{BT}\pt}_{y_0,\pt y_f} = 0,
+ \eval{\psi_{BT}\pt}_{x_0,\pt x_f} = \ \eval{\psi_{BT}\pt}_{y_0,\pt y_f} = 0.
 \hspace{0.3cm} }
 \end{equation}
-et en trouvant \(\psi_{BT}\) on trouve \(\uu_{BT}\). \bigskip
-
-Finalement, on retrouve
+Donc en trouvant \(\psi_{BT}\), on trouve aussi \(\uu_{BT}\) à l'aide de la relation avec la fonction de courant,
+\begin{align}
+&&u = -\pdv{\psi}{y} &&\text{et} && v = \pdv{\psi}{x}.&&
+\end{align}
+Puis finalement, on retrouve
 \begin{equation}
  \uu^{t+1} = \uu_{BT} + \uu_{BC},
 \end{equation}
 où \(\uu_{BC} = \tilde{\uu}_{BC}\) car \(\gradient{\phi}\) est une composante barotrope.
 
 \subsection{Avantages}
-\label{sec:org38fbddc}
-Cette méthode a l'avantage de ramener le problème directement aux frontières, tout en oubliant complétement la composante de pression à trouver.
+\label{sec:org0aa69f7}
+En premier lieu, cette méthode a l'avantage de ramener le problème directement aux frontières.
+Mentionnons qu'en raison de la condition \emph{free slip} et \emph{no normal flow}, les frontières doivent être sur les courants opur une grille Arakawa-C (notre cas). 
+En second, nous n'avons plus besoin de calculer le gradient de pression à l'aide des cette méthode.
+On remplace plutôt notre variable inconnue par une fonction de courant barotrope \(\psi_{BT}\).
+
+\subsection{Désavantages}
+\label{sec:orgfe420b8}
+Mentionnons que cette méthode est un peu plus lente.
+À trois couches, on note au moins un temps de calcul deux fois plus lent.
+Comme notre objectif final est de coupler cette version du modèle avec Wavewatch III, le temps de calcul ne devrait pas être un obstable pour ce modèle-ci. 
+
+
+
+\section{Algorithme de solution à \(\psi_{BT}\)}
+\label{sec:org9bc6c9c}
+
+La documentation de MUDPACK signalait qu'il est possible d'utiliser deux techniques pour améliorer le temps de calcul et limiter l'erreur numérique.
+
+\subsection{Calculer la correction à la solution plutôt que la solution}
+\label{sec:org60c02bc}
+Nous avons en main une équation différentielle elliptique quelconque.
+Cette dernière peut être décrite par un opérateur \(\mathcal{L}\) linéaire qui satisfait,
+\begin{align}
+&&\mathcal{L}\ \qty[\phi(t)] = f(t) && \text{et} && \mathcal{L}\ \qty[\phi(t+\delta t)] = f(t+\delta t), &&
+\end{align}
+où la fonction \(f\) dépend de \(x,y\) de sorte que \(f(t)\) est la notation simplifiée de \(f(x,y,t)\) -- il en est de même avec \(\phi(t)\).
+Il est donc possible de définir une correction \(e\pt(t,\delta t)\) tel que
+\begin{align}
+\mathcal{L}\ \qty[\pt e\pt(t,\delta t)\pt ] = \mathcal{L}\ \qty[ \phi(t+\delta t) - \phi(t) ] = f(t+\delta t) - f(t).
+\end{align}
+On peut donc solutionner \(e\pt(t,\delta t)\) au lieu de \(\phi(t)\) et faire le chemin inverse à l'aide de
+\begin{equation}
+\phi(t+\delta t) = \phi(t) + e\pt(t,\delta t).
+\end{equation}
+
+\textbf{N.B.} Malheureusement, j'ai essayé et le résultat était peu concluant.
+Notre champ initialement calculé (\(f(t+\delta t)\)) n'est pas vraiment au temps \(t+\delta t\) en fait.
+Donc il est peu aviser d'utiliser \(f(t+\delta t) - f(t)\) comme RHS de notre équation elliptique pour trouver la correction \(e\pt(t,\delta t)\).
+J'en parlerai à David, car ça pourrait légitimement réduire l'erreur numérique, même si ça ne semble pas être un problème pour l'instant.
+
+\subsection{Utiliser le dernier champ comme tentative initiale}
+\label{sec:org1fa1ada}
+Essentiellement, il est conseillé d'utiliser \(\phi(t)\) comme tentative initiale pour solutionner \(\phi(t+\delta t)\) au lieu d'un champ vide comme une matrice nulle, par exemple. 
+
+\section{Considérations d'échelle sur la correction à \(\psi_{BT}\)}
+\label{sec:org9179cad}
+
+Quelle est l'ordre de la correction appliquée à \(\psi_{BT}\)? on parle d'un maximum autour de 4 [\(s^{-1}\)].
+Comme les courants océaniques sont (à leur plus fort) de l'ordre de \(\mathcal{O}(10^{-1})\), alors
+\begin{equation}
+\norm{\uu} = - \frac{\delta \psi}{\delta y} \Longrightarrow \frac{[\ ?\ s^{-1}\ ]}{[\simeq 3600m]} = \mathcal{O}(10^{-1}).
+\end{equation}
+Donc, à l'aide de la fameuse règle du produit croisé, on en déduit que els variations de \(\psi\) sont de l'ordre de 360 \(s^{-1}\), donc \$\mathcal{O}(10\textsuperscript{2}).\bigskip
+
+Si l'on met cette valeur en perspective, les corrections maximum de \(\psi\) à l'aide de MUDPACK (\(\sim 3 s^{-1}\)), sont de l'ordre \$\malthcal{O}(1).
+Donc nous sommes dans le royaume du pourcent, ce qui est rassurant car c'est ce que nous avions avec la correction du gradient de pression par \emph{fft}. 
 
 \section{Bibliographie}
-\label{sec:org911efac}
+\label{sec:org9bca5f8}
 \end{document}
