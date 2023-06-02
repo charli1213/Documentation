@@ -113,28 +113,23 @@ Cette dernière quantité est la définition de $\tilde{\uu}_{BC}$, donc on devr
    = \tilde{\uu} - \tilde{\uu}_{BT} = \tilde{\uu}_{BC}.\hspace{0.3cm}}
 \end{equation}
 
-* Comparatif entre les deux méthodes
-
-** 
-
-
-** Enjeu
-Comme la correction s'applique sur la fonction de courant barotrope ($\psi_{BT}$) et que le RHS est calculé à partir de $\zeta_{BT} = \curl(\uu_{BT})$, On Voit que l'effet est particulièrement puissant sur ces deux quantités.
-
-À l'inverse, quand nous résolvions le gradient de pression, nous appliquions une correction sur la divergence (car le gradient de pression s'appliquait sur le courant).\bigskip
-
-Donc, 
-
-
-
-
-
-* Optimiser le pas de temps
-** Enjeu
-J'avais une intuition que ça marchait pas trop ce qu'on faisait.
-Premièrement, parce qu'on passait totalement par dessus le gradient de pression.
-Deuxièmement, parce qu'on utilisait $\tilde{\uu}_BT$ en ayant déjà appliqué le RHS.
-Dans les faits, comme $\uu_{t}$ respectait déjà l'équation de continuité, c'est plutôt en balançant les /RHS/ avec le gradient de pression que $\uu^{t+\delta t}$ satisferait cette dernière équation.
-Et non en balaçant directement $\tilde{\vb{u}}$ avec l'équation de continuité -- considérant qu'on sait pas vraiment c'est à quel pas de temps.
-
-** Discrétisation mathématique
+* Nouvelle méthode proopsée par David
+Comme mentionné précédemment, il est possible de seulement calculer la correction à $\psi_{BT}$ plutôt que $\psi_{BT}$ pour minimiser l'erreur relative sur la solution.
+Pour se faire, on se souvient de l'équation [[eq:evolution]], soit
+\begin{equation}
+   \uu^{t+\delta t} =
+   \uu^t + RHS\cdot \Delta t
+   - \gradient{\phi}\cdot \Delta t.
+\end{equation}
+On divise notre /RHS/ en deux parties, soit barotropes et baroclines,
+\begin{equation}
+   \vec{RHS} = \vec{RHS}_{BT} + \vec{RHS}_{BC},
+\end{equation}
+et on résoud pour uen perturbation de $\psi_{BT}$, définit par
+\begin{equation}
+   \laplacian{\delta \psi_{BT}} = \curl{\vec{RHS}_{BT}}.
+\end{equation}
+Ensuite, on additionne les trouve $\delta \uu_{BT}$, de sorte que
+\begin{equation}
+   \uu^{t+\delta_t} = \uu^{t} + \Delta t \cdot \qty(\delta \uu_{BT} + \delta \uu_{BC}).
+\end{equation}
