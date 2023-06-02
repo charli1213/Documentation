@@ -54,9 +54,9 @@ Donc en trouvant $\psi_{BT}$, on trouve aussi $\uu_{BT}$ à l'aide de la relatio
 &&u = -\pdv{\psi}{y} &&\text{et} && v = \pdv{\psi}{x}.&&
 \end{align}
 Puis finalement, on retrouve
-\begin{equation}
- \uu^{t+1} = \uu_{BT} + \uu_{BC},
-\end{equation}
+\begin{align}
+ \uu^{t+1} = \uu_{BT} + \uu_{BC} = \curl{\qty(\kvf\psi_{BT})} + \uu_{BC},
+\end{align}
 où $\uu_{BC} = \tilde{\uu}_{BC}$ car $\gradient{\phi}$ est une composante barotrope.
 
 ** Avantages
@@ -96,20 +96,34 @@ On peut donc solutionner $e\pt(t,\delta t)$ au lieu de $\phi(t)$ et faire le che
 Notre champ initialement calculé ($f(t+\delta t)$) n'est pas vraiment au temps $t+\delta t$ en fait.
 Donc il est peu aviser d'utiliser $f(t+\delta t) - f(t)$ comme RHS de notre équation elliptique pour trouver la correction $e\pt(t,\delta t)$.
 J'en parlerai à David, car ça pourrait légitimement réduire l'erreur numérique, même si ça ne semble pas être un problème pour l'instant.
+Entre temps, nous sommes revenus à la solution initiale.
+Les résultats comparatifs se retrouveront dans le prochain rapport. 
+
+** Calculer la correction à la solution plutôt que la solution (Revisité)
+
+Comme ça induisait de drôles d'erreurs (voir figure [[test_correction23]]), j'ai décidé de revisiter le problème analytiquement.
+
+#+NAME: test_correction23
+#+CAPTION: Application de la correction à la solution plutôt que la solution elle-même dans le solveur elliptique de MUDPACK. Les résultats ne sont pas très positifs.
+#+ATTR_LATEX: :width=\textwidth
+[[file:figures/tests/2023-05-23_hovmoller1.png]]
 
 ** Utiliser le dernier champ comme tentative initiale
-Essentiellement, il est conseillé d'utiliser $\phi(t)$ comme tentative initiale pour solutionner $\phi(t+\delta t)$ au lieu d'un champ vide comme une matrice nulle, par exemple. 
+Il est conseillé d'utiliser $\phi(t)$ comme tentative initiale pour solutionner $\phi(t+\delta t)$ au lieu d'un champ vide comme une matrice nulle, par exemple.
+C'est ce que nous avons fait comme cette méthode prenait une seule ligne de code. 
 
 * Considérations d'échelle sur la correction à $\psi_{BT}$
 
-Quelle est l'ordre de la correction appliquée à $\psi_{BT}$? on parle d'un maximum autour de 4 [$s^{-1}$].
-Comme les courants océaniques sont (à leur plus fort) de l'ordre de $\mathcal{O}(10^{-1})$, alors
+Quelle est l'ordre de la correction appliquée à la fonction de courant barotrope $\psi_{BT}$?
+Au début, les maxima gravitent autours de 4 [$s^{-1}$].
+De leur côté, les courants océaniques atteignent ordinairement des vitesses de l'ordre de $\order*{10^{-1}}$ à leur maxima.
+Il n'est alors pas déraisonnable d'affirmer que 
 \begin{equation}
-\norm{\uu} = - \frac{\delta \psi}{\delta y} \Longrightarrow \frac{[\ ?\ s^{-1}\ ]}{[\simeq 3600m]} = \mathcal{O}(10^{-1}).
+\norm{\uu} = - \frac{\delta \psi}{\delta y} \Longrightarrow \frac{[\ ?\ s^{-1}\ ]}{[\simeq 3600m]} = \order{10^{-1}}.
 \end{equation}
-Donc, à l'aide de la fameuse règle du produit croisé, on en déduit que els variations de $\psi$ sont de l'ordre de 360 $s^{-1}$, donc $\mathcal{O}(10^2).\bigskip
+À l'aide de la puissante règle du produit croisé, on en déduit que les variations de $\psi$ sont de l'ordre de 360 $s^{-1}$, donc $\order*{10^2}$.\bigskip
 
-Si l'on met cette valeur en perspective, les corrections maximum de $\psi$ à l'aide de MUDPACK ($\sim 3 s^{-1}$), sont de l'ordre $\malthcal{O}(1).
+Si l'on met cette valeur en perspective, les corrections maximum de $\psi$ à l'aide de MUDPACK $(\sim 3 s^{-1})$, sont de l'ordre $\order*{1}$.
 Donc nous sommes dans le royaume du pourcent, ce qui est rassurant car c'est ce que nous avions avec la correction du gradient de pression par /fft/. 
 
 * Bibliographie

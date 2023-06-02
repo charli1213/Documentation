@@ -1,0 +1,140 @@
+#+title: Carnet de bord, Université McGill
+#+author: Charles-Édouard Lizotte
+#+date: 12/05/2023
+#+LATEX_CLASS: org-report
+#+CITE_EXPORT: natbib
+#+LANGUAGE: fr
+#+BIBLIOGRAPHY: master-bibliography.bib
+#+OPTIONS: toc:nil title:nil
+
+\mytitlepage
+\tableofcontents\newpage
+
+* Erreurs rencontrées
+
+** Ancienne méthode : Calculer la fonction de courant barotrope directement
+Concrétement, l'ancienne méthode (voir [[file:rapport-2023-04-28.org][rapport précédent]]) consistait à trouver le rotationnel de $\uu_{BT}$, soit $\zeta_{BT} = \curl(\uu_{BT})$ pour solutionner l'équation de Poisson,
+#+NAME: eq:poisson
+\begin{equation}
+   \laplacian(\psi_{BT}) =  \norm{\pt\curl{\uu_{BT}}\pt}.
+\end{equation}
+Une foit $\psi_{BT}$ en main, il est trivial (on s'en rapelle) de retrouver $\uu_{BT}$ à l'aide de la relation
+\begin{equation}
+   \uu = \kvf\times\gradient{\psi} = - \qty(\curl{\kvf\psi}).
+\end{equation}
+
+Malheureusement, certains problèmes émergeaient de l'application de cette méthode.
+
+** Fluctuation relative de la fonction de courant barotrope
+On définit la fluctuation relative de la fonction de courant barotrope $\delta \psi_{BT}$ de sorte que cette quantité satisfait la relation
+\begin{equation}
+   \psi_{BT}^{t+\delta t} = \psi_{BT}^t + \delta \psi_{BT} + Er\pt(\psi_{BT}),
+\end{equation}
+où $Er\pt(\psi_{BT})$ est une fonction pseudo-aléatoirement linéaire qui représente l'erreur numérique associée à une solution.
+Cette dernière est proportionnelle à la solution de l'équation [[eq:poisson]], de sorte que
+\begin{equation}
+    Er\pt(\psi_{BT}) \propto \psi_{BT}.
+\end{equation}
+Alors, si l'on solve l'équation [[eq:poisson]] avec une précision de 5 chiffres par exemple, l'erreur par rapport à la fluctuation relative de la fonction de courant barotrope va se faire sentir sur les résultats.
+Essentiellement, l'erreur numérique donne naissance à l'inégalité suivante
+\begin{align}
+   &&\text{Erreur relative} = \abs{\frac{Er\pt(\psi_{BT})}{\psi_{BT}}} \le \abs{ \frac{Er\pt(\psi_{BT})}{\delta \psi_{BT}} } &&\text{car (généralement)} && \abs{\psi_{BT}} \ge \abs{\delta \psi_{BT}}. &&
+\end{align}
+Donc, si l'on veut diminuer l'échelle de l'erreur numérique relative, on doit absolument solutionner $\delta \psi_{BT}$ plutôt que $\psi_{BT}$ sinon on perd une résolution importante.
+Encore une fois, on y faisait référence dans le [[file:rapport-2023-04-28.org][rapport précédent]].
+Si l'on faisait ça, nous aurions plutôt
+\begin{align}
+   \text{Erreur relative} = \underbrace{\qty{\ \abs{\frac{Er\pt(\delta\psi_{BT})}{\psi_{BT}}} \le \abs{ \frac{Er\pt(\delta\psi_{BT})}{\delta \psi_{BT}} }\ }}_\text{Solution $\delta \psi_{BT}$}
+   <<
+   \underbrace{\qty{\ \abs{\frac{Er\pt(\psi_{BT})}{\psi_{BT}}} \le \abs{ \frac{Er\pt(\psi_{BT})}{\delta \psi_{BT}} }\ }.}_\text{Solution $\psi_{BT}$}
+\end{align}
+Nous aurions donc bien des avantages à changer de méthode (on va le faire).
+
+** Pas de temps
+
+Techniquement, on peut argumenter que nous calculions 2 fois le pas de temps, accidentellement.
+En différences finies, les équations du mouvement ont la forme
+#+NAME: eq:evolution
+\begin{equation}
+   \uu^{t+\delta t} =
+   \underbrace{\uu^t + RHS\cdot \Delta t\tall}_{\tilde{u}}
+   \underbrace{- \gradient{\phi}\cdot \Delta t.\tall}_\text{Correction P}
+\end{equation}
+Par définition, on sait que
+\begin{equation}
+   \laplacian{\psi^{t+\delta t}} = \zeta^{t+\delta t},
+\end{equation}
+et on décompose en partie barotrope et barocline, de sorte que
+\begin{align}
+   && \laplacian{\psi^{t+\delta t}_{BT} + \psi^{t+\delta t}_{BC}} = \zeta^{t+\delta t}_{BT} + \zeta^{t+\delta t}_{BC}
+   && \Longrightarrow
+   && \laplacian{\psi^{t+\delta t}}_{BT} = \zeta^{t+\delta t}_{BT},
+   && \text{et}
+   && \laplacian{\psi^{t+\delta t}}_{BT} = \zeta^{t+\delta t}_{BT}.&&
+\end{align}
+Comme présenté à l'équation [[eq:evolution]], on peut décomposer le RHS de la dernière équation selon
+\begin{align}
+   \laplacian{\psi^{t+\delta t}}_{BT} = \tilde{\zeta}_{BT} - \cancelto{0}{\curl(\Delta t\cdot\gradient{\phi})}.
+\end{align}
+On solutionne l'équation de Poisson, on trouve $\psi^{t+\delta t}$, puis on retrouve le courant à l'aide de l'équation (à se souvenir), 
+\begin{equation}
+   \uu_{BT} = \kvf \times \qty(\gradient{\psi_{BT}}) = - \pt\curl(\psi_{BT}\kvf).
+\end{equation}
+Finalement, on additionne les parties barocliniques et barotropes pour obtenir
+#+NAME: eq:uuu
+\begin{equation}
+   \uu^{t+\delta t} = \uu_{BT}^{t+\delta t} + \uu_{BC}^{t+\delta t}.
+\end{equation}
+Donc au final, s'il y a une erreur, elle est à l'équation [[eq:uuu]].
+Concrétement, on additionne deux parties qui constituent une même chose.
+Par contre, on obtient ces quantités depuis une quantités qui est entre deux pas de temps, à un temps peu définit.
+Par exemple, on assume que
+\begin{equation}
+   \uu^{t+\delta t} = \tilde{\uu} - \gradient{\phi} \cdot \Delta t.
+\end{equation}
+Puis, on décompose en deux parties à l'aide de [[eq:uuu]], soit barotrope et baroclines,
+\begin{subequations}
+\begin{align}
+   & \uu^{t+\delta t}_{BT} = \zmean{\tilde{\uu} - \gradient{\phi} \cdot \Delta t}  = \tilde{\uu}_{BT} - \gradient{\phi} \cdot \Delta t,\\
+   & \uu^{t+\delta t}_{BC} = \uu^{t+\delta t} - \uu^{t+\delta t}_{BT}.
+\end{align}
+\end{subequations}
+où $\zmean{\alpha}$ dénote la moyenne verticale d'une quantité $\alpha$.
+On développe
+\begin{align}
+   \uu^{t+\delta t}_{BC}
+   &= \uu^{t+\delta t} - \tilde{\uu}_{BT} + \gradient{\phi}\cdot \Delta t, \nonumber\\
+   &= \tilde{\uu} - \gradient{\phi}\cdot \Delta t\ - \tilde{\uu}_{BT} + \gradient{\phi}\cdot \Delta t, \nonumber\\
+   &= \tilde{\uu} - \tilde{\uu}_{BT}.
+\end{align}
+Cette dernière quantité est la définition de $\tilde{\uu}_{BC}$, donc on devrait être convaincu que
+\begin{equation}
+   \boxed{\hspace{0.4cm}\uu^{t+\delta t}_{BC}
+   = \tilde{\uu} - \tilde{\uu}_{BT} = \tilde{\uu}_{BC}.\hspace{0.3cm}}
+\end{equation}
+
+* Comparatif entre les deux méthodes
+
+** 
+
+
+** Enjeu
+Comme la correction s'applique sur la fonction de courant barotrope ($\psi_{BT}$) et que le RHS est calculé à partir de $\zeta_{BT} = \curl(\uu_{BT})$, On Voit que l'effet est particulièrement puissant sur ces deux quantités.
+
+À l'inverse, quand nous résolvions le gradient de pression, nous appliquions une correction sur la divergence (car le gradient de pression s'appliquait sur le courant).\bigskip
+
+Donc, 
+
+
+
+
+
+* Optimiser le pas de temps
+** Enjeu
+J'avais une intuition que ça marchait pas trop ce qu'on faisait.
+Premièrement, parce qu'on passait totalement par dessus le gradient de pression.
+Deuxièmement, parce qu'on utilisait $\tilde{\uu}_BT$ en ayant déjà appliqué le RHS.
+Dans les faits, comme $\uu_{t}$ respectait déjà l'équation de continuité, c'est plutôt en balançant les /RHS/ avec le gradient de pression que $\uu^{t+\delta t}$ satisferait cette dernière équation.
+Et non en balaçant directement $\tilde{\vb{u}}$ avec l'équation de continuité -- considérant qu'on sait pas vraiment c'est à quel pas de temps.
+
+** Discrétisation mathématique
