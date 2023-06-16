@@ -1,0 +1,245 @@
+#+title: Carnet de bord, Université McGill
+#+author: Charles-Édouard Lizotte
+#+date:16/06/2023
+#+LATEX_CLASS: org-report
+#+CITE_EXPORT: natbib
+#+LANGUAGE: fr
+#+BIBLIOGRAPHY: master-bibliography.bib
+#+OPTIONS: toc:nil title:nil
+
+
+\mytitlepage
+\tableofcontents\newpage
+
+
+
+* Considérations en lien avec le premier pas de temps
+** Mise en contexte
+#+NAME: fig:rhsuBTmud
+#+CAPTION: Premier "RHS" barotrope réalisé à l'aide du module MUDPACK. Par "RHS" barotrope, on considère la variation en y de $\psi_{BT}$, soit $\delta \psi_{BT}$, donc $\pdv*{(\delta \psi_{BT})}{y}$.
+#+ATTR_LATEX: :float wrap :width 0.48\textwidth :placement {r}{0.5\textwidth} \vspace{-\baselineskip} \centering
+[[file:figures/debuggage/2023_06_12_RHSuBTmudpack.png]]
+
+
+La semaine passée (voir [[file:rapport-2023-06-03.org][rapport précédent]]), en réalisant des tests et en débuggant sur les premiers pas de temps du modèle en eau peu profonde, j'ai fait la découverte d'une erreur conceptuelle importante.
+Les corrections barotropes (ou les /RHS/) des deux modèles (/FFTW/ et /MUDPACK/) n'avaient pas du tout le même signe.
+Pour mettre en contexte, le premier pas de temps calcule le /RHS/ à partir d'un courant purement positif sur l'entièreté du domaine.
+En effet, le premier champs vectoriel du courant (its=1) est issu d'un bruit aléatoire entre 0 et 0.01 $ms^{-1}$.
+Cette technique primitive permet d'introduire de légères perturbations qui -- bien que non-essentielles à la production baroclinique -- aide le modèle à en créer plus rapidement.
+Sans cette méthode, on fait plutôt condiance aux perturbations induites par le bruits numérique pour créer de l'instabilité barocline, ce qui peut prendre beaucoup de temps selon David et Louis-Philippe. \bigskip
+
+Comme ce premier champ est uniquement positif et que le vent est plutôt faible, les termes d'advections dominent , ce qui induit un /RHS/, lui-aussi, entièrement positif.
+Et comme le courant est entièrement nul dans les couches inférieures, le RHS est nul dans ces mêmes couches. \bigskip
+
+#+NAME: fig:rhsuBTfft
+#+CAPTION: Partie barotrope du "RHS" du modèle "FFTW". On additionne ainsi la partie barotrope du "RHS" avec la correction de la pression due à la surface fixe.
+#+ATTR_LATEX: :float wrap :width 0.48\textwidth :placement {l}{0.5\textwidth} \vspace{-\baselineskip} \centering
+[[file:figures/debuggage/2023_06_12_RHSuBTfftw.png]]
+
+** Courant moyen
+
+Il est possible de décomposer ce RHS en quantités barotrope et baroclines.
+Comme ce /RHS/ positif est assez uniforme, on doute qu'une partie devrait se retrouver dans le /RHS/ barotrope.
+Dès lors, on voit que le modèle /shallow water FFT/ produit un /RHS/ uniquement positif (figure [[fig:rhsuBTfft]]), tandis que le modèle /MUDPACK/ produit des quantités mixtes (voir figure [[fig:rhsuBTmud]]).
+La correction positive sur tout le domain est donc abscente de la solution proposée par MUDPACK.
+Mais pourquoi est-ce le cas?\bigskip
+
+Mathématiquement, imaginons un courant moyen induit sur tout le domaine $\overline{\uu}$, ce courant satisferait les conditions frontières, ce qui en fait une solution valide.
+Par contre, comme ce dernier est définit par
+\begin{equation}
+   \uu = \overline{\uu} + \uu' = - \curl(\psi\kvf),
+\end{equation}
+il faudrait impérativement que la fonction de courant ($\psi$) satisfasse la relation
+#+NAME: eq:solu
+\begin{equation}
+   \psi = f(x,y) - \overline{\uu} y.
+\end{equation}
+
+Où $f(x,y)$ est une solution périodique quelconque. 
+Malheureusement, la solution [[eq:solu]] ne peut possiblement pas satisfaire la continuité aux frontières d'un domaine périodique, car $\psi(y) = \overline{\uu} y$ n'est pas du tout une fonction périodique.
+Il faut donc en déduire que la fonction de courant $\psi$ ne contient pas toute l'information nécessaire à la solution.\bigskip
+
+\textbf{N.B.\ } \begin{minipage}[t]{0.94\linewidth}
+   \itshape Mentionnons que l'existence de la solution [[eq:solu]] est seulement possible dans une domaine doublement périodique.
+   Dans un domaine fermée, la conservation de la masse empêche ce genre de solution d'exister. Bref, en moyenne $\overline{\uu_i h_i} = 0$.
+\end{minipage}
+
+
+* Argument mathématique vis-à-vis la méthode 
+
+** Mise en contexte
+Concrétement, la méthode courante consiste à prendre l'équation
+\begin{equation}
+   \laplacian{\psi^{t+\delta t}} = \kvf\cdot\curl{\uu^{t+\delta t}}.
+\end{equation}
+et de la décomposer en ses partie importantes à l'aide de la méthode des différences finies.
+Soit
+\begin{equation}
+   \laplacian(\psi^t + \Delta t\cdot\delta \psi) = \kvf\cdot\curl(\uu^t + \Delta t\cdot\vec{RHS}^t - \Delta t\cdot\gradient{\phi}).
+\end{equation}
+Comme $\laplacian{\psi^t} = \kvf\cdot\curl{\uu^t}$, on pouvait affirmer que
+#+NAME:eq:rhs
+\begin{equation}
+   \laplacian(\delta \psi_{BT} + \delta \psi_{BC}) = \kvf\cdot\curl(\vec{RHS}^t_{BT} + \vec{RHS}^t_{BC} - \gradient{\phi}),
+\end{equation}
+et qu'on pouvait diviser le RHS en partie barotrope et barocline.
+Ici, on faisait l'assomption que cette équation était séparable en deux sections, de sorte à obtenir une équation seulement pour la partie barocline,
+#+NAME:eq:rhsBT
+\begin{equation}
+   \laplacian(\delta \psi_{BT}) = \kvf\cdot\curl(\vec{RHS}^t_{BT} - \cancelto{0}{\gradient{\phi}}).
+\end{equation}
+Une fois ici, on solvait l'équation
+\begin{equation}
+   \laplacian(\delta \psi_{BT}) = \kvf\cdot\qty(\curl{\vec{RHS}^t_{BT}})
+\end{equation}
+et l'on retrouvait
+\begin{equation}
+   \qty(\pdv{\uu}{t})^t = \vec{RHS}^t_{BC} + \kvf\times\gradient(\delta\psi_{BT}).
+\end{equation}
+Bref, il existe une erreur conceptuelle du passage de [[eq:rhs]] à [[eq:rhsBT]] et je tenterai de le démontrer dans la section suivante.
+
+
+** Considérations sur la fonction de courant barotrope
+Après y avoir pensé très fort, on peut affirmer que
+\begin{equation}
+   \laplacian{\psi_{BT}} \not= \kvf\cdot\qty(\curl{\uu_{BT}}).
+\end{equation}
+
+Cette inégalité est reliée à la manière qu'on définit $\uu_{BT}$.
+Pour mettre ceci en évidence, rappellons que pour chaque fonction de courant $\psi_i$ de notre modèle
+\begin{equation}
+   \laplacian{\psi_i} = \kvf\cdot\qty(\curl{\uu_i}).
+\end{equation}
+
+On peut donc sommer l'ensemble de ces équations et l'on obtient
+\begin{equation}
+   \sum_i^Nh_i\pt\laplacian{\psi_i} = \kvf\cdot \sum_i^N h_i\pt \qty(\curl{\uu_i}).
+\end{equation}
+
+Avec quelques règles de dérivation et des identités, on parvient à une forme générale d'où émergent les quantités barotropes
+\begin{align}
+   \sum_i^N \bigg[ \underbrace{\grande\laplacian(h_i\psi_i)}_{\laplacian{\psi_{BT}}} - \psi_i\pt\qty(\laplacian{h_i}) - 2 \laplacian{h_i}\laplacian{\psi_i}\bigg]
+    = \kvf\cdot \sum_i^N \bigg[ \underbrace{\grande\curl(h_i \uu_i)}_{\curl{\uu_{BT}}}  - \qty(\gradient{h_i})\times\uu_i\bigg],
+\end{align}
+qu'on simplifie en divisant par $H$ pour parvenir à
+#+NAME: eq:inequality
+\begin{align}
+   &\laplacian{\psi_{BT}} - \sum_i^N \bigg[ \frac{\psi_i}{H} \qty(\laplacian{h_i}) + \frac{2}{H} \laplacian{h_i}\laplacian{\psi_i}\bigg]
+    = \kvf\cdot  \qty(\curl{ \uu_{BT}}) - \kvf\cdot \qty[\sum_i^N \frac{1}{H} \qty(\gradient{h_i})\times\uu_i],\nonumber\\
+%
+   &\laplacian{\psi_{BT}}
+    = \kvf\cdot  \qty(\curl{ \uu_{BT}}) + \underbrace{\qty[ \frac{\psi_i}{H} \qty(\laplacian{h_i}) + \frac{2}{H} \laplacian{h_i}\laplacian{\psi_i}  -
+\sum_i^N \frac{\kvf}{H}\cdot\qty(\gradient{h_i}\times\uu_i)]}_\text{Résidu}.
+\end{align}
+
+Donc, si l'on définit la correction barotrope comme une moyenne, on doit se résoudre à ce que
+#+NAME: eq:notequal
+\begin{equation}
+   \boxed{\hspace{0.3cm}\laplacian{\psi_{BT}} \not= \kvf\cdot  \qty(\curl{ \uu_{BT}}).\hspace{0.3cm}}
+\end{equation}
+
+\nb\begin{minipage}[t]{0.9\linewidth}
+\itshape Par contre, il est possible que tous les termes à droite de l'équation [[eq:inequality]] s'annulent.
+Si c'est le cas nous pouvons conserver la formulation originale, mais je ne serai malheureusement pas celui qui va le vérifier.
+Intuitivement, je ne vois pas pourquoi ces termes s'annuleraient.
+David a mentionné qu'il est possible que l'inégalité [[eq:notequal]] soit fausse et que ça viendrait seulement de la manière éronnée que nous définissons notre courant barotrope.
+Dans la section suivante, nous tentons une solution en lien avec la première section et cette dernière inégalité.
+\end{minipage}
+
+** Considérations sur la fonction de courant barotrope (retour sur le chapitre 5.3)
+L'équation
+\begin{equation}
+   \laplacian{\psi_i} = \kvf\cdot\curl{\uu_i},
+\end{equation}
+décrit ce qu'on appelle la *balance géostrophique* et elle relie essentiellement la vorticité potentielle et la fonction de courant géostrophique.
+Comme nous somme en /shallow water Quasi-Geostrophic/, cette équation tient la route.
+Essentiellement, on peut définir une fonction de courant géostrophique (p.177), car au premier ordre
+\begin{equation}
+   \divergence{\uu_0} = 0.
+\end{equation}
+Cette notion, vient principalement du fait qu'on peut relier $\psi$ avec $\eta$, mais qu'on peut aussi relier $\eta$ avec $\zeta$.
+Donc ça vient de la balance géostrophique et ça apparait à l'équation (5.63 [p.181, Vallis]), car
+\begin{align}
+&&f_0 u_0 = -\pdv{\eta_0}{y},
+&& f_0 v_0 = \pdv{\eta_0}{x} &&
+\end{align}
+
+
+
+* Solution
+#+NAME: fig:rhsuBTmud2
+#+CAPTION: Nouvelle partie barotrope entière du RHS au premier pas de temps. On compte ici la moyenne barotrope du "RHS", ainsi que la correction appliquée par la fonction de courant.
+#+ATTR_LATEX: :float wrap :width 0.48\textwidth :placement [18]{r}{0.5\textwidth} \vspace{-\baselineskip} \centering
+[[file:figures/debuggage/2023_06_14_RHSuBTmudpack.png]]
+
+La relation entre la variation de $\psi$ et celle du rotationnel de notre /RHS/, soit
+\begin{equation}
+   \laplacian(\delta \psi) = \kvf\cdot\curl(\vec{RHS}^t - \gradient{\phi}),
+\end{equation}
+tient toujours la route et on pourrait l'utiliser à notre avantage.\bigskip
+
+Comme nous l'avons vu dans la section 1, on définit la correction barotrope à l'aide de l'équation $\psi_{BT} \propto \kvf\cdot\curl(\uu_{BT})$, ce qui fait disparaître tout courant barotrope moyenné sur le domaine.
+Essentiellement, cette différence créait un écart dignificatif entre les /RHS/ des modèles solutionnés par /FFTW/ et /MUDPACK/.
+Ensuite, nous avons vu que, mathématiquement, il y a un problème.\bigskip
+
+La solution est de calculer le /RHS/ barotrope à l'aide de
+\begin{equation}
+   \vec{RHS}^t_{BT} = \kvf\cdot \sum_i^N \bigg[ \underbrace{\grande\curl(h^t_i \uu^t_i)}_{\curl{\uu^t_{BT}}}  - \qty(\gradient{h^t_i})\times\uu^t_i\bigg].
+\end{equation}
+
+Ensuite on conserve la moyenne barotrope du /RHS/ en banque, soit
+\begin{equation}
+   \xymean{RHS^t_{BT}} = \qty(\frac{1}{nx\cdot ny})\sum_{i,j}^{nx,ny} \vec{RHS}^t_{BT}[i,j].
+\end{equation}
+Et l'on additionne les trois partie pour avoir la solution finale
+\begin{equation}
+   \vec{RHS}^t = \underbrace{\venti\xymean{RHS^t_{BT}} \ + \ \delta \psi_{BT}}_\text{Partie barotrope}\ + \ \underbrace{\venti\vec{RHS}^t_{BC}}_\text{Barocline}.
+\end{equation}
+
+Et il semble que ça fonctionne.
+On peut maintenant comparter les figures [[fig:rhsuBTfft]] et [[fig:rhsuBTmud2]] et voir que les deux se ressemble beaucoup, pour ne pas dire qu'ils sont identiques. \bigskip
+
+\nb\begin{minipage}[t]{0.9\linewidth}
+\itshape Nous n'avions pas ce problème lorsque nous trouvions le gradient de pression de surface à l'aide des transformées de Fourier, car on calculait un par de temps intermédiaire et ensuite on corrigeait le prochain pas de temps. Maintenant, on efface carrément le RHS pour retrouver un RHS avec MUDPACK. C'est donc un nouveau problème.
+\end{minipage}
+
+
+* Résultats et comparaison des deux solveurs
+Dans cette sections, nous comparons les résultats obtenus avec les deux modèles, soit celui donc le gradient de pression de surface est solvé à l'aide de transformée de Fourrier et celui donc la correction de la fonction de courant barotrope est solvée par technique /multigrid/ (MUDPACK).\bigskip
+
+\nb\begin{minipage}[t]{0.9\linewidth}
+\itshape 
+eta1 ne dénote par la même quantité dans les deux cas.
+Pour le modèle FFTW, eta1 dénote la pression de surface.
+Tandis que la même quantité dénote la correction de la fonction de courant dans le modèle solvé à l'aide de MUDPACK.   
+\end{minipage}
+
+
+** Spin up
+Les deux modèles accumulent de l'énergie.
+Du côté de /MUDPACK/, on observe l'appararition de lignes horizontales dans le rotationnel de la première couche, ainsi qu'un genre de /bruit/ numérique dans la divergence (Voir figures [[fig:fftw1]] et [[fig:fftw2]]).
+On ne voyait pas ça dans le cas FFT (Voir figures [[fig:fftw1]] et [[fig:fftw2]])
+
+
+#+NAME: fig:fftw1
+#+CAPTION: Diagrammes de Hovmoller entre 0 et 250 jours. Pression de surface calculée à l'aide de FFTW à gauche. Correction psi barotrope à l'aide de MUDPACK à droite.
+| \includegraphics[width=0.5\textwidth]{figures/tests/2023-06-15_hovmoller1_t=250days_fft.png} | \includegraphics[width=0.5\textwidth]{figures/tests/2023-06-16_hovmoller1_t=250days_mud.png} |
+\newpage
+
+** Phase de production des instabilités baroclines
+Le cisaillement des vitesses induit la production d'instabilités baroclines.
+Malgré de légères différences pendant le /spin up/, la phase de production barocline se passe plutôt au même moment que dans l'autre modèlem, ce qui est encourageant.
+
+#+NAME: fig:fftw2
+#+CAPTION: Diagrammes de Hovmoller entre 0 et 1000/950 jours. Pression de surface calculée à l'aide de FFTW. Correction psi barotrope à l'aide de MUDPACK à droite.
+| \includegraphics[width=0.5\textwidth]{figures/tests/2023-06-15_hovmoller1_t=1000days_fft.png} | \includegraphics[width=0.5\textwidth]{figures/tests/2023-06-16_hovmoller1_t=950days_mud.png}  |
+\newpage
+
+** Stabilité barocline
+Les tourbillons remplissent le domaine.
+Une fois la phase de production baroclinique terminée, on ne voit que très peu de différence entre les deux modèles numériques.
+
+#+NAME: fig:fftw3
+#+CAPTION: Diagrammes de Hovmoller entre 0 et 1500 jours. Pression de surface calculée à l'aide de FFTW. Correction psi barotrope à l'aide de MUDPACK à droite.
+| \includegraphics[width=0.5\textwidth]{figures/tests/2023-06-15_hovmoller1_t=1500days_fft.png} | \includegraphics[width=0.5\textwidth]{figures/tests/2023-06-16_hovmoller1_t=1500days_mud.png} |
+

@@ -1,6 +1,6 @@
 #+title: Carnet de bord, Université McGill
 #+author: Charles-Édouard Lizotte
-#+date: 12/05/2023
+#+date: 03/06/2023
 #+LATEX_CLASS: org-report
 #+CITE_EXPORT: natbib
 #+LANGUAGE: fr
@@ -70,7 +70,7 @@ et on décompose en partie barotrope et barocline, de sorte que
    && \Longrightarrow
    && \laplacian{\psi^{t+\delta t}}_{BT} = \zeta^{t+\delta t}_{BT},
    && \text{et}
-   && \laplacian{\psi^{t+\delta t}}_{BT} = \zeta^{t+\delta t}_{BT}.&&
+   && \laplacian{\psi^{t+\delta t}}_{BC} = \zeta^{t+\delta t}_{BC}.&&
 \end{align}
 Comme présenté à l'équation [[eq:evolution]], on peut décomposer le RHS de la dernière équation selon
 \begin{align}
@@ -113,23 +113,62 @@ Cette dernière quantité est la définition de $\tilde{\uu}_{BC}$, donc on devr
    = \tilde{\uu} - \tilde{\uu}_{BT} = \tilde{\uu}_{BC}.\hspace{0.3cm}}
 \end{equation}
 
-* Nouvelle méthode proopsée par David
+* Nouvelle méthode proposée par David
 Comme mentionné précédemment, il est possible de seulement calculer la correction à $\psi_{BT}$ plutôt que $\psi_{BT}$ pour minimiser l'erreur relative sur la solution.
-Pour se faire, on se souvient de l'équation [[eq:evolution]], soit
-\begin{equation}
-   \uu^{t+\delta t} =
-   \uu^t + RHS\cdot \Delta t
-   - \gradient{\phi}\cdot \Delta t.
-\end{equation}
 On divise notre /RHS/ en deux parties, soit barotropes et baroclines,
 \begin{equation}
-   \vec{RHS} = \vec{RHS}_{BT} + \vec{RHS}_{BC},
+   \vec{RHS} = \vec{RHS}_{BT} + \vec{RHS}_{BC}.
 \end{equation}
-et on résoud pour uen perturbation de $\psi_{BT}$, définit par
+
+Nous savons que les équations
+#+NAME: eq:poisson
+\begin{align}
+   &&\laplacian{\psi^{t+\delta t}} = \curl{\uu^{t+\delta t}}
+   &&\text{et}
+   &&\laplacian{\psi^{t}} = \curl{\uu^{t}}&&
+\end{align}
+sont toujours valides. 
+On se souvient aussi que les équations du mouvement en différence finie sont données par 
 \begin{equation}
-   \laplacian{\delta \psi_{BT}} = \curl{\vec{RHS}_{BT}}.
+   \uu^{t+\delta t} =
+   \uu^t + \vec{RHS}\cdot \Delta t
+   - \gradient{\phi}\cdot \Delta t.
 \end{equation}
-Ensuite, on additionne les trouve $\delta \uu_{BT}$, de sorte que
+Les parties barocline et barotrope sont respectivement exprimées par
+\begin{subequations}
+\begin{align}
+   &\uu_{BT}^{t+\delta t} = \uu_{BT}^{t} + \vec{RHS}_{BT}\cdot \Delta t - \Delta t\cdot \gradient{\phi},\grande\\
+   &\uu_{BC}^{t+\delta t} = \uu_{BC}^{t} + \vec{RHS}_{BC}\cdot \Delta t,
+\end{align}
+\end{subequations}
+étant donné que le gradient de pression est un phénomène barotrope.
+Pour cette même raison, on peut justement affirmer hors de tout doute que l'équation [[eq:poisson]] est séparable en partie barotrope et barcocline, soit
+#+name: eq:btrelation
+\begin{subequations}
+\begin{align}
+   &\grande\laplacian{\psi_{BT}^{t}}\ \pt = \curl{\uu_{BT}^{t}}
+   \hspace{0.5cm}\text{et}\hspace{0.5cm}
+   \laplacian{\psi_{BT}^{t+\delta t}} = \curl{\uu_{BT}^{t+\delta t}},\\
+   &\grande\laplacian{\psi_{BC}^{t+\delta t}} = \laplacian{\tilde{\psi}_{BC}} = \curl{\uu_{BC}^{t+\delta t}} = \curl{\tilde{\uu}_{BC}},
+\end{align}
+\end{subequations}
+car $\tilde{\uu}_{BC} = \uu^{t+\delta t}_{BC}$.
+Donc, en développant la partie barotrope, on obtient
+#+NAME: eq:tdeltatpoisson
 \begin{equation}
-   \uu^{t+\delta_t} = \uu^{t} + \Delta t \cdot \qty(\delta \uu_{BT} + \delta \uu_{BC}).
+   \laplacian(\psi_{BT}^t+\delta \psi \cdot \Delta t) = \curl(\uu^t_{BT} + \vec{RHS}_{BT}\cdot\Delta t - \cancelto{0}{\gradient{\phi}}\cdot \Delta t),
+\end{equation}
+puis en soustrayant la relation [[eq:btrelation]]a à la dernière équation ([[eq:tdeltatpoisson]]), on arrive à
+\begin{equation}
+   \laplacian(\delta \psi) = \curl(\vec{RHS}_{BT}).
+\end{equation}
+Finalement, on retrouve la partie barotrope de notre /RHS/ à l'aide de la relation
+\begin{equation}
+   \delta \uu_{BT} = \kvf\times\gradient(\delta \psi) = -\curl(\delta\psi\pt\kvf).
+\end{equation}
+Pour terminer avec
+\begin{equation}
+   \uu^{t+\delta t} =
+   \uu^t + \Delta t\cdot\qty(\vec{RHS}_{BC}
+   + \delta \uu_{BT}).
 \end{equation}
