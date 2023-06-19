@@ -213,7 +213,7 @@ eta1 ne dénote par la même quantité dans les deux cas.
 Pour le modèle FFTW, eta1 dénote la pression de surface.
 Tandis que la même quantité dénote la correction de la fonction de courant dans le modèle solvé à l'aide de MUDPACK.   
 \end{minipage}
-
+\newpage
 
 ** Spin up
 Les deux modèles accumulent de l'énergie.
@@ -223,6 +223,7 @@ On ne voyait pas ça dans le cas FFT (Voir figures [[fig:fftw1]] et [[fig:fftw2]
 
 #+NAME: fig:fftw1
 #+CAPTION: Diagrammes de Hovmoller entre 0 et 250 jours. Pression de surface calculée à l'aide de FFTW à gauche. Correction psi barotrope à l'aide de MUDPACK à droite.
+#+ATTR_LaTeX: :height 5cm :placement [!htpb]
 | \includegraphics[width=0.5\textwidth]{figures/tests/2023-06-15_hovmoller1_t=250days_fft.png} | \includegraphics[width=0.5\textwidth]{figures/tests/2023-06-16_hovmoller1_t=250days_mud.png} |
 \newpage
 
@@ -241,5 +242,15 @@ Une fois la phase de production baroclinique terminée, on ne voit que très peu
 
 #+NAME: fig:fftw3
 #+CAPTION: Diagrammes de Hovmoller entre 0 et 1500 jours. Pression de surface calculée à l'aide de FFTW. Correction psi barotrope à l'aide de MUDPACK à droite.
-| \includegraphics[width=0.5\textwidth]{figures/tests/2023-06-15_hovmoller1_t=1500days_fft.png} | \includegraphics[width=0.5\textwidth]{figures/tests/2023-06-16_hovmoller1_t=1500days_mud.png} |
+| \includegraphics[width=0.5\textwidth]{figures/tests/2023-06-15_hovmoller1_t=1500days_fft.png} | \includegraphics[width=0.5\textwidth]{figures/tests/2023-06-19_hovmoller1_t=1500days_mud.png} |
 
+\newpage
+* Comparatif : nombre de cycles Multigrid
+Dans la sous-routine /MUDPACK/ que nous utilisons, un des paramètre est dénommé /maxcy/.
+Concrétement, ce nombre entier décrit le nombre maximum de cycles /multigrid/ entre la plus grande et petite échelle.
+Comme la sous-routine est assez demandante en temps de calcul, j'ai testé de mettre seulement un seul cycle.
+Essentiellement, on ne voit aucune différence.
+
+#+NAME: fig:maxcy1
+#+CAPTION: Diagrammes de Hovmoller entre 0 et 100 jours. À gauche, MUDPACK à 5 cycles complets. À droite, 1 seul cycle.
+| \includegraphics[width=0.5\textwidth]{figures/tests/2023-06-19_hovmoller1_t=1000days_mud.png} | \includegraphics[width=0.5\textwidth]{figures/tests/2023-06-19_hovmoller1_t=1000days_mud_maxcy1.png} |
