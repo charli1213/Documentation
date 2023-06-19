@@ -204,7 +204,7 @@ On peut maintenant comparter les figures [[fig:rhsuBTfft]] et [[fig:rhsuBTmud2]]
 \end{minipage}
 
 
-* Résultats et comparaison des deux solveurs
+* DONE Résultats et comparaison des deux solveurs
 Dans cette sections, nous comparons les résultats obtenus avec les deux modèles, soit celui donc le gradient de pression de surface est solvé à l'aide de transformée de Fourrier et celui donc la correction de la fonction de courant barotrope est solvée par technique /multigrid/ (MUDPACK).\bigskip
 
 \nb\begin{minipage}[t]{0.9\linewidth}
@@ -245,7 +245,7 @@ Une fois la phase de production baroclinique terminée, on ne voit que très peu
 | \includegraphics[width=0.5\textwidth]{figures/tests/2023-06-15_hovmoller1_t=1500days_fft.png} | \includegraphics[width=0.5\textwidth]{figures/tests/2023-06-19_hovmoller1_t=1500days_mud.png} |
 
 \newpage
-* Comparatif : nombre de cycles Multigrid
+* DONE Comparatif : nombre de cycles Multigrid
 Dans la sous-routine /MUDPACK/ que nous utilisons, un des paramètre est dénommé /maxcy/.
 Concrétement, ce nombre entier décrit le nombre maximum de cycles /multigrid/ entre la plus grande et petite échelle.
 Comme la sous-routine est assez demandante en temps de calcul, j'ai testé de mettre seulement un seul cycle.
