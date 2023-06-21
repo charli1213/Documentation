@@ -1,0 +1,60 @@
+#+title: Carnet de bord, Université McGill
+#+author: Charles-Édouard Lizotte
+#+date:23/06/2023
+#+LATEX_CLASS: org-report
+#+CITE_EXPORT: natbib
+#+LANGUAGE: fr
+#+BIBLIOGRAPHY: master-bibliography.bib
+#+OPTIONS: toc:nil title:nil
+
+
+\mytitlepage
+\tableofcontents\newpage
+
+
+
+* TODO Diagnostiques utiles
+
+Concrétement, on se souvient que les diagrammes de Hovmoller pour le modèle /shallow water/ résolu à l'aide du /package/ MUDPACK sont illustrés dans le [[file:rapport-2023-06-16.org][dernier rapport]].
+Pour en avoir un avant goût, la figure [[fig:mudpack-hovmo]] illustre l'état de la situation.
+Essentiellement, tout se passe bien, mais des lignes horizontales viennent remettre en doute nos résultats.
+Le /spin up/ du modèle arrive au bon moment (aux alentours de 800 jours, comme on l'observe dans le modèle résolu par transformées de Fourrier).
+Ces lignes verticales sont particulièrement visible dans le rotationnel du courant. 
+
+#+NAME: fig:mudpack-hovmo
+#+CAPTION: Diagrame de Hovmoller entre 0 et 950 jours pour le modèle shallow water résolu par MUDPACK. Du haut vers le bas, la vorticité, la divergence, la correction à la fonction de courant barotrope et la norme du courant. Le tout pour la première couche.
+[[file:figures/tests/2023-06-21_hovmoller1_t=950days.png]]
+
+
+
+** DONE Divergence du transport barotrope
+Notre première hypothèse : La solution obtenue avec MUDPACK ne se trouve pas en résolvant l'équation de la conservations de la masse, qui donnée par
+#+NAME: eq:mass
+\begin{equation}
+   \div{\uu_{BT}} = 0,
+\end{equation}
+mais plutôt en solvant l'équation de fonction de courant géostrophique, donnée par
+\begin{equation}
+   \laplacian{\psi_{BT}} = \kvf \cdot \zeta_{BT}.
+\end{equation}
+Donc il faudrait vérifier que l'équation [[eq:mass]] (la conservation de la masse) est bel et bien respectée.\bigskip
+
+Pour se faire, j'ai du relancer quelques /runs/ car ne sortais que les /output/ de la première couche pour sauver de l'espace sur mon ordinateur.
+Les résultats sont là :
+La divergence du transport barotrope est /plutôt très/ nulle, ce qui veut dire que la conservation de la masse ([[eq:mass]]) est respectée.
+
+#+NAME: fig:divBT
+#+CAPTION: Divergence du courant barotrope à divers moments.
+[[file:figures/debuggage/2023_06_21divBT1.png]]
+[[file:figures/debuggage/2023_06_21divBT2.png]]
+
+
+
+
+** TODO Effet du filtre de Robert
+** TODO Contrainte de cisaillement du vent moins forte 
+
+
+* TODO Problème conceptuel avec MUDPACK?
+** Les tests de MUDPACK
+** Est-ce que MUDPACK prend un point à la fin? Que dit la documentation?
