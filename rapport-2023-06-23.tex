@@ -1,4 +1,4 @@
-% Created 2023-06-21 mer. 16:41
+% Created 2023-06-22 jeu. 08:21
 % Intended LaTeX compiler: pdflatex
 
 % =================================BASE====================================%
@@ -164,10 +164,10 @@ ISMER-UQAR
 
 
 \section{{\bfseries\sffamily TODO} Diagnostiques utiles}
-\label{sec:orgb5e89cc}
+\label{sec:org003d999}
 
 Concrétement, on se souvient que les diagrammes de Hovmoller pour le modèle \emph{shallow water} résolu à l'aide du \emph{package} MUDPACK sont illustrés dans le \href{rapport-2023-06-16.org}{dernier rapport}.
-Pour en avoir un avant goût, la figure \ref{fig:org763f1d1} illustre l'état de la situation.
+Pour en avoir un avant goût, la figure \ref{fig:orgcecdd2f} illustre l'état de la situation.
 Essentiellement, tout se passe bien, mais des lignes horizontales viennent remettre en doute nos résultats.
 Le \emph{spin up} du modèle arrive au bon moment (aux alentours de 800 jours, comme on l'observe dans le modèle résolu par transformées de Fourrier).
 Ces lignes verticales sont particulièrement visible dans le rotationnel du courant. 
@@ -175,51 +175,61 @@ Ces lignes verticales sont particulièrement visible dans le rotationnel du cour
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figures/tests/2023-06-21_hovmoller1_t=950days.png}
-\caption{\label{fig:org763f1d1}Diagrame de Hovmoller entre 0 et 950 jours pour le modèle shallow water résolu par MUDPACK. Du haut vers le bas, la vorticité, la divergence, la correction à la fonction de courant barotrope et la norme du courant. Le tout pour la première couche.}
+\caption{\label{fig:orgcecdd2f}Diagrame de Hovmoller entre 0 et 950 jours pour le modèle shallow water résolu par MUDPACK. Du haut vers le bas, la vorticité, la divergence, la correction à la fonction de courant barotrope et la norme du courant. Le tout pour la première couche.}
 \end{figure}
 
 
 
 \subsection{{\bfseries\sffamily DONE} Divergence du transport barotrope}
-\label{sec:orgda1c814}
+\label{sec:org84c1478}
 Notre première hypothèse : La solution obtenue avec MUDPACK ne se trouve pas en résolvant l'équation de la conservations de la masse, qui donnée par
 \begin{equation}
-\label{eq:org993bfc1}
+\label{eq:orgd6fbcbf}
    \div{\uu_{BT}} = 0,
 \end{equation}
 mais plutôt en solvant l'équation de fonction de courant géostrophique, donnée par
 \begin{equation}
-   \laplacian{\psi_{BT}} = \kvf \cdot \zeta_{BT}.
+   \laplacian{\psi_{BT}} = \kvf \cdot \boldsymbol{\zeta}_{BT}.
 \end{equation}
-Donc il faudrait vérifier que l'équation \ref{eq:org993bfc1} (la conservation de la masse) est bel et bien respectée.\bigskip
+Donc il faudrait vérifier que l'équation \ref{eq:orgd6fbcbf} (la conservation de la masse) est bel et bien respectée.\bigskip
 
 Pour se faire, j'ai du relancer quelques \emph{runs} car ne sortais que les \emph{output} de la première couche pour sauver de l'espace sur mon ordinateur.
 Les résultats sont là :
-La divergence du transport barotrope est \emph{plutôt très} nulle, ce qui veut dire que la conservation de la masse (\ref{eq:org993bfc1}) est respectée.
+La divergence du transport barotrope est \emph{plutôt très} nulle, ce qui veut dire que la conservation de la masse (\ref{eq:orgd6fbcbf}) est respectée.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=.9\linewidth]{figures/debuggage/2023_06_21divBT1.png}
-\caption{\label{fig:orgaf83ab7}Divergence du courant barotrope à divers moments.}
+\includegraphics[width=.9\linewidth]{figures/debuggage/2023_06_21divBT1_MUD.png}
+\caption{\label{fig:org24a4189}Divergence du courant barotrope \(\qty(\div{\uu_{BT}} = \qty(1/H_{tot}) \div{\sum_i h_i \uu_i})\) à divers moments pour le modèle solvé par MUDPACK (Le temps est donnée en jours).}
 \end{figure}
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=.9\linewidth]{figures/debuggage/2023_06_21divBT2.png}
-\caption{\label{fig:orgaf83ab7}Divergence du courant barotrope à divers moments.}
+\includegraphics[width=.9\linewidth]{figures/debuggage/2023_06_21divBT2_MUD.png}
+\caption{\label{fig:org24a4189}Divergence du courant barotrope \(\qty(\div{\uu_{BT}} = \qty(1/H_{tot}) \div{\sum_i h_i \uu_i})\) à divers moments pour le modèle solvé par MUDPACK (Le temps est donnée en jours).}
 \end{figure}
+
+
+Lorsqu'on regarde le transport barotrope pour le modèle solvé par transformées de Fourrier, on obtient plutôt les résultats exprimés à la figure \ref{fig:org2b6ae87}. 
+
+\begin{figure}[!htpb]
+\centering
+\includegraphics[height=5cm]{figures/debuggage/2023_06_21divBT1_FFT.png}
+\caption{\label{fig:org2b6ae87}Divergence du courant barotrope  \(\qty(\div{\uu_{BT}} = \qty(1/H_{tot}) \div{\sum_i h_i \uu_i})\) à divers moments pour le modèle solvé par FFTW (Le temps est donnée en jours).}
+\end{figure}
+
 
 
 
 \subsection{{\bfseries\sffamily TODO} Effet du filtre de Robert}
-\label{sec:org059108e}
+\label{sec:orgcf7f99b}
 \subsection{{\bfseries\sffamily TODO} Contrainte de cisaillement du vent moins forte}
-\label{sec:org0d8778d}
+\label{sec:org654ae45}
 
 
 \section{{\bfseries\sffamily TODO} Problème conceptuel avec MUDPACK?}
-\label{sec:orga02ca3e}
+\label{sec:orge39f513}
 \subsection{Les tests de MUDPACK}
-\label{sec:org52c3c33}
+\label{sec:orga074d37}
 \subsection{Est-ce que MUDPACK prend un point à la fin? Que dit la documentation?}
-\label{sec:orgbb2cb48}
+\label{sec:org36812ad}
 \end{document}

@@ -35,7 +35,7 @@ Notre première hypothèse : La solution obtenue avec MUDPACK ne se trouve pas e
 \end{equation}
 mais plutôt en solvant l'équation de fonction de courant géostrophique, donnée par
 \begin{equation}
-   \laplacian{\psi_{BT}} = \kvf \cdot \zeta_{BT}.
+   \laplacian{\psi_{BT}} = \kvf \cdot \boldsymbol{\zeta}_{BT}.
 \end{equation}
 Donc il faudrait vérifier que l'équation [[eq:mass]] (la conservation de la masse) est bel et bien respectée.\bigskip
 
@@ -43,10 +43,18 @@ Pour se faire, j'ai du relancer quelques /runs/ car ne sortais que les /output/ 
 Les résultats sont là :
 La divergence du transport barotrope est /plutôt très/ nulle, ce qui veut dire que la conservation de la masse ([[eq:mass]]) est respectée.
 
-#+NAME: fig:divBT
-#+CAPTION: Divergence du courant barotrope à divers moments.
-[[file:figures/debuggage/2023_06_21divBT1.png]]
-[[file:figures/debuggage/2023_06_21divBT2.png]]
+#+NAME: fig:divBTmud
+#+CAPTION: Divergence du courant barotrope $\qty(\div{\uu_{BT}} = \qty(1/H_{tot}) \div{\sum_i h_i \uu_i})$ à divers moments pour le modèle solvé par MUDPACK (Le temps est donnée en jours).
+[[file:figures/debuggage/2023_06_21divBT1_MUD.png]]
+[[file:figures/debuggage/2023_06_21divBT2_MUD.png]]
+
+
+Lorsqu'on regarde le transport barotrope pour le modèle solvé par transformées de Fourrier, on obtient plutôt les résultats exprimés à la figure [[fig:divBTfftw]]. 
+
+#+NAME: fig:divBTfftw
+#+CAPTION: Divergence du courant barotrope  $\qty(\div{\uu_{BT}} = \qty(1/H_{tot}) \div{\sum_i h_i \uu_i})$ à divers moments pour le modèle solvé par FFTW (Le temps est donnée en jours).
+#+ATTR_LaTeX: :height 5cm :placement [!htpb]
+[[file:figures/debuggage/2023_06_21divBT1_FFT.png]]
 
 
 
