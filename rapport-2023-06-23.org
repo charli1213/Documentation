@@ -13,7 +13,7 @@
 
 
 
-* TODO Diagnostiques utiles
+* DONE Diagnostiques utiles
 
 Concrétement, on se souvient que les diagrammes de Hovmoller pour le modèle /shallow water/ résolu à l'aide du /package/ MUDPACK sont illustrés dans le [[file:rapport-2023-06-16.org][dernier rapport]].
 Pour en avoir un avant goût, la figure [[fig:mudpack-hovmo]] illustre l'état de la situation.
@@ -27,7 +27,7 @@ Ces lignes verticales sont particulièrement visible dans le rotationnel du cour
 
 
 
-** DONE Divergence du transport barotrope
+** DONE Divergence du transport barotrope (Problème réglé)
 Notre première hypothèse : La solution obtenue avec MUDPACK ne se trouve pas en résolvant l'équation de la conservations de la masse, qui donnée par
 #+NAME: eq:mass
 \begin{equation}
@@ -39,30 +39,169 @@ mais plutôt en solvant l'équation de fonction de courant géostrophique, donn�
 \end{equation}
 Donc il faudrait vérifier que l'équation [[eq:mass]] (la conservation de la masse) est bel et bien respectée.\bigskip
 
-Pour se faire, j'ai du relancer quelques /runs/ car ne sortais que les /output/ de la première couche pour sauver de l'espace sur mon ordinateur.
+Pour se faire, j'ai du relancer quelques /runs/ car -- pour sauver de l'espace sur mon poste de travail -- je ne sortais que les /output/ de la première couche.
 Les résultats sont là :
 La divergence du transport barotrope est /plutôt très/ nulle, ce qui veut dire que la conservation de la masse ([[eq:mass]]) est respectée.
 
 #+NAME: fig:divBTmud
 #+CAPTION: Divergence du courant barotrope $\qty(\div{\uu_{BT}} = \qty(1/H_{tot}) \div{\sum_i h_i \uu_i})$ à divers moments pour le modèle solvé par MUDPACK (Le temps est donnée en jours).
+#+ATTR_LaTeX: :placement [!htpb]
 [[file:figures/debuggage/2023_06_21divBT1_MUD.png]]
-[[file:figures/debuggage/2023_06_21divBT2_MUD.png]]
-
 
 Lorsqu'on regarde le transport barotrope pour le modèle solvé par transformées de Fourrier, on obtient plutôt les résultats exprimés à la figure [[fig:divBTfftw]]. 
 
 #+NAME: fig:divBTfftw
 #+CAPTION: Divergence du courant barotrope  $\qty(\div{\uu_{BT}} = \qty(1/H_{tot}) \div{\sum_i h_i \uu_i})$ à divers moments pour le modèle solvé par FFTW (Le temps est donnée en jours).
-#+ATTR_LaTeX: :height 5cm :placement [!htpb]
+#+ATTR_LaTeX: :placement [!htpb]
 [[file:figures/debuggage/2023_06_21divBT1_FFT.png]]
 
+Normalement, ça devrait être complétement nul, ce qui est quand même inquiétant.
+J'ai passé une bonne journée à tenter de débugger tout ça, mais sans succès, malheureusement.
+Je tient à metionner que les dérivées de chaque côté sont quand même très semblables.
+Par exemple, comme illustré à la figure [[fig:debugBT]], les dérivées sont pratiquement identiques, mais de petits écarts se sont creusée quand on les additionne pour obtenir la divergence. 
+
+#+NAME: fig:debugBT
+#+CAPTION: Dérivées horizontales et verticales du courant barotrope et leur addition (la divergence), à droite.
+#+ATTR_LaTeX: :placement [!htpb]
+[[file:figures/debuggage/2023_06_27_comp_divBT.png]]
+
+Il est difficile à dire d'où vient cette erreur.
+Personellement, je pense que ça vient du fait qu'on fait rouler notre modèle en 512, mais que les output sont en 256.
+Lorsqu'il y a des changement abruptes et comme notre résolution n'est pas excelente, on pourrait voir des artefacts qui s'apparentent à ce genre d'erreurs.
+Comme on voyait aussi ça avec le modèle /shallow water/ FFTW, je ne m'inquiéterais pas trop, mais ça serait pertinent de le mentionner à David ou Louis-Philippe.
+En gros, ma théorie c'est que la résolution est pas suffisante pour qu'on ait un aperçu réel de ce que la vraie grille nous donne.
+
+
+** DONE C'est réglé! L'erreur est bel et bien dans mon code
+OK. C'est confirmé, l'erreur vient de mon code.
+En effet, lorsqu'on fait des opérations sur les /outputs/ -- particulièrement lorsqu'on applique des dérivées -- il faut avoir une résolution exacte et non un sous-échantillon des résultats réels.
+Pour l'exprimer, voir l'illustration suivante (figure [[fig:debug-div]]). \bigskip
+
+#+NAME: fig:debug-div
+#+CAPTION: Illustration de l'erreur engendrée par le sous-échantillonnage des données réelles. Le résultat donne des lignes diagonales croissantes qui apparaissent un peu partout sur le domaine.
+\begin{figure}[h!]
+\begin{center}
+\begin{tikzpicture}
+%
+\draw [dotted,thin,gray] (0,0) grid (3,3);
+\draw [thin, red ,dashed](-0.1,-0.1) rectangle (2.20,1.1);
+\draw [thin, blue,dashed](-0.15,-0.15) rectangle (1.1,2.20);
+%
+\foreach \i in {0,2}
+{\foreach \j in {0,2}
+{\draw [thick, red!50] (\i,\j+1) -- (\i,\j) ;
+ \draw [thick,blue!50] (\i,\j) -- (\i+1,\j) ;}}
+%
+\foreach \i in {0,2}
+{\foreach \j in {0,2}
+{\draw [-latex,thin,red!50 ] (\i,0.5+\j) -- (\i+0.15,0.5+\j);
+ \draw [-latex, thin,blue!50] (0.5+\i,\j) -- (0.5+\i,\j+0.15);}}
+%
+\foreach \i in {0,1,2,3}
+\foreach \j in {0,1,2,3}
+{{\filldraw [black!85] (\i,\j) circle (0.8pt);}}
+%
+\draw (7,1.5) node [rectangle, draw=black,fill=white] {\hspace{0.3cm}$\div{\uu} = \color{blue!70}\qty(\pdv{u}{x}) \color{black} + \color{red!70} \qty(\pdv{v}{y})\hspace{0.3cm}\venti$};
+\end{tikzpicture}
+\end{center}
+\end{figure}
+
+Par conséquent, on doit oublier toute forme de dérivées dans nos calculs à partir de maintenant.
+C'est d'ailleurs un problème que j'ai eu lors de ma maîtrise sans en être conscient.
+Je suis quand même fier que ça soit réglé.
+Par contre, ça signifie que beaucoup de transformées de Fourrier ont des résultats douteux dans mon mémoire de maîtrise.
+Louis-Philippe, si tu lis ce texte, j'espère que tu vas empêcher tes prochains étudiant-es de faire ça et me pardonner d'avoir péché. \newpage
 
 
 
-** TODO Effet du filtre de Robert
-** TODO Contrainte de cisaillement du vent moins forte 
+* DONE Problème conceptuel avec MUDPACK (Vrai ou faux?)
+
+** Confirmation sur la périodicité de la frontière avec MUDPACK
+
+#+NAME: fig:test-sans-frontière
+#+CAPTION: Test de MUDPACK où le dernier point n'est pas inclu comme un point périodique.
+#+ATTR_LaTeX: :placement [!htpb]
+[[file:figures/MUDPACK/test_sans_frontière.png]]
+
+Je confirme à 100 % qu'il faut inclure la frontière aux deux extrémités dans /MUDPACK/ lorsqu'on donne une frontière périodique.
+C'est relativement simple à tester, mais lorsqu'on le fait, on voit apparaître des erreurs significatives.
+Par exemple, si l'on regarde à la figure [[fig:test-sans-frontière]], on note une erreur d'environ 0.6% sur la solution, soit une erreur deux fois plus grande qu'avec l'autre test.
+Je pense qu'il est aussi intéressant de mentionner qu'on voit apparaître des lignes verticales dans la solution calculée par /MUDPACK/, ce qui pourrait être analogue au problème que nous avons dans notre propre modèle numérique. 
+Tandis que lorsqu'on regarde la figure [[fig:test-avec-frontière]], on note une erreur de 0.012% sur la solution.
+L'erreur prend plus la forme d'une erreur numérique diffuse sur le domaine.
+Contrairement à l'autre figure, on note aussi que cette erreur est loin des bords. \bigskip
+
+#+NAME: fig:test-avec-frontière
+#+CAPTION: Test de MUDPACK où le dernier point est inclu comme un point périodique, de sorte que phi(1)=phi(nx).
+#+ATTR_LaTeX: :placement [!htpb]
+[[file:figures/MUDPACK/test_avec_frontière.png]]
+
+Au regard de ces résultats, je confirme -- hors de tout doute -- qu'il faut inclure la frontière dans le cas périodique.
+Pour le tester, comme on trouve la solution entre les points 1 et 5, on change tout simplement la définition du paramètre $dx$ pour obtenir une solution réelle qui représente bien les deux cas.
+Comme, le paramètre $dx$ entre dans la définition de la solution réelle, on joue un tour à /MUDPACK/ pour inclure ou non la frontière, comme illustré dans la figure [[fig:test]]. \bigskip
+
+#+NAME: fig:test
+#+CAPTION: Illustration des shéma numériques pour le test avec MUDPACK. a) Solution plus grande que le domaine compilé -- les points 1 et 6 sont périodiques. b) Solution couvre le domaine --  les points 1 et 5 sont périodiques. Dans les deux cas, on compile un domaine contenant $n_x$ points dans le solveur MUDPACK.
+\begin{figure}[!h]
+\begin{center}
+\begin{tikzpicture}
+\draw (0.5,0.75) node [] {a)};
+% >> Dotted lines :
+\foreach \i\j in {1/-1, 2/-0.524, 3/-0.706, 4/-1.294, 5/-1.476, 6/-1}
+{
+\draw[dotted] (\i,0) -- (\i,\j);
+}
+% >> balls : 
+\draw [] (1,0) -- (6,0);
+\foreach \i in {1,...,5}
+{
+\filldraw [black,fill=Violet!20]  (\i,0) circle (6pt) node [] {$\mathrm{\i}$};
+}
+\filldraw [black,fill=white]  (6,0) circle (6pt) node [] {6};
+\draw (1,-1) sin (2.25,-0.5) cos (3.5,-1) sin (4.75,-1.5) cos (6,-1);
+% >> Text :
+\draw (2.2,-1.25) node {$n_x = 5$};
+\draw (2.2,-1.75) node {$dx = L_x/n_x$};
+% >> Domain line 
+\node [] at (3.0,0.75) (domain) {Domaine MUDPACK} ;
+\draw [|-] (1,0.75) -- (domain);
+\draw [-|] (domain) -- (5,0.75);
+\end{tikzpicture}
+% END
+\hspace{2cm}
+% BEGIN
+\begin{tikzpicture}
+\draw (0.5,0.75) node [] {b)};
+\draw [] (1,0) -- (5,0);
+\foreach \i\j in {1/-1, 2/-0.5, 3/-1, 4/-1.5, 5/-1}
+{
+\draw[dotted] (\i,0) -- (\i,\j);
+}
+\foreach \i in {1,...,5}
+{
+\filldraw [black,fill=Violet!20]  (\i,0) circle (6pt) node [] {\i};
+}
+\draw (1,-1) sin (2,-0.5) cos (3,-1) sin (4,-1.5) cos (5,-1);
+% Text
+\draw (2.0,-1.25) node {$n_x = 5$};
+\draw (2.2,-1.75) node {$dx = L_x/(n_x-1)$};
+% Domain line
+\node [] at (3.0,0.75) (domain) {Domaine MUDPACK} ;
+\draw [|-] (1,0.75) -- (domain);
+\draw [-|] (domain) -- (5,0.75);
+\end{tikzpicture}
+\end{center}
+\end{figure}
+ 
+
+* MUDPACK avec une grille de base plus large
+J'ai relancé le modèle avec un /nx/ de 640 points, ce qui me permet de mettre la plus petite grille de /MUDPACK/ à 5 points de large.
+Considérant la nature périodique de la solution qu'on cherche, 5 points devraient être suffisants pour représenter la solution à la plus petite échelle -- en opposition à 2 points.
+Dans la documentation, il était suggéré de prendre 2, 3 ou 5 et de se retenir de prendre de plus grandes grilles.
+Malheureusement, le résultat sur les diagrammes de Hovmoler était le même, comme on peut le voir à la figure [[fig:640hovmo]].
 
 
-* TODO Problème conceptuel avec MUDPACK?
-** Les tests de MUDPACK
-** Est-ce que MUDPACK prend un point à la fin? Que dit la documentation?
+#+NAME: fig:640hovmo
+#+CAPTION: Diagramme de Hovmoller pour la première couche avec un nx de 640 points.
+#+ATTR_LaTeX: :placement [!htpb]
+[[file:figures/tests/2023-06-28_hovmoller1_nx640_t=750days.png]]
