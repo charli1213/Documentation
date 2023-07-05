@@ -110,7 +110,20 @@ Par conséquent, on doit oublier toute forme de dérivées dans nos calculs à p
 C'est d'ailleurs un problème que j'ai eu lors de ma maîtrise sans en être conscient.
 Je suis quand même fier que ça soit réglé.
 Par contre, ça signifie que beaucoup de transformées de Fourrier ont des résultats douteux dans mon mémoire de maîtrise.
-Louis-Philippe, si tu lis ce texte, j'espère que tu vas empêcher tes prochains étudiant-es de faire ça et me pardonner d'avoir péché. \newpage
+Louis-Philippe, si tu lis ce texte, j'espère que tu vas empêcher tes prochains étudiant-es de faire ça et me pardonner d'avoir péché. \bigskip
+
+** Nouvelle run avec la divergence barotrope comme output dans le modèle
+
+Comme je m'y attendais, le résultat est complétement différent lorsqu'on sort en /output/ la divergence du courant barotrope.
+Malheureusement, il semble toujours y avoir quelque chose qui cloche.
+Les lignes horizontales persistent dans le modèle résolu par /MUDPACK/.
+
+#+NAME: fig:output-divBT
+#+CAPTION: Divergence du courant barotrope avec le dernier test de MUDPACK.
+#+ATTR_LaTeX: :placement [!htpb]
+[[file:figures/debuggage/2023_07_03_comp_divBT.png]]
+
+
 
 
 
