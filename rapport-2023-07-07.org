@@ -94,7 +94,7 @@ et l'on retroue le courant à l'aide de
 Voici la nature du problème : les frontières sont périodiques, /MUDPACK/ essaie donc de relier les dérivées aux frontières sans considération de la constante d'intégration.
 Finalement, la solution relative par rapport à la constante d'intégration devient minuscule et on perd de plus en plus de précision.
 On se retrouve alors dans une /feedback loop/ où le système est mal résolue, ce qui vient exacerber les instabilités numériques créées par l'erreur numérique relative, car les erreur nécessite une dérivée de plus en plus forte, ce qui fait aussi monter la constante d'intégration, etc.
-Pour résumer, voici un passage de la documentation de MUDPACK :\bigskip
+Pour résumer, voici un passage de la documentation de MUDPACK :
 
 #+begin_quote
 /« [If] the continuous elliptic pde is singular.  this means the boundary conditions are periodic or pure derivative at all boundaries and ce(x,y) = 0.0 for all x,y.  a solution is still attempted but convergence may not occur due to ill-conditioning of the linear system coming from the discretization.»/
@@ -105,7 +105,7 @@ Donc, on embarque sur les murs au plus vite.
 * TODO Les murs
 Ok, il faut absolument embarquer sur les murs avant que je parte en vacance.
 
-** Nombre de points
+** TODO Nombre de points
 
 #+NAME: fig:debug-div
 #+CAPTION: Grille  avec frontières fixes.
@@ -123,6 +123,10 @@ Ok, il faut absolument embarquer sur les murs avant que je parte en vacance.
 {\foreach \j in {-1,0,1,2,3}
 {\draw [-latex,thin,red!30 ] (\i,0.5+\j) -- (\i+0.15,0.5+\j);
  \draw [-latex,thin,blue!30] (0.5+\j,\i) -- (0.5+\j,\i+0.15);}}
+%
+\foreach \i in {0,1,2,3,4}
+{\foreach \j in {0,1,2,3,4}
+{\fill[fill=black ] (\i-0.53,\j-0.53) rectangle (\i-0.47,\j-0.47);}}
 %
 \draw [ultra thin,gray] (0,0) rectangle (3,3);
 %
@@ -144,4 +148,29 @@ Précédemment, on utilisait toujours une grille de taille $(nx+1)\times(ny+1)$,
 En premier lieu, la condition /free slip/ nécéssite l'ajout de points fantomes sur les axes parallèles, de sorte que
 \begin{align}
 &&   \eval{\pdv{v}{x}\pt}_\text{i=1,nx} = \ 0, && \eval{\pdv{u}{y}\pt}_\text{j=1,ny} =\ 0, &&
+\end{align}
+
+La même condition s'applique aussi sur l'épaisseur des couches, de sorte que
+\begin{align}
+   &&   \eval{\pdv{h}{x}\pt}_\text{i=1,nx} = \ 0, && \eval{\pdv{h}{y}\pt}_\text{j=1,ny} =\ 0, &&
+\end{align}
+
+Pour être plus précis les dimensions seront données par
++ u(nx,0:ny+1)
++ v(0:nx+1,ny)
++ eta(0:nx+1,0:ny+1)
++ zeta(nx,ny)
+
+** Condition no-normal flow
+La condition /no-normal flow/ est tout simplement donnée par
+\begin{align}
+   && u\pt(\pt:\pt,1) = u\pt(:\pt,ny) = 0, && v\pt(1,:\pt) = v\pt(nx,:\pt) = 0. &&
+\end{align}
+
+
+** Condition free slip
+Avec notre nouvelle définition de grille, la condition /free slip/ est tout simplement donnée par
+\begin{align}
+    && u\pt(\pt0,:) = u\pt(1,:); && u\pt(nx+1,:) = u\pt(nx,:) && \\
+    && v\pt(\pt:\pt,0) = v\pt(:,1); && v\pt(:\pt,ny+1) = v\pt(\pt:,ny) &&
 \end{align}

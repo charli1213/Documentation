@@ -1,4 +1,4 @@
-% Created 2023-07-12 mer. 14:12
+% Created 2023-07-12 Wed 16:25
 % Intended LaTeX compiler: pdflatex
 
 % =================================BASE====================================%
@@ -154,7 +154,7 @@ ISMER-UQAR
  pdftitle={Carnet de bord, Université McGill},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 28.2 (Org mode 9.6.5)}, 
+ pdfcreator={Emacs 27.1 (Org mode 9.6.5)}, 
  pdflang={French}}
 \begin{document}
 
@@ -164,7 +164,7 @@ ISMER-UQAR
 
 
 \section{{\bfseries\sffamily DONE} Présentation des résultats de maîtrise}
-\label{sec:org2043ec7}
+\label{sec:org20ce7b2}
 Ce mercredi 5 juillet, le groupe à David m'avait proposé de réaliser une présentation sur mon projet de maîtrise (de 2019 à 2022).
 Personnellement, je trouvais que c'était une bonne occasion de me remettre à niveau sur ce qui avait été réalisé, tout en revisitant certains résultats intéressants datant du début du projet.
 Aussi, ça m'a permis de faire une présentation en Anglais, ce qui n'avait pas vraiment été pertinent jusqu'à maintenant.
@@ -180,34 +180,34 @@ Aussi, ça me permettrait de revisiter certains concepts, comme le calcul menant
 Bref, je met ça ici pour m'en souvenir.
 
 \section{Toujours des problèmes dans la divergence du courant barotrope}
-\label{sec:orge772fb6}
+\label{sec:org644b740}
 
 \subsection{Diagnostique}
-\label{sec:orgd46032c}
+\label{sec:org5a3bfea}
 Encore et toujours, nous avons des problèmes avec la divergence du courant barotrope, comme démontré dans le dernier rapport.
 Certaines informations pertinentes :
 \begin{itemize}
-\item La divergence barotrope n'est pas nulle : Des «points» apparaissent dans la divergence et croient de manière linéaire avec le temps. C'est un problème car ça va créer de l'erreur numérique à long terme. L'erreur est de l'ordre de 1e-11 quand la divergence de chaque couche est autour de 1e-9 (voir figure \ref{fig:org1766be8}).
+\item La divergence barotrope n'est pas nulle : Des «points» apparaissent dans la divergence et croient de manière linéaire avec le temps. C'est un problème car ça va créer de l'erreur numérique à long terme. L'erreur est de l'ordre de 1e-11 quand la divergence de chaque couche est autour de 1e-9 (voir figure \ref{fig:orgda9f588}).
 \item La divergence du RHS barotrope, soit la quantité qui sort directement de MUDPACK est de 1e-19. C'est donc énormément plus petit. On pourrait pas mal dire que c'est de l'ordre de l'erreur numérique.
 \end{itemize}
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figures/debuggage/2023_07_010_3div1.png}
-\caption{\label{fig:org1766be8}Figure illustrant trois quantités reliées à la divergence au dernier pas de temps -- autour de 1450 jours. En ordre : la divergence de la première couche; la divergence barotrope du courant pour toutes les couches; la divergence du RHS du modèle.}
+\caption{\label{fig:orgda9f588}Figure illustrant trois quantités reliées à la divergence au dernier pas de temps -- autour de 1450 jours. En ordre : la divergence de la première couche; la divergence barotrope du courant pour toutes les couches; la divergence du RHS du modèle.}
 \end{figure}
 
-Avant le \emph{spin up}, les erreurs ont une forme légèrement différentes, mais le résultat est le même (voir figure \ref{fig:orgc23768f}).
+Avant le \emph{spin up}, les erreurs ont une forme légèrement différentes, mais le résultat est le même (voir figure \ref{fig:org4d9389e}).
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figures/debuggage/2023_07_010_3div1_t250.png}
-\caption{\label{fig:orgc23768f}Figure illustrant trois quantités reliées à la divergence au jour 250. En ordre : la divergence de la première couche; la divergence barotrope du courant pour toutes les couches; la divergence du RHS du modèle.}
+\caption{\label{fig:org4d9389e}Figure illustrant trois quantités reliées à la divergence au jour 250. En ordre : la divergence de la première couche; la divergence barotrope du courant pour toutes les couches; la divergence du RHS du modèle.}
 \end{figure}
 
 
 \subsection{Hypothèse}
-\label{sec:orgf912124}
+\label{sec:org4706008}
 Donc mon hypothèse est que ça se cache dans la partie barocline et non de MUDPACK.
 Voici l'argument que je fais :
 \begin{itemize}
@@ -221,28 +221,28 @@ Il faudrait trouver une solution.
 Après une rencontre ce vendredi avec David et LP, on propose cordialement de retirer la partie divergente à tous les dix pas de temps, ce qui devrait demander une autre run de MUDPACK, mais le coût numérique est très faible.
 
 \subsection{Solution}
-\label{sec:orgfbbce5d}
+\label{sec:org46abf7b}
 
 À tous les 100 pas de temps, on pourrait retirer la partie non-divergente de notre écoulement.
 Dans ce cas, on appliquerait donc une correction à notre écoulement barotrope.
 En premier lieu, il est extrêmement simple à prouver la moyenne barotrope des vorticités et égale au rotationnel du courant barotrope, soit
 \begin{equation}
-\label{eq:org4d34152}
+\label{eq:org498b92d}
    \zeta_{BT} = \qty(\frac{1}{H})\sum_k^n h_k\zeta_k = \qty(\frac{1}{H})\sum_k^n h_k\pt \kvf \cdot \curl{\uu_k} = \qty(\frac{ \kvf}{H})\cdot\sum_k^n\curl(h_k\uu_k) = \kvf\cdot\curl(\frac{1}{H}\sum_k^n h_k\uu_k) = \kvf\cdot\curl{\uu_{BT}},
 \end{equation}
-car le produit vectoriel est un opérateur linéaire (\ref{eq:org4d34152}).
+car le produit vectoriel est un opérateur linéaire (\ref{eq:org498b92d}).
 Il existe donc deux méthodes pour trouver la vorticités barotrope.\bigskip
 
 Le processus pour corriger notre écoulement est simple, on sait que
 \begin{equation}
-\label{eq:org3faea8d}
+\label{eq:org490c56c}
    \laplacian(\psi_{BT}) = \zeta_{BT}.
 \end{equation}
-Comme à l'habitude, notre écoulement est divisé en deux parties, soit barotropes (voir \ref{eq:org4d34152}) et baroclines ,
+Comme à l'habitude, notre écoulement est divisé en deux parties, soit barotropes (voir \ref{eq:org498b92d}) et baroclines ,
 \begin{equation}
    \uu = \uu_{BT} + \uu_{BC}.
 \end{equation}
-Une fois \ref{eq:org3faea8d} solvé, on retrouve notre courant barotrope corrigé (\(\uu_{BT}'\)) à l'aide de
+Une fois \ref{eq:org490c56c} solvé, on retrouve notre courant barotrope corrigé (\(\uu_{BT}'\)) à l'aide de
 \begin{equation}
    \uu_{BT}' = \curl(k\psi_{BT}),
 \end{equation}
@@ -253,12 +253,12 @@ et l'on retroue le courant à l'aide de
 
 
 \subsection{Résultats}
-\label{sec:orga0f099e}
+\label{sec:orga89f177}
 Ça ne parche pas vu qu'on est en périodique.
 Voici la nature du problème : les frontières sont périodiques, \emph{MUDPACK} essaie donc de relier les dérivées aux frontières sans considération de la constante d'intégration.
 Finalement, la solution relative par rapport à la constante d'intégration devient minuscule et on perd de plus en plus de précision.
 On se retrouve alors dans une \emph{feedback loop} où le système est mal résolue, ce qui vient exacerber les instabilités numériques créées par l'erreur numérique relative, car les erreur nécessite une dérivée de plus en plus forte, ce qui fait aussi monter la constante d'intégration, etc.
-Pour résumer, voici un passage de la documentation de MUDPACK :\bigskip
+Pour résumer, voici un passage de la documentation de MUDPACK :
 
 \begin{quote}
 \emph{« [If] the continuous elliptic pde is singular.  this means the boundary conditions are periodic or pure derivative at all boundaries and ce(x,y) = 0.0 for all x,y.  a solution is still attempted but convergence may not occur due to ill-conditioning of the linear system coming from the discretization.»}
@@ -267,11 +267,11 @@ Pour résumer, voici un passage de la documentation de MUDPACK :\bigskip
 Donc, on embarque sur les murs au plus vite.
 
 \section{{\bfseries\sffamily TODO} Les murs}
-\label{sec:org00ca8c6}
+\label{sec:org3ceb940}
 Ok, il faut absolument embarquer sur les murs avant que je parte en vacance.
 
-\subsection{Nombre de points}
-\label{sec:org04d6d56}
+\subsection{{\bfseries\sffamily TODO} Nombre de points}
+\label{sec:orgd745e8d}
 
 \begin{wrapfigure}{r}{0.4\textwidth}
 \vspace{-\baselineskip}
@@ -288,6 +288,10 @@ Ok, il faut absolument embarquer sur les murs avant que je parte en vacance.
 {\draw [-latex,thin,red!30 ] (\i,0.5+\j) -- (\i+0.15,0.5+\j);
  \draw [-latex,thin,blue!30] (0.5+\j,\i) -- (0.5+\j,\i+0.15);}}
 %
+\foreach \i in {0,1,2,3,4}
+{\foreach \j in {0,1,2,3,4}
+{\fill[fill=black ] (\i-0.53,\j-0.53) rectangle (\i-0.47,\j-0.47);}}
+%
 \draw [ultra thin,gray] (0,0) rectangle (3,3);
 %
 \draw[> = latex, arrows = {|<->|}, thin] (0,4.5) -- (3,4.5);
@@ -300,7 +304,7 @@ Ok, il faut absolument embarquer sur les murs avant que je parte en vacance.
 {{\filldraw [black!85] (\i,\j) circle (0.8pt);}}
 \end{tikzpicture}
 \end{center}
-\caption{\label{org070093a}Grille  avec frontières fixes.}
+\caption{\label{orgd1e6286}Grille  avec frontières fixes.}
 \end{wrapfigure}
 
 
@@ -308,6 +312,35 @@ Avant tout, on change complétement la définition de notre grille.
 Précédemment, on utilisait toujours une grille de taille \((nx+1)\times(ny+1)\), mais ceci est en mesure de changer avec des frontières fixes.
 En premier lieu, la condition \emph{free slip} nécéssite l'ajout de points fantomes sur les axes parallèles, de sorte que
 \begin{align}
-&&   \eval{\pdv{v}{x}\pt}_\text{i=1,nx} = 0, && \eval{\pdv{u}{y}\pt}_\text{j=1,ny} = 0, &&
+&&   \eval{\pdv{v}{x}\pt}_\text{i=1,nx} = \ 0, && \eval{\pdv{u}{y}\pt}_\text{j=1,ny} =\ 0, &&
+\end{align}
+
+La même condition s'applique aussi sur l'épaisseur des couches, de sorte que
+\begin{align}
+   &&   \eval{\pdv{h}{x}\pt}_\text{i=1,nx} = \ 0, && \eval{\pdv{h}{y}\pt}_\text{j=1,ny} =\ 0, &&
+\end{align}
+
+Pour être plus précis les dimensions seront données par
+\begin{itemize}
+\item u(nx,0:ny+1)
+\item v(0:nx+1,ny)
+\item eta(0:nx+1,0:ny+1)
+\item zeta(nx,ny)
+\end{itemize}
+
+\subsection{Condition no-normal flow}
+\label{sec:org0c92980}
+La condition \emph{no-normal flow} est tout simplement donnée par
+\begin{align}
+   && u\pt(\pt:\pt,1) = u\pt(:\pt,ny) = 0, && v\pt(1,:\pt) = v\pt(nx,:\pt) = 0. &&
+\end{align}
+
+
+\subsection{Condition free slip}
+\label{sec:org87d6040}
+Avec notre nouvelle définition de grille, la condition \emph{free slip} est tout simplement donnée par
+\begin{align}
+    && u\pt(\pt0,:) = u\pt(1,:); && u\pt(nx+1,:) = u\pt(nx,:) && \\
+    && v\pt(\pt:\pt,0) = v\pt(:,1); && v\pt(:\pt,ny+1) = v\pt(\pt:,ny) &&
 \end{align}
 \end{document}
