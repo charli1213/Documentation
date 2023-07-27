@@ -1,0 +1,180 @@
+#+title: Carnet de bord, Université McGill
+#+author: Charles-Édouard Lizotte
+#+date:28/07/2023
+#+LATEX_CLASS: org-report
+#+CITE_EXPORT: natbib
+#+LANGUAGE: fr
+#+BIBLIOGRAPHY: master-bibliography.bib
+#+OPTIONS: toc:nil title:nil
+
+
+\mytitlepage
+\tableofcontents\newpage
+
+
+
+* Mettre à jour portable pour travail à distance  <2023-07-24 Mon> 
+
+De manière générale, j'utilise l'ordinateur de bureau fourni par l'université McGill pour travailler.
+Tout ça me permet d'avoir un meilleurs service sur l'installation des module (/packages/).
+La proximité de Ambrish, soit le James Caveen de McGill, m'aide beaucoup à comprendre comment tout ça fonctionne.
+Cependant, je n'ai pas pris le temps de mettre cet ordinateur portable à jour.
+Aujourd'hui est donc une bonne occasion de le faire.
++ [X] Cloner le /.emacs.d/ ;
++ [X] Mise à jour de tous les modules MELPA pour Emacs ;
++ [X] Installer les packages LaTeX.
++ [X] Cloner la dossier Documentation et tous les rapports ;
++ [X] Cloner la branche /walls/ du modèle /shallow water/ ;
+
+
+* Retour sur les conditions frontières <2023-07-26 Wed> 
+
+#+NAME: fig:grille
+#+CAPTION: Exemple de grille avec frontières fixes (nx\pt=\pt ny\pt=\pt4). Pointillé central définit les frontière «\pt réelles\pt» du modèle tandis que tous les points aux alentours sont des points fantômes.
+\begin{wrapfigure}[20]{r}{0.45\textwidth}
+\vspace{-\baselineskip}
+\begin{center}
+\begin{tikzpicture}
+%
+\foreach \i in {0,1,2,3}
+{\foreach \j in {-1,0,1,2,3}
+{\draw [thick, red!40] (\i,\j+1) -- (\i,\j) ;
+ \draw [thick,blue!40] (\j,\i) -- (\j+1,\i) ;}}
+%
+\foreach \i in {0,1,2,3}
+{\foreach \j in {-1,0,1,2,3}
+{\draw [-latex,thin,red!40 ] (\i,0.5+\j) -- (\i+0.15,0.5+\j);
+ \draw [-latex,thin,blue!40] (0.5+\j,\i) -- (0.5+\j,\i+0.15);}}
+% Domaine (Rectangle autour)
+\draw [dotted] (0,0) rectangle (3,3);
+% Cercles (Centres) :
+\foreach \i in {0,1,2,3,4}
+{\foreach \j in {0,1,2,3,4}
+{\fill[fill=black ] (\i-0.5,\j-0.5) circle (0.9pt);}}
+% Rectangles (Noeuds) :
+\foreach \i in {0,1,2,3}
+\foreach \j in {0,1,2,3}
+{{\filldraw [black!85] (\i-0.03,\j-0.03) rectangle (\i+0.03,\j+0.03);}}
+% Rulers 
+\draw[> = latex, arrows = {|<->|}, thin,red ] (0,4.5) -- (3,4.5);
+\draw (1.5,4.5) node [above,red] {nx};
+\draw[> = latex, arrows = {|<->|}, thin,blue] (-1.5,0) -- (-1.5,3);
+\draw (-1.5,1.5) node [above,blue,rotate=90] {ny};
+\draw[> = latex, arrows = {|<->|}, thin,black!50] (4.5,-1) -- (4.5,4);
+\draw (4.5,1.5) node [below,black!50,rotate=90] {$[0:\text{ny}+1]$};
+\draw[> = latex, arrows = {|<->|}, thin,black ] (-0.5,-1.5) -- (3.5,-1.5);
+\draw (1.5,-1.5) node [below,black] {$[0,\text{nx}]$};
+%
+pp\draw (0.5,-0.15) node [] {\color{blue}\tiny$v\pt(1,1)$};
+\draw (-0.15,0.5) node [rotate=90] {\color{red}\tiny$u\pt(1,1)$};
+% Ghost points (mailles):
+\draw [black!20] (-1,-1) rectangle (4,4);
+\foreach \i in {0,1,2,3,4}
+{
+\draw [-latex,thin,black!20] (-1,-0.5+\i) -- (-0.85,-0.5+\i);
+\draw [-latex,thin,black!20] (4.0,-0.5+\i) -- (4.15,-0.5+\i);
+\draw [-latex,thin,black!20] (-0.5+\i,-1) -- (-0.5+\i,-0.85);
+\draw [-latex,thin,black!20] (-0.5+\i,4) -- (-0.5+\i,4.15);
+}
+% Ghost points (noeuds) :
+\foreach \i in {-1,0,1,2,3,4}
+{
+\filldraw [black!20] (-1-0.03,\i-0.03) rectangle (-1+0.03,\i+0.03);
+\filldraw [black!20] (4-0.03,\i-0.03) rectangle (4+0.03,\i+0.03);
+\filldraw [black!20] (\i-0.03,-1-0.03) rectangle (\i+0.03,-1+0.03);
+\filldraw [black!20] (\i-0.03,4-0.03) rectangle (\i+0.03,4+0.03);
+};
+% Ghost text : 
+\draw (-0.5,-1.15) node [gray] {\tiny$v\pt(0,0)$};
+\draw (-1.15,-0.5) node [gray,rotate=90] {\tiny$u\pt(0,0)$};
+\end{tikzpicture}
+\end{center}
+\end{wrapfigure}
+
+Au [[file:rapport-2023-07-07.org][dernier rapport]], nous avons posé les bases d'un modèle emboîté par de frontières de conditions /no normal flow/ et /free slip/.
+Autrement dit, aucun courant ne traverse les frontières et la contrainte de cisaillement normales à ces dernières est nulle. \bigskip
+
+Tout juste avant les vacances \footnote{Rencontre effectuée le 14 juillet 2023}, David et Louis-Philippe avaient fortement insisté sur la nécessité de garder tous points de grille fantôme provenant de l'ancien modèle.
+Principalement, le but de l'exercice est de voir si des erreurs se glissent entre les lignes de notre code. \bigskip
+
+Un bref résumé des sous-routines à modifier en terme de mailles : 
++ [ ] /main.f90/
++ [X] /rhs.f90/
++ [X] /p correction.f90/
++ [X] /diags.f90/
++ [X] /init mudpack.f90/
++ [X] /div vort.f90/
++ [X] /divBT.f90/
+
+
+** Tailles des quantités
+Principalement, on peut diviser nos quantités physiques en trois catégories, soient les *mailles* ($\rightarrow$), les *noeuds* ($\blacksquare$) et les *centres* ($\bullet$).
+Chacune des quantités physique devra avoir une taille préférentielle.
+Bien qu'on me l'aille déconseillé, je tiens à quand même « tenir mon bout » pour qu'on change les tailles de domaine un peu partout.
+La raison me motivant est extrêmement simple : nous verrons bien plus facilement les erreurs fatales si ce sont des erreurs de code plutôt que des erreurs mathématiques.
+On essaie tout ça aujourd'hui, si ça marche pas, on passe définitivement à autre chose.
+
+*** Les mailles ($\rightarrow$)
+Les mailles font référence aux vitesses et au /RHS/ de ces dernières. 
+Dans la figure [[fig:grille]], ces quantités sont illustrées à l'aide des couleurs bleu et rouge.
+#+begin_src fortran
+  real :: u(0:nx+1,0:ny), v(0:nx,0:ny+1)
+#+end_src
+Ces quantités ont des tailles non-homogènes, car elles n'ont pas les mêmes orientations.
+
+*** Les centres ($\bullet$)
+Les centre font référence aux quantités physiques qui se retrouvent au milieu des carrés dans une grille Arakawa-C.
+On fait donc référence à la variation de l'interface $\eta$, à la divergence, etc.
+#+begin_src fortran
+  real :: eta(0:nx,0:ny)
+  real :: div(0:nx,0:ny)
+#+end_src
+
+
+*** Les noeuds ($\blacksquare$)
+Les noeuds font déférence à quantités physiques aux jonctions entre les courants, donc les coins de nos carrés.
+Ces quantités sont généralement reliées à un rotationnel, tel que la fonction de courant $\psi$, la vorticité $\zeta$ et la fréquence de Coriolis $f$.
+#+begin_src fortran
+  real :: psi(0:nx+1,0:ny+1)
+  real :: zeta(0:nx+1,0:ny+1)
+#+end_src
+
+** Mention spéciale pour les boucles (do loop)
+
+Puisque les conditions frontières /no normal flow/ et /free slip/ contraignent le système à avoir des courants nuls ou répétitifs, on se permet d'itérer entre $i=2,\pt nx-1$.
+Par la suite, on applique ces mêmes conditions frontière pour pallier les points qui n'ont pas été itérés.
+D'un côté, ça nous sauve du temps de calcul et de l'autre, ça nous permet de seulement itérer sur ce qu'on a besoin d'itérer.\bigskip
+
+Pour n'en nommer que quelques unes,
++ Les *mailles* (/edges/) n'ont besoin que d'être mises à jour qu'entre i,\pt j = 1 à nx,\pt ny-1.
+  C'est nécessaire si l'on veut veut faire nos applications sur tous les courants.
++ Les *noeuds* (/nodes) sont mis à jours entre i,\pt j = 2 à nx,\pt ny-1, car les fonctions de courants ($\psi$) et les vorticitées ($\zeta$) sont nulles aux frontières.
++ Les *centres* sont mis à jour de 1 à nx,\pt ny-1, car le reste est constitué de points fantômes.
+
+** Expansion en série de Taylor pour le Laplacien 
+Précédemment, nous avions développé l'expression de la dérivée seconde pour les murs.
+Nous allons réaliser un petit rappel, car ça «\pt fait un boutte\pt» que je l'ai réalisé.
+Sans oublier que j'ai besoin d'une référence accessible juste ici.\bigskip
+
+On réalise deux expansions en série de Taylor depuis le mur pour les premiers et seconds points.
+Ainsi
+\begin{align}
+   &&\boxed{\text{A}} && &u(2) = \cancelto{0}{u(1)} + \Delta x \cdot u'(1) + \qty(\frac{\Delta x^2}{2}) \ u''(1) && &&\\
+   &&\boxed{\text{B}} && &u(3) = \cancelto{0}{u(1)} + 2\Delta x \cdot u'(1) + \qty(\frac{4\pt \Delta x^2}{2}) \ u''(1) && &&
+\end{align}
+Par la suite, on soustrait les équations de sorte à éliminer la dérivée première du courant, soit $B - 2A$,
+\begin{equation}
+   u(3) - u(2) = 2\pt \Delta x^2 u''(1) - \Delta x^2 u''(1).
+\end{equation}
+Au final,
+\begin{equation}
+   \boxed{\hspace{0.3cm} u''(1) = \frac{u(3)-u(2)}{\Delta x^2}.\hspace{0.3cm}}
+\end{equation}
+Très simple.
+
+* Gros ménage du modèle numérique <2023-07-25 Tue>
+Comme le modèle fonctionnera uniquement avec MUDPACK, on doit purger tout ce qui est relié aux transformées de Fourier.
+Principalement, la plupart des quantités et sous-routines qui y sont reliés servent à faire des diagnostiques, donc je crois qu'on peut les retirer sans problème.
+Sans oublier que toutes ces sous-routines et quantités existent séparément sur mon [[https://github.com/charli1213/Modele-shallow-water-multicouches][GitHub personnel]] dans la branche main \footnote{Xavier m'a mentionné qu'il aimerait faire du « shallow water », donc permettons nous de conserver quelques traces du modèle en FFT. En ce moment, la version FFT est toujours vivante et fonctionnelle sur le git, mais elle n'est pas assez propre à mon gout.}.
+
+
