@@ -68,8 +68,8 @@ comme il est conseillé de faire dans le README en ligne.
 ** Installation et compilation de la suite MUDPACK
 Il sera nécessaire de constuire et compiler la suite à l'aide d'un /Makefile/.
 Nous allons donc modifer le fichier /bash/ /make.inc/ qui construira un /Makefile/ à l'aide des bons compilateurs.
-+ En premier lieu, on remplace /-fmod=/ par /-J/ partout. La commande /fmod/ est désuette avec tous les compilateurs modernes, c'est une commande qui dit dans quel dossier mettre le modules issus de la compilation.
-+ Deuxièmement, on remplace toutes les mentions  à « pgf90 » et « g95 » par « gfortran », tout simplement parce que c'est notre compilateur.
+1) En premier lieu, on remplace /-fmod=/ par /-J/ partout. La commande /fmod/ est désuette avec tous les compilateurs modernes, c'est une commande qui dit dans quel dossier mettre le modules issus de la compilation.
+2) Deuxièmement, on remplace toutes les mentions  à « pgf90 » et « g95 » par « gfortran », tout simplement parce que c'est notre compilateur.
   
 Au final, le fichier devrait avoir une section principale qui ressemble à
 
