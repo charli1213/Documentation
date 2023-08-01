@@ -172,9 +172,24 @@ Au final,
 \end{equation}
 Très simple.
 
-* Gros ménage du modèle numérique <2023-07-25 Tue>
-Comme le modèle fonctionnera uniquement avec MUDPACK, on doit purger tout ce qui est relié aux transformées de Fourier.
-Principalement, la plupart des quantités et sous-routines qui y sont reliés servent à faire des diagnostiques, donc je crois qu'on peut les retirer sans problème.
-Sans oublier que toutes ces sous-routines et quantités existent séparément sur mon [[https://github.com/charli1213/Modele-shallow-water-multicouches][GitHub personnel]] dans la branche main \footnote{Xavier m'a mentionné qu'il aimerait faire du « shallow water », donc permettons nous de conserver quelques traces du modèle en FFT. En ce moment, la version FFT est toujours vivante et fonctionnelle sur le git, mais elle n'est pas assez propre à mon gout.}.
+* Gros ménage du modèle numérique <2023-07-28 Fri>
+
+** Purge des modules et sous-routines FFT dans la branche «\pt walls\pt»
+Étant donné que notre modèle ne fonctionnera uniquement qu'avec la suite MUDPACK, on se permet de purger tout ce qui est relié aux transformées de Fourier.
+Deux raisons motivent cette actions  : 
+1) Principalement, la plupart des quantités et sous-routines qui y sont reliés servent à faire des diagnostiques, donc je crois qu'on peut les retirer sans problème.
+   Mentionnons aussi que ces sous-routines ne fonctionneront tout simplement plus, considérant que notre domaine ne sera pas périodique.
+2) En second plan, toutes les sous-routines et quantités retirées existent séparément sur mon [[https://github.com/charli1213/Modele-shallow-water-multicouches][GitHub personnel]] dans la branche /main/ \footnote{Xavier m'a mentionné qu'il aimerait faire du « shallow water », donc permettons nous de conserver quelques traces du modèle en FFT. En ce moment, la version FFT est toujours vivante et fonctionnelle sur le git, mais elle n'est pas assez propre à mon gout.}.
+   Au fond, La branche /main/ représente le modèle multicouches fonctionnant par transformées de Fourier -- qui est beaucoup plus rapide et efficace pour une domaine périodique.
+
+   
+** Ménage et nouvelle organisation du GitHub
+Enfin, la conjonction de ces deux motifs me donneront une raison de séparer le modèle numérique initial en deux parties, dites /clean/.
+La branche /main/ servira pour le modèle /shallow water/ multicouche périodique par FFT et la branche /walls/ servira pour le modèle avec murs.
+Je vais réaliser beaucoup de travail pour que ces deux versions restent propres et facilement accessibles pour tous les membres du laboratoire qui en aurait besoin \footnote{Comme Xavier, par exemple}.
+Pour plus d'information, le lecteur est invité à observer [[https://github.com/charli1213/Modele-shallow-water-multicouches/network][l'évolution des différentes branches]].
+Dans les prochaines semaines -- et surtout pour mon plaisir personnel -- la documentation des deux modèles sera mise à jour, un peu comme ce que Tianze avait réalisé avec son propre modèle numérique.
 
 
+#+NAME: fig:branches
+[[file:figures/github/Screenshot from 2023-07-28 12-06-35.png]]

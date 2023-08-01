@@ -1,4 +1,4 @@
-% Created 2023-07-26 Wed 17:11
+% Created 2023-07-28 Fri 12:08
 % Intended LaTeX compiler: pdflatex
 
 % =================================BASE====================================%
@@ -165,7 +165,7 @@ ISMER-UQAR
 
 
 \section{Mettre à jour portable pour travail à distance  \textit{<2023-07-24 Mon>}}
-\label{sec:org1e32711}
+\label{sec:org635ec8d}
 
 De manière générale, j'utilise l'ordinateur de bureau fourni par l'université McGill pour travailler.
 Tout ça me permet d'avoir un meilleurs service sur l'installation des module (\emph{packages}).
@@ -182,7 +182,7 @@ Aujourd'hui est donc une bonne occasion de le faire.
 
 
 \section{Retour sur les conditions frontières \textit{<2023-07-26 Wed>}}
-\label{sec:orga3b15ef}
+\label{sec:org4f35fde}
 
 \begin{wrapfigure}[20]{r}{0.45\textwidth}
 \vspace{-\baselineskip}
@@ -242,7 +242,7 @@ pp\draw (0.5,-0.15) node [] {\color{blue}\tiny$v\pt(1,1)$};
 \draw (-1.15,-0.5) node [gray,rotate=90] {\tiny$u\pt(0,0)$};
 \end{tikzpicture}
 \end{center}
-\caption{\label{orgb26196a}Exemple de grille avec frontières fixes (nx\pt=\pt ny\pt=\pt4). Pointillé central définit les frontière «\pt réelles\pt» du modèle tandis que tous les points aux alentours sont des points fantômes.}
+\caption{\label{org29bc526}Exemple de grille avec frontières fixes (nx\pt=\pt ny\pt=\pt4). Pointillé central définit les frontière «\pt réelles\pt» du modèle tandis que tous les points aux alentours sont des points fantômes.}
 \end{wrapfigure}
 
 Au \href{rapport-2023-07-07.org}{dernier rapport}, nous avons posé les bases d'un modèle emboîté par de frontières de conditions \emph{no normal flow} et \emph{free slip}.
@@ -258,11 +258,13 @@ Un bref résumé des sous-routines à modifier en terme de mailles :
 \item[{$\boxtimes$}] \emph{p correction.f90}
 \item[{$\boxtimes$}] \emph{diags.f90}
 \item[{$\boxtimes$}] \emph{init mudpack.f90}
+\item[{$\boxtimes$}] \emph{div vort.f90}
+\item[{$\boxtimes$}] \emph{divBT.f90}
 \end{itemize}
 
 
 \subsection{Tailles des quantités}
-\label{sec:org90ae6c0}
+\label{sec:org3cd5c34}
 Principalement, on peut diviser nos quantités physiques en trois catégories, soient les \textbf{mailles} (\(\rightarrow\)), les \textbf{noeuds} (\(\blacksquare\)) et les \textbf{centres} (\(\bullet\)).
 Chacune des quantités physique devra avoir une taille préférentielle.
 Bien qu'on me l'aille déconseillé, je tiens à quand même « tenir mon bout » pour qu'on change les tailles de domaine un peu partout.
@@ -270,16 +272,16 @@ La raison me motivant est extrêmement simple : nous verrons bien plus facilemen
 On essaie tout ça aujourd'hui, si ça marche pas, on passe définitivement à autre chose.
 
 \subsubsection{Les mailles (\(\rightarrow\))}
-\label{sec:org777fa0a}
+\label{sec:org893bafc}
 Les mailles font référence aux vitesses et au \emph{RHS} de ces dernières. 
-Dans la figure \ref{orgb26196a}, ces quantités sont illustrées à l'aide des couleurs bleu et rouge.
+Dans la figure \ref{org29bc526}, ces quantités sont illustrées à l'aide des couleurs bleu et rouge.
 \begin{verbatim}
 real :: u(0:nx+1,0:ny), v(0:nx,0:ny+1)
 \end{verbatim}
 Ces quantités ont des tailles non-homogènes, car elles n'ont pas les mêmes orientations.
 
 \subsubsection{Les centres (\(\bullet\))}
-\label{sec:org0d6ed4a}
+\label{sec:org3d53550}
 Les centre font référence aux quantités physiques qui se retrouvent au milieu des carrés dans une grille Arakawa-C.
 On fait donc référence à la variation de l'interface \(\eta\), à la divergence, etc.
 \begin{verbatim}
@@ -289,7 +291,7 @@ real :: div(0:nx,0:ny)
 
 
 \subsubsection{Les noeuds (\(\blacksquare\))}
-\label{sec:orgedf5251}
+\label{sec:orgf967a6a}
 Les noeuds font déférence à quantités physiques aux jonctions entre les courants, donc les coins de nos carrés.
 Ces quantités sont généralement reliées à un rotationnel, tel que la fonction de courant \(\psi\), la vorticité \(\zeta\) et la fréquence de Coriolis \(f\).
 \begin{verbatim}
@@ -298,7 +300,7 @@ real :: zeta(0:nx+1,0:ny+1)
 \end{verbatim}
 
 \subsection{Mention spéciale pour les boucles (do loop)}
-\label{sec:orge64d54a}
+\label{sec:org0b1a908}
 
 Puisque les conditions frontières \emph{no normal flow} et \emph{free slip} contraignent le système à avoir des courants nuls ou répétitifs, on se permet d'itérer entre \(i=2,\pt nx-1\).
 Par la suite, on applique ces mêmes conditions frontière pour pallier les points qui n'ont pas été itérés.
@@ -313,7 +315,7 @@ C'est nécessaire si l'on veut veut faire nos applications sur tous les courants
 \end{itemize}
 
 \subsection{Expansion en série de Taylor pour le Laplacien}
-\label{sec:orgbb97765}
+\label{sec:org15a39f3}
 Précédemment, nous avions développé l'expression de la dérivée seconde pour les murs.
 Nous allons réaliser un petit rappel, car ça «\pt fait un boutte\pt» que je l'ai réalisé.
 Sans oublier que j'ai besoin d'une référence accessible juste ici.\bigskip
@@ -334,9 +336,32 @@ Au final,
 \end{equation}
 Très simple.
 
-\section{Gros ménage du modèle numérique \textit{<2023-07-25 Tue>}}
-\label{sec:orgde657ad}
-Comme le modèle fonctionnera uniquement avec MUDPACK, on doit purger tout ce qui est relié aux transformées de Fourier.
-Principalement, la plupart des quantités et sous-routines qui y sont reliés servent à faire des diagnostiques, donc je crois qu'on peut les retirer sans problème.
-Sans oublier que toutes ces sous-routines et quantités existent séparément sur mon \href{https://github.com/charli1213/Modele-shallow-water-multicouches}{GitHub personnel} dans la branche main \footnote{Xavier m'a mentionné qu'il aimerait faire du « shallow water », donc permettons nous de conserver quelques traces du modèle en FFT. En ce moment, la version FFT est toujours vivante et fonctionnelle sur le git, mais elle n'est pas assez propre à mon gout.}.
+\section{Gros ménage du modèle numérique \textit{<2023-07-28 Fri>}}
+\label{sec:org4492355}
+
+\subsection{Purge des modules et sous-routines FFT dans la branche «\pt walls\pt»}
+\label{sec:org4a07ba1}
+Étant donné que notre modèle ne fonctionnera uniquement qu'avec la suite MUDPACK, on se permet de purger tout ce qui est relié aux transformées de Fourier.
+Deux raisons motivent cette actions  : 
+\begin{enumerate}
+\item Principalement, la plupart des quantités et sous-routines qui y sont reliés servent à faire des diagnostiques, donc je crois qu'on peut les retirer sans problème.
+Mentionnons aussi que ces sous-routines ne fonctionneront tout simplement plus, considérant que notre domaine ne sera pas périodique.
+\item En second plan, toutes les sous-routines et quantités retirées existent séparément sur mon \href{https://github.com/charli1213/Modele-shallow-water-multicouches}{GitHub personnel} dans la branche \emph{main} \footnote{Xavier m'a mentionné qu'il aimerait faire du « shallow water », donc permettons nous de conserver quelques traces du modèle en FFT. En ce moment, la version FFT est toujours vivante et fonctionnelle sur le git, mais elle n'est pas assez propre à mon gout.}.
+Au fond, La branche \emph{main} représente le modèle multicouches fonctionnant par transformées de Fourier -- qui est beaucoup plus rapide et efficace pour une domaine périodique.
+\end{enumerate}
+
+
+\subsection{Ménage et nouvelle organisation du GitHub}
+\label{sec:org315039c}
+Enfin, la conjonction de ces deux motifs me donneront une raison de séparer le modèle numérique initial en deux parties, dites \emph{clean}.
+La branche \emph{main} servira pour le modèle \emph{shallow water} multicouche périodique par FFT et la branche \emph{walls} servira pour le modèle avec murs.
+Je vais réaliser beaucoup de travail pour que ces deux versions restent propres et facilement accessibles pour tous les membres du laboratoire qui en aurait besoin \footnote{Comme Xavier, par exemple}.
+Pour plus d'information, le lecteur est invité à observer \href{https://github.com/charli1213/Modele-shallow-water-multicouches/network}{l'évolution des différentes branches}.
+Dans les prochaines semaines -- et surtout pour mon plaisir personnel -- la documentation des deux modèles sera mise à jour, un peu comme ce que Tianze avait réalisé avec son propre modèle numérique.
+
+
+\begin{center}
+\includegraphics[width=.9\linewidth]{figures/github/Screenshot from 2023-07-28 12-06-35.png}
+\label{org4371744}
+\end{center}
 \end{document}
