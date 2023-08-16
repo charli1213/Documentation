@@ -1,0 +1,222 @@
+#+title: Carnet de bord, Université McGill
+#+author: Charles-Édouard Lizotte
+#+date:04/08/2023
+#+LATEX_CLASS: org-report
+#+CITE_EXPORT: natbib
+#+LANGUAGE: fr
+#+BIBLIOGRAPHY: master-bibliography.bib
+#+OPTIONS: toc:nil title:nil
+
+
+\mytitlepage
+\tableofcontents\newpage
+
+
+* Retour sur les murs, test et problèmes rencontrés -- <2023-07-31 Mon>
+
+Après une semaine bien mouvementée, j'ai réussi à faire fonctionner le modèle /shallow water/ veituré par des murs.
+En fin de semaine, j'ai profité de l'occasion pour réaliser une batterie de test.
+Principalement, les lignes horizontales qui /sabotaient/ le modèle périodique --solvé par algorithme /multigrid/ -- sont encore et toujours là.
+J'ai été extrêmement surpris et déçu par leur retour.
+J'avais la certitude que le problème venait d'une boucle de rétroaction dans MUDPACK avec la constante d'intégration qui devenait de plus en plus grande, faisant réduire la valeur relative de la solution réelle par rapport à la solution fournie par MUDPACK.
+En changeant les frontières pour des conditions Dirichlet, j'estimais donc que constante d'intégration disparaîtrait, réglant du même coup tous nos problèmes.\bigskip
+
+Malheureusement, ce ne fut pas le cas.
+Mentionnons que MUDPACK semble trouver des solutions raisonables (voir figure [[fig:0correction]]), mais qu'on observe toujours les lignes horizontales à l'intérieur de la divergence de la première couche.
+
+#+NAME:fig:0correction
+#+CAPTION: Test avec modèle borné par des murs.
+[[file:figures/tests/2023-07-31_hovmoller1_t=950days.png]]
+\newpage
+
+* Quelques pistes de solution
+Avant tout, souvenons nous des discussions que nous avons eu avec David : 
+Pour observer ce genre de comportement, il doit absolument exister une *partie divergente* à notre courant *qui survit entre chaque itération*.
+À chaque pas de temps, on advecte notre partie non-divergente (avec MUDPACK) sans se soucier de la partie divergente cachée dans les courante $u$ et $v$.
+Essentiellement, la partie divergente survit car on ne corrige pas le courant.
+
+
+** Retirer la partie divergente après quelques timesteps -- <2023-08-01 Tue>
+C'est la solution qui avait été proposée par David et Louis-Philippe.
+Quand nous avions des conditions frontières périodiques, cette option était *catastrophiquement peu efficace*.
+Comme mentionné plus haut, la solution calculée par MUDPACK avait toujours une constante d'intégration, ce qui signifiait que la solution calculée avait quelques ordres de grandeur de plus que la solution réelle.
+Ce processus augmentait drastiquement l'erreur relative sur la solution réelle et les résultats étaient très douteux.\bigskip
+
+Bien qu'un problème similaire pourrait se produire avec MUDPACK -- en ce qui attrait à l'erreur relative, cette option est toujours sur la table.\bigskip
+
+\nb /Si les autres méthodes proposée plus bas échouent, nous allons retenter le coup parce que je serai désespéré./
+
+** Rendre le bruit initial non-divergent <2023-07-31 Mon>
+*Cet idée m'a été révélée dans un rêve.*
+Concrétement, le bruit initial (fortement divergent d'ailleurs) ne fait que croître au long de notre série temporelle (comme on peut l'observer dans le diagramme de Hovmoller pour la divergence, figure [[fig:0correction]]).
+La question qu'on doit ici se poser est maintenant formullée : « Est-ce qu'un bruit définit comme non-divergent à la base aurait le même effet? »\bigskip
+
+Bref, ça vaut la peine de vérifier.
+Si c'est le cas, ça signifie que notre modèle périodique fonctionnait et qu'on s'en faisait pour rien.
+Il me semble raisonnable de croire que, au fond, le modèle ne pouvait tout simplement pas se débarrasser lui-même de la partie divergente.\bigskip
+
+<2023-08-01 Tue> J'ai testé tout ça.
+Bien que je crois que la pratique derrière ce concept soit bonne, le résultat reste le même, les lignes horizontales dans les divergences persistent.
+Donc, on va garder le module qui produit un bruit non-divergent, mais ça ne change pas grand chose, malheureusement.
+
+#+CAPTION: Diagrammes de Hovmollet comparant la divergence barotrope et la divergence dans la première couche du modèle.
+[[file:figures/debuggage/2023_08_03_comp_divergences.png]]
+
+Les « lignes horizontales » apparaissent à la fois dans la divergence de toutes les couches, ainsi que dans la divergence barotrope.
+Ceci nous laisse croire que le problème pourrait se retrouver ailleurs que dans MUDPACK.
+Mentionnons aussi que je croyais que le problème disparaîtrait avec les conditions frontières Dirichlet.
+Donc, je crois qu'il faut revenir à mon intuition initiale, soit que des erreurs *non-corrigées se transmettent dans la partie barocline* de notre RHS.\bigskip
+
+\nb /Pour faire preuve d'intelligence, il serait intéressant de vérifier une fois de plus que le RHS de u trouvé à l'aide de MUDPACK est non-divergent.
+Ensuite, vérifier que le tout (u et v) sont eux-même non-divergents./
+
+
+** Améliorer la précision de MUDPACK comme proposée dans la documentation -- <2023-08-03 Thu>
+
+*** Argument mathématique proposé dans la documentation
+Concrètement, la méthode proposée dans la documentation se résume ainsi :
+Assumons une équation différentielle partielle de la forme
+\begin{equation}
+   \mathscr{L}\qty{\pt p(t)\pt} = r(t),
+\end{equation}
+où $\mathscr{L}$ est un opérateur linéaire quelconque et $r(t)$ est le /RHS/ de ce dernier.\bigskip
+
+Cette équation est valide à tous moments, ainsi
+\begin{equation}
+   \mathscr{L}\qty{\pt p(t+\delta t)\pt} = r(t+\delta t),
+\end{equation}
+
+En assumant que la solution à $t+\delta t$ aura une forme similaire à celle à $t$, on pourrait se permettre de définir un écart $e(t,\delta t)$ entre les deux solutions, de sorte que
+#+NAME: eq:ecart
+\begin{equation}
+   e(t,\delta t) = p(t+\delta t) - p(t).
+\end{equation}
+
+Donc, il est simple de voir que l'opérateur linéarie satisfera
+\begin{equation}
+   \mathscr{L}\qty{\pt e(t,\delta t)} = r(t+\delta t) - r(t).
+\end{equation}
+
+Pour les conditions frontières Neumann, représentées par les fonction $f(t)$ et $f(t+\delta t)$, dont défnies comme
+\begin{align}
+   && \pdv{}{x} \qty[ \tall p(t) ] = f(t), && \pdv{}{x} \qty[\tall p(t+\delta t)] = f(t+\delta t). &&
+\end{align}
+Ainsi, les conditions frontière Neumann pour la correction sont données par
+\begin{equation}
+   \pdv{}{x} \qty[ \tall e(t,\delta t) ]  = f(t+\delta t) - f(t).
+\end{equation}
+
+Pour des contions frontières Dirichlet, on soustrait $p(t)$ à $p(t+\delta t)$, de sorte à suivre l'équation [[eq:ecart]], soit
+\begin{equation}
+   \eval{e(t,\delta t)\ }_{x_0} = \eval{ \qty{ \pt p(t+\delta t) - p(t)\pt \tall } }_{x_0}.
+\end{equation}
+
+Dans notre cas, la condition Dirichlet est que $p(t)$ est nul aux murs pour tous $t$, ainsi $e(t,\delta t)$ aussi sera nulle partout.\bigskip
+
+\nb /Mentionnons aussi que nous n'appliquons cette méthode pour le RHS barotrope et non le courant barotrope. Nous y reviendrons peut-être dans la section suivante./
+
+*** Tests de la méthode, résultats et conclusion -- <2023-08-02 Wed>
+J'ai testé la méthode et elle m'amène exactement les mêmes résultats qu'avant.
+Bien que ça peut paraître /anti-climatique/, je suis heureux parce que ça me renseigne sur deux choses :
++ *Le problème ne vient définitivement pas de MUDPACK*.
+  Si c'était le cas, tous les changements qu'on a réalisés pour optimiser la résolution, soient :
+  1) Passer de solver $\psi_{BT}$ à $\delta \psi_{BT}$;
+  2) Ensuite, solver $\Delta (\delta \psi_{BT})$ au lieu $\delta\psi$.
+  3) Retirer la partie divergente à chaque 1000 pas de temps.
+     
++ Et puis, ça veut dire que je n'ai *pas fait d'erreurs en modifiant l'algorithme* -- ce qui m'aurait pris pas mal de temps à débugger. 
+
+
+* Retour à la correction totale, mais avec la méthode proposée dans la documentation
+
+Essentiellement, on utilise la méthode proposée dans la section précédente, mais sur tous $\psi$.
+En gros,
+1) On décompose notre courant mis à jour, soit $\tilde{\uu}$, en parties barotropes ($\tilde{\uu}_{BT}$ et baroclines ($\tilde{\uu}_{BC}$) ;
+2) On trouve le rotationnel de la partie barotrope du courant;
+   \begin{equation}
+      \tilde{\zeta}_{BT} = \kvf\cdot\curl(\tilde{\uu}_{BT});
+   \end{equation}
+3) On soustrait la nouvelle partie barotrope à l'ancienne, de sorte à avoir un $\delta \zeta_{BT}$.
+   \begin{equation}
+      \delta \zeta_{BT} = \tilde{\zeta}_{BT} - \zeta_{BT}^t;
+   \end{equation}
+4) À l'aide de MUDPACK, on trouve la différence entre la nouvelle et l'ancienne fonction de courant barotrope $\delta \psi_{BT}$;
+   \begin{equation}
+      \delta \psi_{BT} = MUDPACK \pt \qty(\delta \zeta_{BT},\pt \laplacian{});
+   \end{equation}
+5) On additionne avec l'ancienne partie barotrope pour avoir la nouvelle, soit
+   \begin{equation}
+      \psi^{t+1}_{BT} = \tilde{\psi}_{BT} = \psi^{t} + \delta \psi_{BT}.
+   \end{equation}
+6) On trouve le courant barotrope $\uu^{t+1}_{BT}$ à l'aide de
+   \begin{equation}
+      \uu^{t+1}_{BT} = \kvf\times\gradient(\psi^{t+1}_{BT})
+   \end{equation}
+
+** Débuggage de la méthode proposée dans la documentation -- <2023-08-08 Tue>
+
+Commmençons par tester le modèle /shallow water/ à 2 couche, ensuite nous pourrons voir si les erreurs se transmettent aux couches inférieures.
+D'un côté, le temps de calcul sera grandement réduit et nous verrons s'il y a une corrélation avec l'épaisseur des couches, étant donné que nous n'avons qu'une seule couche.\bigskip
+
+On se rappelle que les équations /shallow water/ à solver sont exprimées par
+\begin{equation}
+   \pdv{\uu_k}{t} = \qty(\zeta_k + f\pt) \pt \kvf\times\uu_k -\frac{\gradient|\uu_k^2|}{2}  -\frac{\gradient{P_k}}{\rho_k} - \frac{\gradient p_{surf}}{\rho_k},
+\end{equation}
+où $P_k$ est la pression à la couche $k$ et $g'_k$ est la  *gravité réduite* , respectivement illustrés par 
+\begin{align}
+   && P_k = \qty(\sum_i^{k-1} P_i ) + \rho_1 g'_k \eta_k &&  \text{et} && g'_k = g \pt\qty(\frac{\rho_k - \rho_{k-1}}{\rho_1})\ . &&
+\end{align}
+
+\nb /Juste en regardant ça, j'ai remarqué que le modèle de Tianze n'avait tout simplement pas définit le ratio des rho. Ce qui n'est pas très grave comme les rho entre les couches sont proches. Je les ai rajoutés pour m'assurer que tout soit bon./\bigskip
+
+** Problème précédent avec la divergence? -- <2023-08-11 Fri>
+Déjà, le problème de divergence barotrope est *disparu complétement*.
+Donc l'objectif de la section précédente est une réussite.
+Par contre, on voit des trucs /funky/, comme on peut le constater dans les prochaines sections.
+
+** Premier test -- <2023-08-09 Wed>
+
+Les paramètres sont illustrés dans le tableau suivant :
+
+|------------------------------------------+------------+--------------------+--------------|
+|------------------------------------------+------------+--------------------+--------------|
+| Paramètres                               | Symbole    |             Valeur | Unité        |
+|------------------------------------------+------------+--------------------+--------------|
+| Taille du domaine                        | L_x = L_y  |               2000 | km           |
+| Nombre de points de grilles              | nx = ny    |                513 | --           |
+| Pas de temps                             | \Delta t   |                300 | s            |
+| Paramètre de Coriolis                    | f          |     7\times10^{-5} | s^{-1}       |
+| Paramètre beta                           | beta       |    1\times10^{-11} | m^{-1}s^{-1} |
+| Amplitude du vent                        | \tau_{atm} |                0.1 | N m^{-2}     |
+| Coefficient de visc. biharmonique        | A_{bh}     | dx^4 \times10^{-5} | s^{-1}       |
+| Coefficient de frottement                | r_{drag}   |            10^{-7} | s^{-1}       |
+| Vitesse des ondes internes barocliniques | c_{bc}     |                  2 | ms^{-1}      |
+| Épaisseur de la couche supérieure        | H_1        |               1000 | m            |
+| Épaisseur de la couche inférieur         | H_2        |               1000 | m            |
+|------------------------------------------+------------+--------------------+--------------|
+
+
+*** Détection d'une erreur majeure -- <2023-08-11 Fri>
+Alors, il semble que j'avais mal calculé le laplacien au mur et ça pourrait être la source de nos troubles.
+Juste pour s'en rappeler, il est possible de développer les deux points les plus proches du mur à l'aide de séries de Taylor.
+\begin{align}
+   (A)\hspace{1cm}&u(1) = u(0) + \qty(\frac{\Delta x}{1!}) \eval{\qty(\pdv{u}{x})\pt}_{\pt x=0} \ \pt+ \qty(\frac{\Delta x^2}{2!}) \eval{\qty(\pdv[2]{u}{x})\pt }_{\pt x=0} \\
+   (B)\hspace{1cm}&u(2) = u(0) + \qty(\frac{2\Delta x}{1!}) \eval{\qty(\pdv{u}{x})\pt}_{\pt x=0} + \qty(\frac{4\Delta x^2}{2!}) \eval{\qty(\pdv[2]{u}{x})\pt }_{\pt x=0}.
+\end{align}
+
+On peut par la suite faire $(B) - 2(A)$, pour obtenir
+\begin{equation}
+   \eval{\qty(\pdv[2]{u}{x})\pt }_{\pt x=0} = \frac{(u(2) - 2u(1) )}{\Delta x^2 }
+\end{equation}
+
+Et l'on applique cette méthode partout, voir fonction /laplacian_bndy.f90/, en cas de doute.
+
+*** Résultats
+On voit une circulation semblable à celle des deux gyres de Stommel se développer autours de 50 à 100 jours.
+Par la suite, une circulation constituée entièrement de tourbillons géostrophiques se développe sur l'ensemble du domaine.
+
+[[file:figures/tests/2023-08-14_hovmoller1_t=50days.png]]
+file:figures/tests/2023-08-14_hovmoller1_t=500days.png
+file:figures/tests/2023-08-14_hovmoller1_t=1000days.png
+file:figures/tests/2023-08-14_hovmoller1_t=3600days.png
+

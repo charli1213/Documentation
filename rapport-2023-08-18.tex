@@ -1,0 +1,228 @@
+% Created 2023-08-15 Tue 16:40
+% Intended LaTeX compiler: pdflatex
+
+% =================================BASE====================================%
+\documentclass[10pt]{article}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry} % Marges
+%\usepackage{libertine}
+%\usepackage{libertinust1math}
+\usepackage[T1]{fontenc} % Nécessaire avec FrenchBabel
+\usepackage[utf8]{inputenc} % Important pour symboles Francophones, é,à,etc
+
+\usepackage{lmodern}
+\renewcommand{\familydefault}{cmr} % La meilleure police (CMU Serif Roman) (Je me suis battu).
+\usepackage{mathrsfs} %Permet la command \mathscr (Lettres attachées genre)
+
+\usepackage{natbib} % Bibliographie
+\bibliographystyle{abbrvnat}
+
+
+
+\usepackage{amsmath, amssymb, amsthm} % Symb. math. (Mathmode+Textmode) + Beaux théorèmes.
+
+\usepackage{mathtools,cancel} % Utilisation de boîtes \boxed{} + \cancelto{}{}
+\usepackage{graphicx, wrapfig} % Géstion des figures.
+\usepackage{hyperref} % Permettre l'utilisation d'hyperliens.
+\usepackage{color} % Permettre l'utilisation des couleurs.
+\usepackage[dvipsnames]{xcolor} % Couleurs avancées.
+\usepackage{titling} % Donne accès à \theauthor, \thetitle, \thedate
+
+% >>> Physique >>>
+\usepackage{physics} % Meilleur package pour physicien. 
+\usepackage{pxfonts} % Rajoute PLEIN de symboles mathématiques, dont les intégrales doubles et triples
+% <<< Physique <<<
+
+\usepackage{lipsum} % For fun
+\usepackage{tikz} % Realisation de figures TIKZ.
+\usepackage{empheq} % Boite autour de MULTIPLE équations
+
+\usepackage[french]{babel} % Environnements en Français.
+% ==============================BASE-(END)=================================%
+
+
+
+% ================================SETTINGS=================================%
+% Pas d'indentation en début de paragraphe :
+\setlength\parindent{0pt} 
+
+% Couleurs de hyperliens :
+\definecolor{mypink}{RGB}{147, 0, 255}
+\hypersetup{colorlinks, urlcolor=mypink, citecolor=mypink, linkcolor=mypink}
+
+% Numéros d'équations suivent les sections :
+\numberwithin{equation}{section} 
+
+% Les « captions » sont en italique et largeur limitée
+\usepackage[textfont = it]{caption} 
+\captionsetup[wrapfigure]{margin=0.5cm}
+
+% Retirer le l'écriture en gras dans la table des matières
+\usepackage{tocloft}
+\renewcommand{\cftsecfont}{\normalfont}
+\renewcommand{\cftsecpagefont}{\normalfont}
+
+% Change bullet style
+\usepackage{pifont}
+\usepackage{enumitem}
+%\setlist[itemize,1]{label=\ding{224}}
+\setlist[itemize,1]{label=\ding{239}}
+\renewcommand{\boxtimes}{\blacksquare}
+% ================================SETTINGS=================================%
+
+
+
+% ==============================NEWCOMMANDS================================%
+% Degrés Celsius :
+\newcommand{\celsius}{${}^\circ$ C} % \degrée Celsius : Pas mal plus simple qu'utilise le package gensymb qui plante avec tout...
+
+% Vecteurs de base :
+\newcommand{\nvf}{\vb{\hat{n}}}
+\newcommand{\ivf}{\vb{\hat{i}}}
+\newcommand{\jvf}{\vb{\hat{j}}}
+\newcommand{\kvf}{\vb{\hat{k}}}
+
+\newcommand{\uu}{\vb*{u}}
+\newcommand{\vv}{\vb*{v}}
+
+% Boîte vide pour ajuster les underbrace
+\newcommand{\bigno}{\vphantom{\qty(\frac{d}{q})}}
+\newcommand{\pt}{\hspace{1pt}}
+
+% Physics empty spaces 
+\newcommand{\typical}{\vphantom{A}}
+\newcommand{\tall}{\vphantom{A^{x^x}_p}}
+\newcommand{\grande}{\vphantom{\frac{1}{xx}}}
+\newcommand{\venti}{\vphantom{\sum_x^x}}
+
+% Moyenne numérique entre deux points de grilles. 
+\newcommand{\xmean}[1]{\overline{#1}^x}
+\newcommand{\ymean}[1]{\overline{#1}^y}
+\newcommand{\zmean}[1]{\overline{#1}^z}
+\newcommand{\xymean}[1]{\overline{#1}^{xy}}
+
+% Tilde over psi
+\newcommand{\tpsi}{\tilde{\psi}}
+
+% Nota Bene env :
+\newcommand{\nb}{\ding{165}\ \textbf{N.B.}\hspace{4pt}}
+   
+% ==============================NEWCOMMANDS================================%
+
+
+
+% ==============================PAGE-TITRE=================================%
+% Titlepage 
+\newcommand{\mytitlepage}{
+\begin{titlepage}
+\begin{center}
+{\Large Contrat Été 2023 \par}
+\vspace{2cm}
+{\Large \MakeUppercase{\thetitle} \par}
+\vspace{2cm}
+RÉALISÉ DANS LE CADRE\\ D'UN PROJET POUR \par
+\vspace{2cm}
+{\Large ISMER--UQAR \par}
+\vspace{2cm}
+{\thedate}
+\end{center}
+\vfill
+Rédaction \\
+{\theauthor}\\
+\url{charles-edouard.lizotte@uqar.ca}\\
+ISMER-UQAR
+\end{titlepage}
+}
+% ==============================PAGE-TITRE=================================%
+
+
+
+% =================================ENTÊTE==================================%
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\setlength{\headheight}{13pt}
+\renewcommand{\headrulewidth}{1.3pt} % Ligne horizontale en haut
+
+\fancyhead[R]{\textit{\thetitle}}
+\fancyhead[L]{\ \thepage}
+\fancyfoot[R]{\textit{\theauthor}}
+\fancyfoot[L]{}
+\fancyfoot[C]{} 
+% =================================ENTÊTE==================================%
+\author{Charles-Édouard Lizotte}
+\date{18/08/2023}
+\title{Carnet de bord, Université McGill}
+\hypersetup{
+ pdfauthor={Charles-Édouard Lizotte},
+ pdftitle={Carnet de bord, Université McGill},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 27.1 (Org mode 9.6.7)}, 
+ pdflang={French}}
+\begin{document}
+
+\mytitlepage
+\tableofcontents\newpage
+
+\section{Reconnection au réseau de McGill -- \textit{<2023-08-14 Mon>}}
+\label{sec:org7601a85}
+Un petit rappel dans mes notes personnelles que mes coordonnées de McGill sont
+\begin{verbatim}
+>>> charles-edouard.lizotte@mcgill.ca
+\end{verbatim}
+et que mon \emph{mot de passe} est exactement le même que mon \emph{mot de passe} professionnel de l'UQAR.
+Comme j'utilise mes adresses professionnelle et étudiante de l'UQAR, j'ai rarement besoin d'utiliser celle de McGill.
+Donc, ça serait bien qu'elle soit écrite quelque part dans mon carnet de travail si je ne veux pas la perdre.
+
+
+\section{Problème avec la méthode Leapfrog -- \textit{<2023-08-14 Mon>}}
+\label{sec:org5e5e5cd}
+
+\subsection{Nouveau schéma d'intégration leapfrog pour la correction de psi barotrope}
+\label{sec:orgc6f5aed}
+Pour clarifier la méthode \emph{leapfrog}, la procédure consiste à prendre le champ précédent (à \(t-\delta t\)) et lui additionner le double du \emph{RHS} (pris au temps \(t\)) dans le but d'obtenir le champ au temps \(t+\delta t\).
+Conséquemment, la méthode se déclare comme suit, soit
+\begin{equation}
+   u^{t+\delta t} = u^{t-\delta t} + 2\Delta t\cdot RHS^t.
+\end{equation}
+Il faut impérativement trouver un moyen d'appliquer cette même méthode dans la correction de MUDPACK.
+Si l'on sépare les champs, il est possible qu'on se mélange avec le \(\delta \psi\) comme il y a deux \(\Delta t\) dans la méthode \emph{leapfrog}.\bigskip
+
+Construisons nous une suite d'étapes logiques pour appliquer la méthode \emph{leapfrog} avec MUDPACK.
+\begin{enumerate}
+\item On calcule \(\delta \psi\) à l'aide de la différence de \(\zeta_{BT}\) entre \(t-\delta t\) et \(t+\delta t\) (voir équation \ref{eq:org305b786}) ;
+\item Trouver le \(\psi^{t+\delta t}\) à l'aide de \(\psi^{t-\delta t}\), ce qui se traduit par l'utilisation de MUDPACK pour trouver \(\delta \psi\) (voir équation \ref{eq:orgfe08445});
+\item Appliquer le filtre de Robert (section \ref{orgb2d5eb0})  sur les deux quantités (\(\zeta_{BT}\) et \(\psi_{BT}\));
+\item Et redéfinir \(\psi^t = \psi^{t+\delta t}\) pour le prochain time step de MUDPACK, de manière identique à ce qu'on fait dans la routine \emph{main.f90}.
+\end{enumerate}
+
+Concrétement, on se définit une méthode \emph{leapfrog} pour la correction à l'aide de MUDPACK, soit des champs à trois \emph{étages}, comme dans la fonction \emph{main.f90}.
+Nous aurions 3 quantités, soient \(\psi^{t+\delta t}\), \(\psi^t\), \(\psi^{t-\delta t}\) et le \(\delta \psi\) calculé par MUDPACK serait définit par
+\begin{equation}
+\label{eq:orgfe08445}
+   \delta \psi = \psi^{t+\delta t} - \psi^{t-\delta t},
+\end{equation}
+ce qui mettra la condition sur \(\zeta_{BT}\) que
+\begin{equation}
+\label{eq:org305b786}
+   \delta \zeta_{BT} = \zeta_{BT}^{t+\delta t} - \zeta_{BT}^{t-\delta t}.
+\end{equation}
+
+\subsection{Filtre de Robert}
+\label{sec:org0dde827}
+\label{orgb2d5eb0}
+L'application du filtre de Robert est caractérisée par le système d'équations,
+\begin{align}
+   &\psi^t \ \pt= \psi^t \ + R_f\pt\pt \qty( \psi^{t+\delta t}  +\psi^{t-\delta t} - 2\psi^t)\pt,\\
+   &\zeta_{BT}^t = \zeta_{BT}^t + R_f\pt \qty( \zeta_{BT}^{t+\delta t}  +\zeta_{BT}^{t-\delta t} - 2\zeta_{BT}^t),
+\end{align}
+où \(R_f \sim 0.001\).
+
+
+
+\section{Retour au débuggage de MUDPACK -- \textit{<2023-08-15 Tue>}}
+\label{sec:orgde4b868}
+Certains indices me permettent de remarquer que le problème pourrait être apparent à l'intérieur de la méthode de relaxation de MUDPACK.
+En gros, on a toujours un courant nul au milieu vertical du modèle, ce qui est douteux, mais qui pourrait être un artefact de la méthode employée par MUDPACK lors de sa relaxation.
+J'essaye donc d'autre schémas d'intégration, tel que la relaxation par lignes verticales, par exemple.
+Mais sinon, je suis assez désespéré\ldots{}
+\end{document}

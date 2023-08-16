@@ -1,0 +1,435 @@
+% Created 2023-08-14 Mon 16:43
+% Intended LaTeX compiler: pdflatex
+
+% =================================BASE====================================%
+\documentclass[10pt]{article}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry} % Marges
+%\usepackage{libertine}
+%\usepackage{libertinust1math}
+\usepackage[T1]{fontenc} % Nécessaire avec FrenchBabel
+\usepackage[utf8]{inputenc} % Important pour symboles Francophones, é,à,etc
+
+\usepackage{lmodern}
+\renewcommand{\familydefault}{cmr} % La meilleure police (CMU Serif Roman) (Je me suis battu).
+\usepackage{mathrsfs} %Permet la command \mathscr (Lettres attachées genre)
+
+\usepackage{natbib} % Bibliographie
+\bibliographystyle{abbrvnat}
+
+
+
+\usepackage{amsmath, amssymb, amsthm} % Symb. math. (Mathmode+Textmode) + Beaux théorèmes.
+
+\usepackage{mathtools,cancel} % Utilisation de boîtes \boxed{} + \cancelto{}{}
+\usepackage{graphicx, wrapfig} % Géstion des figures.
+\usepackage{hyperref} % Permettre l'utilisation d'hyperliens.
+\usepackage{color} % Permettre l'utilisation des couleurs.
+\usepackage[dvipsnames]{xcolor} % Couleurs avancées.
+\usepackage{titling} % Donne accès à \theauthor, \thetitle, \thedate
+
+% >>> Physique >>>
+\usepackage{physics} % Meilleur package pour physicien. 
+\usepackage{pxfonts} % Rajoute PLEIN de symboles mathématiques, dont les intégrales doubles et triples
+% <<< Physique <<<
+
+\usepackage{lipsum} % For fun
+\usepackage{tikz} % Realisation de figures TIKZ.
+\usepackage{empheq} % Boite autour de MULTIPLE équations
+
+\usepackage[french]{babel} % Environnements en Français.
+% ==============================BASE-(END)=================================%
+
+
+
+% ================================SETTINGS=================================%
+% Pas d'indentation en début de paragraphe :
+\setlength\parindent{0pt} 
+
+% Couleurs de hyperliens :
+\definecolor{mypink}{RGB}{147, 0, 255}
+\hypersetup{colorlinks, urlcolor=mypink, citecolor=mypink, linkcolor=mypink}
+
+% Numéros d'équations suivent les sections :
+\numberwithin{equation}{section} 
+
+% Les « captions » sont en italique et largeur limitée
+\usepackage[textfont = it]{caption} 
+\captionsetup[wrapfigure]{margin=0.5cm}
+
+% Retirer le l'écriture en gras dans la table des matières
+\usepackage{tocloft}
+\renewcommand{\cftsecfont}{\normalfont}
+\renewcommand{\cftsecpagefont}{\normalfont}
+
+% Change bullet style
+\usepackage{pifont}
+\usepackage{enumitem}
+%\setlist[itemize,1]{label=\ding{224}}
+\setlist[itemize,1]{label=\ding{239}}
+\renewcommand{\boxtimes}{\blacksquare}
+% ================================SETTINGS=================================%
+
+
+
+% ==============================NEWCOMMANDS================================%
+% Degrés Celsius :
+\newcommand{\celsius}{${}^\circ$ C} % \degrée Celsius : Pas mal plus simple qu'utilise le package gensymb qui plante avec tout...
+
+% Vecteurs de base :
+\newcommand{\nvf}{\vb{\hat{n}}}
+\newcommand{\ivf}{\vb{\hat{i}}}
+\newcommand{\jvf}{\vb{\hat{j}}}
+\newcommand{\kvf}{\vb{\hat{k}}}
+
+\newcommand{\uu}{\vb*{u}}
+\newcommand{\vv}{\vb*{v}}
+
+% Boîte vide pour ajuster les underbrace
+\newcommand{\bigno}{\vphantom{\qty(\frac{d}{q})}}
+\newcommand{\pt}{\hspace{1pt}}
+
+% Physics empty spaces 
+\newcommand{\typical}{\vphantom{A}}
+\newcommand{\tall}{\vphantom{A^{x^x}_p}}
+\newcommand{\grande}{\vphantom{\frac{1}{xx}}}
+\newcommand{\venti}{\vphantom{\sum_x^x}}
+
+% Moyenne numérique entre deux points de grilles. 
+\newcommand{\xmean}[1]{\overline{#1}^x}
+\newcommand{\ymean}[1]{\overline{#1}^y}
+\newcommand{\zmean}[1]{\overline{#1}^z}
+\newcommand{\xymean}[1]{\overline{#1}^{xy}}
+
+% Tilde over psi
+\newcommand{\tpsi}{\tilde{\psi}}
+
+% Nota Bene env :
+\newcommand{\nb}{\ding{165}\ \textbf{N.B.}\hspace{4pt}}
+   
+% ==============================NEWCOMMANDS================================%
+
+
+
+% ==============================PAGE-TITRE=================================%
+% Titlepage 
+\newcommand{\mytitlepage}{
+\begin{titlepage}
+\begin{center}
+{\Large Contrat Été 2023 \par}
+\vspace{2cm}
+{\Large \MakeUppercase{\thetitle} \par}
+\vspace{2cm}
+RÉALISÉ DANS LE CADRE\\ D'UN PROJET POUR \par
+\vspace{2cm}
+{\Large ISMER--UQAR \par}
+\vspace{2cm}
+{\thedate}
+\end{center}
+\vfill
+Rédaction \\
+{\theauthor}\\
+\url{charles-edouard.lizotte@uqar.ca}\\
+ISMER-UQAR
+\end{titlepage}
+}
+% ==============================PAGE-TITRE=================================%
+
+
+
+% =================================ENTÊTE==================================%
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\setlength{\headheight}{13pt}
+\renewcommand{\headrulewidth}{1.3pt} % Ligne horizontale en haut
+
+\fancyhead[R]{\textit{\thetitle}}
+\fancyhead[L]{\ \thepage}
+\fancyfoot[R]{\textit{\theauthor}}
+\fancyfoot[L]{}
+\fancyfoot[C]{} 
+% =================================ENTÊTE==================================%
+\author{Charles-Édouard Lizotte}
+\date{04/08/2023}
+\title{Carnet de bord, Université McGill}
+\hypersetup{
+ pdfauthor={Charles-Édouard Lizotte},
+ pdftitle={Carnet de bord, Université McGill},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 27.1 (Org mode 9.6.7)}, 
+ pdflang={French}}
+\begin{document}
+
+\mytitlepage
+\tableofcontents\newpage
+
+
+\section{Retour sur les murs, test et problèmes rencontrés -- \textit{<2023-07-31 Mon>}}
+\label{sec:org8b01f6b}
+
+Après une semaine bien mouvementée, j'ai réussi à faire fonctionner le modèle \emph{shallow water} veituré par des murs.
+En fin de semaine, j'ai profité de l'occasion pour réaliser une batterie de test.
+Principalement, les lignes horizontales qui \emph{sabotaient} le modèle périodique --solvé par algorithme \emph{multigrid} -- sont encore et toujours là.
+J'ai été extrêmement surpris et déçu par leur retour.
+J'avais la certitude que le problème venait d'une boucle de rétroaction dans MUDPACK avec la constante d'intégration qui devenait de plus en plus grande, faisant réduire la valeur relative de la solution réelle par rapport à la solution fournie par MUDPACK.
+En changeant les frontières pour des conditions Dirichlet, j'estimais donc que constante d'intégration disparaîtrait, réglant du même coup tous nos problèmes.\bigskip
+
+Malheureusement, ce ne fut pas le cas.
+Mentionnons que MUDPACK semble trouver des solutions raisonables (voir figure \ref{fig:org41c941f}), mais qu'on observe toujours les lignes horizontales à l'intérieur de la divergence de la première couche.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\linewidth]{figures/tests/2023-07-31_hovmoller1_t=950days.png}
+\caption{\label{fig:org41c941f}Test avec modèle borné par des murs.}
+\end{figure}
+\newpage
+
+\section{Quelques pistes de solution}
+\label{sec:org64fd0c7}
+Avant tout, souvenons nous des discussions que nous avons eu avec David : 
+Pour observer ce genre de comportement, il doit absolument exister une \textbf{partie divergente} à notre courant \textbf{qui survit entre chaque itération}.
+À chaque pas de temps, on advecte notre partie non-divergente (avec MUDPACK) sans se soucier de la partie divergente cachée dans les courante \(u\) et \(v\).
+Essentiellement, la partie divergente survit car on ne corrige pas le courant.
+
+
+\subsection{Retirer la partie divergente après quelques timesteps -- \textit{<2023-08-01 Tue>}}
+\label{sec:org990c428}
+C'est la solution qui avait été proposée par David et Louis-Philippe.
+Quand nous avions des conditions frontières périodiques, cette option était \textbf{catastrophiquement peu efficace}.
+Comme mentionné plus haut, la solution calculée par MUDPACK avait toujours une constante d'intégration, ce qui signifiait que la solution calculée avait quelques ordres de grandeur de plus que la solution réelle.
+Ce processus augmentait drastiquement l'erreur relative sur la solution réelle et les résultats étaient très douteux.\bigskip
+
+Bien qu'un problème similaire pourrait se produire avec MUDPACK -- en ce qui attrait à l'erreur relative, cette option est toujours sur la table.\bigskip
+
+\nb \emph{Si les autres méthodes proposée plus bas échouent, nous allons retenter le coup parce que je serai désespéré.}
+
+\subsection{Rendre le bruit initial non-divergent \textit{<2023-07-31 Mon>}}
+\label{sec:org1dea805}
+\textbf{Cet idée m'a été révélée dans un rêve.}
+Concrétement, le bruit initial (fortement divergent d'ailleurs) ne fait que croître au long de notre série temporelle (comme on peut l'observer dans le diagramme de Hovmoller pour la divergence, figure \ref{fig:org41c941f}).
+La question qu'on doit ici se poser est maintenant formullée : « Est-ce qu'un bruit définit comme non-divergent à la base aurait le même effet? »\bigskip
+
+Bref, ça vaut la peine de vérifier.
+Si c'est le cas, ça signifie que notre modèle périodique fonctionnait et qu'on s'en faisait pour rien.
+Il me semble raisonnable de croire que, au fond, le modèle ne pouvait tout simplement pas se débarrasser lui-même de la partie divergente.\bigskip
+
+\textit{<2023-08-01 Tue> } J'ai testé tout ça.
+Bien que je crois que la pratique derrière ce concept soit bonne, le résultat reste le même, les lignes horizontales dans les divergences persistent.
+Donc, on va garder le module qui produit un bruit non-divergent, mais ça ne change pas grand chose, malheureusement.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\linewidth]{figures/debuggage/2023_08_03_comp_divergences.png}
+\caption{Diagrammes de Hovmollet comparant la divergence barotrope et la divergence dans la première couche du modèle.}
+\end{figure}
+
+Les « lignes horizontales » apparaissent à la fois dans la divergence de toutes les couches, ainsi que dans la divergence barotrope.
+Ceci nous laisse croire que le problème pourrait se retrouver ailleurs que dans MUDPACK.
+Mentionnons aussi que je croyais que le problème disparaîtrait avec les conditions frontières Dirichlet.
+Donc, je crois qu'il faut revenir à mon intuition initiale, soit que des erreurs \textbf{non-corrigées se transmettent dans la partie barocline} de notre RHS.\bigskip
+
+\nb \emph{Pour faire preuve d'intelligence, il serait intéressant de vérifier une fois de plus que le RHS de u trouvé à l'aide de MUDPACK est non-divergent.
+Ensuite, vérifier que le tout (u et v) sont eux-même non-divergents.}
+
+
+\subsection{Améliorer la précision de MUDPACK comme proposée dans la documentation -- \textit{<2023-08-03 Thu>}}
+\label{sec:org792a9d8}
+
+\subsubsection{Argument mathématique proposé dans la documentation}
+\label{sec:org3c9f317}
+Concrètement, la méthode proposée dans la documentation se résume ainsi :
+Assumons une équation différentielle partielle de la forme
+\begin{equation}
+   \mathscr{L}\qty{\pt p(t)\pt} = r(t),
+\end{equation}
+où \(\mathscr{L}\) est un opérateur linéaire quelconque et \(r(t)\) est le \emph{RHS} de ce dernier.\bigskip
+
+Cette équation est valide à tous moments, ainsi
+\begin{equation}
+   \mathscr{L}\qty{\pt p(t+\delta t)\pt} = r(t+\delta t),
+\end{equation}
+
+En assumant que la solution à \(t+\delta t\) aura une forme similaire à celle à \(t\), on pourrait se permettre de définir un écart \(e(t,\delta t)\) entre les deux solutions, de sorte que
+\begin{equation}
+\label{eq:orgf716533}
+   e(t,\delta t) = p(t+\delta t) - p(t).
+\end{equation}
+
+Donc, il est simple de voir que l'opérateur linéarie satisfera
+\begin{equation}
+   \mathscr{L}\qty{\pt e(t,\delta t)} = r(t+\delta t) - r(t).
+\end{equation}
+
+Pour les conditions frontières Neumann, représentées par les fonction \(f(t)\) et \(f(t+\delta t)\), dont défnies comme
+\begin{align}
+   && \pdv{}{x} \qty[ \tall p(t) ] = f(t), && \pdv{}{x} \qty[\tall p(t+\delta t)] = f(t+\delta t). &&
+\end{align}
+Ainsi, les conditions frontière Neumann pour la correction sont données par
+\begin{equation}
+   \pdv{}{x} \qty[ \tall e(t,\delta t) ]  = f(t+\delta t) - f(t).
+\end{equation}
+
+Pour des contions frontières Dirichlet, on soustrait \(p(t)\) à \(p(t+\delta t)\), de sorte à suivre l'équation \ref{eq:orgf716533}, soit
+\begin{equation}
+   \eval{e(t,\delta t)\ }_{x_0} = \eval{ \qty{ \pt p(t+\delta t) - p(t)\pt \tall } }_{x_0}.
+\end{equation}
+
+Dans notre cas, la condition Dirichlet est que \(p(t)\) est nul aux murs pour tous \(t\), ainsi \(e(t,\delta t)\) aussi sera nulle partout.\bigskip
+
+\nb \emph{Mentionnons aussi que nous n'appliquons cette méthode pour le RHS barotrope et non le courant barotrope. Nous y reviendrons peut-être dans la section suivante.}
+
+\subsubsection{Tests de la méthode, résultats et conclusion -- \textit{<2023-08-02 Wed>}}
+\label{sec:orgde89c94}
+J'ai testé la méthode et elle m'amène exactement les mêmes résultats qu'avant.
+Bien que ça peut paraître \emph{anti-climatique}, je suis heureux parce que ça me renseigne sur deux choses :
+\begin{itemize}
+\item \textbf{Le problème ne vient définitivement pas de MUDPACK}.
+Si c'était le cas, tous les changements qu'on a réalisés pour optimiser la résolution, soient :
+\begin{enumerate}
+\item Passer de solver \(\psi_{BT}\) à \(\delta \psi_{BT}\);
+\item Ensuite, solver \(\Delta (\delta \psi_{BT})\) au lieu \(\delta\psi\).
+\item Retirer la partie divergente à chaque 1000 pas de temps.
+\end{enumerate}
+
+\item Et puis, ça veut dire que je n'ai \textbf{pas fait d'erreurs en modifiant l'algorithme} -- ce qui m'aurait pris pas mal de temps à débugger.
+\end{itemize}
+
+
+\section{Retour à la correction totale, mais avec la méthode proposée dans la documentation}
+\label{sec:org28f8288}
+
+Essentiellement, on utilise la méthode proposée dans la section précédente, mais sur tous \(\psi\).
+En gros,
+\begin{enumerate}
+\item On décompose notre courant mis à jour, soit \(\tilde{\uu}\), en parties barotropes (\(\tilde{\uu}_{BT}\) et baroclines (\(\tilde{\uu}_{BC}\)) ;
+\item On trouve le rotationnel de la partie barotrope du courant;
+\begin{equation}
+   \tilde{\zeta}_{BT} = \kvf\cdot\curl(\tilde{\uu}_{BT});
+\end{equation}
+\item On soustrait la nouvelle partie barotrope à l'ancienne, de sorte à avoir un \(\delta \zeta_{BT}\).
+\begin{equation}
+   \delta \zeta_{BT} = \tilde{\zeta}_{BT} - \zeta_{BT}^t;
+\end{equation}
+\item À l'aide de MUDPACK, on trouve la différence entre la nouvelle et l'ancienne fonction de courant barotrope \(\delta \psi_{BT}\);
+\begin{equation}
+   \delta \psi_{BT} = MUDPACK \pt \qty(\delta \zeta_{BT},\pt \laplacian{});
+\end{equation}
+\item On additionne avec l'ancienne partie barotrope pour avoir la nouvelle, soit
+\begin{equation}
+   \psi^{t+1}_{BT} = \tilde{\psi}_{BT} = \psi^{t} + \delta \psi_{BT}.
+\end{equation}
+\item On trouve le courant barotrope \(\uu^{t+1}_{BT}\) à l'aide de
+\begin{equation}
+   \uu^{t+1}_{BT} = \kvf\times\gradient(\psi^{t+1}_{BT})
+\end{equation}
+\end{enumerate}
+
+\subsection{Débuggage de la méthode proposée dans la documentation -- \textit{<2023-08-08 Tue>}}
+\label{sec:org9310810}
+
+Commmençons par tester le modèle \emph{shallow water} à 2 couche, ensuite nous pourrons voir si les erreurs se transmettent aux couches inférieures.
+D'un côté, le temps de calcul sera grandement réduit et nous verrons s'il y a une corrélation avec l'épaisseur des couches, étant donné que nous n'avons qu'une seule couche.\bigskip
+
+On se rappelle que les équations \emph{shallow water} à solver sont exprimées par
+\begin{equation}
+   \pdv{\uu_k}{t} = \qty(\zeta_k + f\pt) \pt \kvf\times\uu_k -\frac{\gradient|\uu_k^2|}{2}  -\frac{\gradient{P_k}}{\rho_k} - \frac{\gradient p_{surf}}{\rho_k},
+\end{equation}
+où \(P_k\) est la pression à la couche \(k\) et \(g'_k\) est la  \textbf{gravité réduite} , respectivement illustrés par 
+\begin{align}
+   && P_k = \qty(\sum_i^{k-1} P_i ) + \rho_1 g'_k \eta_k &&  \text{et} && g'_k = g \pt\qty(\frac{\rho_k - \rho_{k-1}}{\rho_1})\ . &&
+\end{align}
+
+\nb \emph{Juste en regardant ça, j'ai remarqué que le modèle de Tianze n'avait tout simplement pas définit le ratio des rho. Ce qui n'est pas très grave comme les rho entre les couches sont proches. Je les ai rajoutés pour m'assurer que tout soit bon.}\bigskip
+
+\subsection{Problème précédent avec la divergence? -- \textit{<2023-08-11 Fri>}}
+\label{sec:orge578c7c}
+Déjà, le problème de divergence barotrope est \textbf{disparu complétement}.
+Donc l'objectif de la section précédente est une réussite.
+Par contre, on voit des trucs \emph{funky}, comme on peut le constater dans les prochaines sections.
+
+\subsection{Premier test -- \textit{<2023-08-09 Wed>}}
+\label{sec:orgcbc464e}
+
+Les paramètres sont illustrés dans le tableau suivant :
+
+\begin{center}
+\begin{tabular}{llrl}
+\hline
+\hline
+Paramètres & Symbole & Valeur & Unité\\[0pt]
+\hline
+Taille du domaine & L\textsubscript{x} = L\textsubscript{y} & 2000 & km\\[0pt]
+Nombre de points de grilles & nx = ny & 513 & --\\[0pt]
+Pas de temps & \(\Delta\) t & 300 & s\\[0pt]
+Paramètre de Coriolis & f & 7\texttimes{}10\textsuperscript{-5} & s\textsuperscript{-1}\\[0pt]
+Paramètre beta & beta & 1\texttimes{}10\textsuperscript{-11} & m\textsuperscript{-1}s\textsuperscript{-1}\\[0pt]
+Amplitude du vent & \(\tau\)\textsubscript{atm} & 0.1 & N m\textsuperscript{-2}\\[0pt]
+Coefficient de visc. biharmonique & A\textsubscript{bh} & dx\textsuperscript{4} \texttimes{}10\textsuperscript{-5} & s\textsuperscript{-1}\\[0pt]
+Coefficient de frottement & r\textsubscript{drag} & 10\textsuperscript{-7} & s\textsuperscript{-1}\\[0pt]
+Vitesse des ondes internes barocliniques & c\textsubscript{bc} & 2 & ms\textsuperscript{-1}\\[0pt]
+Épaisseur de la couche supérieure & H\textsubscript{1} & 1000 & m\\[0pt]
+Épaisseur de la couche inférieur & H\textsubscript{2} & 1000 & m\\[0pt]
+\hline
+\end{tabular}
+\end{center}
+
+
+\subsubsection{Détection d'une erreur majeure -- \textit{<2023-08-11 Fri>}}
+\label{sec:org2b13491}
+Alors, il semble que j'avais mal calculé le laplacien au mur et ça pourrait être la source de nos troubles.
+Juste pour s'en rappeler, il est possible de développer les deux points les plus proches du mur à l'aide de séries de Taylor.
+\begin{align}
+   (A)\hspace{1cm}&u(1) = u(0) + \qty(\frac{\Delta x}{1!}) \eval{\qty(\pdv{u}{x})\pt}_{\pt x=0} \ \pt+ \qty(\frac{\Delta x^2}{2!}) \eval{\qty(\pdv[2]{u}{x})\pt }_{\pt x=0} \\
+   (B)\hspace{1cm}&u(2) = u(0) + \qty(\frac{2\Delta x}{1!}) \eval{\qty(\pdv{u}{x})\pt}_{\pt x=0} + \qty(\frac{4\Delta x^2}{2!}) \eval{\qty(\pdv[2]{u}{x})\pt }_{\pt x=0}.
+\end{align}
+
+On peut par la suite faire \((B) - 2(A)\), pour obtenir
+\begin{equation}
+   \eval{\qty(\pdv[2]{u}{x})\pt }_{\pt x=0} = \frac{(u(2) - 2u(1) )}{\Delta x^2 }
+\end{equation}
+
+Et l'on applique cette méthode partout, voir fonction \emph{laplacian\textsubscript{bndy.f90}}, en cas de doute.
+
+\subsubsection{Résultats}
+\label{sec:org2143f05}
+On voit une circulation semblable à celle des deux gyres de Stommel se développer autours de 50 à 100 jours.
+Par la suite, une circulation constituée entièrement de tourbillons géostrophiques se développe sur l'ensemble du domaine.
+
+\begin{center}
+\includegraphics[width=.9\linewidth]{figures/tests/2023-08-14_hovmoller1_t=50days.png}
+\end{center}
+\begin{center}
+\includegraphics[width=.9\linewidth]{figures/tests/2023-08-14_hovmoller1_t=500days.png}
+\end{center}
+\begin{center}
+\includegraphics[width=.9\linewidth]{figures/tests/2023-08-14_hovmoller1_t=1000days.png}
+\end{center}
+\begin{center}
+\includegraphics[width=.9\linewidth]{figures/tests/2023-08-14_hovmoller1_t=3600days.png}
+\end{center}
+
+
+\subsection{Problème avec la méthode Leapfrog -- \textit{<2023-08-14 Mon>}}
+\label{sec:org907262f}
+
+On prend le champ à \(t-\delta t\) et on lui additionne le \emph{RHS} à \(t\), soit
+\begin{equation}
+   u^{t+\delta t} = u^{t-\delta t} + 2\times RHS^t.
+\end{equation}
+Il faudrait impérativement trouver un moyen d'appliquer cette même méthode dans la correction de MUDPACK, parce qu'on en prend pas compte du tout.
+Pour simplifier, ce que nous faisons avec MUDPACK, c'est
+\begin{enumerate}
+\item Trouver le \(\psi^{t+\delta t}\) à l'aide de \(\psi^t\).
+\item Et redéfinir \(\psi^t = \psi^{t+\delta t}\) pour le prochain time step de MUDPACK.
+\end{enumerate}
+
+À la place, on pourrait définir un genre de \emph{leapfrog} pour MUDPACK à trois étages.
+Donc, on aurait \(\psi^{t+\delta t}\), \(\psi^t\) et \(\psi^{t-\delta t}\) et le \(\delta \psi\) calculé par MUDPACK serait définit par
+\begin{equation}
+   \delta \psi = \psi^{t+\delta t} - \psi^{t-\delta t},
+\end{equation}
+ce qui mettra la condition sur \(\zeta_{BT}\) que
+\begin{equation}
+   \delta \zeta_{BT} = \zeta_{BT}^{t+\delta t} - \zeta_{BT}^{t-\delta t}.
+\end{equation}
+\end{document}

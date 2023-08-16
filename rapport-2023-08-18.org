@@ -1,0 +1,68 @@
+#+title: Carnet de bord, Université McGill
+#+author: Charles-Édouard Lizotte
+#+date:18/08/2023
+#+LATEX_CLASS: org-report
+#+CITE_EXPORT: natbib
+#+LANGUAGE: fr
+#+BIBLIOGRAPHY: master-bibliography.bib
+#+OPTIONS: toc:nil title:nil
+
+
+\mytitlepage
+\tableofcontents\newpage
+
+* Reconnection au réseau de McGill -- <2023-08-14 Mon>
+Un petit rappel dans mes notes personnelles que mes coordonnées de McGill sont
+#+begin_src
+  >>> charles-edouard.lizotte@mcgill.ca
+#+end_src
+et que mon /mot de passe/ est exactement le même que mon /mot de passe/ professionnel de l'UQAR.
+Comme j'utilise mes adresses professionnelle et étudiante de l'UQAR, j'ai rarement besoin d'utiliser celle de McGill.
+Donc, ça serait bien qu'elle soit écrite quelque part dans mon carnet de travail si je ne veux pas la perdre.
+
+
+* Problème avec la méthode Leapfrog -- <2023-08-14 Mon>
+
+** Nouveau schéma d'intégration leapfrog pour la correction de psi barotrope
+Pour clarifier la méthode /leapfrog/, la procédure consiste à prendre le champ précédent (à $t-\delta t$) et lui additionner le double du /RHS/ (pris au temps $t$) dans le but d'obtenir le champ au temps $t+\delta t$.
+Conséquemment, la méthode se déclare comme suit, soit
+\begin{equation}
+   u^{t+\delta t} = u^{t-\delta t} + 2\Delta t\cdot RHS^t.
+\end{equation}
+Il faut impérativement trouver un moyen d'appliquer cette même méthode dans la correction de MUDPACK.
+Si l'on sépare les champs, il est possible qu'on se mélange avec le $\delta \psi$ comme il y a deux $\Delta t$ dans la méthode /leapfrog/.\bigskip
+
+Construisons nous une suite d'étapes logiques pour appliquer la méthode /leapfrog/ avec MUDPACK.
+1) On calcule $\delta \psi$ à l'aide de la différence de $\zeta_{BT}$ entre $t-\delta t$ et $t+\delta t$ (voir équation [[deltazetabt]]) ;
+2) Trouver le $\psi^{t+\delta t}$ à l'aide de $\psi^{t-\delta t}$, ce qui se traduit par l'utilisation de MUDPACK pour trouver $\delta \psi$ (voir équation [[deltapsi]]);
+3) Appliquer le filtre de Robert (section [[sec:robert]])  sur les deux quantités ($\zeta_{BT}$ et $\psi_{BT}$);
+4) Et redéfinir $\psi^t = \psi^{t+\delta t}$ pour le prochain time step de MUDPACK, de manière identique à ce qu'on fait dans la routine /main.f90/.
+
+Concrétement, on se définit une méthode /leapfrog/ pour la correction à l'aide de MUDPACK, soit des champs à trois /étages/, comme dans la fonction /main.f90/.
+Nous aurions 3 quantités, soient $\psi^{t+\delta t}$, $\psi^t$, $\psi^{t-\delta t}$ et le $\delta \psi$ calculé par MUDPACK serait définit par
+#+NAME:deltapsi
+\begin{equation}
+   \delta \psi = \psi^{t+\delta t} - \psi^{t-\delta t},
+\end{equation}
+ce qui mettra la condition sur $\zeta_{BT}$ que
+#+NAME:deltazetabt
+\begin{equation}
+   \delta \zeta_{BT} = \zeta_{BT}^{t+\delta t} - \zeta_{BT}^{t-\delta t}.
+\end{equation}
+
+** Filtre de Robert
+<<sec:robert>>
+L'application du filtre de Robert est caractérisée par le système d'équations,
+\begin{align}
+   &\psi^t \ \pt= \psi^t \ + R_f\pt\pt \qty( \psi^{t+\delta t}  +\psi^{t-\delta t} - 2\psi^t)\pt,\\
+   &\zeta_{BT}^t = \zeta_{BT}^t + R_f\pt \qty( \zeta_{BT}^{t+\delta t}  +\zeta_{BT}^{t-\delta t} - 2\zeta_{BT}^t),
+\end{align}
+où $R_f \sim 0.001$.
+
+
+
+* Retour au débuggage de MUDPACK -- <2023-08-15 Tue>
+Certains indices me permettent de remarquer que le problème pourrait être apparent à l'intérieur de la méthode de relaxation de MUDPACK.
+En gros, on a toujours un courant nul au milieu vertical du modèle, ce qui est douteux, mais qui pourrait être un artefact de la méthode employée par MUDPACK lors de sa relaxation.
+J'essaye donc d'autre schémas d'intégration, tel que la relaxation par lignes verticales, par exemple.
+Mais sinon, je suis assez désespéré...
