@@ -1,0 +1,103 @@
+#+title: Carnet de bord, Université McGill
+#+author: Charles-Édouard Lizotte
+#+date:01/09/2023
+#+LATEX_CLASS: org-report
+#+CITE_EXPORT: natbib
+#+LANGUAGE: fr
+#+BIBLIOGRAPHY: master-bibliography.bib
+#+OPTIONS: toc:nil title:nil
+
+
+\mytitlepage
+\tableofcontents\newpage
+
+* Diatribes mathématiques -- <2023-08-28 Mon>
+L'implémentation de MUDPACK et notre insatisfaction m'amène à voir s'il y aurait d'autres méthodes mathématiques pour résoudre notre problème.
+En somme, l'équation différentielle partielle à résoudre est une équation elliptique -- plus précisément une équation de Poisson -- composée d'une dérivée de second ordre et d'une autre de premier ordre.
+Soit,
+#+NAME:eq:poisson
+\begin{equation}
+   \laplacian{\psi} = \kvf \cdot \curl{\uu_{BT}}.
+\end{equation}
+L'équation [[eq:poisson]] est composée de dérivées de second ordre, mais existe-t-il un moyen de la réduire au premier ordre, considérant que l'erreur induite dans /MUDPACK/ est affectée par la précision des chiffres significatifs?
+La réponse est probablement négative, mais essayons quand même pour se redonner confiance.
+Utilisons la relation
+\begin{equation}
+   \curl(\vb{A}\times\vb{B}) = \vb{A}\qty(\divergence{\vb{B}}) - \vb{B}\qty(\divergence{\vb{A}}) +\qty(\vb{B}\cdot\gradient)\vb{A} -\qty(\vb{A}\cdot\gradient)\vb{B}.
+\end{equation}
+En premier, comme le courant est donné par la relation $\uu_{BT} = \kvf \times \gradient{\psi}$, on peut développer l'équation [[eq:poisson]],
+\begin{align}
+   \div{\gradient{\psi}}
+   \venti&= \kvf \cdot \qty(\kvf \times \gradient{\psi}),\nonumber \\
+   \venti&= \kvf \cdot \big(\kvf\qty(\divergence{\gradient{\psi}}) - \cancelto{0}{\gradient{\psi}\qty(\divergence{\kvf})} + \qty(\kvf\cdot\gradient) \gradient{\psi} - \cancelto{0}{\qty(\gradient{\psi} \cdot\gradient)\kvf} \big),\nonumber\\
+   \venti&= \kvf \cdot \qty(\kvf\qty(\divergence{\gradient{\psi}}) + \qty(\kvf\cdot\gradient) \gradient{\psi}),\nonumber\\
+   \venti&= \divergence{\gradient{\psi}} + \cancelto{0}{(\kvf\cdot\gradient)\gradient(\psi)},\nonumber\\
+   \venti&=\divergence{\gradient{\psi}}.
+\end{align}
+Ouin... dommage. Les maths fonctionnent en tout cas...
+
+* Fishpack -- <2023-08-29 Tue>
+
+#+NAME: fig:fishtest
+#+CAPTION: Comparaison des mêmes quantités évaluées avec MUDPACK, mais avec le solveur Fishpack. Résultat ahurissant.
+#+ATTR_LaTeX: :width 0.8\textwidth :placement [!htpb]
+[[file:figures/fishpack/2023-08-29-fishtest.png]]
+
+Ce lundi soir et mardi, j'étais un peu épuisé qu'on perde autant de temps sur /MUDPACK/, c'est pourquoi j'ai commencé à regarder ailleurs.
+Entre autre, un article en ligne comparait l'efficacité de trois méthodes pour solutionner rapidement les équations différentielles partielles du genre de celle à laquelle on a affaire (équation [[eq:poisson]]).\bigskip
+
+Concrétement, /MUDPACK/ était la moins bonne, mais il mentionnait un autre module nommé /fishpack/.
+Donc, je me suis lancé.
+Deux versions existaient en ligne, soit celle de NCAR et une [[https://github.com/jlokimlin/fishpack][version mise à jour]] il y a 6 ans.
+Bien entendu j'ai pris la plus récente pour m'assurer qu'on puisse utiliser les type DOUBLE PRECISION.\bigskip
+
+Après une journée de travail, j'en suis arrivé à la figure [[fig:fishtest]].
+Le résultat est ahurissant, on obtient une erreur absolue de l'ordre de $10^{-12}$ et un écart de $\zeta$ de $10^{-11}$.
+On peut en déduire de /MUDPACK/ est complétement surclassé.
+Sans oublier que le temps de calcul est minimal aussi.
+
+** Implémentation dans le modèle en eau peu profonde -- <2023-08-30 Wed>
+
+Comme au premier jet, nous solvons l'équation [[eq:poisson]] directement.
+Donc, aucun besoin de corriger le RHS ou l'écart entre les deux champs : on corrige directement le champ courant (donc celui mis à jour : $ilevel=3$).
+Si le besoin pour une meilleure précision se fait sentir, on pourra revenir à nos bonnes habitudes de seulement corriger l'écart entre les champs $ilevel=1$ et $ilevel=3$, de sorte à suivre le pas de temps de type /leapfrog/.
+
+*** Rappel de l'analyse dimensionelle associée au vent <2023-08-31 Thu>
+La nuit dernière, j'ai lancé une simulation de 10 ans, mais nous sommes toujours dans le /spin up/.
+Après un peu de débroussaillage, j'ai vu que ça venait probablement du $\tau$ insuffisant.,
+À la base, j'avais mis ça car David voulait voir le système évoluer sans les termes non-linéaires et je l'avais oublié là.
+J'ai relancé la simulation avec un vent de $\tau = 0.1 Nm^{-2}$.\bigskip
+
+Les paramètres sont illustrés dans le tableau [[tab:params]].
+
+#+NAME: tab:params
+#+CAPTION: Paramètres utilisés dans la simulation de jeudi matin (<2023-08-31 Thu>). 
+|------------------------------------------+------------+--------------------+--------------|
+|------------------------------------------+------------+--------------------+--------------|
+| Paramètres                               | Symbole    |             Valeur | Unité        |
+|------------------------------------------+------------+--------------------+--------------|
+| Taille du domaine                        | L_x = L_y  |               2000 | km           |
+| Nombre de points de grilles              | nx = ny    |                513 | --           |
+| Pas de temps                             | \Delta t   |                300 | s            |
+| Paramètre de Coriolis                    | f          |     7\times10^{-5} | s^{-1}       |
+| Paramètre beta                           | beta       |    1\times10^{-11} | m^{-1}s^{-1} |
+| Amplitude du vent                        | \tau_{atm} |                0.1 | N m^{-2}     |
+| Coefficient de visc. biharmonique        | A_{bh}     | dx^4 \times10^{-5} | s^{-1}       |
+| Coefficient de frottement                | r_{drag}   |            10^{-7} | s^{-1}       |
+| Vitesse des ondes internes barocliniques | c_{bc}     |                  2 | ms^{-1}      |
+| Épaisseur de la couche supérieure        | H_1        |               1000 | m            |
+| Épaisseur de la couche inférieur         | H_2        |               3000 | m            |
+|------------------------------------------+------------+--------------------+--------------|
+
+L'analyse dimensionnel va comme suit : Pour l'évolution,
+\begin{equation}
+   \pdv{\uu}{t} \Rightarrow \qty[ \frac{ms^{-1}}{s}] \Rightarrow \qty[\frac{m}{s^2}]. 
+\end{equation}
+
+Pour le terme associé au frottement visqueux du vent à la surface,
+\begin{equation}
+   \frac{\tau}{\rho h} \Rightarrow \frac{\qty[N m^{-2}]}{\qty[Kg\cdot m^{-3}] \qty[m]} \Rightarrow \qty[\frac{N}{Kg}] \Rightarrow \frac{\qty[Kg \cdot m s^{-2}]}{[Kg]} \Rightarrow \qty[\frac{m}{s^2}].
+\end{equation}
+Bonne nouvelle! Notre schéma pour le frottement visqueux à la surface est bon et je ne fais pas des erreurs stupides depuis 6 mois! /Cheers!/ \bigskip
+
+Le test est réussi! Ça marche à merveille!
