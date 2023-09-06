@@ -228,6 +228,7 @@ Précédemment, nous avons utilisé l'équation d'évolution de la QGPV pour tro
 \begin{equation}
 \pdv{t} \Bigg[ \laplacian \psi' + \frac{1}{\tilde{\rho}(z)}\pdv{z}\qty(\frac{f_0}{N^2}\pdv{\psi'}{z}) \Bigg] + \beta \pdv{\psi'}{x} = 0.
 \end{equation}
+
 Ensuite, nous avions linéarisé l'équation précédente autour d'un courant moyen en /x/ en assumant que $L_d \rightarrow \infty$.
 Ici, nous allons exactement réaliser l'inverse en posant une solution oscillante de la forme
 \begin{equation}
@@ -238,27 +239,30 @@ dans l'équation [[QGPV-continue]].\bigskip
 On arrive à
 #+NAME: z-separation
 \begin{equation}
-\omega\ \Bigg[ - K^2 \cdot \tpsi(z) + \underbrace{\frac{1}{\tilde{\rho}(z)}\pdv{z}\qty(\frac{f_0^2}{N^2} \pdv{z}\tpsi(z))}_{\mathcal{L}\tpsi} \Bigg] + \beta k\cdot \tpsi(z) = 0,
+\omega\ \Bigg[ - K^2 \cdot \tpsi(z) + \underbrace{\frac{1}{\tilde{\rho}(z)}\pdv{z}\qty(\frac{f_0^2}{N^2} \pdv{z}\tpsi(z))}_{\mathscr{L}\tpsi} \Bigg] + \beta k\cdot \tpsi(z) = 0,
 \end{equation}
-où $\mathcal{L}$ est un opérateur linéaire.
+
+où $\mathscr{L}$ est un opérateur linéaire.
 Ce dernier satisfait ainsi l'équation aux valeurs propres
 \begin{equation}
-\mathcal{L}\tpsi(z) = - \Gamma \tpsi(z).
+\mathscr{L}\tpsi(z) = - \Gamma \tpsi(z).
 \end{equation}
-En milieu continu, l'opérateur $\mathcal{L}$ produit donc un nombre infini de modes verticaux discrétisés à l'aide des conditions limites [cite:@vallis_2006 p.468].
-En revanche, dans un système quasi-géostrophique à plusieurs couches, la QGPV est donnée par l'équation [[qgpv-n-layers]], de sorte que cet opérateur linéaire $\mathcal{L}$ est dépendant des fonctions de courant $\psi$ des couches adjacentes,
+
+En milieu continu, l'opérateur $\mathscr{L}$ produit donc un nombre infini de modes verticaux discrétisés à l'aide des conditions limites [cite:@vallis_2006 p.468].
+En revanche, dans un système quasi-géostrophique à plusieurs couches, la QGPV est donnée par l'équation [[qgpv-n-layers]], de sorte que cet opérateur linéaire $\mathscr{L}$ est dépendant des fonctions de courant $\psi$ des couches adjacentes,
 \begin{equation}
-\mathcal{L}\tpsi_k = \frac{f_0^2}{g_k' H_k} (\tpsi_{k-1} - \tpsi_k) - \frac{f_0^2}{g_{k+1}'H_k} (\tpsi_k - \tpsi_{k+1}).
+\mathscr{L}\tpsi_k = \frac{f_0^2}{g_k' H_k} (\tpsi_{k-1} - \tpsi_k) - \frac{f_0^2}{g_{k+1}'H_k} (\tpsi_k - \tpsi_{k+1}).
 \end{equation}
 On peut réunir les termes communs,
 \begin{align}
-\mathcal{L} \tpsi_k = \qty( \frac{f_0^2}{H_k g'_{k+1}} + \frac{f_0^2}{H_k g'_{k}} )\ \tpsi_k
+\mathscr{L} \tpsi_k = \qty( \frac{f_0^2}{H_k g'_{k+1}} + \frac{f_0^2}{H_k g'_{k}} )\ \tpsi_k
 - \qty(\frac{f_0^2}{H_k g'_{k}})\ \tpsi_{k-1}
 - \qty(\frac{f_0^2}{H_k g'_{k+1}})\ \tpsi_{k+1},\nonumber
 \end{align}
+
 \begin{equation}
 \boxed{\hspace{0.4cm}
-\mathcal{L}\tpsi_k = \qty( F_{(k,k+1)} + F_{(k,k)}) \ \tpsi_k
+\mathscr{L}\tpsi_k = \qty( F_{(k,k+1)} + F_{(k,k)}) \ \tpsi_k
 - F_{(k,k)}\ \tpsi_{k-1}
 - F_{(k,k+1)}\ \tpsi_{k+1},
 \hspace{0.5cm}\text{où}\hspace{0.5cm}
@@ -266,7 +270,7 @@ F_{(i,j)} = \frac{f_0^2}{H_i g'_j}.
 \hspace{0.4cm} }
 \end{equation}
 
-On voit que l'opérateur linéaire $\mathcal{L}$ peut être exprimé sous forme matricielle où il satisfait l'équation aux valeurs propres
+On voit que l'opérateur linéaire $\mathscr{L}$ peut être exprimé sous forme matricielle où il satisfait l'équation aux valeurs propres
 
 #+attr_latex: :mode math :environment pmatrix
 | F_{(1,2)} + F_{(1,1)} | -F_{(1,2)}            |          0 | \cdots       |                           0 |

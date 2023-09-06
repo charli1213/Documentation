@@ -1,13 +1,17 @@
-% Created 2023-05-10 mer 14:08
+% Created 2023-09-01 Fri 10:29
 % Intended LaTeX compiler: pdflatex
 
 % =================================BASE====================================%
 \documentclass[10pt]{article}
 \usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry} % Marges
-\usepackage[utf8]{inputenc} % Important pour symboles Francophones, é,à,etc.
+%\usepackage{libertine}
+%\usepackage{libertinust1math}
 \usepackage[T1]{fontenc} % Nécessaire avec FrenchBabel
-%\usepackage{lmodern}
+\usepackage[utf8]{inputenc} % Important pour symboles Francophones, é,à,etc
+
+\usepackage{lmodern}
 \renewcommand{\familydefault}{cmr} % La meilleure police (CMU Serif Roman) (Je me suis battu).
+\usepackage{mathrsfs} %Permet la command \mathscr (Lettres attachées genre)
 
 \usepackage{natbib} % Bibliographie
 \bibliographystyle{abbrvnat}
@@ -52,7 +56,6 @@
 \usepackage[textfont = it]{caption} 
 \captionsetup[wrapfigure]{margin=0.5cm}
 
-
 % Retirer le l'écriture en gras dans la table des matières
 \usepackage{tocloft}
 \renewcommand{\cftsecfont}{\normalfont}
@@ -61,7 +64,9 @@
 % Change bullet style
 \usepackage{pifont}
 \usepackage{enumitem}
-\setlist[itemize,1]{label=\ding{224}}
+%\setlist[itemize,1]{label=\ding{224}}
+\setlist[itemize,1]{label=\ding{239}}
+\renewcommand{\boxtimes}{\blacksquare}
 % ================================SETTINGS=================================%
 
 
@@ -71,25 +76,37 @@
 \newcommand{\celsius}{${}^\circ$ C} % \degrée Celsius : Pas mal plus simple qu'utilise le package gensymb qui plante avec tout...
 
 % Vecteurs de base :
-\newcommand{\nvf}{\hat{\vb{n}}}
+\newcommand{\nvf}{\vb{\hat{n}}}
 \newcommand{\ivf}{\vb{\hat{i}}}
-\newcommand{\jvf}{\hat{\vb{j}}}
-\newcommand{\kvf}{\hat{\vb{k}}}
+\newcommand{\jvf}{\vb{\hat{j}}}
+\newcommand{\kvf}{\vb{\hat{k}}}
 
 \newcommand{\uu}{\vb*{u}}
 \newcommand{\vv}{\vb*{v}}
-\newcommand{\ww}{\vb*{w}}
 
 % Boîte vide pour ajuster les underbrace
 \newcommand{\bigno}{\vphantom{\qty(\frac{d}{q})}}
 \newcommand{\pt}{\hspace{1pt}}
 
+% Physics empty spaces 
+\newcommand{\typical}{\vphantom{A}}
+\newcommand{\tall}{\vphantom{A^{x^x}_p}}
+\newcommand{\grande}{\vphantom{\frac{1}{xx}}}
+\newcommand{\venti}{\vphantom{\sum_x^x}}
+
 % Moyenne numérique entre deux points de grilles. 
 \newcommand{\xmean}[1]{\overline{#1}^x}
 \newcommand{\ymean}[1]{\overline{#1}^y}
+\newcommand{\zmean}[1]{\overline{#1}^z}
+\newcommand{\xymean}[1]{\overline{#1}^{xy}}
 
 % Tilde over psi
 \newcommand{\tpsi}{\tilde{\psi}}
+\newcommand{\tphi}{\tilde{\phi}}
+
+% Nota Bene env :
+\newcommand{\nb}{\ding{165}\ \textbf{N.B.}\hspace{4pt}}
+   
 % ==============================NEWCOMMANDS================================%
 
 
@@ -141,7 +158,7 @@ ISMER-UQAR
  pdftitle={Rapport hebdomadaire -- McGill},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 28.2 (Org mode 9.6.5)}, 
+ pdfcreator={Emacs 27.1 (Org mode 9.6.7)}, 
  pdflang={French}}
 \begin{document}
 
@@ -149,9 +166,9 @@ ISMER-UQAR
 \tableofcontents\newpage
 
 \section{{\bfseries\sffamily DONE} Transformer le \emph{slab model} en modèle \emph{shallow water} multicouches [3/3]}
-\label{sec:orgcc26ecb}
+\label{sec:org8b42ecf}
 \subsection{\textbf{Cadre théorique} : Retrouver les variations des interfaces eta(k)}
-\label{sec:org152c6a3}
+\label{sec:org67649a2}
 En premier lieu, en \emph{shallow water}, l'équation de masse pour chaque couche \(k\) est donnée par
 \begin{equation}
 \pdv{}{t} d_k = \divergence (d_k\vb{u}_k)
@@ -204,7 +221,7 @@ Après avoir calculé les \emph{RHS}, faut donc retouver les \(\eta_k\) à l'aid
 \draw[>=stealth, ->|] (H4) -- (4.3,-4);
 \end{tikzpicture}
 \end{center}
-\caption{\label{org28ef8f5}Illustration d'un modèle \textit{shallow water} à quatre couches (\(n_k = 4\)).}
+\caption{\label{org630dea2}Illustration d'un modèle \textit{shallow water} à quatre couches (\(n_k = 4\)).}
 \end{wrapfigure}
 
 En commençant depuis la fin, l'algorithme pour retrouver les \(\eta_k\) à partir des épaisseurs \(d_k\) est donné par
@@ -217,7 +234,7 @@ En commençant depuis la fin, l'algorithme pour retrouver les \(\eta_k\) à part
 
 Pour résumé, de manière générale, entre les couches 2 et \emph{nk-1},
 \begin{equation}
-\label{eq:org00aa9bf}
+\label{eq:org3c1b8ad}
 \eta_k = \eta_{k+1} + (d_k - H_k).
 \end{equation}
 On peut donc toujours prendre la dernières couches et reconstruire les autres \(\eta_{k+1}\).
@@ -226,7 +243,7 @@ Cette technique est employé par toutes les sous-routines qui font usage de la \
 
 
 Mentionnons qu'on regarde les \emph{RHS} des équations du mouvement, soit les dérivées temporelles des quantités \(h\) et \(\eta\).
-En ordre décroissant, il est donc possible de créer une méthode itérative qui appelle le \emph{RHS} du \emph{eta} couche inférieure (\(nk+1\)) à l'aide de la dérivée de l'équation \ref{eq:org00aa9bf}, soit
+En ordre décroissant, il est donc possible de créer une méthode itérative qui appelle le \emph{RHS} du \emph{eta} couche inférieure (\(nk+1\)) à l'aide de la dérivée de l'équation \ref{eq:org3c1b8ad}, soit
 \begin{align}
 (k=nz)\hspace{2cm}    &\Delta \eta_{nz} =\ \Delta h_{nz}\ ;\nonumber\\
 (k=k) \hspace{2cm} &\Delta \eta_{k}\ = \ \Delta h_k\ + \Delta \eta_{k+1}\ ;\\
@@ -239,9 +256,9 @@ En ordre décroissant, il est donc possible de créer une méthode itérative qu
 Pous solutionner ce problème, on utiliserait une méthode d'algèbre linéaire matricielle, mais ça ne devrait pas être très grave si on a peu de couches, selon David.
 
 \subsection{\textbf{Cadre théorique} : Vorticité quasi-géostrophique}
-\label{sec:orgb6af691}
+\label{sec:orgbffdf9e}
 \subsubsection{Retrouver la QGPV à partir de la vorticité relative}
-\label{sec:org807caf7}
+\label{sec:orge38dfe0}
 
 Dans le système en eau peu profonde, la vorticité potentielle \(Q_k\) est une quantité conservée, de sorte que 
 
@@ -275,7 +292,7 @@ Q_k \approx \frac{1}{H_k}  \qty(f + \zeta_k -f_o\frac{h_k'}{H_k}).
 Cette nouvelle quantité \(q_k\) s'appelle la \textbf{vorticité potentielle quasi-géostrophique} (QGPV) et est conservée sur le domaine.
 Soit,
 \begin{equation}
-\label{eq:org1b6212f}
+\label{eq:org000fe32}
 \boxed{q_k \equiv \qty( \beta  y + \zeta_k - f_o \frac{h_k'}{H_k})
 \hspace{0.3cm} \text{où} \hspace{0.3cm}
 \zeta_k = \laplacian \psi_k.}
@@ -289,7 +306,7 @@ La variation de l'interface entre deux couches \(\eta_k'\) peut toujours être e
 \end{equation}
 
 \subsubsection{Généralisation de la QGPV à un modèle à plusieurs couches}
-\label{sec:org6e3f199}
+\label{sec:org629b31b}
 
 Après quelque substitutions algébriques, on parviendra ainsi à une équation générique de la vorticité potentielle quasi-géostrophique en eau peu profonde pour un modèle à plusieurs couches,
 \begin{align}
@@ -306,12 +323,12 @@ g_k' = g \frac{\rho_k - \rho_{k-1}}{\rho_1}.}
 
 \textbf{N.B. 1)} Notre résultat est différent de celui exprimé dans le \citep[, p.185]{vallis_2006} à ce qui attrait aux gravités réduites car nous définissons \(\eta_k\) comme la «plafond» d'une couche \(k\) et non son «plancher».\\[0pt]
 
-\textbf{N.B. 2)} La formulation \ref{eq:org1b6212f} est toujours valides, car c'est la définition de la QGPV à plusieurs couches.
+\textbf{N.B. 2)} La formulation \ref{eq:org000fe32} est toujours valides, car c'est la définition de la QGPV à plusieurs couches.
 Une version différente existe en milieu continu, mais nous y reviendrons dans les prochains rapports.
 Bref, restons avec cette formulation, ça nous empêchera de se tromper avec les gravités réduites.
 
 \subsubsection{Gravité réduite}
-\label{sec:org451275b}
+\label{sec:org937efce}
 
 Pour donner un argument, toujours en se fiant au Vallis, notre formulation de la gravités réduites \(g_i'\) découle du fait que la pression s'additionne à chaque couche, de sorte que 
 \begin{equation}
@@ -323,7 +340,7 @@ lorsque \(\eta_k\) est définit comme le «plafond» d'une couche \(k\).
 Pour une surface fixe, \(\eta_1\) est tout simplement nulle et on rajoute un gradient de pression dans les équations du mouvement.
 
 \subsection{{\bfseries\sffamily DONE} Modifer le schéma numérique pour retrouver les eta(k)}
-\label{sec:org536d1fc}
+\label{sec:org90af646}
 Il existe un peu une incertitude entre \emph{eta} et \emph{thickness}, les deux variables s'interchangent lorsqu'on travaille à plus de deux couches et j'ai un peu de difficulté à comprendre ça.
 Il va donc falloir déméler toute cette information-là.
 En premier lieu, nous avons désormais un vecteur \(H(k)\) qui décrit les épaisseurs moyennes de chaque couches (On l'avait déjà, mais on va vraiment s'en servir)
@@ -333,7 +350,7 @@ Ensuite, en suivant le schéma décrit dans les sections précédentes, on va po
 \textbf{N.B.} Finalement, après inspection du code, j'ai abandonnée l'idée d'avoir un \emph{thickness} prédéfinit à la grandeur du code, on va rester avec \emph{eta-k} et calculer \emph{thickness} \emph{on the spot}. Faut juste changer le nom de la variable \emph{RHS-eta} qui définit plutôt \emph{RHS-thickness}. 
 
 \subsection{{\bfseries\sffamily DONE} Modifier les sous-routines de diagnostiques et d'\emph{output} [3/3]}
-\label{sec:org4fecd04}
+\label{sec:orga24f0d5}
 Toutes les routines de diagnostiques ont été créées pour 2 couches uniquement, il faudrait donc modifier les \textbf{do loop} qui contiennent des \emph{k} et \emph{nz}.
 Pour l'essentiel, il faut modifer les fichiers : 
 
@@ -355,10 +372,10 @@ En attendant, la \emph{do loop} des \emph{nz} s'arrête à nz = 2, de sorte que 
 \end{itemize}
 
 \subsection{{\bfseries\sffamily DONE} Gestion des paramètres initiaux}
-\label{sec:orgd96027d}
+\label{sec:orgf1129ba}
 Faut gosser un peu dans la fonction \emph{initialisation.f90} pour avoir un H(k) et un gprime(k) qui fonctionnent.
 Maintenant, gprime(k) est définit en fonction d'un vecteur rho(k). 
 Tout va être relié dans le fichier de paramètres.
 
-\bibliography{/aos/home/celizotte/Desktop/Documentation/master-bibliography}
+\bibliography{/home/charlesedouard/Desktop/Travail/Documentation/master-bibliography}
 \end{document}
