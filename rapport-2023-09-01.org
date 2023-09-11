@@ -162,7 +162,7 @@ Comme point de départ, reprenons le système d'équations en eau peu profonde d
 
 Nous avons devant nous un système d'équations couplées.
 Notre objectif sera de trouver une base de $\boldsymbol{\psi}$ qui *découple* ces deux équations.
-Par inspection (et traditionnellement), on peut poser deux combinaisons linéaires, soit
+Par inspection (et traditionnellement) (voir [cite:@vallis_2006 p.230], on peut poser deux combinaisons linéaires, soit
 \begin{align}
    &&\hat{\psi} = \psi_1 - \psi_2 ,&& \bar{\psi} = \frac{H_1\psi_1 + H_2\psi_2}{H_1+H_2}, &&
 \end{align}
@@ -470,5 +470,21 @@ La matrice $A$ est seulement normale lorsque la stratification est constante, do
 $N^2$ est pareil sur toute la colonne d'eau.
 Mentionnons que le cas analytique à 3 couches identiques a d'ailleurs déjà été résolue analytiquement dans le [[file:rapport-2023-04-07.pdf][rapport du début d'avril]], donc je ne le referais pas ici.
 J'en ai déjà beaucoup trop refait...
+
+* Implémentation fonctions barotropes
+Avant tout, rappellons que la décomposition de Helmholtz est définie par
+\begin{subequations}
+\begin{align}
+   \uu &= -\gradient{\phi} + \kvf \times \gradient{\psi},\\
+   \divergence{\uu} &= -\laplacian{\phi},\\
+   \kvf\cdot\curl{\uu} &= \laplacian{\psi}.
+\end{align}
+\end{subequations}
+Donc, on peut trouver la fonction de courant $\psi(k)$ en solvant l'équation précédente à l'aide de Fishpack.
+Comme les fonctions baroclines verticales ont été définies précédemment $\hat{\psi}$, on trouve les modes baroclines à l'aide de
+\begin{align}
+   &&\psi_\text{mode}^i = \sum_k^{nz} \hat{\psi}^i(k)\cdot  \psi_k(x,y),
+   &&\zeta_\text{mode}^i = \sum_k^{nz} \hat{\psi}^i(k)\cdot  \zeta_k(x,y).&&
+\end{align}
 
 #+print_bibliography:
