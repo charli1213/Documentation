@@ -1,0 +1,35 @@
+#+title: Carnet de bord, Université McGill
+#+author: Charles-Édouard Lizotte
+#+date:29/09/2023
+#+LATEX_CLASS: org-report
+#+CITE_EXPORT: natbib
+#+LANGUAGE: fr
+#+BIBLIOGRAPHY: master-bibliography.bib
+#+OPTIONS: toc:nil title:nil
+
+
+\mytitlepage
+\tableofcontents\newpage
+
+* TODO Résoudre le problème de densité [0%] -- <2023-09-25 Mon> 
+DEADLINE: <2023-09-26 Tue>
+
+On va tout faire ça d'un coup.
++ [ ] Transférer le code du modèle /shallow water/ sur Oxygen à l'aide de /git/;
++ [ ] Écriture d'un /decay scale/ pour la densité. 
+  On se souvient que le /decay scale/ devrait donner une stratification telle que
+  \begin{align}
+    && \rho(z) = \exp{z/\chi} && \text{où} && \chi = 1000\ [m]. &&
+  \end{align}
+
++ [ ] Création d'un lanceur /bash/ pour tester entre 2 et 10 couches sur Oxygen;
++ [ ] Adaptation du paramètre de frottement au fond (/r/) selon le résultat de la fonction de courant barotrope moyennée dans le temps;
+  
+Une fois ces quatre étapes accomplies, le /set-up/ de référence sera assez solide.
+On espère seulement qu'il n'y aura pas trop d'erreur numérique et/ou de couches qui arrivent à zéro.
+
+
+* Lancement des runs couplées [0%] -- <2023-09-27 Wed> 
+Avant de lancer le couplage, il faut juste s'assurer que
++ [ ] La sous-routine /ww3 shel/ a les bonnes dates;
++ [ ] Les /restart files/ fonctionnent bien.

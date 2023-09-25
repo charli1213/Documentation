@@ -317,7 +317,7 @@ donc
 Mentionnons que c'est différent de ce que nous avions trouvé avec la méthode traditionnelle, je sais pas trop pourquoi... anyway.\bigskip
 
 
-*** Résultats analytiquemes vs numériques -- <2023-09-06 Wed>
+*** Résultats analytiques vs numériques -- <2023-09-06 Wed>
 
 Pour des paramètres de l'ordre de ceux dans le tableau suivant,
 
@@ -486,5 +486,55 @@ Comme les fonctions baroclines verticales ont été définies précédemment $\h
    &&\psi_\text{mode}^i = \sum_k^{nz} \hat{\psi}^i(k)\cdot  \psi_k(x,y),
    &&\zeta_\text{mode}^i = \sum_k^{nz} \hat{\psi}^i(k)\cdot  \zeta_k(x,y).&&
 \end{align}
+
+
+
+* Stratification -- <2023-09-11 Mon>
+À deux couches, on se souvient que le calcul des valeurs propres nous amène à
+\begin{align}
+   && \lambda_1 = 0 && \lambda_2 = \frac{f_0^2}{g} \qty(\frac{H_1+H_2}{H_1 H_2}) = k_d^2. &&
+\end{align}
+Et le rayon de déformation de Rossby ($\L_D$) est relié à la vitesse des ondes baroclines par
+\begin{equation}
+   L_D = \frac{c_{bc}}{f_0}.
+\end{equation}
+En substituant, on retrouve finalement
+#+NAME: eq:cbcrho
+\begin{equation}
+   \boxed{\hspace{0.3cm}\Delta\rho = \qty(\frac{H_1+H_2}{H_1H_2})\pt\rho_1 g c_{bc}^2.\venti\hspace{0.3cm}}
+\end{equation}
+Concrétement, l'équation [[eq:cbcrho]] nous renseigne sur l'intégration la vitesse des ondes baroclines dans la stratification entre la première et la seconde couche.
+
+** Stratification raisonnable -- <2023-09-11 Mon>
+La stratification devrait -- grosso modo -- suivre une courbe exponentielle décroissante.
+Pour s'assurer que la vitesse des ondes baroclines soit toujours la même entre chaque couche, on utilise la règle
+\begin{equation}
+   \rho_k = \rho_{k-1} + \frac{\rho_1}{g}\pt\qty(\frac{H_{k-1}+H_k}{H_{k-1}H_k})\cdot c_{bc}^2
+\end{equation}
+
+Les résultats de la construction précédente se retrouvent dans le tableau [[tab:densities]]
+
+#+NAME: tab:densities
+#+CAPTION: Épaisseurs et densités des différentes couches pour le test du modèle à 5 couches.
+| Nom                             | Symbole | Valeur | Unités |
+|---------------------------------+---------+--------+--------|
+|---------------------------------+---------+--------+--------|
+| /                               |   <c>   |  <c>   |  <c>   |
+| Densité de la première couche   | \rho_1  | 1000.0 | kg/m^3 |
+| Densité de la seconde couche    | \rho_2  | 1005.3 | kg/m^3 |
+| Densité de la troisième couche  | \rho_3  | 1007.3 | kg/m^3 |
+| Densité de la quatrième couche  | \rho_4  | 1008.4 | kg/m^3 |
+| Densité de la dernière couche   | \rho_5  | 1009.0 | kg/m^3 |
+|---------------------------------+---------+--------+--------|
+| Épaisseur de la première couche |   H_1   |  100   |   m    |
+| Épaisseur de la première couche |   H_2   |  300   |   m    |
+| Épaisseur de la première couche |   H_3   |  600   |   m    |
+| Épaisseur de la première couche |   H_4   |  1000  |   m    |
+| Épaisseur de la première couche |   H_5   |  2000  |   m    |
+|---------------------------------+---------+--------+--------|
+|---------------------------------+---------+--------+--------|
+
+
+
 
 #+print_bibliography:
