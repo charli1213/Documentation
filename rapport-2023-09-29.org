@@ -11,25 +11,213 @@
 \mytitlepage
 \tableofcontents\newpage
 
-* TODO Résoudre le problème de densité [0%] -- <2023-09-25 Mon> 
+* TODO Résoudre le problème de densité [83%] -- <2023-09-25 Mon> 
 DEADLINE: <2023-09-26 Tue>
 
-On va tout faire ça d'un coup.
-+ [ ] Transférer le code du modèle /shallow water/ sur Oxygen à l'aide de /git/;
-+ [ ] Écriture d'un /decay scale/ pour la densité. 
-  On se souvient que le /decay scale/ devrait donner une stratification telle que
-  \begin{align}
-    && \rho(z) = \exp{z/\chi} && \text{où} && \chi = 1000\ [m]. &&
-  \end{align}
+  #+NAME: fig:epaisseurs
+  #+CAPTION: Discrétisation des épaisseurs de couches pour un cas linéaire et exponentiel.
+  \begin{wrapfigure}[12]{r}{0.4\textwidth}
+  \vspace{-\baselineskip}
+  \begin{center}
+  \begin{tikzpicture}   
+     \draw[dotted] (0,0) grid (4.5,4.5);
+     \draw[->] (0,0) -- (4.5,0);
+     \draw[->] (0,0) -- (0,4.5);
+     \draw[blue] (0,0) -- (4,4);
+    % x-axis
+     \draw (1,-0.3) node [] {$\sfrac{1}{nz}$};
+     \draw (2,-0.3) node [] {$\sfrac{2}{nz}$};
+     \draw (3,-0.3) node [] {$\cdots$};
+     \draw (4,-0.3) node [] {$\sfrac{nz}{nz}$};
+    % y-axis
+     \draw (-0.4,1) node [] {$\sfrac{1}{nz}$};
+     \draw (-0.4,2) node [] {$\sfrac{2}{nz}$};
+     \draw (-0.4,3) node [] {$\cdots$};
+     \draw (-0.4,4) node [] {$\sfrac{nz}{nz}$};
+  \end{tikzpicture}
+  \bigskip
+  \begin{tikzpicture}   
+     \draw[dotted] (0,0) grid (4.5,4.5);
+     \draw[->] (0,0) -- (4.5,0);
+     \draw[->] (0,0) -- (0,4.5);
+    % x-axis
+     \draw (1,-0.3) node [] {$\sfrac{1}{nz}$};
+     \draw (2,-0.3) node [] {$\sfrac{2}{nz}$};
+     \draw (3,-0.3) node [] {$\cdots$};
+     \draw (4,-0.3) node [] {$\sfrac{nz}{nz}$};
+    % y-axis
+     \draw (-0.4,1) node [] {$\sfrac{1}{nz}$};
+     \draw (-0.4,2) node [] {$\sfrac{2}{nz}$};
+     \draw (-0.4,3) node [] {$\cdots$};
+     \draw (-0.4,4) node [] {$\sfrac{nz}{nz}$};
+     \draw[scale=1,domain=0:4,smooth,variable=\x,blue] plot ({\x},{1.1*exp(2*\x/4)/2.718+1.0});
+  \end{tikzpicture}
+  \end{center}
+  \end{wrapfigure}
 
-+ [ ] Création d'un lanceur /bash/ pour tester entre 2 et 10 couches sur Oxygen;
-+ [ ] Adaptation du paramètre de frottement au fond (/r/) selon le résultat de la fonction de courant barotrope moyennée dans le temps;
+
+On va tout faire ça d'un coup.
+
++ [X] *Transférer le code du modèle /shallow water/ sur Oxygen à l'aide de /git/ ;*
+
+  Ça fonctionne très bien, tous les compilateurs sont installés.
+  J'ai parlé à Ambrish et tout devrait être en ordre, techniquement.
+  Il m'a aussi donné accès au /storage/ de Oxygen.\bigskip
+  
++ [X] *Création d'un lanceur /bash/ pour tester entre 2 et 10 couches sur Oxygen ;*
+  
+  Essentiellement, il fallait aussi reconfigurer les tous les code simples qui avaient été réalisés pendant la maîtrise.
+  Ça m'a permis de me remettre à jour en /bash/.
+  Entre autres, les codes à remetter à jour étaient
+  + /create case oxygen/ ;
+  + /create case local/ ;
+  + /compile model/.\bigskip
+    
++ [X] *Écriture d'un « decay scale » pour la densité ;*
+  
+  On se souvient que le /decay scale/ devrait donner une stratification telle que
+  #+NAME: eq:strat
+  \begin{align}
+    && \rho(z) = \rho_0 - \tilde{\rho}\exp{\ z/\chi\tall\ } && \text{où} && \chi = 1000\ [m]. &&
+  \end{align}
+  Après un peu de /fuck around and find out/, j'ai /fine tunné/ les paramètres de l'équation [[eq:strat]] pour obtenir une estimation réaliste de la densité de l'océan.
+  Ces paramètes se retrouvent dans le tableau [[tab:density]].\bigskip
+
+#+NAME:tab:density
+#+CAPTION: Résumé des paramètres utilisés dans notre configuration pour la densité (eq. [[eq:strat]]).
+|------------------------------------------+----------------+--------+----------------|
+|------------------------------------------+----------------+--------+----------------|
+| /                                        |      <c>       |  <c>   |      <c>       |
+| Description                              |    Symbole     | Valeur |    Unitées     |
+|------------------------------------------+----------------+--------+----------------|
+| Amplitude de l'exponentielle             | $\tilde{\rho}$ |  3.00  | kg\cdot m^{-3} |
+| Densité maximale                         |     \rho_0     |  1028  | kg\cdot m^{-3} |
+| Longueur de décroissance (/decay scale/) |      \chi      |  1000  |       m        |
+| profondeur                               |       z        |  ---   |       m        |
+|------------------------------------------+----------------+--------+----------------|
+
++ [X] *Créer un mécanisme qui détermine l'épaisseur des couches ;*
+  
+  Techniquement, on veut des épaisseurs qui croîent exponentiellement en fonction de la profondeur, comme illustré à la figure [[fig:epaisseurs]]. 
+
+  
++ [X] *Lancement des runs sur Oxygen ;*
+  
+  Pour se connecter sur Oxygen,
+  #+begin_src bash
+     ssh -Y celizotte@jump.meteo.mcgill.ca
+  #+end_src
+  À partir de là, il est possible d'ouvrir Oxygen à l'aide de la commande
+  #+begin_src bash
+     ssh -Y oxygen.meteo.mcgill.ca
+  #+end_src
+  Il ne faut pas oublier le -Y pour pouvoir ouvrir des figures.
+  
++ [ ] *Adaptation du paramètre de frottement au fond ($r_{drag}$) ;*
+  
+  Selon le résultat de la fonction de courant barotrope moyennée dans le temps, il serait pertinent d'obtenir une énergie similaire dans tous les cas.
+  Plus la couche est épaisse, plus on retire du courant, donc il faudrait que ce paramètre soit modulable en fonction de l'épaisseur de cette dernière.
   
 Une fois ces quatre étapes accomplies, le /set-up/ de référence sera assez solide.
 On espère seulement qu'il n'y aura pas trop d'erreur numérique et/ou de couches qui arrivent à zéro.
 
+** Premier test -- <2023-09-26 mar.>
 
-* Lancement des runs couplées [0%] -- <2023-09-27 Wed> 
+Toutes les tests ont eu des couches qui ont atteinte des épaisseurs nulles.
+La stratification était définie selon l'équation [[eq:strat]].
+
+#+NAME:tab:density2
+#+CAPTION: Résumé des paramètres utilisés dans notre configuration pour la densité (eq. [[eq:strat]]).
+|------------------------------------------+----------------+--------+----------------|
+|------------------------------------------+----------------+--------+----------------|
+| /                                        |      <c>       |  <c>   |      <c>       |
+| Description                              |    Symbole     | Valeur |    Unitées     |
+|------------------------------------------+----------------+--------+----------------|
+| Amplitude de l'exponentielle             | $\tilde{\rho}$ |  4.00  | kg\cdot m^{-3} |
+| Densité maximale                         |     \rho_0     |  1028  | kg\cdot m^{-3} |
+| Longueur de décroissance (/decay scale/) |      \chi      |  1000  |       m        |
+| profondeur                               |       z        |  ---   |       m        |
+|------------------------------------------+----------------+--------+----------------|
+
+Ce qui nous donnait des paramètres de tourbillons énoncés dans le tableau [[tab:eddieparams]]. 
+
+#+NAME: tab:eddieparams
+#+CAPTION: Portrait des ondes barocliniques retrouvées dans nos test  associées à la stratification énoncée au tableau [[tab:density2]].
+|-------------------+--------+--------+--------+--------+--------|
+|-------------------+--------+--------+--------+--------+--------|
+|        <c>        |  <c>   |  <c>   |  <c>   |  <c>   |  <c>   |
+| Nombre de couches |   2    |   4    |   6    |   8    |   10   |
+|-------------------+--------+--------+--------+--------+--------|
+|                   | \infty | \infty | \infty | \infty | \infty |
+|      c_{cb}       |  3.4   |  3.1   |  3.1   |  3.1   |  3.1   |
+|  [m\cdot s^{-1}]  |        |  1.7   |   à    |   à    |   à    |
+|                   |        |  1.2   |  1.1   |  0.4   |  0.4   |
+|-------------------+--------+--------+--------+--------+--------|
+|                   | \infty | \infty | \infty | \infty | \infty |
+|        L_d        |  48.0  |  16.7  |  8.9   |  5.7   |  4.2   |
+|       [km]        |        |   à    |   à    |   à    |   à    |
+|                   |        |  44.6  |  44.2  |  44.2  |  44.1  |
+|-------------------+--------+--------+--------+--------+--------|
+
+Bref, les trosi dernières expériences ont des niveaux qui ont atteint une épaisseur nulle.
+On se lance donc dans le prochain test.
+
+** Tests subséquents -- <2023-09-27 mer.>
+
+On augmente de nouveau la stratification en espérant que ça permette de retenir un peu l'épaisseur des couches.
+je ne crois pas qu'on soit rendu au point critique où l'instabilité numérique apparaisse. 
+#+NAME:tab:density3
+#+CAPTION: Résumé des paramètres utilisés dans notre configuration pour la densité (eq. [[eq:strat]]).
+|------------------------------------------+----------------+--------+----------------|
+|------------------------------------------+----------------+--------+----------------|
+| /                                        |      <c>       |  <c>   |      <c>       |
+| Description                              |    Symbole     | Valeur |    Unitées     |
+|------------------------------------------+----------------+--------+----------------|
+| Amplitude de l'exponentielle             | $\tilde{\rho}$ |  5.00  | kg\cdot m^{-3} |
+| Densité maximale                         |     \rho_0     |  1028  | kg\cdot m^{-3} |
+| Longueur de décroissance (/decay scale/) |      \chi      |  1000  |       m        |
+| profondeur                               |       z        |  ---   |       m        |
+|------------------------------------------+----------------+--------+----------------|
+
+On a aussi fait des test pour $\tilde{\rho}$ de 6.00 et 7.00, mais sans succès (Voir tableau [[tab:break]]).
+*Toutes les runs* ont atteint des épaisseurs nulles à un point où un autre.
+Il semble qu'on atteint des courants de surface de 4.5 m/s, ce qui est *très curieux*.
+
+#+CAPTION: Nombre d'outputs avant que l'épaisseur de la première couche devienne nulle.
+#+NAME: tab:break
+|--------------------------+-----------+-----------+-----------+-----------+------------|
+|--------------------------+-----------+-----------+-----------+-----------+------------|
+| Paramètre $\tilde{\rho}$ | 2 couches | 4 couches | 6 couches | 8 couches | 10 couches |
+|--------------------------+-----------+-----------+-----------+-----------+------------|
+|           <c>            |    <c>    |    <c>    |    <c>    |    <c>    |    <c>     |
+|            5             |   11114   |   4660    |    607    |    376    |    297     |
+|            6             |   11069   |   4451    |    771    |    387    |    304     |
+|            7             |   11632   |   4188    |    980    |    399    |    311     |
+|--------------------------+-----------+-----------+-----------+-----------+------------|
+
+Au devant de ces échecs, j'ai relancé 9 runs à /nz/ = (2 6 8) et un multiplicateur du coefficient de friction de $r_{drag}$ = (2 4 6).
+
+* Travail sur les runs couplées [0%] -- <2023-09-28 jeu.>
+
+** Installation de Wavewatch III sur Oxygen [33%]
+DEADLINE: <2023-09-28 jeu.>
++ [X] *Extraction du modèle depuis le site web de la NOAA ;*
+  Comme mentionné dans le [[file:rapport-2023-09-22.pdf][rapport précédent]], on peut trouver le modèle sur le site https://polar.ncep.noaa.gov/waves/wavewatch/distribution/.
+  Les indicatifs sont donnés par
+  #+begin_src bash
+    username: converter1091
+    password: contractor8409
+  #+end_src
++ [ ] *Installation ;*
+  Pour l'installation, il faut s'assurer que l'exécutable qui ouvre tous les *.tar* fonctionne bien.
+  Tout a bien été, par contre, il faut demander à Ambrish d'installer la commande /nc-config/, car Wavewatch s'en sert pour faire fonctionner les NetCDF.
++ [ ] *Création de la config ;*
+  Il faudrait juste s'assurer que la config que j'ai créée sur mon portable fonctionne avec le compilateur Intel et les /switches/ que j'ai choisit.
+
+Une fois ces tâches accomplies, on peut se lancer à 100\% sur les runs couplées. 
+  
+** Lancement des runs couplées sur Oxygen
+DEADLINE: <2023-09-29 ven.>
 Avant de lancer le couplage, il faut juste s'assurer que
 + [ ] La sous-routine /ww3 shel/ a les bonnes dates;
 + [ ] Les /restart files/ fonctionnent bien.

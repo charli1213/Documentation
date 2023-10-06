@@ -1,41 +1,42 @@
-% Created 2023-09-18 Mon 11:02
+% Created 2023-09-25 lun. 16:54
 % Intended LaTeX compiler: pdflatex
 
 % =================================BASE====================================%
 \documentclass[10pt]{article}
 \usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry} % Marges
-%\usepackage{libertine}
-%\usepackage{libertinust1math}
 \usepackage[T1]{fontenc} % Nécessaire avec FrenchBabel
 \usepackage[utf8]{inputenc} % Important pour symboles Francophones, é,à,etc
 
+
+% Calligraphie
 \usepackage{lmodern}
 \renewcommand{\familydefault}{cmr} % La meilleure police (CMU Serif Roman) (Je me suis battu).
 \usepackage{mathrsfs} %Permet la command \mathscr (Lettres attachées genre)
 
+% Bibliographie
 \usepackage[round, sort]{natbib} % Bibliographie
 \bibliographystyle{abbrvnat}
 
 
-
 \usepackage{amsmath, amssymb, amsthm} % Symb. math. (Mathmode+Textmode) + Beaux théorèmes.
-
-\usepackage{mathtools,cancel,nicefrac} % Utilisation de boîtes \boxed{} + \cancelto{}{}
+%\usepackage{mathtools,cancel,nicefrac} % Utilisation de boîtes \boxed{} + \cancelto{}{}
+\usepackage{mathtools,cancel} % Utilisation de boîtes \boxed{} + \cancelto{}{}
 \usepackage{graphicx, wrapfig} % Géstion des figures.
 \usepackage{hyperref} % Permettre l'utilisation d'hyperliens.
 \usepackage{color} % Permettre l'utilisation des couleurs.
 \usepackage[dvipsnames]{xcolor} % Couleurs avancées.
 \usepackage{titling} % Donne accès à \theauthor, \thetitle, \thedate
 
-% >>> Physique >>>
+% Physique
 \usepackage{physics} % Meilleur package pour physicien. 
 \usepackage{pxfonts} % Rajoute PLEIN de symboles mathématiques, dont les intégrales doubles et triples
-% <<< Physique <<<
 
+% Style
 \usepackage{lipsum} % For fun
 \usepackage{tikz} % Realisation de figures TIKZ.
 \usepackage{empheq} % Boite autour de MULTIPLE équations
 
+% Français
 \usepackage[french]{babel} % Environnements en Français.
 % ==============================BASE-(END)=================================%
 
@@ -43,7 +44,8 @@
 
 % ================================SETTINGS=================================%
 % Pas d'indentation en début de paragraphe :
-\setlength\parindent{0pt} 
+\setlength\parindent{0pt}
+\setlength{\parskip}{0.15cm}
 
 % Couleurs de hyperliens :
 \definecolor{mypink}{RGB}{147, 0, 255}
@@ -77,27 +79,21 @@
 
 
 % ==============================NEWCOMMANDS================================%
-% Degrés Celsius :
-\newcommand{\celsius}{${}^\circ$ C} % \degrée Celsius : Pas mal plus simple qu'utilise le package gensymb qui plante avec tout...
 
 % Vecteurs de base :
 \newcommand{\nvf}{\vb{\hat{n}}}
 \newcommand{\ivf}{\vb{\hat{i}}}
 \newcommand{\jvf}{\vb{\hat{j}}}
 \newcommand{\kvf}{\vb{\hat{k}}}
-
 \newcommand{\uu}{\vb*{u}}
 \newcommand{\vv}{\vb*{v}}
-
-% Boîte vide pour ajuster les underbrace
-\newcommand{\bigno}{\vphantom{\qty(\frac{d}{q})}}
-\newcommand{\pt}{\hspace{1pt}}
 
 % Physics empty spaces 
 \newcommand{\typical}{\vphantom{A}}
 \newcommand{\tall}{\vphantom{A^{x^x}_p}}
 \newcommand{\grande}{\vphantom{\frac{1}{xx}}}
 \newcommand{\venti}{\vphantom{\sum_x^x}}
+\newcommand{\pt}{\hspace{1pt}} % One horizontal pt space
 
 % Moyenne numérique entre deux points de grilles. 
 \newcommand{\xmean}[1]{\overline{#1}^x}
@@ -109,8 +105,8 @@
 \newcommand{\tpsi}{\tilde{\psi}}
 \newcommand{\tphi}{\tilde{\phi}}
 
-% Nota Bene env :
-\newcommand{\nb}{\ding{165}\ \textbf{N.B.}\hspace{4pt}}
+% Nota Bene env : (\ding{89})
+\newcommand{\nb}{\raisebox{0.8pt}{\scriptsize\textleaf}\ $\mathscr{N. B.}$\hspace{4pt}}
    
 % ==============================NEWCOMMANDS================================%
 
@@ -146,7 +142,7 @@ ISMER-UQAR
 \usepackage{fancyhdr}
 \pagestyle{fancy}
 \setlength{\headheight}{13pt}
-\renewcommand{\headrulewidth}{0.05pt} % Ligne horizontale en haut
+\renewcommand{\headrulewidth}{0.025pt} % Ligne horizontale en haut
 
 \fancyhead[R]{\textit{\thetitle}}
 \fancyhead[L]{\ \thepage}
@@ -162,29 +158,29 @@ ISMER-UQAR
  pdftitle={Carnet de bord, Université McGill},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 27.1 (Org mode 9.6.7)}, 
+ pdfcreator={Emacs 28.2 (Org mode 9.6.5)}, 
  pdflang={French}}
 \begin{document}
 
 \mytitlepage
 \tableofcontents\newpage
 
-\section{Diatribes mathématiques -- \textit{<2023-08-28 Mon>}}
-\label{sec:org128dfcf}
+\section{Diatribes mathématiques -- \textit{<2023-08-28 lun.>}}
+\label{sec:org421e968}
 L'implémentation de MUDPACK et notre insatisfaction m'amène à voir s'il y aurait d'autres méthodes mathématiques pour résoudre notre problème.
 En somme, l'équation différentielle partielle à résoudre est une équation elliptique -- plus précisément une équation de Poisson -- composée d'une dérivée de second ordre et d'une autre de premier ordre.
 Soit,
 \begin{equation}
-\label{eq:orgf0db307}
+\label{eq:orgc78413c}
    \laplacian{\psi} = \kvf \cdot \curl{\uu_{BT}}.
 \end{equation}
-L'équation \ref{eq:orgf0db307} est composée de dérivées de second ordre, mais existe-t-il un moyen de la réduire au premier ordre, considérant que l'erreur induite dans \emph{MUDPACK} est affectée par la précision des chiffres significatifs?
+L'équation \ref{eq:orgc78413c} est composée de dérivées de second ordre, mais existe-t-il un moyen de la réduire au premier ordre, considérant que l'erreur induite dans \emph{MUDPACK} est affectée par la précision des chiffres significatifs?
 La réponse est probablement négative, mais essayons quand même pour se redonner confiance.
 Utilisons la relation
 \begin{equation}
    \curl(\vb{A}\times\vb{B}) = \vb{A}\qty(\divergence{\vb{B}}) - \vb{B}\qty(\divergence{\vb{A}}) +\qty(\vb{B}\cdot\gradient)\vb{A} -\qty(\vb{A}\cdot\gradient)\vb{B}.
 \end{equation}
-En premier, comme le courant est donné par la relation \(\uu_{BT} = \kvf \times \gradient{\psi}\), on peut développer l'équation \ref{eq:orgf0db307},
+En premier, comme le courant est donné par la relation \(\uu_{BT} = \kvf \times \gradient{\psi}\), on peut développer l'équation \ref{eq:orgc78413c},
 \begin{align}
    \div{\gradient{\psi}}
    \venti&= \kvf \cdot \qty(\kvf \times \gradient{\psi}),\nonumber \\
@@ -195,46 +191,46 @@ En premier, comme le courant est donné par la relation \(\uu_{BT} = \kvf \times
 \end{align}
 Ouin\ldots{} dommage. Les maths fonctionnent en tout cas\ldots{}
 
-\section{Fishpack -- \textit{<2023-08-29 Tue>}}
-\label{sec:orgd153962}
+\section{Fishpack -- \textit{<2023-08-29 mar.>}}
+\label{sec:orga82edac}
 
 \begin{figure}[!htpb]
 \centering
 \includegraphics[width=0.8\textwidth]{figures/fishpack/2023-08-29-fishtest.png}
-\caption{\label{fig:orga06aeee}Comparaison des mêmes quantités évaluées avec MUDPACK, mais avec le solveur Fishpack. Résultat ahurissant.}
+\caption{\label{fig:org7dc374c}Comparaison des mêmes quantités évaluées avec MUDPACK, mais avec le solveur Fishpack. Résultat ahurissant.}
 \end{figure}
 
 Ce lundi soir et mardi, j'étais un peu épuisé qu'on perde autant de temps sur \emph{MUDPACK}, c'est pourquoi j'ai commencé à regarder ailleurs.
-Entre autre, un article en ligne comparait l'efficacité de trois méthodes pour solutionner rapidement les équations différentielles partielles du genre de celle à laquelle on a affaire (équation \ref{eq:orgf0db307}).\bigskip
+Entre autre, un article en ligne comparait l'efficacité de trois méthodes pour solutionner rapidement les équations différentielles partielles du genre de celle à laquelle on a affaire (équation \ref{eq:orgc78413c}).\bigskip
 
 Concrétement, \emph{MUDPACK} était la moins bonne, mais il mentionnait un autre module nommé \emph{fishpack}.
 Donc, je me suis lancé.
 Deux versions existaient en ligne, soit celle de NCAR et une \href{https://github.com/jlokimlin/fishpack}{version mise à jour} il y a 6 ans.
 Bien entendu j'ai pris la plus récente pour m'assurer qu'on puisse utiliser les type DOUBLE PRECISION.\bigskip
 
-Après une journée de travail, j'en suis arrivé à la figure \ref{fig:orga06aeee}.
+Après une journée de travail, j'en suis arrivé à la figure \ref{fig:org7dc374c}.
 Le résultat est ahurissant, on obtient une erreur absolue de l'ordre de \(10^{-12}\) et un écart de \(\zeta\) de \(10^{-11}\).
 On peut en déduire de \emph{MUDPACK} est complétement surclassé.
 Sans oublier que le temps de calcul est minimal aussi.
 
-\subsection{Implémentation dans le modèle en eau peu profonde -- \textit{<2023-08-30 Wed>}}
-\label{sec:org822c1da}
+\subsection{Implémentation dans le modèle en eau peu profonde -- \textit{<2023-08-30 mer.>}}
+\label{sec:org741d415}
 
-Comme au premier jet, nous solvons l'équation \ref{eq:orgf0db307} directement.
+Comme au premier jet, nous solvons l'équation \ref{eq:orgc78413c} directement.
 Donc, aucun besoin de corriger le RHS ou l'écart entre les deux champs : on corrige directement le champ courant (donc celui mis à jour : \(ilevel=3\)).
 Si le besoin pour une meilleure précision se fait sentir, on pourra revenir à nos bonnes habitudes de seulement corriger l'écart entre les champs \(ilevel=1\) et \(ilevel=3\), de sorte à suivre le pas de temps de type \emph{leapfrog}.
 
-\subsubsection{Rappel de l'analyse dimensionelle associée au vent \textit{<2023-08-31 Thu>}}
-\label{sec:org0bf2484}
+\subsubsection{Rappel de l'analyse dimensionelle associée au vent \textit{<2023-08-31 jeu.>}}
+\label{sec:org3e0b947}
 La nuit dernière, j'ai lancé une simulation de 10 ans, mais nous sommes toujours dans le \emph{spin up}.
 Après un peu de débroussaillage, j'ai vu que ça venait probablement du \(\tau\) insuffisant.,
 À la base, j'avais mis ça car David voulait voir le système évoluer sans les termes non-linéaires et je l'avais oublié là.
 J'ai relancé la simulation avec un vent de \(\tau = 0.1 Nm^{-2}\).\bigskip
 
-Les paramètres sont illustrés dans le tableau \ref{tab:org81f8597}.
+Les paramètres sont illustrés dans le tableau \ref{tab:org7dca455}.
 
 \begin{table}[htbp]
-\caption{\label{tab:org81f8597}Paramètres utilisés dans la simulation de jeudi matin (\textit{<2023-08-31 Thu>}).}
+\caption{\label{tab:org7dca455}Paramètres utilisés dans la simulation de jeudi matin (\textit{<2023-08-31 jeu.>}).}
 \centering
 \begin{tabular}{llrl}
 \hline
@@ -267,16 +263,16 @@ Pour le terme associé au frottement visqueux du vent à la surface,
 \end{equation}
 Bonne nouvelle! Notre schéma pour le frottement visqueux à la surface est bon et je ne fais pas des erreurs stupides depuis 6 mois! \emph{Cheers!} \bigskip
 
-Le test est réussi! Ça marche à merveille (voir figure \ref{fig:orgcc464a6}).
+Le test est réussi! Ça marche à merveille (voir figure \ref{fig:org9400040}).
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figures/tests/2023-09-06_8panneaux_zetaBT.png}
-\caption{\label{fig:orgcc464a6}« Snapshots » (ou figures instantanées) de la vorticité barotrope calculée sur le domaines à différents moments. On voit apparaître les doubles gyres de Stommel.}
+\caption{\label{fig:org9400040}« Snapshots » (ou figures instantanées) de la vorticité barotrope calculée sur le domaines à différents moments. On voit apparaître les doubles gyres de Stommel.}
 \end{figure}
 
-\section{Modes baroclines pour l'étude des ondes de Rossby -- \textit{<2023-09-05 Tue>}}
-\label{sec:org4972f63}
+\section{Modes baroclines pour l'étude des ondes de Rossby -- \textit{<2023-09-05 mar.>}}
+\label{sec:orgefa11a6}
 
 Dans un \href{rapport-2023-04-07.pdf}{rapport précédent}, nous avions utilisé le module \emph{LAPACK} pour retrouver les rayons de déformation de Rossby.
 Le cadre théorique autour de la matière ce retrouve dans le \href{rapport-2023-03-24.pdf}{rapport de la fin du mois de mars}.
@@ -312,17 +308,17 @@ Finalement, encore d'autres éléments théoriques ont été amenés dans le \hr
 \draw[>=stealth, ->|] (H2) -- (4.3,-3);
 \end{tikzpicture}
 \end{center}
-\caption{\label{org162d1ae}Illustration d'un modèle \textit{shallow water} à deux couches (\(n_k = 2\)).}
+\caption{\label{org5324545}Illustration d'un modèle \textit{shallow water} à deux couches (\(n_k = 2\)).}
 \end{wrapfigure}
 
 En premier lieu, dans un milieu continu linéarisé autour d'un courant moyen (ce qu'on appelle généralement un \emph{background flow}), l'équation d'évolution pour la vorticité potentielle quasi-géostrophique (QGPV) est donnée par
 \begin{equation}
-\label{eq:org65f42fd}
+\label{eq:orgff5a29f}
    \pdv{}{t} \qty[\laplacian\psi + \qty(\frac{f^2}{N^2})\pdv[2]{\psi}{z}] + \beta \pdv{\psi}{x} = 0.
 \end{equation}
 Comme point de départ, reprenons le système d'équations en eau peu profonde discrétisé en deux couches (\emph{Shallow Water Quasi-Geostrophic} abbrévé par \emph{SWQG}), soit
 \begin{subequations}
-\label{eq:orga00089f}
+\label{eq:org44e9d00}
 \begin{align}
    &\pdv{}{t} \qty[\laplacian\psi_1 + \qty(\frac{f_0^2}{g'H_1}) \pt(\psi_2 - \psi_1)] + \beta \pdv{\psi_1}{x} = 0,\\
    &\pdv{}{t} \qty[\laplacian\psi_2 + \qty(\frac{f_0^2}{g'H_2}) \pt(\psi_1 - \psi_2)] + \beta \pdv{\psi_2}{x} = 0.
@@ -348,21 +344,21 @@ où \(L_R\) est le rayon de déformation de Rossby qui est définit par
    && L_R \equiv \frac{f_0}{\sqrt{g'\hat{H}}}, && \hat{H} = \frac{H_1H_2}{H_1+H_2}.&&
 \end{align}
 
-\subsection{Décomposition à l'aide du problème au valeurs propres -- \textit{<2023-09-05 Tue>}}
-\label{sec:orgdefab41}
+\subsection{Décomposition à l'aide du problème au valeurs propres -- \textit{<2023-09-05 mar.>}}
+\label{sec:org8a2aed4}
 
 Ok, la méthode traditionnelle est \emph{bin correct}, mais elle ne fonctionne pas pour plusieurs couches.
 Dans un problème à plusieurs couches, il faudrait trouver une base de solutions qui découplent les équations précédentes -- ce qui est essentiellement la description du problème aux valeurs propres.
-En solvant l'équation caractéristique \ref{eq:org1caaf75}, on trouve justement une base qui solutionne notre système d'équations linéaires, donc qui trouve une base de solutions.
+En solvant l'équation caractéristique \ref{eq:org8531287}, on trouve justement une base qui solutionne notre système d'équations linéaires, donc qui trouve une base de solutions.
 Commençons par poser le problème, soit
 \begin{align}
    && f_1 = \frac{f_0^2}{g'H_1} && \text{et} && f_2 = \frac{f_0^2}{g'H_2}. &&
 \end{align}
 
-On peut alors prendre l'opérateur linéaire décrivant la stratification : \(\mathscr{L} = \qty(\frac{f^2}{N^2})\pt\pdv[2]{\psi}{z}\) et trouver une base de vecteurs propres qui \textbf{découplent} le système d'équations \ref{eq:orgced346b}.
+On peut alors prendre l'opérateur linéaire décrivant la stratification : \(\mathscr{L} = \qty(\frac{f^2}{N^2})\pt\pdv[2]{\psi}{z}\) et trouver une base de vecteurs propres qui \textbf{découplent} le système d'équations \ref{eq:org8757ec6}.
 Construisons la matrice \(A\), soit
 \begin{align}
-\label{eq:org1caaf75}
+\label{eq:org8531287}
 && \mathscr{L} \pt\qty[ \hat{\psi} ] = \qty(\frac{f^2}{N^2})\pt\pdv[2]{}{z} \pt\qty[\hat{\psi}]= 
    \underbrace{
    \begin{pmatrix}
@@ -377,12 +373,12 @@ Construisons la matrice \(A\), soit
    && \boxed{ A \hat{\psi}^i = \lambda_i \hat{\psi}^i. } &&
 \end{align}
 
-\subsubsection{Rafraîchissement rapide sur le problème aux valeurs propres -- \textit{<2023-09-05 Tue>}}
-\label{sec:org9802c44}
+\subsubsection{Rafraîchissement rapide sur le problème aux valeurs propres -- \textit{<2023-09-05 mar.>}}
+\label{sec:org6b05c0a}
 
 C'est un problème aux valeurs propres, donc on peut créer l'équation charactéristique
 \begin{align}
-\label{eq:orga7ccc73}
+\label{eq:orga7b5732}
    && A \vv^i = \lambda_i \vv^i && B \vv_i = (A - \lambda_i I)\vv^i = 0 &&
 \end{align}
 N'oublions pas que par définition, les vecteurs propres doivent être normalisés, de sorte que
@@ -439,14 +435,14 @@ On multiplie la seconde équation par $(\vv^i)^\dagger$,
 \end{align}
 Donc, à moins que $\lambda_i = \lambda_j$ (ce qui n'est pas le cas), les vecteurs $\vv^i$ et $\vv^j$ sont orthogonaux. \end{proof}
 
-\subsubsection{Trouver les fonctions verticales baroclines dans le modèle SWQG à deux couches -- \textit{<2023-09-05 Tue>}}
-\label{sec:org5be3d28}
+\subsubsection{Trouver les fonctions verticales baroclines dans le modèle SWQG à deux couches -- \textit{<2023-09-05 mar.>}}
+\label{sec:org1cf22bd}
 
-À moins que l'épaisseur des deux couches soit la même (\(f_1 = f_2\) donc \(H_1 = H_2\)), notre système d'équations couplées \ref{eq:org1caaf75} ne nous offrira pas vraiment une matrice normale à résoudre (donc \(AA^\dagger\not=A^\dagger A\)).
+À moins que l'épaisseur des deux couches soit la même (\(f_1 = f_2\) donc \(H_1 = H_2\)), notre système d'équations couplées \ref{eq:org8531287} ne nous offrira pas vraiment une matrice normale à résoudre (donc \(AA^\dagger\not=A^\dagger A\)).
 Par conséquent, les fonctions baroclines (ou nos vecteurs propres) ne seront pas orthogonaux (\(\hat{\psi}^i \cdot \hat{\psi}^j \not= 0\)).
 Il est possible que les couches aillent la même épaisseur (ou la même stratification dans le problème à \(>2\) couches), mais ça ne sera jamais vraiment le cas.\bigskip
 
-Utilisons la méthode précédente pour trouver les vecteurs propres de la matrice \(A\) (\ref{eq:org1caaf75}), soit
+Utilisons la méthode précédente pour trouver les vecteurs propres de la matrice \(A\) (\ref{eq:org8531287}), soit
 \begin{align}
    \begin{vmatrix}
      -f_1 - \lambda & f_1 \\
@@ -489,8 +485,8 @@ donc
 Mentionnons que c'est différent de ce que nous avions trouvé avec la méthode traditionnelle, je sais pas trop pourquoi\ldots{} anyway.\bigskip
 
 
-\subsubsection{Résultats analytiques vs numériques -- \textit{<2023-09-06 Wed>}}
-\label{sec:org3bde327}
+\subsubsection{Résultats analytiques vs numériques -- \textit{<2023-09-06 mer.>}}
+\label{sec:orgf1e543e}
 
 Pour des paramètres de l'ordre de ceux dans le tableau suivant,
 
@@ -517,18 +513,18 @@ on retrouve deux vecteurs propres analytiquement, soient
 \end{align}
 \end{subequations}
 
-Et lorsqu'on les compare avec ceux calculés numériquement à l'intérieur de la sous-routine d'initialisation du modèle \emph{shallow water} pour deux couches, on retrouve les mêmes vecteurs propres dans la figure \ref{fig:org4d42380}.
-Donc, il faut en conclure que notre implémentation à nz couches (voir section \ref{org956f0b5} pour comprendre comment on résoud le cas à nz couches) fonctionne aussi pour 2 couches.
+Et lorsqu'on les compare avec ceux calculés numériquement à l'intérieur de la sous-routine d'initialisation du modèle \emph{shallow water} pour deux couches, on retrouve les mêmes vecteurs propres dans la figure \ref{fig:org0b45f2c}.
+Donc, il faut en conclure que notre implémentation à nz couches (voir section \ref{orge19015e} pour comprendre comment on résoud le cas à nz couches) fonctionne aussi pour 2 couches.
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figures/vallis/eigenvalues.png}
-\caption{\label{fig:org4d42380}« Screenshot » des diagnostiques d'algèbre linéaire de LAPACK.}
+\caption{\label{fig:org0b45f2c}« Screenshot » des diagnostiques d'algèbre linéaire de LAPACK.}
 \end{figure}
 \newpage
-\subsection{Fonctions baroclines du cas à plusieurs couches -- \textit{<2023-09-06 Wed>}}
-\label{sec:org05a62aa}
-\label{org956f0b5}
+\subsection{Fonctions baroclines du cas à plusieurs couches -- \textit{<2023-09-06 mer.>}}
+\label{sec:org84a1206}
+\label{orge19015e}
 
 \begin{wrapfigure}{r}{0.5\textwidth}
 \begin{center}
@@ -573,21 +569,21 @@ Donc, il faut en conclure que notre implémentation à nz couches (voir section 
 \draw[>=stealth, ->|] (H4) -- (4.3,-4);
 \end{tikzpicture}
 \end{center}
-\caption{\label{orga29724a}Modèle « shallow water » à 4 couches.}
+\caption{\label{org764d27c}Modèle « shallow water » à 4 couches.}
 \end{wrapfigure}
 
-Dans le cas à plusieurs couches, l'opérateur linéaire de flottabilité (\(\mathscr{L}\pt[\psi]\)) est représenté comme un ratio des variations verticales (\(\eta_{top},\ \eta_{bottom}\) : comme on peut voir à l'équation \ref{eq:orgced346b}) -- ou de \(h_i\) car c'est en fait un terme de «stretching» associé à la conservation de la vorticité.
+Dans le cas à plusieurs couches, l'opérateur linéaire de flottabilité (\(\mathscr{L}\pt[\psi]\)) est représenté comme un ratio des variations verticales (\(\eta_{top},\ \eta_{bottom}\) : comme on peut voir à l'équation \ref{eq:org8757ec6}) -- ou de \(h_i\) car c'est en fait un terme de «stretching» associé à la conservation de la vorticité.
 \begin{equation}
    h_i = H_i + \eta_i - \eta_{i+1}.
 \end{equation}
 
 Notons que cette démarche avait déjà été réalisée dans le \href{rapport-2023-03-31.pdf}{rapport final de mars}, mais nous effectuons un rappel ici-bas car j'ai tout simplement tout oublié.
-Pour toute définition, le lecteur est invité à se référer à la figure \ref{orga29724a}. \bigskip
+Pour toute définition, le lecteur est invité à se référer à la figure \ref{org764d27c}. \bigskip
 
-Concrétement, l'équation de conservation de la vorticité potentielle en \emph{shallow water} (SWQG) dans chaque couche \citep[p.186]{vallis_2006} est trouvée en étandant la définition de l'équation continue \ref{eq:org65f42fd} à un domaine à différences finies.
+Concrétement, l'équation de conservation de la vorticité potentielle en \emph{shallow water} (SWQG) dans chaque couche \citep[p.186]{vallis_2006} est trouvée en étandant la définition de l'équation continue \ref{eq:orgff5a29f} à un domaine à différences finies.
 Il en résulte l'équation
 \begin{equation}
-\label{eq:orgced346b}
+\label{eq:org8757ec6}
    \pdv{}{t} \Bigg[ \laplacian{\psi^2_k} + \underbrace{\qty(\frac{f_0^2}{g_k' H_k})\pt \overbrace{\qty(\psi_{k-1}-\psi_k)\grande}^{\eta\pt(top)} -\pt \qty(\frac{f_0^2}{g_{k+1}' H_k})\pt \overbrace{\qty(\psi_{k} - \psi_{k+1})\grande}^{\eta\pt(bottom)}}_{\mathscr{L \psi}} \Bigg] + \beta\pt \qty(\pdv{\psi_k}{x}) = 0.
 \end{equation}
 
@@ -651,7 +647,7 @@ Mentionnons que le cas analytique à 3 couches identiques a d'ailleurs déjà é
 J'en ai déjà beaucoup trop refait\ldots{}
 
 \section{Implémentation fonctions barotropes}
-\label{sec:org2499bab}
+\label{sec:org38a2752}
 Avant tout, rappellons que la décomposition de Helmholtz est définie par
 \begin{subequations}
 \begin{align}
@@ -669,8 +665,8 @@ Comme les fonctions baroclines verticales ont été définies précédemment \(\
 
 
 
-\section{Stratification -- \textit{<2023-09-11 Mon>}}
-\label{sec:org9f2c5db}
+\section{Stratification -- \textit{<2023-09-11 lun.>}}
+\label{sec:orga99fec3}
 À deux couches, on se souvient que le calcul des valeurs propres nous amène à
 \begin{align}
    && \lambda_1 = 0 && \lambda_2 = \frac{f_0^2}{g} \qty(\frac{H_1+H_2}{H_1 H_2}) = k_d^2. &&
@@ -681,27 +677,28 @@ Et le rayon de déformation de Rossby (\(\L_D\)) est relié à la vitesse des on
 \end{equation}
 En substituant, on retrouve finalement
 \begin{equation}
-\label{eq:orgb66be6a}
+\label{eq:org1f7802c}
    \boxed{\hspace{0.3cm}\Delta\rho = \qty(\frac{H_1+H_2}{H_1H_2})\pt\rho_1 g c_{bc}^2.\venti\hspace{0.3cm}}
 \end{equation}
-Concrétement, l'équation \ref{eq:orgb66be6a} nous renseigne sur l'intégration la vitesse des ondes baroclines dans la stratification entre la première et la seconde couche.
+Concrétement, l'équation \ref{eq:org1f7802c} nous renseigne sur l'intégration la vitesse des ondes baroclines dans la stratification entre la première et la seconde couche.
 
-\subsection{Stratification raisonnable -- \textit{<2023-09-11 Mon>}}
-\label{sec:org44a3622}
+\subsection{Stratification raisonnable -- \textit{<2023-09-11 lun.>}}
+\label{sec:orgbd0256e}
 La stratification devrait -- grosso modo -- suivre une courbe exponentielle décroissante.
 Pour s'assurer que la vitesse des ondes baroclines soit toujours la même entre chaque couche, on utilise la règle
 \begin{equation}
    \rho_k = \rho_{k-1} + \frac{\rho_1}{g}\pt\qty(\frac{H_{k-1}+H_k}{H_{k-1}H_k})\cdot c_{bc}^2
 \end{equation}
 
-Les résultats de la construction précédente se retrouvent dans le tableau \ref{tab:org6b633b7}
+Les résultats de la construction précédente se retrouvent dans le tableau \ref{tab:org19f226f}
 
 \begin{table}[htbp]
-\caption{\label{tab:org6b633b7}Épaisseurs et densités des différentes couches pour le test du modèle à 5 couches.}
+\caption{\label{tab:org19f226f}Épaisseurs et densités des différentes couches pour le test du modèle à 5 couches.}
 \centering
 \begin{tabular}{lccc}
-Nom & Symbole & Valeur & Unités\\[0pt]
 \hline
+\hline
+Nom & Symbole & Valeur & Unités\\[0pt]
 \hline
 Densité de la première couche & \(\rho\)\textsubscript{1} & 1000.0 & kg/m\textsuperscript{3}\\[0pt]
 Densité de la seconde couche & \(\rho\)\textsubscript{2} & 1005.3 & kg/m\textsuperscript{3}\\[0pt]
@@ -715,12 +712,12 @@ Densité de la dernière couche & \(\rho\)\textsubscript{5} & 1009.0 & kg/m\text
 Épaisseur de la première couche & H\textsubscript{4} & 1000 & m\\[0pt]
 Épaisseur de la première couche & H\textsubscript{5} & 2000 & m\\[0pt]
 \hline
-\hline
 \end{tabular}
 \end{table}
 
 
 
 
-\bibliography{/home/charlesedouard/Desktop/Travail/Documentation/master-bibliography}
+
+\bibliography{/aos/home/celizotte/Desktop/Documentation/master-bibliography}
 \end{document}

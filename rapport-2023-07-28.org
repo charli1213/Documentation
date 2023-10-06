@@ -65,7 +65,7 @@ Aujourd'hui est donc une bonne occasion de le faire.
 \draw[> = latex, arrows = {|<->|}, thin,black ] (-0.5,-1.5) -- (3.5,-1.5);
 \draw (1.5,-1.5) node [below,black] {$[0,\text{nx}]$};
 %
-pp\draw (0.5,-0.15) node [] {\color{blue}\tiny$v\pt(1,1)$};
+\draw (0.5,-0.15) node [] {\color{blue}\tiny$v\pt(1,1)$};
 \draw (-0.15,0.5) node [rotate=90] {\color{red}\tiny$u\pt(1,1)$};
 % Ghost points (mailles):
 \draw [black!20] (-1,-1) rectangle (4,4);

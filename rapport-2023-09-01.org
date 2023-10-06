@@ -514,10 +514,11 @@ Pour s'assurer que la vitesse des ondes baroclines soit toujours la même entre 
 
 Les résultats de la construction précédente se retrouvent dans le tableau [[tab:densities]]
 
-#+NAME: tab:densities
+#+NAME:tab:densities
 #+CAPTION: Épaisseurs et densités des différentes couches pour le test du modèle à 5 couches.
-| Nom                             | Symbole | Valeur | Unités |
 |---------------------------------+---------+--------+--------|
+|---------------------------------+---------+--------+--------|
+| Nom                             | Symbole | Valeur | Unités |
 |---------------------------------+---------+--------+--------|
 | /                               |   <c>   |  <c>   |  <c>   |
 | Densité de la première couche   | \rho_1  | 1000.0 | kg/m^3 |
@@ -532,7 +533,7 @@ Les résultats de la construction précédente se retrouvent dans le tableau [[t
 | Épaisseur de la première couche |   H_4   |  1000  |   m    |
 | Épaisseur de la première couche |   H_5   |  2000  |   m    |
 |---------------------------------+---------+--------+--------|
-|---------------------------------+---------+--------+--------|
+
 
 
 

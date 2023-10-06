@@ -1,0 +1,123 @@
+#+title: Carnet de bord, Université McGill
+#+author: Charles-Édouard Lizotte
+#+date:06/10/2023
+#+LATEX_CLASS: org-report
+#+CITE_EXPORT: natbib
+#+LANGUAGE: fr
+#+BIBLIOGRAPHY: master-bibliography.bib
+#+OPTIONS: toc:nil title:nil
+
+
+\mytitlepage
+\tableofcontents\newpage
+
+* DONE Le problème des ondes de Kelvin au bord -- <2023-10-03 mar.>
+DEADLINE: <2023-10-03 mar.>
+
+Depuis quelques temps, toutes les simulations numériques non-couplées plantaient.
+Lorsque nous analysions les /output/, il était évident que quelque chose se passait aux bords.
+L'épaisseur de la couche de surface atteingnait son minimum au côtes nord et sud, come si une onde de Kelvin beaucoup trop forte s'y était développée.
+
+** Partial slip condition
+David eu la brillante idée de vouloir « ralentir » l'onde -- et donc diminuer son amplitude -- en changeant sa vitesse aux frontières.
+Pour se faire, nous avions choisi de modifier la /free slip condition/ pour quelque chose qui retirerait du momentum aux frontières, donc une /partial slip condition/.
+Aux frontières, la dérivée serait plutôt exprimée selon
+\begin{equation}
+   \eval{\qty(\pdv{v}{x} + \alpha v)\pt}_{x=0} = 0,
+\end{equation}
+ce qui se traduit en différence finie par
+\begin{equation}
+   \qty(\frac{v(1) - v(0)}{\Delta x}) + \alpha\pt\qty( \frac{v(1)+v(0)}{2}) = 0.
+\end{equation}
+
+Et puis le paramètre $\alpha$ devrait représenter l'inverse d'une longueur charactéristique $L_c$, de sorte que
+\begin{align}
+   && \alpha = \frac{1}{L_c}, && \text{tel que} && L_c \sim 5\ \text{km}. && 
+\end{align}
+Mais malgré tout, ça n'a pas sembler fonctionner.
+En effet, avec le temps, le courant et sa dérivée se stabilisent et l'effet devient quasiment similaire à un /free slip/ selon David.
+De plus, notre longueur caractéristique $L_c$ ne peut pas être si grande que ça, ce qui fait en sorte que quelques points plus loin que la frontière et on est revenu à une condition quasi /free slip/.
+Donc, malgré que la /switch/ est présente dans le fichier de paramètres, nous avons abandonné ce chemin.
+
+** Changer l'hyperviscosité par une viscosité -- <2023-10-04 mer.>
+David soupçonnait qu'il y avait un problème relié à l'hyperviscosité dans le modèle.
+Il aurait été possible que la manière qu'on avait implémenté l'hyperviscosité ne fonctionne pas bien avec les bords -- étant donné que ça met en jeu un Laplacien double, etc. 
+C'est pourquoi David m'a proposé de la changer pour une viscosité qui dépend du Laplacien directement.
+On aurait même pu mettre les deux, au final.
+La viscosité peut en fait être exprimée mathématiquement par
+\begin{equation}
+   \text{Viscosité} = Ah_2 \laplacian{u}  - Ah_4 \gradient^4 u.
+\end{equation}
+Bien que nous ayons implémenté une viscosité au lieu d'une hyperviscosité, le résultat était toujours le même.
+Les couches du modèle atteingnaient des épaisseurs nulles après quelques pas de temps aux frontières nord et sud.
+
+** Changer le profil de vent -- <2023-10-04 mer.>
+Après avoir fait pas mal de recherche sur les ondes de Kelvin dans le [cite:@vallis_2006], David est arrivé à la conclusion que ce n'étaient pas des ondes de Kelvin, mais plutôt de l'/upwelling/ induit par le courant de bord.
+Ce courant était trop fort à cause du vent, donc on est passé d'un vent
+\begin{equation}
+   \tau = -\tau_0 \cdot \cos(\frac{2\pi y}{L_y}),
+\end{equation}
+à 
+\begin{equation}
+   \tau = \tau_0\cdot\qty(1-\cos(\frac{2\pi y}{L_y})).
+\end{equation}
+On a aussi diminué la valeur de $\tau_0$ de moitié et tout fonctionne mieux.
+Le modèle produit maintenant des instabilités barocliniques sans problème.
+
+* DONE Compute Canada -- <2023-10-05 jeu.>
+DEADLINE: <2023-10-06 ven.>
+
+** Introduction
+Pour se connecter,
+#+begin_src bash
+  ssh -Y celiz2@beluga.computecanada.ca
+#+end_src
+Le mot de passe est laissé à la discrétion du lecteur de ce rapport.
+En résumé, nous travaillons sur la grappe de calcul de l'ETS, soit Beluga en l'honneur de la baleine qui est en train de crever dans le Saint-Laurent.
+
+** Importation des modules sur Compute Canada
+Pour faire fonctionner nos modèles, on a besoin d'une couple de modules.
+Au même titre que sur la grappe de calcul Mingan, il est toujours possible de voir les modules listés à l'aide de la commande
+#+begin_src bash
+  module list
+#+end_src
+Et normalement, il est possible de voir les modules disponibles à l'aide de la commande
+#+begin_src bash
+  module avail
+#+end_src
+Par contre, il y a tellement de modules qu'on est fortement encouragé d'utiliser le modteur de recherche /spider/ pour voir si un module existe.
+Par exemple,
+#+begin_src bash
+  module spider <module name>
+#+end_src
+
+Pour le modèle /shallow water/, on a besoin de deux modules, soient
+#+begin_src bash
+  # Shallow watewr model stull
+  module load openblas
+  module load flexiblas
+#+end_src
+qui nous permettent d'avoir /BLAS/ et /LAPACK/.
+Pour ce qui est de /fishpack/, tout s'est installé sans problème et les librairies sont dans le répertoire local.
+Tandis que pour Wavewatch III, il faut absolument ajouter ces commandes à notre /.bashrc/, soient 
+#+begin_src bash
+  # Wavewatch III stuff                                                                       
+  module load netcdf-fortran
+  export WWATCH3_NETCDF=NC4
+  export NETCDF_CONFIG=/cvmfs/soft.computecanada.ca/easybuild/software/2020/avx512/Compiler/intel2020/netcdf/4.9.0/bin/\
+  nc-config
+  PATH=$PATH:$HOME/projects/def-lpnadeau/celiz2/wavewatch3/bin
+  PATH=$PATH:$HOME/projects/def-lpnadeau/celiz2/wavewatch3/exe
+  export PATH
+#+end_src
+
+
+** Script bash de type SLURM
+
+
+
+* TODO Nouveau schéma pour l'introduction de la dérive de Stokes dans les équations du mouvement -- <2023-10-06 ven.>
+DEADLINE: <2023-10-08 dim.>
+
+
+#+print_bibliography:

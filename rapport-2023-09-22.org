@@ -20,10 +20,12 @@ Une fois téléchargée, on peut développer l'archive *tar* dans un nouveau dos
 #+begin_src bash
   mkdir ww3
   tar -xvf wwatch3.v5.16.tar.gz -C ww3
+  cd ww3
 #+end_src
 On se retrouve avec une multitude de fichiers *tar* éparpillés au long du dossier /ww3/. 
 Pour développer les multiples archives *tar* restantes, on utilise le script bash d'installation fournit par l'équipe de Wavewatch,
 #+begin_src bash
+  chmod +x install_ww3_tar 
   ./install_ww3_tar 
 #+end_src
 Tout au long de l'installation, quelques questions seront posées sur les compilateurs désirés. Personnellement, j'utilise les compilateurs /gcc/ et /gfortran/ par habitude.
