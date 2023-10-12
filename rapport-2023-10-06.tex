@@ -1,4 +1,4 @@
-% Created 2023-10-06 ven. 15:47
+% Created 2023-10-08 Sun 20:38
 % Intended LaTeX compiler: pdflatex
 
 % =================================BASE====================================%
@@ -19,7 +19,7 @@
 
 
 \usepackage{amsmath, amssymb, amsthm} % Symb. math. (Mathmode+Textmode) + Beaux théorèmes.
-\usepackage{mathtools,cancel,xfrac} % Utilisation de boîtes \boxed{} + \cancelto{}{}
+\usepackage{mathtools,cancel,nicefrac} % Utilisation de boîtes \boxed{} + \cancelto{}{}
 \usepackage{graphicx, wrapfig} % Géstion des figures.
 \usepackage{hyperref} % Permettre l'utilisation d'hyperliens.
 \usepackage{color} % Permettre l'utilisation des couleurs.
@@ -157,21 +157,21 @@ ISMER-UQAR
  pdftitle={Carnet de bord, Université McGill},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 28.2 (Org mode 9.6.5)}, 
+ pdfcreator={Emacs 27.1 (Org mode 9.6.7)}, 
  pdflang={French}}
 \begin{document}
 
 \mytitlepage
 \tableofcontents\newpage
 
-\section{{\bfseries\sffamily DONE} Le problème des ondes de Kelvin au bord -- \textit{<2023-10-03 mar.>}}
-\label{sec:org6f5156f}
+\section{{\bfseries\sffamily DONE} Le problème des ondes de Kelvin au bord -- \textit{<2023-10-03 Tue>}}
+\label{sec:org93e1c30}
 Depuis quelques temps, toutes les simulations numériques non-couplées plantaient.
 Lorsque nous analysions les \emph{output}, il était évident que quelque chose se passait aux bords.
 L'épaisseur de la couche de surface atteingnait son minimum au côtes nord et sud, come si une onde de Kelvin beaucoup trop forte s'y était développée.
 
 \subsection{Partial slip condition}
-\label{sec:orgf8eb539}
+\label{sec:org9eb7de7}
 David eu la brillante idée de vouloir « ralentir » l'onde -- et donc diminuer son amplitude -- en changeant sa vitesse aux frontières.
 Pour se faire, nous avions choisi de modifier la \emph{free slip condition} pour quelque chose qui retirerait du momentum aux frontières, donc une \emph{partial slip condition}.
 Aux frontières, la dérivée serait plutôt exprimée selon
@@ -192,8 +192,8 @@ En effet, avec le temps, le courant et sa dérivée se stabilisent et l'effet de
 De plus, notre longueur caractéristique \(L_c\) ne peut pas être si grande que ça, ce qui fait en sorte que quelques points plus loin que la frontière et on est revenu à une condition quasi \emph{free slip}.
 Donc, malgré que la \emph{switch} est présente dans le fichier de paramètres, nous avons abandonné ce chemin.
 
-\subsection{Changer l'hyperviscosité par une viscosité -- \textit{<2023-10-04 mer.>}}
-\label{sec:org5b3e907}
+\subsection{Changer l'hyperviscosité par une viscosité -- \textit{<2023-10-04 Wed>}}
+\label{sec:orgb40a093}
 David soupçonnait qu'il y avait un problème relié à l'hyperviscosité dans le modèle.
 Il aurait été possible que la manière qu'on avait implémenté l'hyperviscosité ne fonctionne pas bien avec les bords -- étant donné que ça met en jeu un Laplacien double, etc. 
 C'est pourquoi David m'a proposé de la changer pour une viscosité qui dépend du Laplacien directement.
@@ -205,8 +205,8 @@ La viscosité peut en fait être exprimée mathématiquement par
 Bien que nous ayons implémenté une viscosité au lieu d'une hyperviscosité, le résultat était toujours le même.
 Les couches du modèle atteingnaient des épaisseurs nulles après quelques pas de temps aux frontières nord et sud.
 
-\subsection{Changer le profil de vent -- \textit{<2023-10-04 mer.>}}
-\label{sec:orgf8848ef}
+\subsection{Changer le profil de vent -- \textit{<2023-10-04 Wed>}}
+\label{sec:org0227245}
 Après avoir fait pas mal de recherche sur les ondes de Kelvin dans le \citep{vallis_2006}, David est arrivé à la conclusion que ce n'étaient pas des ondes de Kelvin, mais plutôt de l'\emph{upwelling} induit par le courant de bord.
 Ce courant était trop fort à cause du vent, donc on est passé d'un vent
 \begin{equation}
@@ -219,19 +219,19 @@ Ce courant était trop fort à cause du vent, donc on est passé d'un vent
 On a aussi diminué la valeur de \(\tau_0\) de moitié et tout fonctionne mieux.
 Le modèle produit maintenant des instabilités barocliniques sans problème.
 
-\section{{\bfseries\sffamily DONE} Compute Canada -- \textit{<2023-10-05 jeu.>}}
-\label{sec:orgcb26c1c}
+\section{{\bfseries\sffamily DONE} Compute Canada -- \textit{<2023-10-05 Thu>}}
+\label{sec:org91df4df}
 \subsection{Introduction}
-\label{sec:orgc838cea}
+\label{sec:org2369a76}
 Pour se connecter,
 \begin{verbatim}
   ssh -Y celiz2@beluga.computecanada.ca
 \end{verbatim}
 Le mot de passe est laissé à la discrétion du lecteur de ce rapport.
-En résumé, nous travaillons sur la grappe de calcul de l'ETS, soit Beluga en l'honneur de la baleine qui est en train de crever dans le Saint-Laurent.\bigskip
+En résumé, nous travaillons sur la grappe de calcul de l'ETS, soit Beluga en l'honneur de la baleine qui est en train de crever dans le Saint-Laurent.
 
-\subsection{Modules}
-\label{sec:org6f30fd5}
+\subsection{Importation des modules sur Compute Canada}
+\label{sec:org4e5b31d}
 Pour faire fonctionner nos modèles, on a besoin d'une couple de modules.
 Au même titre que sur la grappe de calcul Mingan, il est toujours possible de voir les modules listés à l'aide de la commande
 \begin{verbatim}
@@ -269,11 +269,31 @@ Tandis que pour Wavewatch III, il faut absolument ajouter ces commandes à notre
 
 
 \subsection{Script bash de type SLURM}
-\label{sec:org2be52ac}
+\label{sec:org6f67c0a}
 
 
 
-\section{{\bfseries\sffamily TODO} Nouveau schéma pour l'introduction de la dérive de Stokes dans les équations du mouvement -- \textit{<2023-10-06 ven.>}}
-\label{sec:org6aecc10}
-\bibliography{/aos/home/celizotte/Desktop/Documentation/master-bibliography}
+\section{{\bfseries\sffamily DONE} Nouveau schéma pour l'introduction de la dérive de Stokes dans les équations du mouvement -- \textit{<2023-10-06 Fri>}}
+\label{sec:org2c8da6e}
+Essentiellement, les équations du mouvement de la couche supérieure peuvent être exprimées selon l'expression
+\begin{equation}
+\label{eq:orga4a3467}
+   \pdv{\uu}{t} = \qty(f+\zeta)\pt \kvf\times\uu = -\gradient{B} + \boldsymbol{D} + \frac{\tau_a}{\rho_o H},
+\end{equation}
+où la fonction de Bernouilli est exprimée par \(B = p/\rho_o + \uu^2/2\).
+Dans leur résumé, \Citet{suzuki2016understanding}  expliquent que la dérive de Stokes est une contribution lagrangienne à notre écoulement, de sorte qu'on peut décrire ce courant lagrangien par
+\begin{equation}
+   \uu_L = \uu + \uu_S,
+\end{equation}
+où \(\uu_S\) est la dérive de Stokes. 
+Lorsqu'on ajoute cette contribution lagrangienne à notre courant, on obtient plutôt l'expression \ref{eq:orga4a3467} devient plutôt
+\begin{equation}
+   \pdv{\uu}{t} = \qty(f+\zeta)\pt \kvf\times\underbrace{\grande\qty(\uu + \uu_S)}_{\substack{\text{Courant} \\ \text{Lagrangien}}} = \underbrace{\grande-\gradient{B_S}}_\text{B.-Stokes} + \boldsymbol{D} \underbrace{+ \frac{\tau_o}{\rho_o H}.}_{\substack{\text{Contribution} \\ \text{Vagues}}}
+\end{equation}
+où la nouvelle fonction de Bernouilli qui tient compte de la dérive de Stokes est donnée par
+\begin{align}
+   B_S = B + \uu\cdot\uu_S + \uu_S^2/2.
+\end{align}
+
+\bibliography{/home/charlesedouard/Desktop/Travail/Documentation/master-bibliography}
 \end{document}

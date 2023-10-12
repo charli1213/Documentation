@@ -116,8 +116,27 @@ Tandis que pour Wavewatch III, il faut absolument ajouter ces commandes à notre
 
 
 
-* TODO Nouveau schéma pour l'introduction de la dérive de Stokes dans les équations du mouvement -- <2023-10-06 ven.>
+* DONE Nouveau schéma pour l'introduction de la dérive de Stokes dans les équations du mouvement -- <2023-10-06 ven.>
 DEADLINE: <2023-10-08 dim.>
 
+Essentiellement, les équations du mouvement de la couche supérieure peuvent être exprimées selon l'expression
+#+NAME:eq:mvmnt
+\begin{equation}
+   \pdv{\uu}{t} = \qty(f+\zeta)\pt \kvf\times\uu = -\gradient{B} + \boldsymbol{D} + \frac{\tau_a}{\rho_o H},
+\end{equation}
+où la fonction de Bernouilli est exprimée par $B = p/\rho_o + \uu^2/2$.
+Dans leur résumé, [cite/t/c:@suzuki2016understanding]  expliquent que la dérive de Stokes est une contribution lagrangienne à notre écoulement, de sorte qu'on peut décrire ce courant lagrangien par
+\begin{equation}
+   \uu_L = \uu + \uu_S,
+\end{equation}
+où $\uu_S$ est la dérive de Stokes. 
+Lorsqu'on ajoute cette contribution lagrangienne à notre courant, on obtient plutôt l'expression [[eq:mvmnt]] devient plutôt
+\begin{equation}
+   \pdv{\uu}{t} = \qty(f+\zeta)\pt \kvf\times\underbrace{\grande\qty(\uu + \uu_S)}_{\substack{\text{Courant} \\ \text{Lagrangien}}} = \underbrace{\grande-\gradient{B_S}}_\text{B.-Stokes} + \boldsymbol{D} \underbrace{+ \frac{\tau_o}{\rho_o H}.}_{\substack{\text{Contribution} \\ \text{Vagues}}}
+\end{equation}
+où la nouvelle fonction de Bernouilli qui tient compte de la dérive de Stokes est donnée par
+\begin{align}
+   B_S = B + \uu\cdot\uu_S + \uu_S^2/2.
+\end{align}
 
 #+print_bibliography:
