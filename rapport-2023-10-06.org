@@ -112,27 +112,47 @@ Tandis que pour Wavewatch III, il faut absolument ajouter ces commandes à notre
 #+end_src
 
 
-** Script bash de type SLURM
+** Script bash de type SLURM -- <2023-10-10 mar.>
 
+Pour faire fonctionner les module MPI sur compute Canada, il faut utiliser /srun/, mais la commande /mpirun/ fonctionne aussi.\bigskip
+
+** Compilation des modèles numériques en MPI -- <2023-10-10 mar.>
+Un résumé rapide du travail effectué pour que ça /marche/ entre vendredi et mardi : \bigskip
+1. Le modèle /shallow water/ doit *absolument* être compilé avec /gfortran/, /fishpack/ n'a malheureusement pas été programé pour fonctionner avec /ifort/;\bigskip
+2. Il semble que les deux modèles doivent *impérativement* être compilés avec le même compilateur pour que MPI fonctionne.
+   Je n'avais initialement pas ce problème sur mon ordinateur personnel, mais il semble que ça soit nécessaire sur Béluga.
+   On pourrait peut-être trouver un moyen définissant des variables globales de MPI, mais je préfère ne pas m'embarquer là-dedans. Ça serait une perte de temps monumentale.\bigskip
+3. La sous-routine /ww3 prnc/ du modèle Wavewatch (soit la routine qui transforme les fichiers NetCDF en input pour Wavewatch) ne peut pas être compilée avec /gfortran/. Pour vrai, j'ai tout essayer.
+   C'est comme si -- malgré l'importation des modules nécessaires (netcdf, netcdf-fortran, netcdf-mpi-fortran, etc) -- la fonction *USE MPI* dans la sous-routine /ww3 prnc/ est incapable de compiler.\bigskip
+
+   Comme solution, je compile donc toutes les sous-routines qui ne sont pas le /shel/ avec /ifort/ et je compile le /shel/ en MPI avec /gfortran/.
+   C'est malheureusement le seul moyen que j'ai trouvé.\bigskip
+
+Dans le meilleur des mondes, j'aurais aimé que tout se compile soit avec /gfortran/ ou avec /ifort/, mais il semble que ça doit en être autrement.
+Je voulais mettre ça ici, parce que ça m'a pris beaucoup de temps pour /fuck around and find out/ tout ça.
 
 
 * DONE Nouveau schéma pour l'introduction de la dérive de Stokes dans les équations du mouvement -- <2023-10-06 ven.>
 DEADLINE: <2023-10-08 dim.>
 
-Essentiellement, les équations du mouvement de la couche supérieure peuvent être exprimées selon l'expression
+Initialement, les équations du mouvement d'un système Boussinesq sont exprimées selon l'expression
 #+NAME:eq:mvmnt
 \begin{equation}
-   \pdv{\uu}{t} = \qty(f+\zeta)\pt \kvf\times\uu = -\gradient{B} + \boldsymbol{D} + \frac{\tau_a}{\rho_o H},
+   \pdv{\uu}{t} = \qty(f+\zeta)\pt \kvf\times\uu = -\gradient{B} + \boldsymbol{D} + \frac{\boldsymbol{\tau_a}}{\rho_o H},
 \end{equation}
-où la fonction de Bernouilli est exprimée par $B = p/\rho_o + \uu^2/2$.
-Dans leur résumé, [cite/t/c:@suzuki2016understanding]  expliquent que la dérive de Stokes est une contribution lagrangienne à notre écoulement, de sorte qu'on peut décrire ce courant lagrangien par
+où la fonction de Bernouilli ($B$) est exprimée par $B = p/\rho_o + \uu^2/2$.\bigskip
+
+Dans leur résumé, [cite/t/c:@suzuki2016understanding]  définissent la dérive de Stokes $\uu_S$ comme une contribution lagrangienne à notre écoulement, de sorte qu'on peut décrire ce courant lagrangien $\uu_L$ par
 \begin{equation}
-   \uu_L = \uu + \uu_S,
+   \uu_L = \uu + \uu_S.
 \end{equation}
-où $\uu_S$ est la dérive de Stokes. 
-Lorsqu'on ajoute cette contribution lagrangienne à notre courant, on obtient plutôt l'expression [[eq:mvmnt]] devient plutôt
+En somme, 
++ Ce courant lagrangien $\uu_L$ se substitue dans les termes d'advection, de la même manière qu'un référentiel en mouvement ;
++ Les termes de Stokes-Coriolis, Craik-Leibovic et la nouvelle fonction de Bernouilli découlent donc directement cette au référentiel en mouvement. \bigskip
+
+Lorsqu'on ajoute cette contribution lagrangienne à notre courant, l'expression [[eq:mvmnt]] devient plutôt
 \begin{equation}
-   \pdv{\uu}{t} = \qty(f+\zeta)\pt \kvf\times\underbrace{\grande\qty(\uu + \uu_S)}_{\substack{\text{Courant} \\ \text{Lagrangien}}} = \underbrace{\grande-\gradient{B_S}}_\text{B.-Stokes} + \boldsymbol{D} \underbrace{+ \frac{\tau_o}{\rho_o H}.}_{\substack{\text{Contribution} \\ \text{Vagues}}}
+   \pdv{\uu}{t} = \qty(f+\zeta)\pt \kvf\ \times\underbrace{\grande\qty(\uu + \uu_S)}_{\substack{\text{Courant} \\ \text{Lagrangien}}} = \underbrace{\grande-\gradient{B_S}}_\text{B.-Stokes} + \ \boldsymbol{D} \underbrace{+ \frac{\tau_o}{\rho_o H}.}_{\substack{\text{Contr. des} \\ \text{Vagues}}}
 \end{equation}
 où la nouvelle fonction de Bernouilli qui tient compte de la dérive de Stokes est donnée par
 \begin{align}
