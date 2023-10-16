@@ -1,0 +1,22 @@
+#+title: Carnet de bord, Université McGill
+#+author: Charles-Édouard Lizotte
+#+date:20/10/2023
+#+LATEX_CLASS: org-report
+#+CITE_EXPORT: natbib
+#+LANGUAGE: fr
+#+BIBLIOGRAPHY: master-bibliography.bib
+#+OPTIONS: toc:nil title:nil
+
+
+\mytitlepage
+\tableofcontents\newpage
+* Implémentation transfert de masse -- <2023-10-16 lun.>
+DEADLINE: <2023-10-18 mer.>
+
+
+* Solution à la dérive de Stokes -- <2023-10-16 lun.>
+
+
+
+
+#+print_bibliography: 

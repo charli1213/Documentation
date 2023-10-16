@@ -1,0 +1,212 @@
+#+title: Carnet de bord, Université McGill
+#+author: Charles-Édouard Lizotte
+#+date:13/10/2023
+#+LATEX_CLASS: org-report
+#+CITE_EXPORT: natbib
+#+LANGUAGE: fr
+#+BIBLIOGRAPHY: master-bibliography.bib
+#+OPTIONS: toc:nil title:nil
+
+
+\mytitlepage
+\tableofcontents\newpage
+
+* Épaisseur nulle pour le modèle non-couplée -- <2023-10-12 jeu.>
+
+#+NAME: fig:histo
+#+caption: Histograme de l'épaisseur de la première couche du dernier output avant que l'épaisseur atteingne zéro.
+#+ATTR_LATEX: :float wrap :width 0.45\textwidth :placement [18]{l}{0.45\textwidth}\vspace{-\baselineskip} \centering
+[[file:figures/debuggage/2023_10_08_thickness1_histo.png]]
+
+
+Comme ajouté dans le dernier rapport, le modèle /shallow water/ dit maintenant à quel point spatial l'épaisseur a atteint une valeur nulle.
+Pour diagnostiquer l'erreur, on a maintenant un moyen d'observer ce qui se passe, comme illustré à la figure [[fig:thickness0]].
+Dans ce cas précis, le modèles /shallow water/ non couplé semble encore montrer des signes d'instabilités assez aléatoires.
+En somme, nous étions parti d'une /run/ précédente qui avait (elle aussi) atteint une épaisseur nulle pour voir ce qui se passait.
+Par contre, la /run/ n'a pas explosée immédiatement, ce qui vient confirmer que c'est probablement de l'erreur numérique.
+À la figure [[fig:thickness0]], c'est pas mal ce qu'on peut voir.
+Un point bleu apparait très rapidement en haut à droite des quatres quadrants (1 /output/ aux deux heures). \bigskip
+
+Malheureusement, l'histograme n'est pas très évocateur, comme il manque définitivement des pas de temps (voir fig. [[fig:histo]]).
+Malgré tout, aux vue de l'animation de la figure [[fig:thickness0]], je pense que c'est une erreur de type numérique.\bigskip
+
+Principalement pour ces trois raisons : 
+1) Ça apparaît de nulle part;
+2) On voit presque un motif qui ressemble à de l'instabilité numérique dans la figure;
+3) Ça se produit dans une zone où les courants sont extrêmement forts. 
+
+   
+#+NAME: fig:thickness0
+#+CAPTION: Diagnostique de l'épaisseur d'une run précise du modèle /shallow water/. On peut voir sur ce zoom que l'instabilité dans l'épaisseur apparait dans le haut à droite de tous les quadrant avant que le modèle s'arrête. De gauche à droite les temps -4, -3 et en bas : -2, -1.
+#+ATTR_LaTeX: :width 0.7\textwidth :placement [!htpb]
+[[file:figures/debuggage/2023_10_08_thickness1_last4steps.png]]
+
+** Solutions : Filtre de Robert plus fort? -- <2023-10-12 jeu.>
+On peut diminuer les pas de temps ou augmenter la puissance du filtre de Robert?
+Il faudrait voir avec David pour ça.
+pour l'instant, j'ai testé plusieurs amplitudes pour le filtre de Robert.
+Les valeurs utilisées sont illustrées dans le tableau [[tab:robert]] et l'on y retrouve aussi le nombre de pas de temps que le modèle s'est rendu avant de lâcher à cause d'une instabilité numérique causant une épaisseur nulle. 
+
+#+NAME:tab:robert
+#+CAPTION: Résumé des valeurs utilisées comme filtre de Robert, dans le but de « smoother » les instabilités numériques. 
+|       <c>        |          <c>           |        <c>         |         <c>          |         <c>          |
+|------------------+------------------------+--------------------+----------------------+----------------------|
+| Filtre de Robert | min($\sfrac{L_d}{dx}$) |    max(c_{bc})     |  $\abs{\vb{\tau}}$   | Dernier pas de temps |
+|      [ -- ]      |         [ -- ]         | [ $\sfrac{m}{s}$ ] | [ $\sfrac{N}{m^2}$ ] |        [ -- ]        |
+|------------------+------------------------+--------------------+----------------------+----------------------|
+|------------------+------------------------+--------------------+----------------------+----------------------|
+|      0.001       |         5.363          |        2.6         |         0.1          |  362 712 et 362 664  |
+|      0.005       |         5.363          |        2.6         |         0.1          |       613 656        |
+|      0.010       |         5.363          |        2.6         |         0.1          |       445 904        |
+|      0.050       |         5.363          |        2.6         |         0.1          |       633 240        |
+|      0.100       |         5.363          |        2.6         |         0.1          |       746 663        |
+|------------------+------------------------+--------------------+----------------------+----------------------|
+|------------------+------------------------+--------------------+----------------------+----------------------|
+
+Donc, je pourrais dire que ça n'a pas vraiment marché.
+On va passer à une autre solution.
+
+** Solution : pas de temps plus faible? -- <2023-10-13 ven.>
+
+Une autres solution proposée par David.
+Si notre diagnostique d'erreur numérique est bon, ça devrait régler le problème.
+J'ai donc relancé les tests à plusieurs couches pour voir si l'on arrivait à quelque chose de concluant.
+Tous ces tests sont réalisés avec un pas de temps de 200 secondes au lieu du 300 secondes généralement utilisé.\bigskip
+
+Après avoir tenté l'expérience, j'ai vu que le pas de temps ne change arbitrairement rien.
+Au fond, il semble qu'il y ait des incursions lorsque deux « blobs » se séparent et il faudrait trouve un moyen de gérer ces incursions.
+Un résumé des expériences se retrouve dans le tableau [[tab:timestep]].
+
+#+NAME:tab:timestep
+#+CAPTION: Résumé des expériences lancées avec un pas de temps de 200 secondes au lieu de 300.
+|        <c>        |          <c>           |     <c>     |         <c>          |
+|-------------------+------------------------+-------------+----------------------|
+| Nombre de couches | min($\sfrac{L_d}{dx}$) | max(c_{bc}) | Dernier pas de temps |
+|-------------------+------------------------+-------------+----------------------|
+|-------------------+------------------------+-------------+----------------------|
+|         3         |         5.363          |     2.6     |       583 092        |
+|         4         |         3.488          |     2.5     |       391 284        |
+|         5         |         2.459          |     2.5     |       226 584        |
+|         6         |         1.852          |     2.5     |       133 056        |
+|-------------------+------------------------+-------------+----------------------|
+
+Mentionnons que les incursions se produisent généralement sur le bord ouest ou à la jonction entre deux tourbillons.
+Par exemple, à la figure \ref{fig:thickness-close} on observe une incursion à l'intérieur du domain pour l'expérience à trois couches.
+Tandis qu'on observe une incusrion à la frontière pour l'expérience à 4 couches (Voir figure \ref{fig:thickness-close2}).
+
+
+\begin{figure}[!htpb]
+\centering
+\includegraphics[width=0.45\textwidth]{figures/debuggage/2023_10_16_thickness_closeup.png} \includegraphics[width=0.45\textwidth]{figures/debuggage/2023_10_16_thickness_histo2.png}
+\caption{« Snapshot » de l'épaisseur de la couche supérieure en zoom sur la zone où cette dernière devient nulle. Et histograme de l'épaisseur de la première couche au même moment. Tirée de l'expérience à 4 couches.}
+\label{fig:thickness-close}
+\end{figure}
+
+\begin{figure}[!htpb]
+\centering
+\includegraphics[width=0.45\textwidth]{figures/debuggage/2023_10_16_thickness_closeup2.png}
+\includegraphics[width=0.45\textwidth]{figures/debuggage/2023_10_16_thickness_histo.png}
+\caption{ « Snapshot » de l'épaisseur de la couche supérieure en zoom sur la zone où cette dernière devient nulle. Et histograme de l'épaisseur de la première couche au même moment. Tirée de l'expérience à 3 couches.}
+\label{fig:thickness-close2}
+\end{figure}
+
+** Le besoin d'un transfert de masse et/ou d'un Laplacien sur l'épaisseur des couches?
+
+* Retour rapide sur la « partial slip » -- <2023-10-13 ven.>
+La /partial/ et la /free slip/ est maintenant controlée par la même sous-routine /partial free slip.f90/.
+Tout passe maintenant par le paramètre « $\alpha$ » qui décrit la proportion de la dérivée qui doit passer dans l'équation
+\begin{equation}
+   \eval{\pdv{u}{y} - \alpha \cdot u = 0\hspace{0.2cm}}_{\pt\forall\pt y\pt \in\pt \qty{0,\pt L_y}}.
+\end{equation}
+Donc, si l'on fixe une valeur nulle à « $\alpha$ », on obtient une condition /free slip/.
+Simple comme ça. 
+
+
+
+* « Spin up » de la dérive de Stokes -- <2023-10-12 jeu.>
+
+#+NAME: fig:ramp
+#+CAPTION: Illustration conceptuelle de la rampe pour éviter le /spin up/ du modèle de vagues.
+\begin{wrapfigure}[14]{r}{0.65\textwidth}
+\vspace{-\baselineskip}
+\begin{center}
+\begin{tikzpicture}[scale=1.4]
+   % Rectangles :
+   \fill [BurntOrange!10] (0,0) rectangle (2,3) ;
+   \fill [BurntOrange!18] (2,0) rectangle (4,3) ;
+   \fill [BurntOrange!26] (4,0) rectangle (6,3) ;
+   %
+   \draw (1,2.75) node [] {Spin up};
+   \draw (3,2.75) node [] {Ramp};
+   \draw (5,2.75) node [] {Couplé};
+   %
+   \draw [->] (0,0) -- (6.25,0);
+   \draw [->] (0,0) -- (0,3.25);
+   \draw [dotted] (0,2.5) -- (6,2.5);
+   \draw [thick, BurntOrange!50!red!90] (0,0.01) -- (2,0.01) -- (4,2.5) -- (6,2.5);
+   \draw (0,2.5) node [left] {1};
+   \draw (0,0) node [left] {0};
+   \draw (0,1.25) node [rotate=90, above] {Rampe};
+   \draw (2,0) node [below] {2 jours};
+   \draw (4,0) node [below] {1 mois};
+   \draw (6,0) node [below] {Temps};
+\end{tikzpicture}
+\end{center}
+\end{wrapfigure}
+
+En somme, le modèle de vagues a un /spin up/ extrême, pas en terme d'amplitude, mais en terme de vitesse et ça fait tout sauter -- l'épaisseur de la première couche atteint 0 en moins de 90 pas de temps.
+Donc, ce qu'on va faire, c'est une rampe différente que /saute par dessus/ le /spin up/ du modèle de vagues.
+Quelque chose qui ressemble à la figure [[fig:ramp]]. \bigskip
+
+Bien que je croyais que cette solution serait suffisante, il semble que la dérive de Stokes soit encore trop forte.
+Nous allons donc essayer d'autres avenues dans les sections suivantes. 
+
+* Problème de dérive de Stokes
+Après avoir tenté la solution proposée dans la section précédente, on voit qu'il faudra bien plus qu'une rampe pour satisfaire le modèle /shallow water/.
+Sommairement, le modèle /shallow water/ ne tient pas le coups car la dérive de Stokes induit un gradient extrême dans la partie droite du domaine (Voir figure [[fig:gradstokes]]).
+
+#+NAME: fig:gradstokes
+#+CAPTION: Figure instantanée du profil associé au transport de Stokes après trois jours.
+[[file:figures/debuggage/2023_10_13_UStokes.png]]
+
+Lors de ma maîtrise, nous n'avions pas ce problème, car les zones primaires de productions de vagues (ZPPV) étaient à l'extérieur du domaine périodique, de sorte qu'on évitait le gradient élevé dans cette zonne (Voir figure [[fig:coupeUSt]])
+
+#+NAME: fig:coupeUSt
+#+CAPTION: Coupe horizontale du transport de Stokes après 4 jours.
+#+ATTR_LaTeX: :width 0.5\textwidth :placement [!htpb]
+[[file:figures/debuggage/2023_10_13_Stokes_coupe.png]]
+
+Le même délire arrive aussi avec le $\tau_{wave}$ et $\tau_{dissipation}$, mais à moindre échelle.
+
+* Solutions à l'étude -- <2023-10-13 ven.>
+
++ *Ramener le coefficient de réflection aux murs dans le modèle de vagues.*
+  Ça permettrait d'avoir des vagues déjà formées dans la partie ouest et ça viendrait diminuer le chaos dans la zone primaire de production de vagues.
++ *Essayer un schéma de vent différent*, tel que
+  \begin{equation}
+    \tau_{atm} = \qty(\frac{\tau_0}{2})\cdot \qty(1-\cos \frac{2\pi y}{L_y})\cdot \qty(\sin \frac{\pi x}{L_x} ).
+  \end{equation}
+  De cette manière, le gradient de vent devrait changer aussi.
+  Ça devrait avoir été testé cette fin de semaine. 
+
+** Résultats -- <2023-10-16 lun.>
+
+*** Enlever la dérive de Stokes
+Ce test nous a permis de voir qu'au fond ce sont les variations dans la zone primaire de production de vagues qui viennent mettre à mal la circulation.
+Même si la dérive de Stokes est abscente, on a toujours le même problème avec la variation de l'interface.
+On se souvient que
+\begin{align}
+   && \boldsymbol{\tau}_{oc} = \underbrace{\rho_{atm} |\uu_*|\uu_*\tall}_\text{F. velocity} \ - \underbrace{\qty(\boldsymbol{\tau}_{in} - \boldsymbol{\tau}_{ds})\tall}_\text{Champ de vagues} && \text{où} && \uu_* \equiv c_d(x,y)\cdot\uu_{10} &&
+\end{align}
+comme illustré dans [cite/p:@breivik_al_2015].
+Mentionnons que $c_d(x,y)$ est dépendant du champ de vagues. 
+[[file:figures/debuggage/2023_10_16_nostokes_tauoc.png]]
+
+*** Changer le type de vent
+J'ai implémenté le nouveau schéma pour le vent, mais sans succès
+
+[[file:figures/debuggage/2023_10_16_ramp_tauETUstokes.png]]
+
+
+
+#+print_bibliography: 
