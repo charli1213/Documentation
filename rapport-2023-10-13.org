@@ -49,19 +49,19 @@ Les valeurs utilisées sont illustrées dans le tableau [[tab:robert]] et l'on y
 
 #+NAME:tab:robert
 #+CAPTION: Résumé des valeurs utilisées comme filtre de Robert, dans le but de « smoother » les instabilités numériques. 
-|       <c>        |          <c>           |        <c>         |         <c>          |         <c>          |
-|------------------+------------------------+--------------------+----------------------+----------------------|
-| Filtre de Robert | min($\sfrac{L_d}{dx}$) |    max(c_{bc})     |  $\abs{\vb{\tau}}$   | Dernier pas de temps |
-|      [ -- ]      |         [ -- ]         | [ $\sfrac{m}{s}$ ] | [ $\sfrac{N}{m^2}$ ] |        [ -- ]        |
-|------------------+------------------------+--------------------+----------------------+----------------------|
-|------------------+------------------------+--------------------+----------------------+----------------------|
-|      0.001       |         5.363          |        2.6         |         0.1          |  362 712 et 362 664  |
-|      0.005       |         5.363          |        2.6         |         0.1          |       613 656        |
-|      0.010       |         5.363          |        2.6         |         0.1          |       445 904        |
-|      0.050       |         5.363          |        2.6         |         0.1          |       633 240        |
-|      0.100       |         5.363          |        2.6         |         0.1          |       746 663        |
-|------------------+------------------------+--------------------+----------------------+----------------------|
-|------------------+------------------------+--------------------+----------------------+----------------------|
+|  <c>   |        <c>        |        <c>         |         <c>          |        <c>         |
+|--------+-------------------+--------------------+----------------------+--------------------|
+| Robert | $\sfrac{L_d}{dx}$ |    max(c_{bc})     |  $\abs{\vb{\tau}}$   |       Temps        |
+| [ -- ] |      [ -- ]       | [ $\sfrac{m}{s}$ ] | [ $\sfrac{N}{m^2}$ ] |       [ -- ]       |
+|--------+-------------------+--------------------+----------------------+--------------------|
+|--------+-------------------+--------------------+----------------------+--------------------|
+| 0.001  |       5.363       |        2.6         |         0.1          | 362 712 et 362 664 |
+| 0.005  |       5.363       |        2.6         |         0.1          |      613 656       |
+| 0.010  |       5.363       |        2.6         |         0.1          |      445 904       |
+| 0.050  |       5.363       |        2.6         |         0.1          |      633 240       |
+| 0.100  |       5.363       |        2.6         |         0.1          |      746 663       |
+|--------+-------------------+--------------------+----------------------+--------------------|
+|--------+-------------------+--------------------+----------------------+--------------------|
 
 Donc, je pourrais dire que ça n'a pas vraiment marché.
 On va passer à une autre solution.
@@ -181,13 +181,60 @@ Le même délire arrive aussi avec le $\tau_{wave}$ et $\tau_{dissipation}$, mai
 * Solutions à l'étude -- <2023-10-13 ven.>
 
 + *Ramener le coefficient de réflection aux murs dans le modèle de vagues.*
-  Ça permettrait d'avoir des vagues déjà formées dans la partie ouest et ça viendrait diminuer le chaos dans la zone primaire de production de vagues.
+  Ça permettrait d'avoir des vagues déjà formées dans la partie ouest et ça viendrait diminuer le chaos dans la zone primaire de production de vagues.\bigskip
+
 + *Essayer un schéma de vent différent*, tel que
   \begin{equation}
     \tau_{atm} = \qty(\frac{\tau_0}{2})\cdot \qty(1-\cos \frac{2\pi y}{L_y})\cdot \qty(\sin \frac{\pi x}{L_x} ).
   \end{equation}
   De cette manière, le gradient de vent devrait changer aussi.
   Ça devrait avoir été testé cette fin de semaine. 
+
+
+
++ *Diminuer ou moyenner une partie de la grille de Wavewatch*.
+  Cette solution nous permettrait aussi de rouler le modèle Wavewatch plus rapidement.
+  Il faudrait seulement avoir un genre de stencil qui moyenne chaque partie, mais c'est facilement faisable.
+
+      
+  #+NAME: fig:stencil
+  #+caption: « Stencil » utilisé pour obtenir le champs aux plus grandes échelles.
+  \begin{figure}[h!]
+  \begin{center}
+  \begin{tikzpicture}
+  % Big grid
+  \fill [blue!5] (0,0) rectangle (3,3);
+  \fill [blue!5] (3,3) rectangle (6,6);
+  % Grid
+  \draw (0,0) rectangle (6,6) ;
+  \draw [dotted] (0,0) grid (6,6) ;
+  \draw [step=3.0] (0,0) grid (6,6) ;
+  % Coordinates 
+  \foreach \x in {1,2,3}
+  \foreach \y in {1,2,3}
+  {\draw (\x-0.5,\y-0.5) node [] {1,1};}
+  %
+  \foreach \x in {4,5,6}
+  \foreach \y in {1,2,3}
+  {\draw (\x-0.5,\y-0.5) node [] {2,1};}
+  %
+  \foreach \x in {1,2,3}
+  \foreach \y in {4,5,6}
+  {\draw (\x-0.5,\y-0.5) node [] {1,2};}
+  %
+  \foreach \x in {4,5,6}
+  \foreach \y in {4,5,6}
+  {\draw (\x-0.5,\y-0.5) node [] {2,2};}
+  %
+  \draw [red] (2,2) rectangle (5,5) ;
+  \fill [red, opacity=0.3] (3,3) rectangle (4,4);
+  \end{tikzpicture}
+  \end{center}
+  \end{figure}
+
+
+
+  \newpage
 
 ** Résultats -- <2023-10-16 lun.>
 
