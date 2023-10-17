@@ -14,9 +14,12 @@
 DEADLINE: <2023-10-18 mer.>
 
 ** Vérifier que ce n'est pas un problème de viscosité -- <2023-10-16 Mon>
+<<sec:visco>>
 DEADLINE: <2023-10-17 Tue>
-Avant tout, David a remarqué que les champs étaient très bruités, ce qui signifie qu'il y a clairement un manque à gagner en terme de viscosité.
-N'oublions pas que nous sommes passées d'une viscosité au 4ème degré vers une viscosité au second degré quand nous cherchions le problème au bord, il y a quelques semaines. \bigskip
+Avant tout, David a remarqué que les champs de vorticité ($\zeta_k$) étaient extrêmement bruités, ce qui signifie qu'il y a clairement un manque à gagner en terme de viscosité.
+Une viscosité plus forte permet essentiellement de se débarrasser des fluctuations aux plus petites échelles.
+N'oublions pas que nous sommes passées d'une viscosité au 4ème degré vers une viscosité au second degré quand nous cherchions le problème au bord, il y a quelques semaines.
+Tout ça vient confirmer ma théorie de l'escalier.\bigskip
 
 En sommes, de nouveaux test ont été effectuées pour le schéma de viscosité exprimé par
 \begin{equation}
@@ -43,13 +46,22 @@ En ce mardi matin, les résultats sont exprimés dans le tableau [[tab:visco]].
 |--------+--------------------------------+--------+------------------------+------------------|
 
 
-En somme, il semble que tous nos problèmes venaient bel et bien du changement de viscosité que nous avions appliqué pour régler le problème d'ondes de Kelvin aux bord (problème qui a été réglé [[file:rapport-2023-10-06.pdf][il y a deux rapports]]).\bigskip
+Pour conclure, il semble que tous nos problèmes venaient bel et bien du changement de viscosité que nous avions appliqué pour régler le problème d'ondes de Kelvin aux bord (problème qui a été réglé [[file:rapport-2023-10-06.pdf][il y a deux rapports]]).
+Comme on peut l'observer à la figure [[fig:smoothzeta]], les /eddies/ sont maintenant très /smooth/ et non-bruités -- ce qui contraste fortement avec le dernier schéma de viscosité où l'on utilisait une viscosité au deuxième ordre plutôt qu'un viscosité avec un Laplacien d'ordre 4.
+Ce qu'il faut retenir de cela c'est que le schéma utilisé dans l'article de [cite/t/c:@chen_2021] était robuste.
+Vaut mieux ne pas trop s'en éloigner. 
 
+#+NAME:fig:smoothzeta
+#+CAPTION: Vorticité dans les trois couches après 1900 jours pour le modèle « shallow water ». On observe que les tourbillons sont très lisses dans la promière couche, en opposition au précédent schéma de viscosité utilisé.
+[[file:figures/debuggage/2023_10_17_smooth_zeta.png]]
 
 
 ** « Stencil » de transfert de masse
-Louis-Philippe propose d'utiliser un stencil à 21 points pour redistribuer la masse.
-En gros, on en retirerait sur le point fautif pour rejouter du /h/ aux points des alentours, ce qui en fait une redistribution horizontale de la masse.
+Louis-Philippe propose d'utiliser un stencil à 21 points pour redistribuer la masse (Voir figure [[fig:stencil]]).
+En gros, on en retirerait sur le point fautif pour rejouter du /h/ aux points des alentours, ce qui en fait une redistribution horizontale de la masse.\bigskip
+
+\nb Pour l'instant, je met tout ça sur la glace, car la solution trouvée à la section [[sec:visco]] semble suffisante.
+Si la solution proposée à la prochaine section n'est pas suffisante, nous reviendrons sur le transfert de masse avec notre /stencil/. 
 
 #+NAME: fig:stencil
 #+CAPTION: Stencil de redistribution de la masse.

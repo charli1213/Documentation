@@ -1,4 +1,4 @@
-% Created 2023-10-17 Tue 12:51
+% Created 2023-10-17 mar. 13:18
 % Intended LaTeX compiler: pdflatex
 
 % =================================BASE====================================%
@@ -23,7 +23,6 @@
 \usepackage{graphicx, wrapfig} % Géstion des figures.
 \usepackage{hyperref} % Permettre l'utilisation d'hyperliens.
 \usepackage{color} % Permettre l'utilisation des couleurs.
-\usepackage{colortbl} % Color tables
 \usepackage[dvipsnames]{xcolor} % Couleurs avancées.
 \usepackage{titling} % Donne accès à \theauthor, \thetitle, \thedate
 
@@ -47,12 +46,6 @@
 \setlength\parindent{0pt}
 \setlength{\parskip}{0.15cm}
 
-% Tableaux/tabular
-% Espace vertical dans les tabular/tableaux
-\renewcommand{\arraystretch}{1.2}
-% Couleur des tableaux/tabular
-\rowcolors{2}{violet!5}{}
-
 % Couleurs de hyperliens :
 \definecolor{mypink}{RGB}{147, 0, 255}
 \hypersetup{colorlinks, 
@@ -62,8 +55,6 @@
              linkcolor=mypink, 
              anchorcolor=mypink}
 
-
-
 % Numéros d'équations suivent les sections :
 \numberwithin{equation}{section} 
 
@@ -71,7 +62,7 @@
 \usepackage[textfont = it]{caption} 
 \captionsetup[wrapfigure]{margin=0.5cm}
 
-% Retirer l'écriture en gras dans la table des matières
+% Retirer le l'écriture en gras dans la table des matières
 \usepackage{tocloft}
 \renewcommand{\cftsecfont}{\normalfont}
 \renewcommand{\cftsecpagefont}{\normalfont}
@@ -166,29 +157,33 @@ ISMER-UQAR
  pdftitle={Carnet de bord, Université McGill},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 27.1 (Org mode 9.6.7)}, 
+ pdfcreator={Emacs 28.2 (Org mode 9.6.5)}, 
  pdflang={French}}
 \begin{document}
 
 \mytitlepage
 \tableofcontents\newpage
-\section{Debuggage et implémentation transfert de masse -- \textit{<2023-10-16 Mon>}}
-\label{sec:org09fcffb}
-\subsection{Vérifier que ce n'est pas un problème de viscosité -- \textit{<2023-10-16 Mon>}}
-\label{sec:org1386377}
-Avant tout, David a remarqué que les champs étaient très bruités, ce qui signifie qu'il y a clairement un manque à gagner en terme de viscosité.
-N'oublions pas que nous sommes passées d'une viscosité au 4ème degré vers une viscosité au second degré quand nous cherchions le problème au bord, il y a quelques semaines. \bigskip
+\section{Debuggage et implémentation transfert de masse -- \textit{<2023-10-16 lun.>}}
+\label{sec:org5937cc8}
+\subsection{Vérifier que ce n'est pas un problème de viscosité -- \textit{<2023-10-16 lun.>}}
+\label{sec:org3357d4d}
+\label{orgf05ef60}
+DEADLINE: \textit{<2023-10-17 mar.>}
+Avant tout, David a remarqué que les champs de vorticité (\(\zeta_k\)) étaient extrêmement bruités, ce qui signifie qu'il y a clairement un manque à gagner en terme de viscosité.
+Une viscosité plus forte permet essentiellement de se débarrasser des fluctuations aux plus petites échelles.
+N'oublions pas que nous sommes passées d'une viscosité au 4ème degré vers une viscosité au second degré quand nous cherchions le problème au bord, il y a quelques semaines.
+Tout ça vient confirmer ma théorie de l'escalier.\bigskip
 
 En sommes, de nouveaux test ont été effectuées pour le schéma de viscosité exprimé par
 \begin{equation}
    \vb{D} = Ah_2 \cdot \laplacian{\uu} - Ah_4\cdot \gradient^4\uu.
 \end{equation}
-En ce mardi matin, les résultats sont exprimés dans le tableau \ref{tab:org7b6bc5a}.
+En ce mardi matin, les résultats sont exprimés dans le tableau \ref{tab:org601b00e}.
 
 
 
 \begin{table}[htbp]
-\caption{\label{tab:org7b6bc5a}Résumé des expériences réalisées dans le but de retrouver la bonne viscosité.}
+\caption{\label{tab:org601b00e}Résumé des expériences réalisées dans le but de retrouver la bonne viscosité.}
 \centering
 \begin{tabular}{c|c|c|c|l}
 \hline
@@ -207,14 +202,25 @@ Ah\textsubscript{2} & Ah\textsubscript{4} & dx & min(\sfrac{$L_d$}{dx}) & Nombre
 \end{table}
 
 
-En somme, il semble que tous nos problèmes venaient bel et bien du changement de viscosité que nous avions appliqué pour régler le problème d'ondes de Kelvin aux bord (problème qui a été réglé \href{rapport-2023-10-06.pdf}{il y a deux rapports}).\bigskip
+Pour conclure, il semble que tous nos problèmes venaient bel et bien du changement de viscosité que nous avions appliqué pour régler le problème d'ondes de Kelvin aux bord (problème qui a été réglé \href{rapport-2023-10-06.pdf}{il y a deux rapports}).
+Comme on peut l'observer à la figure \ref{fig:org0b377de}, les \emph{eddies} sont maintenant très \emph{smooth} et non-bruités -- ce qui contraste fortement avec le dernier schéma de viscosité où l'on utilisait une viscosité au deuxième ordre plutôt qu'un viscosité avec un Laplacien d'ordre 4.
+Ce qu'il faut retenir de cela c'est que le schéma utilisé dans l'article de \Citet{chen_2021} était robuste.
+Vaut mieux ne pas trop s'en éloigner. 
 
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\linewidth]{figures/debuggage/2023_10_17_smooth_zeta.png}
+\caption{\label{fig:org0b377de}Vorticité dans les trois couches après 1900 jours pour le modèle « shallow water ». On observe que les tourbillons sont très lisses dans la promière couche, en opposition au précédent schéma de viscosité utilisé.}
+\end{figure}
 
 
 \subsection{« Stencil » de transfert de masse}
-\label{sec:orgc289194}
-Louis-Philippe propose d'utiliser un stencil à 21 points pour redistribuer la masse.
-En gros, on en retirerait sur le point fautif pour rejouter du \emph{h} aux points des alentours, ce qui en fait une redistribution horizontale de la masse.
+\label{sec:orge2cf174}
+Louis-Philippe propose d'utiliser un stencil à 21 points pour redistribuer la masse (Voir figure \ref{orge64b552}).
+En gros, on en retirerait sur le point fautif pour rejouter du \emph{h} aux points des alentours, ce qui en fait une redistribution horizontale de la masse.\bigskip
+
+\nb Pour l'instant, je met tout ça sur la glace, car la solution trouvée à la section \ref{orgf05ef60} semble suffisante.
+Si la solution proposée à la prochaine section n'est pas suffisante, nous reviendrons sur le transfert de masse avec notre \emph{stencil}. 
 
 \begin{figure}[!h]
 \centering
@@ -229,14 +235,14 @@ En gros, on en retirerait sur le point fautif pour rejouter du \emph{h} aux poin
    %
    \draw (2.5,2.5) node {+1};
 \end{tikzpicture}
-\caption{\label{orgab9ca32}Stencil de redistribution de la masse.}
+\caption{\label{orge64b552}Stencil de redistribution de la masse.}
 \end{figure}
 
-\section{Solution à la dérive de Stokes -- \textit{<2023-10-16 Mon>}}
-\label{sec:orgd725159}
+\section{Solution à la dérive de Stokes -- \textit{<2023-10-16 lun.>}}
+\label{sec:org1b8958e}
 Grossièrement, il est sorti deux possibilités pour régler le problème des petites échelles qui sortent de Wavewatch :
 \begin{itemize}
-\item Il serait possible de diminuer la résolution de Wavewatch et de réinterpoler les points de courants à l'aide de la méthose employée dans la figure \ref{org3d68a6c}.
+\item Il serait possible de diminuer la résolution de Wavewatch et de réinterpoler les points de courants à l'aide de la méthose employée dans la figure \ref{orgc5e9c70}.
 
 \begin{figure}[h!]
 \begin{center}
@@ -276,12 +282,12 @@ Grossièrement, il est sorti deux possibilités pour régler le problème des pe
 \begin{equation}
    {\color{cyan}u(4,4)} = \qty(\sfrac{1}{9})\cdot u(1,1) + \qty(\sfrac{2}{9})\cdot u(2,1) + \qty(\sfrac{2}{9})\cdot u(1,2) + \qty(\sfrac{4}{9})\cdot u(2,2).
 \end{equation}
-\caption{\label{org3d68a6c}« Stencil » utilisé pour obtenir le champs aux plus grandes échelles.}
+\caption{\label{orgc5e9c70}« Stencil » utilisé pour obtenir le champs aux plus grandes échelles.}
 \end{figure}
 \end{itemize}
 
 
 
 
-\bibliography{/home/charlesedouard/Desktop/Travail/Documentation/master-bibliography}
+\bibliography{/aos/home/celizotte/Desktop/Documentation/master-bibliography}
 \end{document}
