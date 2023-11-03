@@ -1,0 +1,307 @@
+% Created 2023-11-03 ven. 15:51
+% Intended LaTeX compiler: pdflatex
+
+% =================================BASE====================================%
+\documentclass[10pt]{article}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry} % Marges
+\usepackage[T1]{fontenc} % Nécessaire avec FrenchBabel
+\usepackage[utf8]{inputenc} % Important pour symboles Francophones, é,à,etc
+
+
+% Calligraphie
+\usepackage{lmodern}
+\renewcommand{\familydefault}{cmr} % La meilleure police (CMU Serif Roman) (Je me suis battu).
+\usepackage{mathrsfs} %Permet la command \mathscr (Lettres attachées genre)
+
+% Bibliographie
+\usepackage[round, sort]{natbib} % Bibliographie
+\bibliographystyle{abbrvnat}
+
+
+\usepackage{amsmath, amssymb, amsthm} % Symb. math. (Mathmode+Textmode) + Beaux théorèmes.
+\usepackage{mathtools,cancel,xfrac} % Utilisation de boîtes \boxed{} + \cancelto{}{}
+\usepackage{graphicx, wrapfig} % Géstion des figures.
+\usepackage{hyperref} % Permettre l'utilisation d'hyperliens.
+\usepackage{color} % Permettre l'utilisation des couleurs.
+\usepackage{colortbl} % Color tables
+\usepackage[dvipsnames]{xcolor} % Couleurs avancées.
+\usepackage{titling} % Donne accès à \theauthor, \thetitle, \thedate
+
+% Physique
+\usepackage{physics} % Meilleur package pour physicien. 
+\usepackage{pxfonts} % Rajoute PLEIN de symboles mathématiques, dont les intégrales doubles et triples
+
+% Style
+\usepackage{lipsum} % For fun
+\usepackage{tikz} % Realisation de figures TIKZ.
+\usepackage{empheq} % Boite autour de MULTIPLE équations
+
+% Français
+\usepackage[french]{babel} % Environnements en Français.
+% ==============================BASE-(END)=================================%
+
+
+
+% ================================SETTINGS=================================%
+% Pas d'indentation en début de paragraphe :
+\setlength\parindent{0pt}
+\setlength{\parskip}{0.15cm}
+
+% Tableaux/tabular
+% Espace vertical dans les tabular/tableaux
+\renewcommand{\arraystretch}{1.2}
+% Couleur des tableaux/tabular
+\rowcolors{2}{violet!5}{}
+
+% Couleurs de hyperliens :
+\definecolor{mypink}{RGB}{147, 0, 255}
+\hypersetup{colorlinks, 
+             filecolor=mypink,
+             urlcolor=mypink, 
+             citecolor=mypink, 
+             linkcolor=mypink, 
+             anchorcolor=mypink}
+
+
+
+% Numéros d'équations suivent les sections :
+\numberwithin{equation}{section} 
+
+% Les « captions » sont en italique et largeur limitée
+\usepackage[textfont = it]{caption} 
+\captionsetup[wrapfigure]{margin=0.5cm}
+
+% Retirer l'écriture en gras dans la table des matières
+\usepackage{tocloft}
+\renewcommand{\cftsecfont}{\normalfont}
+\renewcommand{\cftsecpagefont}{\normalfont}
+
+% Change bullet style
+\usepackage{pifont}
+\usepackage{enumitem}
+%\setlist[itemize,1]{label=\ding{224}}
+\setlist[itemize,1]{label=\ding{239}}
+\renewcommand{\boxtimes}{\blacksquare}
+% ================================SETTINGS=================================%
+
+
+
+% ==============================NEWCOMMANDS================================%
+
+% Vecteurs de base :
+\newcommand{\nvf}{\vb{\hat{n}}}
+\newcommand{\ivf}{\vb{\hat{i}}}
+\newcommand{\jvf}{\vb{\hat{j}}}
+\newcommand{\kvf}{\vb{\hat{k}}}
+\newcommand{\uu}{\vb*{u}}
+\newcommand{\vv}{\vb*{v}}
+
+% Physics empty spaces 
+\newcommand{\typical}{\vphantom{A}}
+\newcommand{\tall}{\vphantom{A^{x^x}_p}}
+\newcommand{\grande}{\vphantom{\frac{1}{xx}}}
+\newcommand{\venti}{\vphantom{\sum_x^x}}
+\newcommand{\pt}{\hspace{1pt}} % One horizontal pt space
+
+% Moyenne numérique entre deux points de grilles. 
+\newcommand{\xmean}[1]{\overline{#1}^x}
+\newcommand{\ymean}[1]{\overline{#1}^y}
+\newcommand{\zmean}[1]{\overline{#1}^z}
+\newcommand{\xymean}[1]{\overline{#1}^{xy}}
+
+% Tilde over psi
+\newcommand{\tpsi}{\tilde{\psi}}
+\newcommand{\tphi}{\tilde{\phi}}
+
+% Nota Bene env : (\ding{89})
+\newcommand{\nb}{\raisebox{0.8pt}{\scriptsize\textleaf}\ $\mathscr{N. B.}$\hspace{4pt}}
+\newcommand{\cmark}{\ding{52}}
+\newcommand{\xmark}{\ding{55}}
+% ==============================NEWCOMMANDS================================%
+
+
+
+% ==============================PAGE-TITRE=================================%
+% Titlepage 
+\newcommand{\mytitlepage}{
+\begin{titlepage}
+\begin{center}
+{\Large Contrat Été 2023 \par}
+\vspace{2cm}
+{\Large \MakeUppercase{\thetitle} \par}
+\vspace{2cm}
+RÉALISÉ DANS LE CADRE\\ D'UN PROJET POUR \par
+\vspace{2cm}
+{\Large ISMER--UQAR \par}
+\vspace{2cm}
+{\thedate}
+\end{center}
+\vfill
+Rédaction \\
+{\theauthor}\\
+\url{charles-edouard.lizotte@uqar.ca}\\
+ISMER-UQAR
+\end{titlepage}
+}
+% ==============================PAGE-TITRE=================================%
+
+
+
+% =================================ENTÊTE==================================%
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\setlength{\headheight}{13pt}
+\renewcommand{\headrulewidth}{0.025pt} % Ligne horizontale en haut
+
+\fancyhead[R]{\textit{\thetitle}}
+\fancyhead[L]{\ \thepage}
+\fancyfoot[R]{\textit{\theauthor}}
+\fancyfoot[L]{}
+\fancyfoot[C]{} 
+% =================================ENTÊTE==================================%
+\author{Charles-Édouard Lizotte}
+\date{03/11/2023}
+\title{Carnet de bord, Université McGill}
+\hypersetup{
+ pdfauthor={Charles-Édouard Lizotte},
+ pdftitle={Carnet de bord, Université McGill},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 28.2 (Org mode 9.6.5)}, 
+ pdflang={French}}
+\begin{document}
+
+\mytitlepage
+\tableofcontents\newpage
+
+\section{Résumé des test réalisés -- \textit{<2023-11-02 jeu.>}}
+\label{sec:orgedab9bc}
+\begin{center}
+\begin{tabular}{lcccccc}
+Nom & Refl. (WW3) & Spin up (SW) & Spin up (WW3) & Thick. Visc. & Numerical mixing & Timestep\\[0pt]
+\hline
+\hline
+Reflection & \cmark & \xmark & \cmark & \xmark & \cmark & 3565\\[0pt]
+linear tau & \xmark & \xmark & \xmark & \xmark & \cmark & 1945\\[0pt]
+spun up & \xmark & \cmark & \xmark & \xmark & \cmark & 3907\\[0pt]
+spin thickness visc & \xmark & \cmark & \xmark & \cmark & \xmark & 3853\\[0pt]
+thickness visc & \xmark & \xmark & \xmark & \cmark & \xmark & 3775\\[0pt]
+all spun up & \cmark & \cmark & \cmark & \xmark & \xmark & 3385\\[0pt]
+\hline
+\end{tabular}
+\end{center}
+
+
+
+\section{D'autres tests pour la fin de semaine - \textit{<2023-11-03 ven.>}}
+\label{sec:org5539ee2}
+
+Cette rencontre avec David et LP a été productive.
+Le modèle se rend plus loin depuis qu'on a modifié
+\begin{itemize}
+\item \emph{grad2u} et \emph{grad2v} sont nuls aux murs, de sorte à ce que \emph{grad4u} et \emph{grad4v} soient calculés en fonction d'uen valeur nullw;
+\item On a rajouté la réflection des vagues aux murs ( à l'aide du paramètre \emph{REFCOAST=0.1} );
+\item On initialise maintenant le modèle de vagues avec un \emph{Jonswap}.
+Ainsi, tout est plus \emph{smooth} au départ;
+\item On initialise le modèle \emph{shallow water} à l'aide d'une run fialble qui a duré 10 ans avec un \emph{restart files}.
+\end{itemize}
+
+Mais tout semble se briser après 3800 pas de temps.
+On obtient des épaisseurs nulles un peu partout sur le domaine.
+Ça pourrait être causé par l'ajout du transport de Stokes à l'intérieur de l'équation de masse.
+Ça a un drole d'effet, ça vient inverser le sens courant. \bigskip
+
+Dans ma maîtrise, on avait évité le problème en assumant que le courant réel était une forme de courant effectif qui combinait les deux.
+Mais, aux dires des dernières discussions, il semble que rien ne nous indique d'ajouter la dérive de Stokes dans l'équation de masse.
+L'article de \Citet{suzuki2016understanding} ne semble pas expliquer rien en ce sens.
+Bref, nous l'avons enlevée et le résultat se retrouve dans le tableau suivant.
+Louis-Philippe n'a toujours pas l'air d'un fan pour un bi-laplacien sur les épaisseurs.
+
+\begin{center}
+\begin{tabular}{ccccc}
+Nom & Couche Stokes (HS) & Épaisseur & UStokes couplée? & Last Timestep\\[0pt]
+\hline
+\hline
+HS\textsubscript{Htot} & Htot & 3999 [m] & \cmark & \\[0pt]
+HS\textsubscript{H1} & H1 & 482 [m] & \cmark & \\[0pt]
+HS\textsubscript{thickness} & thickness & -- [m] & \cmark & \\[0pt]
+nostokes & \xmark & -- [m] & \xmark & \\[0pt]
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Rappel sur le modèle -- \textit{<2023-11-03 ven.>}}
+\label{sec:org5549b57}
+
+Petit rappel sur la rampe.
+On change progressivement d'un régime à l'autre à l'aide d'une rampe.
+Bien que les deux forçages soient similaires, je pense qu'il faut prendre des précautions pour ne pas sacrifier l'épaisseur des couches du modèle.
+Bref, ne prenons aucune chance, comme rien ne marche.
+
+\begin{figure}
+\begin{center}
+\begin{tikzpicture}[scale=1.4]
+   % Rectangles :
+   \fill [BurntOrange!10] (0,0) rectangle (2,3) ;
+   \fill [BurntOrange!18] (2,0) rectangle (4,3) ;
+   \fill [BurntOrange!26] (4,0) rectangle (6,3) ;
+   %
+   \draw (1,2.75) node [] {Spin up WW3};
+   \draw (3,2.75) node [] {Rampe};
+   \draw (5,2.75) node [] {Couplé};
+   %
+   \draw [->] (0,0) -- (6.25,0);
+   \draw [->] (0,0) -- (0,3.25);
+   \draw [dotted] (0,2.5) -- (6,2.5);
+   \draw [thick, BurntOrange!50!red!90] (0,0.01) -- (2,0.01) -- (4,2.5) -- (6,2.5);
+   \draw [thick, red] (0,2.5) -- (2,2.5) -- (4,0.01) -- (6,0.01);
+   \draw (0,2.5) node [left] {1};
+   \draw (0,0) node [left] {0};
+   \draw (0,1.30) node [rotate=90, above] {Rampe};
+   \draw (2,0) node [below] {4 jours};
+   \draw (4,0) node [below] {1 mois};
+   \draw (6,0) node [below] {Temps};
+   %
+   \draw (5.7,0.2) node [red] {$\boldsymbol{\tau_{atm}}$};
+   \draw (5.7,2.3) node [BurntOrange!50!red!90] {$\boldsymbol{\tau_{oc}}$};
+\end{tikzpicture}
+\end{center}
+\caption{\label{org4519fd8}Illustration conceptuelle de la rampe pour éviter le \emph{spin up} du modèle de vagues.}
+\end{figure}
+
+\subsection{Rappel sur les équations -- \textit{<2023-11-03 ven.>}}
+\label{sec:org558001a}
+
+On rappel que dans le \href{rapport-2023-10-06.org}{rapport du 6 octobre}, nous avions les équations du mouvement pour un système Boussinesq
+\begin{equation}
+\label{eq:orgb0adb00}
+   \pdv{\uu}{t} = \qty(f+\zeta)\pt \kvf\times\uu = -\gradient{B} + \boldsymbol{D} + \frac{\boldsymbol{\tau_a}}{\rho_o H},
+\end{equation}
+où la fonction de Bernouilli (\(B\)) est exprimée par \(B = p/\rho_o + \uu^2/2\).\bigskip
+
+
+Dans leur résumé, \Citet{suzuki2016understanding}  définissent la dérive de Stokes \(\uu_S\) comme une contribution lagrangienne à notre écoulement, de sorte qu'on peut décrire ce courant lagrangien \(\uu_L\) par
+\begin{equation}
+   \uu_L = \uu + \uu_S.
+\end{equation}
+En somme, 
+\begin{itemize}
+\item Ce courant lagrangien \(\uu_L\) se substitue dans les termes d'advection, de la même manière qu'un référentiel en mouvement ;
+\item Les termes de Stokes-Coriolis, Craik-Leibovic et la nouvelle fonction de Bernouilli découlent donc directement cette au référentiel en mouvement. \bigskip
+\end{itemize}
+
+Lorsqu'on ajoute cette contribution lagrangienne à notre courant, l'expression \ref{eq:orgb0adb00} devient plutôt
+\begin{equation}
+   \pdv{\uu}{t} = \qty(f+\zeta)\pt \kvf\ \times\underbrace{\grande\qty(\uu + \uu_S)}_{\substack{\text{Courant} \\ \text{Lagrangien}}} = \underbrace{\grande-\gradient{B_S}}_\text{B.-Stokes} + \ \boldsymbol{D} \underbrace{+ \frac{\tau_o}{\rho_o H}.}_{\substack{\text{Contr. des} \\ \text{Vagues}}}
+\end{equation}
+où la nouvelle fonction de Bernouilli qui tient compte de la dérive de Stokes est donnée par
+\begin{align}
+   B_S = B + \uu\cdot\uu_S + \uu_S^2/2.
+\end{align}
+
+
+\section{Switches de Wavewatch III}
+\label{sec:orgd97ae52}
+
+\bibliography{/aos/home/celizotte/Desktop/Documentation/master-bibliography}
+\end{document}

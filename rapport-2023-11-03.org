@@ -1,0 +1,130 @@
+#+title: Carnet de bord, Université McGill
+#+author: Charles-Édouard Lizotte
+#+date:03/11/2023
+#+LATEX_CLASS: org-report
+#+CITE_EXPORT: natbib
+#+LANGUAGE: fr
+#+BIBLIOGRAPHY: master-bibliography.bib
+#+OPTIONS: toc:nil title:nil
+
+
+\mytitlepage
+\tableofcontents\newpage
+
+* Résumé des test réalisés -- <2023-11-02 jeu.>
+| <l>                 |     <c>     |     <c>      |      <c>      |     <c>      |       <c>        | <c>      |
+| Nom                 | Refl. (WW3) | Spin up (SW) | Spin up (WW3) | Thick. Visc. | Numerical mixing | Timestep |
+|---------------------+-------------+--------------+---------------+--------------+------------------+----------|
+|---------------------+-------------+--------------+---------------+--------------+------------------+----------|
+| Reflection          |   \cmark    |    \xmark    |    \cmark     |    \xmark    |      \cmark      | 3565     |
+| linear tau          |   \xmark    |    \xmark    |    \xmark     |    \xmark    |      \cmark      | 1945     |
+| spun up             |   \xmark    |    \cmark    |    \xmark     |    \xmark    |      \cmark      | 3907     |
+| spin thickness visc |   \xmark    |    \cmark    |    \xmark     |    \cmark    |      \xmark      | 3853     |
+| thickness visc      |   \xmark    |    \xmark    |    \xmark     |    \cmark    |      \xmark      | 3775     |
+| all spun up         |   \cmark    |    \cmark    |    \cmark     |    \xmark    |      \xmark      | 3385     |
+|---------------------+-------------+--------------+---------------+--------------+------------------+----------|
+
+
+
+* D'autres tests pour la fin de semaine - <2023-11-03 ven.>
+
+Cette rencontre avec David et LP a été productive.
+Le modèle se rend plus loin depuis qu'on a modifié
++ /grad2u/ et /grad2v/ sont nuls aux murs, de sorte à ce que /grad4u/ et /grad4v/ soient calculés en fonction d'uen valeur nullw;
++ On a rajouté la réflection des vagues aux murs ( à l'aide du paramètre /REFCOAST=0.1/ );
++ On initialise maintenant le modèle de vagues avec un /Jonswap/.
+  Ainsi, tout est plus /smooth/ au départ;
++ On initialise le modèle /shallow water/ à l'aide d'une run fialble qui a duré 10 ans avec un /restart files/.
+
+Mais tout semble se briser après 3800 pas de temps.
+On obtient des épaisseurs nulles un peu partout sur le domaine.
+Ça pourrait être causé par l'ajout du transport de Stokes à l'intérieur de l'équation de masse.
+Ça a un drole d'effet, ça vient inverser le sens courant. \bigskip
+
+Dans ma maîtrise, on avait évité le problème en assumant que le courant réel était une forme de courant effectif qui combinait les deux.
+Mais, aux dires des dernières discussions, il semble que rien ne nous indique d'ajouter la dérive de Stokes dans l'équation de masse.
+L'article de [cite/t/c:@suzuki2016understanding] ne semble pas expliquer rien en ce sens.
+Bref, nous l'avons enlevée et le résultat se retrouve dans le tableau suivant.
+Louis-Philippe n'a toujours pas l'air d'un fan pour un bi-laplacien sur les épaisseurs.
+
+|     <c>      |        <c>         |    <c>    |       <c>        |      <c>      |
+|     Nom      | Couche Stokes (HS) | Épaisseur | UStokes couplée? | Last Timestep |
+|--------------+--------------------+-----------+------------------+---------------|
+|--------------+--------------------+-----------+------------------+---------------|
+|   HS_Htot    |        Htot        | 3999 [m]  |      \cmark      |               |
+|    HS_H1     |         H1         |  482 [m]  |      \cmark      |               |
+| HS_thickness |     thickness      |  -- [m]   |      \cmark      |               |
+|   nostokes   |       \xmark       |  -- [m]   |      \xmark      |               |
+|--------------+--------------------+-----------+------------------+---------------|
+
+** Rappel sur le modèle -- <2023-11-03 ven.>
+
+Petit rappel sur la rampe.
+On change progressivement d'un régime à l'autre à l'aide d'une rampe.
+Bien que les deux forçages soient similaires, je pense qu'il faut prendre des précautions pour ne pas sacrifier l'épaisseur des couches du modèle.
+Bref, ne prenons aucune chance, comme rien ne marche.
+
+#+NAME: fig:ramp
+#+CAPTION: Illustration conceptuelle de la rampe pour éviter le /spin up/ du modèle de vagues.
+\begin{figure}
+\begin{center}
+\begin{tikzpicture}[scale=1.4]
+   % Rectangles :
+   \fill [BurntOrange!10] (0,0) rectangle (2,3) ;
+   \fill [BurntOrange!18] (2,0) rectangle (4,3) ;
+   \fill [BurntOrange!26] (4,0) rectangle (6,3) ;
+   %
+   \draw (1,2.75) node [] {Spin up WW3};
+   \draw (3,2.75) node [] {Rampe};
+   \draw (5,2.75) node [] {Couplé};
+   %
+   \draw [->] (0,0) -- (6.25,0);
+   \draw [->] (0,0) -- (0,3.25);
+   \draw [dotted] (0,2.5) -- (6,2.5);
+   \draw [thick, BurntOrange!50!red!90] (0,0.01) -- (2,0.01) -- (4,2.5) -- (6,2.5);
+   \draw [thick, red] (0,2.5) -- (2,2.5) -- (4,0.01) -- (6,0.01);
+   \draw (0,2.5) node [left] {1};
+   \draw (0,0) node [left] {0};
+   \draw (0,1.30) node [rotate=90, above] {Rampe};
+   \draw (2,0) node [below] {4 jours};
+   \draw (4,0) node [below] {1 mois};
+   \draw (6,0) node [below] {Temps};
+   %
+   \draw (5.7,0.2) node [red] {$\boldsymbol{\tau_{atm}}$};
+   \draw (5.7,2.3) node [BurntOrange!50!red!90] {$\boldsymbol{\tau_{oc}}$};
+\end{tikzpicture}
+\end{center}
+\end{figure}
+
+** Rappel sur les équations -- <2023-11-03 ven.>
+
+On rappel que dans le [[file:rapport-2023-10-06.org][rapport du 6 octobre]], nous avions les équations du mouvement pour un système Boussinesq
+#+NAME:eq:mvmnt
+\begin{equation}
+   \pdv{\uu}{t} = \qty(f+\zeta)\pt \kvf\times\uu = -\gradient{B} + \boldsymbol{D} + \frac{\boldsymbol{\tau_a}}{\rho_o H},
+\end{equation}
+où la fonction de Bernouilli ($B$) est exprimée par $B = p/\rho_o + \uu^2/2$.\bigskip
+
+
+Dans leur résumé, [cite/t/c:@suzuki2016understanding]  définissent la dérive de Stokes $\uu_S$ comme une contribution lagrangienne à notre écoulement, de sorte qu'on peut décrire ce courant lagrangien $\uu_L$ par
+\begin{equation}
+   \uu_L = \uu + \uu_S.
+\end{equation}
+En somme, 
++ Ce courant lagrangien $\uu_L$ se substitue dans les termes d'advection, de la même manière qu'un référentiel en mouvement ;
++ Les termes de Stokes-Coriolis, Craik-Leibovic et la nouvelle fonction de Bernouilli découlent donc directement cette au référentiel en mouvement. \bigskip
+
+Lorsqu'on ajoute cette contribution lagrangienne à notre courant, l'expression [[eq:mvmnt]] devient plutôt
+\begin{equation}
+   \pdv{\uu}{t} = \qty(f+\zeta)\pt \kvf\ \times\underbrace{\grande\qty(\uu + \uu_S)}_{\substack{\text{Courant} \\ \text{Lagrangien}}} = \underbrace{\grande-\gradient{B_S}}_\text{B.-Stokes} + \ \boldsymbol{D} \underbrace{+ \frac{\tau_o}{\rho_o H}.}_{\substack{\text{Contr. des} \\ \text{Vagues}}}
+\end{equation}
+où la nouvelle fonction de Bernouilli qui tient compte de la dérive de Stokes est donnée par
+\begin{align}
+   B_S = B + \uu\cdot\uu_S + \uu_S^2/2.
+\end{align}
+
+Par contre, il faudrait partir de ça pour obtenir les équations en /shallow water/ avec la contrainte sur l'épaisseur des couches.
+
+* Switches de Wavewatch III
+
+#+print_bibliography:
