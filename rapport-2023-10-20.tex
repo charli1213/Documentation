@@ -1,4 +1,4 @@
-% Created 2023-10-17 mar. 13:18
+% Created 2023-10-26 Thu 15:23
 % Intended LaTeX compiler: pdflatex
 
 % =================================BASE====================================%
@@ -23,6 +23,7 @@
 \usepackage{graphicx, wrapfig} % Géstion des figures.
 \usepackage{hyperref} % Permettre l'utilisation d'hyperliens.
 \usepackage{color} % Permettre l'utilisation des couleurs.
+\usepackage{colortbl} % Color tables
 \usepackage[dvipsnames]{xcolor} % Couleurs avancées.
 \usepackage{titling} % Donne accès à \theauthor, \thetitle, \thedate
 
@@ -46,6 +47,12 @@
 \setlength\parindent{0pt}
 \setlength{\parskip}{0.15cm}
 
+% Tableaux/tabular
+% Espace vertical dans les tabular/tableaux
+\renewcommand{\arraystretch}{1.2}
+% Couleur des tableaux/tabular
+\rowcolors{2}{violet!5}{}
+
 % Couleurs de hyperliens :
 \definecolor{mypink}{RGB}{147, 0, 255}
 \hypersetup{colorlinks, 
@@ -55,6 +62,8 @@
              linkcolor=mypink, 
              anchorcolor=mypink}
 
+
+
 % Numéros d'équations suivent les sections :
 \numberwithin{equation}{section} 
 
@@ -62,7 +71,7 @@
 \usepackage[textfont = it]{caption} 
 \captionsetup[wrapfigure]{margin=0.5cm}
 
-% Retirer le l'écriture en gras dans la table des matières
+% Retirer l'écriture en gras dans la table des matières
 \usepackage{tocloft}
 \renewcommand{\cftsecfont}{\normalfont}
 \renewcommand{\cftsecpagefont}{\normalfont}
@@ -157,18 +166,18 @@ ISMER-UQAR
  pdftitle={Carnet de bord, Université McGill},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 28.2 (Org mode 9.6.5)}, 
+ pdfcreator={Emacs 27.1 (Org mode 9.6.7)}, 
  pdflang={French}}
 \begin{document}
 
 \mytitlepage
 \tableofcontents\newpage
-\section{Debuggage et implémentation transfert de masse -- \textit{<2023-10-16 lun.>}}
-\label{sec:org5937cc8}
-\subsection{Vérifier que ce n'est pas un problème de viscosité -- \textit{<2023-10-16 lun.>}}
-\label{sec:org3357d4d}
-\label{orgf05ef60}
-DEADLINE: \textit{<2023-10-17 mar.>}
+\section{Debuggage et implémentation transfert de masse -- \textit{<2023-10-16 Mon>}}
+\label{sec:org679a975}
+\subsection{Vérifier que ce n'est pas un problème de viscosité -- \textit{<2023-10-16 Mon>}}
+\label{sec:orgfb5362c}
+\label{org5a2f71f}
+DEADLINE: \textit{<2023-10-17 Tue>}
 Avant tout, David a remarqué que les champs de vorticité (\(\zeta_k\)) étaient extrêmement bruités, ce qui signifie qu'il y a clairement un manque à gagner en terme de viscosité.
 Une viscosité plus forte permet essentiellement de se débarrasser des fluctuations aux plus petites échelles.
 N'oublions pas que nous sommes passées d'une viscosité au 4ème degré vers une viscosité au second degré quand nous cherchions le problème au bord, il y a quelques semaines.
@@ -178,12 +187,12 @@ En sommes, de nouveaux test ont été effectuées pour le schéma de viscosité 
 \begin{equation}
    \vb{D} = Ah_2 \cdot \laplacian{\uu} - Ah_4\cdot \gradient^4\uu.
 \end{equation}
-En ce mardi matin, les résultats sont exprimés dans le tableau \ref{tab:org601b00e}.
+En ce mardi matin, les résultats sont exprimés dans le tableau \ref{tab:org14ad76d}.
 
 
 
 \begin{table}[htbp]
-\caption{\label{tab:org601b00e}Résumé des expériences réalisées dans le but de retrouver la bonne viscosité.}
+\caption{\label{tab:org14ad76d}Résumé des expériences réalisées dans le but de retrouver la bonne viscosité.}
 \centering
 \begin{tabular}{c|c|c|c|l}
 \hline
@@ -203,50 +212,92 @@ Ah\textsubscript{2} & Ah\textsubscript{4} & dx & min(\sfrac{$L_d$}{dx}) & Nombre
 
 
 Pour conclure, il semble que tous nos problèmes venaient bel et bien du changement de viscosité que nous avions appliqué pour régler le problème d'ondes de Kelvin aux bord (problème qui a été réglé \href{rapport-2023-10-06.pdf}{il y a deux rapports}).
-Comme on peut l'observer à la figure \ref{fig:org0b377de}, les \emph{eddies} sont maintenant très \emph{smooth} et non-bruités -- ce qui contraste fortement avec le dernier schéma de viscosité où l'on utilisait une viscosité au deuxième ordre plutôt qu'un viscosité avec un Laplacien d'ordre 4.
+Comme on peut l'observer à la figure \ref{fig:orgaadbea3}, les \emph{eddies} sont maintenant très \emph{smooth} et non-bruités -- ce qui contraste fortement avec le dernier schéma de viscosité où l'on utilisait une viscosité au deuxième ordre plutôt qu'un viscosité avec un Laplacien d'ordre 4.
 Ce qu'il faut retenir de cela c'est que le schéma utilisé dans l'article de \Citet{chen_2021} était robuste.
 Vaut mieux ne pas trop s'en éloigner. 
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figures/debuggage/2023_10_17_smooth_zeta.png}
-\caption{\label{fig:org0b377de}Vorticité dans les trois couches après 1900 jours pour le modèle « shallow water ». On observe que les tourbillons sont très lisses dans la promière couche, en opposition au précédent schéma de viscosité utilisé.}
+\caption{\label{fig:orgaadbea3}Vorticité dans les trois couches après 1900 jours pour le modèle « shallow water ». On observe que les tourbillons sont très lisses dans la promière couche, en opposition au précédent schéma de viscosité utilisé.}
 \end{figure}
 
 
-\subsection{« Stencil » de transfert de masse}
-\label{sec:orge2cf174}
-Louis-Philippe propose d'utiliser un stencil à 21 points pour redistribuer la masse (Voir figure \ref{orge64b552}).
+\subsection{« Stencil » de transfert de masse -- \textit{<2023-10-23 Mon>}}
+\label{sec:org49f3db7}
+\label{orgaefbc54}
+
+Louis-Philippe propose d'utiliser un stencil à 21 points pour redistribuer la masse (Voir figure \ref{org311c840}).
 En gros, on en retirerait sur le point fautif pour rejouter du \emph{h} aux points des alentours, ce qui en fait une redistribution horizontale de la masse.\bigskip
 
-\nb Pour l'instant, je met tout ça sur la glace, car la solution trouvée à la section \ref{orgf05ef60} semble suffisante.
+\nb Pour l'instant (\textit{<2023-10-18 Wed>}), je met tout ça sur la glace, car la solution trouvée à la section \ref{org5a2f71f} semble suffisante.
 Si la solution proposée à la prochaine section n'est pas suffisante, nous reviendrons sur le transfert de masse avec notre \emph{stencil}. 
 
 \begin{figure}[!h]
 \centering
-\begin{tikzpicture}
-   \fill [blue!5] (1,0) -- (4,0) -- (4,1) -- (5,1) -- (5,4) -- (4,4) -- (4,5) -- (1,5) -- (1,4) -- (0,4) -- (0,1) -- (1,1) -- (1,0);
-   \fill [blue!12] (1,1) rectangle (4,4);
-   \draw [dotted,thin] (1,0) grid (4,5);
-   \draw [dotted,thin] (0,1) grid (5,4);
-   \draw [] (1,0) -- (4,0) -- (4,1) -- (5,1) -- (5,4) -- (4,4) -- (4,5) -- (1,5) -- (1,4) -- (0,4) -- (0,1) -- (1,1) -- (1,0);
-   \fill [cyan!50] (2,2) rectangle (3,3); 
-   \draw [] (2,2) rectangle (3,3);
-   %
-   \draw (2.5,2.5) node {+1};
+\begin{tikzpicture}[scale = 0.8]
+  \fill [blue!5] (1,0) -- (4,0) -- (4,1) -- (5,1) -- (5,4) -- (4,4) -- (4,5) -- (1,5) -- (1,4) -- (0,4) -- (0,1) -- (1,1) -- (1,0);
+  \fill [blue!12] (1,1) rectangle (4,4);
+  \draw [dotted,thin] (0,0) grid (5,5);
+  \draw [] (1,0) -- (4,0) -- (4,1) -- (5,1) -- (5,4) -- (4,4) -- (4,5) -- (1,5) -- (1,4) -- (0,4) -- (0,1) -- (1,1) -- (1,0);
+  \fill [cyan!50] (2,2) rectangle (3,3); 
+  \draw [] (2,2) rectangle (3,3);
+  %
+  \draw (2.5,2.5) node {+1};
+  \foreach \x in {1,2,3,4,5}{
+   \draw (\x-0.5,-0.5) node {\x};
+   \draw (-0.5,\x-0.5) node {\x};}
+  \draw (0,5.5) node {a)};
+\end{tikzpicture}\hspace{1cm}
+\begin{tikzpicture}[scale = 0.8]
+  \foreach \x in {-2,-1,1,2}{
+   \filldraw [color=black, fill=blue!12, line width = 0.1pt] (\x,0) rectangle (\x+1,{-2*abs(1/\x)});
+  }
+  \filldraw [color=black, fill=cyan!50, ] (0,0) rectangle (1,3);
+  \draw (0.5,1.5) node {+1};
+  \draw (-2,3.5) node {b)};
+  \draw (-2,0) node [left] {0};
+  \foreach \x in {-2,-1,0,1,2}{
+   \draw (0.5+\x,-2.5) node {\x};}
+\end{tikzpicture}\hspace{1cm}
+\begin{tikzpicture}[scale = 0.8]
+  \fill [blue!5] (0,0) -- (3,0) -- (3,3) -- (2,3) -- (2,4) -- (0,4) -- (0,0);
+  \fill [blue!12] (0,0) rectangle (2,3);
+  \draw [dotted,thin] (0,0) grid (4.5,4.5);
+  \draw [] (0,0) -- (3,0) -- (3,3) -- (2,3) -- (2,4) -- (0,4) -- (0,0);
+  \fill [cyan!50] (0,1) rectangle (1,2);
+  \draw [] (0,1) rectangle (1,2);
+  \draw (0.5,1.5) node {+1};
+  \draw [->, thick] (0,0) -- (5,0);
+  \draw [->, thick] (0,0) -- (0,4.5);
+  \draw (0,5.5) node [] {c)};
+  \foreach \x in {1,2,3,4,5}{
+   \draw (\x-0.5,-0.5) node {\x};
+   \draw (-0.5,\x-0.5) node {\x};}
 \end{tikzpicture}
-\caption{\label{orge64b552}Stencil de redistribution de la masse.}
+\caption{\label{org311c840}Stencil de redistribution de la masse. À gauche (a), transfert de masse horizontal vu du haut. Au milieu (b), le même transfert de masse vu en coupe verticale. À droite (c), cas tangeant au mur.}
 \end{figure}
 
-\section{Solution à la dérive de Stokes -- \textit{<2023-10-16 lun.>}}
-\label{sec:org1b8958e}
-Grossièrement, il est sorti deux possibilités pour régler le problème des petites échelles qui sortent de Wavewatch :
-\begin{itemize}
-\item Il serait possible de diminuer la résolution de Wavewatch et de réinterpoler les points de courants à l'aide de la méthose employée dans la figure \ref{orgc5e9c70}.
+En somme, on crée une sous-routine qui peut vérifier l'épaisseur des couches produire un transfert de masse horizontal, comme illustré à la figure \ref{org311c840}.
+Par contre, il faudra bien faire attention lorsqu'on arrive aux murs pour que notre masque s'adapte à la forme désirée.
+En ordre, les étapes à suivre sont :
+
+\begin{enumerate}
+\item On vérifie si l'épaisseur de la couche (\(h_k = H_k + \eta_k + \eta_{k+1}\)) dépasse un \emph{treshold} ou une limite verticale.
+Dans notre cas, on commence à un rapport d'épaisseur de 15\% pour tester.
+\item On retire l'\emph{overshoot} ( ou l'écart avec la limite \(\delta h_k\)) à la case bleue de la figure \ref{org311c840}.
+Dans le code, c'est la quantité qu'on appelle \emph{hgap}.
+\item On recrée le masque en fonction de la position par rapport aux murs.
+Le poid accordé à chaque case dépend donc de la position.
+\item On somme les valeurs actives du masque, de sorte à ce que le total (ou la norme) soit de 1;
+\item On additionne les valeurs du masque multipliées par \(\delta h_k/2\) en haut (\(\eta_k\)) et on soustrait la même valeur en bas (\(\eta_{k+1}\)).
+\end{enumerate}
+
 
 \begin{figure}[h!]
 \begin{center}
-\begin{tikzpicture}
+\begin{tikzpicture}[scale = 0.9]
+\draw (-0.8,6.5) node {a)};
 % Big grid
 \fill [blue!5] (0,0) rectangle (3,3);
 \fill [blue!5] (3,3) rectangle (6,6);
@@ -255,6 +306,7 @@ Grossièrement, il est sorti deux possibilités pour régler le problème des pe
 \draw [dotted] (0,0) grid (6,6) ;
 \draw [step=3.0] (0,0) grid (6,6) ;
 % Carré
+\fill [cyan, opacity=0.1] (2,2) rectangle (5,5) ;
 \draw [cyan, thick] (2,2) rectangle (5,5) ;
 \fill [cyan!50, opacity=0.5] (3,3) rectangle (4,4);
 % Coordinates 
@@ -277,17 +329,136 @@ Grossièrement, il est sorti deux possibilités pour régler le problème des pe
 \foreach \y in {1,2,3,4,5,6} {\draw (-0.5,\y-0.5) node [cyan] {\y};}
 \foreach \x in {1,2,3,4,5,6} {\draw (\x-0.5,-0.5) node [cyan] {\x};}
 %
+\end{tikzpicture}\hspace{1.3cm}
+\begin{tikzpicture}[scale = 0.9]
+\draw (-0.8,6.5) node {b)};
+% Big grid
+\fill [blue!7] (0,0) rectangle (2,2);
+\fill [blue!7] (2,2) rectangle (4,4);
+\fill [blue!7] (4,4) rectangle (6,6);
+\fill [blue!7] (0,4) rectangle (2,6);
+\fill [blue!7] (4,0) rectangle (6,2);
+% Grid
+\draw (0,0) rectangle (6,6) ;
+\draw [dotted] (0,0) grid (6,6) ;
+\draw [step=2.0] (0,0) grid (6,6) ;
+% Carré
+\fill [cyan, opacity=0.2] (1.5,1.5) rectangle (3.5,3.5) ;
+\fill [cyan!50, opacity=0.5] (2,2) rectangle (3,3);
+% Coordinates 
+\foreach \x in {1,2,3}
+\foreach \y in {1,2,3}
+{\draw (2*\x-0.5,2*\y-0.5) node [] {\x,\y};
+ \draw (2*\x-1.5,2*\y-0.5) node [] {\x,\y};
+ \draw (2*\x-0.5,2*\y-1.5) node [] {\x,\y};
+ \draw (2*\x-1.5,2*\y-1.5) node [] {\x,\y};}
+% Axis:
+\foreach \y in {1,2,3,4,5,6} {\draw (-0.5,\y-0.5) node [cyan] {\y};}
+\foreach \x in {1,2,3,4,5,6} {\draw (\x-0.5,-0.5) node [cyan] {\x};}
+%
 \end{tikzpicture}
 \end{center}
-\begin{equation}
-   {\color{cyan}u(4,4)} = \qty(\sfrac{1}{9})\cdot u(1,1) + \qty(\sfrac{2}{9})\cdot u(2,1) + \qty(\sfrac{2}{9})\cdot u(1,2) + \qty(\sfrac{4}{9})\cdot u(2,2).
-\end{equation}
-\caption{\label{orgc5e9c70}« Stencil » utilisé pour obtenir le champs aux plus grandes échelles.}
+\caption{\label{org7e608a6}« Stencil » utilisé pour obtenir le champs aux plus grandes échelles. À gauche (a), «stencil» pour une interoplation à ratio impair, à droite (b), «stencil» pour une interpolation à ratio pair.}
 \end{figure}
+
+\newpage
+\section{Solution à la dérive de Stokes -- \textit{<2023-10-16 Mon>}}
+\label{sec:org2649ce8}
+Grossièrement, il est sorti deux possibilités pour régler le problème des petites échelles qui sortent de Wavewatch :
+\begin{enumerate}
+\item Il serait possible de diminuer la résolution de Wavewatch et de réinterpoler les points de courants à l'aide de la méthose employée dans la figure \ref{org7e608a6}a.
+Pour une interpolation \textbf{paire}, le \emph{stencil} serait un peu différent (voir figure \ref{org7e608a6}b).
+
+\item La seconde solution serait d'utiliser le stencil qui redistribue la masse, comme énoncé dans la section \ref{orgaefbc54}.
+\end{enumerate}
+
+\section{Résumé de la rencontre de mercredi [42\%]  -- \textit{<2023-10-25 Wed>}}
+\label{sec:org5e46707}
+
+\begin{itemize}
+\item[{$\boxtimes$}] Il faut tester jusqu'à combien de couches on peut se rendre.
+Bien que trois couches soit intéressant, il serait pertinent de savoir si plus de couches serait fonctionnel, maintenant que le modèle est véritablement testable.
+On lance les test sans transfert de masse, considérant que c'est pas au point.\bigskip
+
+\item[{$\boxtimes$}] Est-ce que Wavewatch est pogné avec ce \emph{fetch} là? Ça serait quand même facile de tester plusieurs \emph{switches} (voir section \ref{org2652828}). \bigskip
+
+\item[{$\square$}] Un problème récurrent, c'est qu'on crée des plateaux en redistribuant la masse aux alentours.
+Louis-Philippe proposait deux choses pour contrer cet effet :
+\begin{enumerate}
+\item \textbf{Tester un rappel plus grand} : Par exemple, à une épaisseur de moins de 15\%, on ramène tout à 15\%.
+Rien ne nous oblige à ne pas ramener à 30\% et redistribuer toute cette masse-là aux alentours du point.
+\item \textbf{Mettre un «threshold» plus gros} : Ça nous permettrait d'éviter que des pics d'épaisseur faible se développent dès le départ.\bigskip
+\end{enumerate}
+
+\item[{$\square$}] Les poids que j'utilise à la figure \ref{org311c840} sont un peu bizare.
+Louis-Philippe me l'a mentionné, mais ça ne doit pas être si grave. 
+\begin{enumerate}
+\item \textbf{Le masque devrait être cirulaire :}
+En ce moment, le masque est plutôt rectangulaire.
+Louis-Philippe ne pense pas que ça soit si grave, mais tant qu'à le faire on pourrait bien le faire.
+\item \textbf{Le masque n'est pas vraiment linéaire :} On rajoute une masse plus forte à côté, mais il faudrait que ça soit plus loin.
+Mentionnons que je ne suis pas sur à 100\% que ça soit une bonne idée, parce que ça crérait des gradient d'épaisseurs un peu étranges.\bigskip
+
+\nb À la rencontre du PolR, Rosalie et Jonathan ont proposé de tester plusieurs valeurs de masque ou de fenêtre.
+Effectivement, la fenêtre choisie initialement donne des gros gradients d'épaisseurs qu'il faudrait peut-être modifier.\bigskip
+\end{enumerate}
+
+\item[{$\square$}] David a rappelé que la variation de l'interface pourrait devenir linéaire si on assume que \(h_k \sim H_k\).
+Comme ça, ça ne changerait pas grand chose si l'épaisseur devenait nulle, mais c'est un peu une solution \emph{scotch-tape} à tester en dernier recours, selon moi.\bigskip
+
+\item[{$\boxtimes$}] Finalement, on a un gros problème d'ordre chronologique pour adapter les épaisseurs.
+Concrétement, on les modifie en même temps que trouver le \emph{RHS} des couches et des vitesses.
+Il faudrait plutôt les modifier avant de calculer les \emph{RHS} associés à la vitesse et tout.
+David a mentionné qu'il faut retrouver les \(\eta_k\) de la même manière qu'avec l'addition des \(RHS\ h_k\) (voir section \ref{orgd43926a}). \bigskip
+
+\item[{$\square$}] Si rien ne marche, on peut commencer à checker pour une solution incluant un genre de Laplacien (ou de viscosité) sur les épaisseurs.
+Faudra faire extrémement attention avec ça.
 \end{itemize}
 
+\section{Solutionner le chaos des vagues -- \textit{<2023-10-25 Wed>}}
+\label{sec:org8b2e4d6}
+
+\subsection{Réorganiser l'ordre du transfert de masse -- \textit{<2023-10-26 Thu>}}
+\label{sec:org6a2bdc7}
+\label{orgd43926a}
+\textbf{Énoncé du problème :} En transférant de la masse aux niveaux adjacents, puis en calculant le \emph{RHS}, on vient modifier les épaisseurs en même temps qu'en calculant nos quantités importantes.
+Essentiellement, il faut trouver un moyen de corriger toutes les épaisseurs d'un coup pour \textbf{après} calculer les \emph{RHS}. \bigskip
+
+Concrétement, dans un boucle de \(k\) partant de la couche du haut, les étapes sont les suivantes :
+\begin{enumerate}
+\item On calcule l'épaisseur \(h_k\) (\emph{thickness}) et donc l'écart \emph{hgap}.
+De cette manière, on trouve les positions des incursions d'eau dans les autres couches.
+\item On trouve la forme horizontale (\(x,y\)) de la fenêtre (\emph{stencil}).
+\item On applique le masque sur \textbf{l'interface inférieure ainsi qu'à toutes les interfaces subséquentes}.
+\item On répète les étapes 1 à 3 pour les couches inférieures jusqu'à \(nz-1\).\bigskip
+\end{enumerate}
+
+\nb En additionnant la correction à toutes les couches inférieures, on s'assure que 
+\begin{enumerate}
+\item il n'y a pas d'overlap créé par une correction quelconque,
+\item la fonction d'onde \(\psi_k\) est conservée dans les couches inférieures.
+\end{enumerate}
 
 
 
-\bibliography{/aos/home/celizotte/Desktop/Documentation/master-bibliography}
+\subsection{Tester d'autres switches pour Wavewatch -- \textit{<2023-10-26 Thu>}}
+\label{sec:orgd15d0e2}
+\label{org2652828}
+\begin{enumerate}
+\item{$\square$} ST1,
+\item{$\boxtimes$} ST2, FLX2 : Celui qu'on utilisait de base.
+\item{$\boxtimes$} ST3, FLX0 : Pour vrai, ça marche mieux. La ZPPV est bien plus proche du mur et on dirait que les corrections sont moins nécessaires qu'avec ST2.
+Donc, je suggère qu'on teste encore avec celle là.
+\item{$\square$} ST4, \bigskip
+\end{enumerate}
+
+
+\subsection{Fenêtre de transfert de masse -- \textit{<2023-10-26 Thu>}}
+\label{sec:org5980299}
+Après avoir testé les \emph{switches} de la section précédentes, je vois qu'on a toujours tendance à corriger un seul point.
+Ceci me laisse à penser qu'on utilise clairement une mauvaise fenêtre de transfert de masse, comme l'avait prédit Louis-Philippe et Rosalie.
+Il faut donc se pencher sur ce thème-là aujourd'hui.
+
+
+\bibliography{/home/charlesedouard/Desktop/Travail/Documentation/master-bibliography}
 \end{document}

@@ -56,77 +56,220 @@ Vaut mieux ne pas trop s'en éloigner.
 [[file:figures/debuggage/2023_10_17_smooth_zeta.png]]
 
 
-** « Stencil » de transfert de masse
+** « Stencil » de transfert de masse -- <2023-10-23 Mon>
+<<sec:stencil>>
+
 Louis-Philippe propose d'utiliser un stencil à 21 points pour redistribuer la masse (Voir figure [[fig:stencil]]).
 En gros, on en retirerait sur le point fautif pour rejouter du /h/ aux points des alentours, ce qui en fait une redistribution horizontale de la masse.\bigskip
 
-\nb Pour l'instant, je met tout ça sur la glace, car la solution trouvée à la section [[sec:visco]] semble suffisante.
+\nb Pour l'instant (<2023-10-18 Wed>), je met tout ça sur la glace, car la solution trouvée à la section [[sec:visco]] semble suffisante.
 Si la solution proposée à la prochaine section n'est pas suffisante, nous reviendrons sur le transfert de masse avec notre /stencil/. 
 
 #+NAME: fig:stencil
-#+CAPTION: Stencil de redistribution de la masse.
+#+CAPTION: Stencil de redistribution de la masse. À gauche (a), transfert de masse horizontal vu du haut. Au milieu (b), le même transfert de masse vu en coupe verticale. À droite (c), cas tangeant au mur. 
 \begin{figure}[!h]
 \centering
-\begin{tikzpicture}
-   \fill [blue!5] (1,0) -- (4,0) -- (4,1) -- (5,1) -- (5,4) -- (4,4) -- (4,5) -- (1,5) -- (1,4) -- (0,4) -- (0,1) -- (1,1) -- (1,0);
-   \fill [blue!12] (1,1) rectangle (4,4);
-   \draw [dotted,thin] (1,0) grid (4,5);
-   \draw [dotted,thin] (0,1) grid (5,4);
-   \draw [] (1,0) -- (4,0) -- (4,1) -- (5,1) -- (5,4) -- (4,4) -- (4,5) -- (1,5) -- (1,4) -- (0,4) -- (0,1) -- (1,1) -- (1,0);
-   \fill [cyan!50] (2,2) rectangle (3,3); 
-   \draw [] (2,2) rectangle (3,3);
-   %
-   \draw (2.5,2.5) node {+1};
+\begin{tikzpicture}[scale = 0.8]
+  \fill [blue!5] (1,0) -- (4,0) -- (4,1) -- (5,1) -- (5,4) -- (4,4) -- (4,5) -- (1,5) -- (1,4) -- (0,4) -- (0,1) -- (1,1) -- (1,0);
+  \fill [blue!12] (1,1) rectangle (4,4);
+  \draw [dotted,thin] (0,0) grid (5,5);
+  \draw [] (1,0) -- (4,0) -- (4,1) -- (5,1) -- (5,4) -- (4,4) -- (4,5) -- (1,5) -- (1,4) -- (0,4) -- (0,1) -- (1,1) -- (1,0);
+  \fill [cyan!50] (2,2) rectangle (3,3); 
+  \draw [] (2,2) rectangle (3,3);
+  %
+  \draw (2.5,2.5) node {+1};
+  \foreach \x in {1,2,3,4,5}{
+   \draw (\x-0.5,-0.5) node {\x};
+   \draw (-0.5,\x-0.5) node {\x};}
+  \draw (0,5.5) node {a)};
+\end{tikzpicture}\hspace{1cm}
+\begin{tikzpicture}[scale = 0.8]
+  \foreach \x in {-2,-1,1,2}{
+   \filldraw [color=black, fill=blue!12, line width = 0.1pt] (\x,0) rectangle (\x+1,{-2*abs(1/\x)});
+  }
+  \filldraw [color=black, fill=cyan!50, ] (0,0) rectangle (1,3);
+  \draw (0.5,1.5) node {+1};
+  \draw (-2,3.5) node {b)};
+  \draw (-2,0) node [left] {0};
+  \foreach \x in {-2,-1,0,1,2}{
+   \draw (0.5+\x,-2.5) node {\x};}
+\end{tikzpicture}\hspace{1cm}
+\begin{tikzpicture}[scale = 0.8]
+  \fill [blue!5] (0,0) -- (3,0) -- (3,3) -- (2,3) -- (2,4) -- (0,4) -- (0,0);
+  \fill [blue!12] (0,0) rectangle (2,3);
+  \draw [dotted,thin] (0,0) grid (4.5,4.5);
+  \draw [] (0,0) -- (3,0) -- (3,3) -- (2,3) -- (2,4) -- (0,4) -- (0,0);
+  \fill [cyan!50] (0,1) rectangle (1,2);
+  \draw [] (0,1) rectangle (1,2);
+  \draw (0.5,1.5) node {+1};
+  \draw [->, thick] (0,0) -- (5,0);
+  \draw [->, thick] (0,0) -- (0,4.5);
+  \draw (0,5.5) node [] {c)};
+  \foreach \x in {1,2,3,4,5}{
+   \draw (\x-0.5,-0.5) node {\x};
+   \draw (-0.5,\x-0.5) node {\x};}
 \end{tikzpicture}
 \end{figure}
 
+En somme, on crée une sous-routine qui peut vérifier l'épaisseur des couches produire un transfert de masse horizontal, comme illustré à la figure [[fig:stencil]].
+Par contre, il faudra bien faire attention lorsqu'on arrive aux murs pour que notre masque s'adapte à la forme désirée.
+En ordre, les étapes à suivre sont :
+
+1) On vérifie si l'épaisseur de la couche ($h_k = H_k + \eta_k + \eta_{k+1}$) dépasse un /treshold/ ou une limite verticale.
+   Dans notre cas, on commence à un rapport d'épaisseur de 15% pour tester.
+2) On retire l'/overshoot/ ( ou l'écart avec la limite $\delta h_k$) à la case bleue de la figure [[fig:stencil]].
+   Dans le code, c'est la quantité qu'on appelle /hgap/.
+3) On recrée le masque en fonction de la position par rapport aux murs.
+   Le poid accordé à chaque case dépend donc de la position. 
+4) On somme les valeurs actives du masque, de sorte à ce que le total (ou la norme) soit de 1;
+5) On additionne les valeurs du masque multipliées par $\delta h_k/2$ en haut ($\eta_k$) et on soustrait la même valeur en bas ($\eta_{k+1}$).
+
+      
+#+NAME: fig:interp
+#+caption: « Stencil » utilisé pour obtenir le champs aux plus grandes échelles. À gauche (a), «stencil» pour une interoplation à ratio impair, à droite (b), «stencil» pour une interpolation à ratio pair. 
+\begin{figure}[h!]
+\begin{center}
+\begin{tikzpicture}[scale = 0.9]
+\draw (-0.8,6.5) node {a)};
+% Big grid
+\fill [blue!5] (0,0) rectangle (3,3);
+\fill [blue!5] (3,3) rectangle (6,6);
+% Grid
+\draw (0,0) rectangle (6,6) ;
+\draw [dotted] (0,0) grid (6,6) ;
+\draw [step=3.0] (0,0) grid (6,6) ;
+% Carré
+\fill [cyan, opacity=0.1] (2,2) rectangle (5,5) ;
+\draw [cyan, thick] (2,2) rectangle (5,5) ;
+\fill [cyan!50, opacity=0.5] (3,3) rectangle (4,4);
+% Coordinates 
+\foreach \x in {1,2,3}
+\foreach \y in {1,2,3}
+{\draw (\x-0.5,\y-0.5) node [] {1,1};}
+%
+\foreach \x in {4,5,6}
+\foreach \y in {1,2,3}
+{\draw (\x-0.5,\y-0.5) node [] {2,1};}
+%
+\foreach \x in {1,2,3}
+\foreach \y in {4,5,6}
+{\draw (\x-0.5,\y-0.5) node [] {1,2};}
+%
+\foreach \x in {4,5,6}
+\foreach \y in {4,5,6}
+{\draw (\x-0.5,\y-0.5) node [] {2,2};}
+% Axis:
+\foreach \y in {1,2,3,4,5,6} {\draw (-0.5,\y-0.5) node [cyan] {\y};}
+\foreach \x in {1,2,3,4,5,6} {\draw (\x-0.5,-0.5) node [cyan] {\x};}
+%
+\end{tikzpicture}\hspace{1.3cm}
+\begin{tikzpicture}[scale = 0.9]
+\draw (-0.8,6.5) node {b)};
+% Big grid
+\fill [blue!7] (0,0) rectangle (2,2);
+\fill [blue!7] (2,2) rectangle (4,4);
+\fill [blue!7] (4,4) rectangle (6,6);
+\fill [blue!7] (0,4) rectangle (2,6);
+\fill [blue!7] (4,0) rectangle (6,2);
+% Grid
+\draw (0,0) rectangle (6,6) ;
+\draw [dotted] (0,0) grid (6,6) ;
+\draw [step=2.0] (0,0) grid (6,6) ;
+% Carré
+\fill [cyan, opacity=0.2] (1.5,1.5) rectangle (3.5,3.5) ;
+\fill [cyan!50, opacity=0.5] (2,2) rectangle (3,3);
+% Coordinates 
+\foreach \x in {1,2,3}
+\foreach \y in {1,2,3}
+{\draw (2*\x-0.5,2*\y-0.5) node [] {\x,\y};
+ \draw (2*\x-1.5,2*\y-0.5) node [] {\x,\y};
+ \draw (2*\x-0.5,2*\y-1.5) node [] {\x,\y};
+ \draw (2*\x-1.5,2*\y-1.5) node [] {\x,\y};}
+% Axis:
+\foreach \y in {1,2,3,4,5,6} {\draw (-0.5,\y-0.5) node [cyan] {\y};}
+\foreach \x in {1,2,3,4,5,6} {\draw (\x-0.5,-0.5) node [cyan] {\x};}
+%
+\end{tikzpicture}
+\end{center}
+\end{figure}
+
+\newpage
 * Solution à la dérive de Stokes -- <2023-10-16 lun.>
 Grossièrement, il est sorti deux possibilités pour régler le problème des petites échelles qui sortent de Wavewatch :
-+ Il serait possible de diminuer la résolution de Wavewatch et de réinterpoler les points de courants à l'aide de la méthose employée dans la figure [[fig:interp]].
+1. Il serait possible de diminuer la résolution de Wavewatch et de réinterpoler les points de courants à l'aide de la méthose employée dans la figure [[fig:interp]]a.
+   Pour une interpolation *paire*, le /stencil/ serait un peu différent (voir figure [[fig:interp]]b).
 
-  #+NAME: fig:interp
-  #+caption: « Stencil » utilisé pour obtenir le champs aux plus grandes échelles.
-  \begin{figure}[h!]
-  \begin{center}
-  \begin{tikzpicture}
-  % Big grid
-  \fill [blue!5] (0,0) rectangle (3,3);
-  \fill [blue!5] (3,3) rectangle (6,6);
-  % Grid
-  \draw (0,0) rectangle (6,6) ;
-  \draw [dotted] (0,0) grid (6,6) ;
-  \draw [step=3.0] (0,0) grid (6,6) ;
-  % Carré
-  \draw [cyan, thick] (2,2) rectangle (5,5) ;
-  \fill [cyan!50, opacity=0.5] (3,3) rectangle (4,4);
-  % Coordinates 
-  \foreach \x in {1,2,3}
-  \foreach \y in {1,2,3}
-  {\draw (\x-0.5,\y-0.5) node [] {1,1};}
-  %
-  \foreach \x in {4,5,6}
-  \foreach \y in {1,2,3}
-  {\draw (\x-0.5,\y-0.5) node [] {2,1};}
-  %
-  \foreach \x in {1,2,3}
-  \foreach \y in {4,5,6}
-  {\draw (\x-0.5,\y-0.5) node [] {1,2};}
-  %
-  \foreach \x in {4,5,6}
-  \foreach \y in {4,5,6}
-  {\draw (\x-0.5,\y-0.5) node [] {2,2};}
-  % Axis:
-  \foreach \y in {1,2,3,4,5,6} {\draw (-0.5,\y-0.5) node [cyan] {\y};}
-  \foreach \x in {1,2,3,4,5,6} {\draw (\x-0.5,-0.5) node [cyan] {\x};}
-  %
-  \end{tikzpicture}
-  \end{center}
-  \begin{equation}
-     {\color{cyan}u(4,4)} = \qty(\sfrac{1}{9})\cdot u(1,1) + \qty(\sfrac{2}{9})\cdot u(2,1) + \qty(\sfrac{2}{9})\cdot u(1,2) + \qty(\sfrac{4}{9})\cdot u(2,2).
-  \end{equation}
-  \end{figure}
+2. La seconde solution serait d'utiliser le stencil qui redistribue la masse, comme énoncé dans la section [[sec:stencil]].
+
+* Résumé de la rencontre de mercredi [42%]  -- <2023-10-25 Wed>
+
++ [X] Il faut tester jusqu'à combien de couches on peut se rendre.
+   Bien que trois couches soit intéressant, il serait pertinent de savoir si plus de couches serait fonctionnel, maintenant que le modèle est véritablement testable.
+   On lance les test sans transfert de masse, considérant que c'est pas au point.\bigskip
+
++ [X] Est-ce que Wavewatch est pogné avec ce /fetch/ là? Ça serait quand même facile de tester plusieurs /switches/ (voir section [[sec:switches]]). \bigskip
+
++ [ ] Un problème récurrent, c'est qu'on crée des plateaux en redistribuant la masse aux alentours.
+   Louis-Philippe proposait deux choses pour contrer cet effet :
+  1. *Tester un rappel plus grand* : Par exemple, à une épaisseur de moins de 15%, on ramène tout à 15%.
+     Rien ne nous oblige à ne pas ramener à 30% et redistribuer toute cette masse-là aux alentours du point.
+  2. *Mettre un «threshold» plus gros* : Ça nous permettrait d'éviter que des pics d'épaisseur faible se développent dès le départ.\bigskip
+     
++ [ ] Les poids que j'utilise à la figure [[fig:stencil]] sont un peu bizare.
+  Louis-Philippe me l'a mentionné, mais ça ne doit pas être si grave. 
+  1. *Le masque devrait être cirulaire :*
+     En ce moment, le masque est plutôt rectangulaire.
+     Louis-Philippe ne pense pas que ça soit si grave, mais tant qu'à le faire on pourrait bien le faire. 
+  2. *Le masque n'est pas vraiment linéaire :* On rajoute une masse plus forte à côté, mais il faudrait que ça soit plus loin.
+     Mentionnons que je ne suis pas sur à 100% que ça soit une bonne idée, parce que ça crérait des gradient d'épaisseurs un peu étranges.\bigskip
+
+     \nb À la rencontre du PolR, Rosalie et Jonathan ont proposé de tester plusieurs valeurs de masque ou de fenêtre.
+     Effectivement, la fenêtre choisie initialement donne des gros gradients d'épaisseurs qu'il faudrait peut-être modifier.\bigskip
+     
++ [ ] David a rappelé que la variation de l'interface pourrait devenir linéaire si on assume que $h_k \sim H_k$.
+  Comme ça, ça ne changerait pas grand chose si l'épaisseur devenait nulle, mais c'est un peu une solution /scotch-tape/ à tester en dernier recours, selon moi.\bigskip
+     
++ [X] Finalement, on a un gros problème d'ordre chronologique pour adapter les épaisseurs.
+  Concrétement, on les modifie en même temps que trouver le /RHS/ des couches et des vitesses.
+  Il faudrait plutôt les modifier avant de calculer les /RHS/ associés à la vitesse et tout.
+  David a mentionné qu'il faut retrouver les $\eta_k$ de la même manière qu'avec l'addition des $RHS\ h_k$ (voir section [[sec:chrono]]). \bigskip
+
++ [ ] Si rien ne marche, on peut commencer à checker pour une solution incluant un genre de Laplacien (ou de viscosité) sur les épaisseurs.
+  Faudra faire extrémement attention avec ça.
+
+* Solutionner le chaos des vagues -- <2023-10-25 Wed>
+
+** Réorganiser l'ordre du transfert de masse -- <2023-10-26 Thu>
+<<sec:chrono>>
+*Énoncé du problème :* En transférant de la masse aux niveaux adjacents, puis en calculant le /RHS/, on vient modifier les épaisseurs en même temps qu'en calculant nos quantités importantes.
+Essentiellement, il faut trouver un moyen de corriger toutes les épaisseurs d'un coup pour *après* calculer les /RHS/. \bigskip
+
+Concrétement, dans un boucle de $k$ partant de la couche du haut, les étapes sont les suivantes :
+1) On calcule l'épaisseur $h_k$ (/thickness/) et donc l'écart /hgap/.
+   De cette manière, on trouve les positions des incursions d'eau dans les autres couches. 
+2) On trouve la forme horizontale ($x,y$) de la fenêtre (/stencil/).
+3) On applique le masque sur *l'interface inférieure ainsi qu'à toutes les interfaces subséquentes*.
+4) On répète les étapes 1 à 3 pour les couches inférieures jusqu'à $nz-1$.\bigskip
+
+\nb En additionnant la correction à toutes les couches inférieures, on s'assure que 
+1) il n'y a pas d'overlap créé par une correction quelconque,
+2) la fonction d'onde $\psi_k$ est conservée dans les couches inférieures. 
+   
 
 
+** Tester d'autres switches pour Wavewatch -- <2023-10-26 Thu>
+<<sec:switches>>
+  1. [ ] ST1, 
+  2. [X] ST2, FLX2 : Celui qu'on utilisait de base.
+  3. [X] ST3, FLX0 : Pour vrai, ça marche mieux. La ZPPV est bien plus proche du mur et on dirait que les corrections sont moins nécessaires qu'avec ST2.
+     Donc, je suggère qu'on teste encore avec celle là.
+  4. [ ] ST4, \bigskip
+
+
+** Fenêtre de transfert de masse -- <2023-10-26 Thu>
+Après avoir testé les /switches/ de la section précédentes, je vois qu'on a toujours tendance à corriger un seul point.
+Ceci me laisse à penser qu'on utilise clairement une mauvaise fenêtre de transfert de masse, comme l'avait prédit Louis-Philippe et Rosalie.
+Il faut donc se pencher sur ce thème-là aujourd'hui.
 
 
 #+print_bibliography: 
