@@ -1,6 +1,6 @@
 #+title: Carnet de bord, Université McGill
 #+author: Charles-Édouard Lizotte
-#+date:03/11/2023
+#+date:11/11/2023
 #+LATEX_CLASS: org-report
 #+CITE_EXPORT: natbib
 #+LANGUAGE: fr
@@ -44,18 +44,30 @@ On obtient des épaisseurs nulles un peu partout sur le domaine.
 Dans ma maîtrise, on avait évité le problème en assumant que le courant réel était une forme de courant effectif qui combinait les deux.
 Mais, aux dires des dernières discussions, il semble que rien ne nous indique d'ajouter la dérive de Stokes dans l'équation de masse.
 L'article de [cite/t/c:@suzuki2016understanding] ne semble pas expliquer rien en ce sens.
-Bref, nous l'avons enlevée et le résultat se retrouve dans le tableau suivant.
+Bref, nous l'avons enlevée et le résultat se retrouve dans le tableau [[tab:stokes]].
 Louis-Philippe n'a toujours pas l'air d'un fan pour un bi-laplacien sur les épaisseurs.
 
-|     <c>      |        <c>         |    <c>    |       <c>        |      <c>      |
-|     Nom      | Couche Stokes (HS) | Épaisseur | UStokes couplée? | Last Timestep |
-|--------------+--------------------+-----------+------------------+---------------|
-|--------------+--------------------+-----------+------------------+---------------|
-|   HS_Htot    |        Htot        | 3999 [m]  |      \cmark      |               |
-|    HS_H1     |         H1         |  482 [m]  |      \cmark      |               |
-| HS_thickness |     thickness      |  -- [m]   |      \cmark      |               |
-|   nostokes   |       \xmark       |  -- [m]   |      \xmark      |               |
-|--------------+--------------------+-----------+------------------+---------------|
+#+NAME: tab:stokes
+#+CAPTION: Expériences réalisées sans la dérive de Stokes dans l'équation de masse. Divers épaisseurs de couches pour la dérive s de Stokes ont été testées dans la partie droite des équations du mouvement.
+| <l>            |        <c>         |    <c>    |        <c>        |      <c>      |       <c>       |
+|----------------+--------------------+-----------+-------------------+---------------+-----------------|
+|----------------+--------------------+-----------+-------------------+---------------+-----------------|
+| Nom du fichier | Couche Stokes (HS) | Épaisseur | Couplage Stokes?  | Last Timestep | Last ramp value |
+| [ -- ]         |       [ -- ]       |   [ m ]   | [ \cmark/\xmark ] |    [ -- ]     |      [ % ]      |
+|----------------+--------------------+-----------+-------------------+---------------+-----------------|
+| HS_Htot        |        Htot        |   3999    |      \cmark       |     3430      |      25.52      |
+| HS_H1          |         H1         |    482    |      \cmark       |     3430      |      25.52      |
+| HS_thickness   |    /thickness/     |  Locale   |      \cmark       |     3222      |      23.19      |
+| nostokes       |       \xmark       |  \xmark   |      \xmark       |     3412      |      25.31      |
+|----------------+--------------------+-----------+-------------------+---------------+-----------------|
+
+Donc, le constat est évident : *le problème ne vient pas de la dérive de Stokes*, mais plutôt de la variabilité locale et à haute fréquence de $taux_{Oc}$ et $tauy_{Oc}$.
+Rapellons que tous les /spin up/ avaient été utilisés. \bigskip
+
+\nb <2023-11-06 lun.> Je viens de remarquer que mon spectre Jonswap était orienté vers l'ouest et non l'est (car on utilise la convention océanographique pour orienter le vecteur du vent).
+Il se peut que ça ait une incidence sur les résultats.
+Par exemple, on voyait une inversion du courant, ce qui venait éliminer les structures à grandes échelles et faisait apparaître des /ripples/ géostrophiques sur toutes les couches.
+Je ne pense pas que ça change grand chose étant donné que l'on laisse le modèle de vagues se stabiliser avant de le coupler, mais nous n'avons rien à perdre. 
 
 ** Rappel sur le modèle -- <2023-11-03 ven.>
 
@@ -124,6 +136,47 @@ où la nouvelle fonction de Bernouilli qui tient compte de la dérive de Stokes 
 \end{align}
 
 Par contre, il faudrait partir de ça pour obtenir les équations en /shallow water/ avec la contrainte sur l'épaisseur des couches.
+
+* Investigation sur la contrainte de cisaillement des vagues -- <2023-11-06 lun.>
+
+Après vérification des animations, l'hypothèse est que les hautes fréquences dans le champ de vagues viennent briser la circulation géostrophique.
+Par contre, il est difficile de le confirmer avec les animations réalisées.
+#+NAME: eq:tauwaves
+\begin{align}
+   && \boldsymbol{\tau}_{Oc} = \underbrace{\tall\boldsymbol{\tau}_{fv}}_\text{Rugosité}  - \ \underbrace{(\tall\boldsymbol{\tau}_{in} - \boldsymbol{\tau}_{ds}).}_{\substack{\text{Injection} \\ \text{Dissipation}}}
+   && \text{où}
+   && \boldsymbol{\tau}_{fv} = \rho_{atm} \abs{\uu_*}\pt\uu_*. &&
+\end{align}
+
+Dans l'équation [[eq:tauwaves]], on sait de prime abord que la partie /friction velocity/ est assez lisse, mais il faudrait caractériser la divergence et le rotationnel des contraintes de cisaillement reliées au champ de vagues. \bigskip
+
++ [ ] Pour se faire, il faut modifier le code de Wavewatch, et donc rajouter un canal MPI de plus.
++ [ ] Il faut aussi mettre à jour le code du modèle en /shallow water/.
++ [ ] recompiler et relancer les /runs/ précédentes.
+
+
+Voici un récapitulatif des quantités qu'on peut extraire en /output/ du modèles Wavewatch III (tableau [[tab:output]]).
+
+#+NAME: tab:output
+#+CAPTION: Tableau récapitulatif des outputs de Wavewatch III.
+#+attr_latex: :align lcl|lc|c
+|-----------------+------------+----------------------------------------------+----------+-------------+--------------|
+|-----------------+------------+----------------------------------------------+----------+-------------+--------------|
+| *Documentation* |            |                                              | *Code*   |             | *Litérature* |
+| Nom de code     | output tag | Description (ww3 shel.inp)                   | Variable | Unitées     | Symbole      |
+|-----------------+------------+----------------------------------------------+----------+-------------+--------------|
+| UST             | UST        | /Friction velocity/                          | UST      | m           | $\ust$       |
+| CHARN           | CHA        | /Charnok parameter/                          | CHARN    | --          |              |
+| CGE             | CGE        | /Energy flux/                                | CGE      | Wm^{-2}     |              |
+| PHIAW           | FAW        | /Air-sea energy flux/                        | PHIAW    | Wm^{-2}     |              |
+| TAUWI[X,Y]      | TAW        | /Net wave-supported stress/                  | TAUWIX/Y | m^{2}s^{-2} | \tau_w       |
+| TAUWN[X,Y]      | TWA        | /Negative part of the wave-supported stress/ | TAUWNX/Y | m^{2}s^{-2} |              |
+|-----------------+------------+----------------------------------------------+----------+-------------+--------------|
+| TAUO[X,Y]       | TWO        | /Wave to ocean momentum flux/                | TAUOX/Y  | m^{2}s^{-2} |              |
+| PHIOC           | FOC        | /Wave to ocean energy flux/                  | PHIOC    | Wm^{-2}     |              |
+| TUS[X,Y]        | TUS        | /Stokes transport/                           | TUSX/Y   | m^{2}s^{-1} |              |
+| USS[X,Y]        | USS        | /Surface Stokes drift/                       | USSX/Y   | ms^{-1}     |              |
+|-----------------+------------+----------------------------------------------+----------+-------------+--------------|
 
 * Switches de Wavewatch III
 

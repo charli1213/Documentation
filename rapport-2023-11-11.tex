@@ -1,4 +1,4 @@
-% Created 2023-11-03 ven. 15:51
+% Created 2023-11-06 lun. 16:08
 % Intended LaTeX compiler: pdflatex
 
 % =================================BASE====================================%
@@ -11,7 +11,10 @@
 % Calligraphie
 \usepackage{lmodern}
 \renewcommand{\familydefault}{cmr} % La meilleure police (CMU Serif Roman) (Je me suis battu).
-\usepackage{mathrsfs} %Permet la command \mathscr (Lettres attachées genre)
+%\usepackage{unicode-math} % À réessayer...
+%\setmathfont{Latin Modern Math} % À réessayer...
+\usepackage{mathrsfs} %Permet la command \mathscr (Lettres attachées genre) mathscr(B)
+
 
 % Bibliographie
 \usepackage[round, sort]{natbib} % Bibliographie
@@ -93,8 +96,9 @@
 \newcommand{\ivf}{\vb{\hat{i}}}
 \newcommand{\jvf}{\vb{\hat{j}}}
 \newcommand{\kvf}{\vb{\hat{k}}}
-\newcommand{\uu}{\vb*{u}}
-\newcommand{\vv}{\vb*{v}}
+\newcommand{\uu}{\vb{u}}
+\newcommand{\vv}{\vb{v}}
+\newcommand{\ust}{\vb{u}_{\ast}}
 
 % Physics empty spaces 
 \newcommand{\typical}{\vphantom{A}}
@@ -140,7 +144,8 @@ RÉALISÉ DANS LE CADRE\\ D'UN PROJET POUR \par
 Rédaction \\
 {\theauthor}\\
 \url{charles-edouard.lizotte@uqar.ca}\\
-ISMER-UQAR
+ISMER-UQAR\\
+Police d'écriture : \textbf{CMU Serif Roman}
 \end{titlepage}
 }
 % ==============================PAGE-TITRE=================================%
@@ -160,7 +165,7 @@ ISMER-UQAR
 \fancyfoot[C]{} 
 % =================================ENTÊTE==================================%
 \author{Charles-Édouard Lizotte}
-\date{03/11/2023}
+\date{11/11/2023}
 \title{Carnet de bord, Université McGill}
 \hypersetup{
  pdfauthor={Charles-Édouard Lizotte},
@@ -175,7 +180,7 @@ ISMER-UQAR
 \tableofcontents\newpage
 
 \section{Résumé des test réalisés -- \textit{<2023-11-02 jeu.>}}
-\label{sec:orgedab9bc}
+\label{sec:org320fae8}
 \begin{center}
 \begin{tabular}{lcccccc}
 Nom & Refl. (WW3) & Spin up (SW) & Spin up (WW3) & Thick. Visc. & Numerical mixing & Timestep\\[0pt]
@@ -194,7 +199,7 @@ all spun up & \cmark & \cmark & \cmark & \xmark & \xmark & 3385\\[0pt]
 
 
 \section{D'autres tests pour la fin de semaine - \textit{<2023-11-03 ven.>}}
-\label{sec:org5539ee2}
+\label{sec:org24b6be4}
 
 Cette rencontre avec David et LP a été productive.
 Le modèle se rend plus loin depuis qu'on a modifié
@@ -214,24 +219,36 @@ On obtient des épaisseurs nulles un peu partout sur le domaine.
 Dans ma maîtrise, on avait évité le problème en assumant que le courant réel était une forme de courant effectif qui combinait les deux.
 Mais, aux dires des dernières discussions, il semble que rien ne nous indique d'ajouter la dérive de Stokes dans l'équation de masse.
 L'article de \Citet{suzuki2016understanding} ne semble pas expliquer rien en ce sens.
-Bref, nous l'avons enlevée et le résultat se retrouve dans le tableau suivant.
+Bref, nous l'avons enlevée et le résultat se retrouve dans le tableau \ref{tab:org0598d03}.
 Louis-Philippe n'a toujours pas l'air d'un fan pour un bi-laplacien sur les épaisseurs.
 
-\begin{center}
-\begin{tabular}{ccccc}
-Nom & Couche Stokes (HS) & Épaisseur & UStokes couplée? & Last Timestep\\[0pt]
+\begin{table}[htbp]
+\caption{\label{tab:org0598d03}Expériences réalisées sans la dérive de Stokes dans l'équation de masse. Divers épaisseurs de couches pour la dérive s de Stokes ont été testées dans la partie droite des équations du mouvement.}
+\centering
+\begin{tabular}{lccccc}
 \hline
 \hline
-HS\textsubscript{Htot} & Htot & 3999 [m] & \cmark & \\[0pt]
-HS\textsubscript{H1} & H1 & 482 [m] & \cmark & \\[0pt]
-HS\textsubscript{thickness} & thickness & -- [m] & \cmark & \\[0pt]
-nostokes & \xmark & -- [m] & \xmark & \\[0pt]
+Nom du fichier & Couche Stokes (HS) & Épaisseur & Couplage Stokes? & Last Timestep & Last ramp value\\[0pt]
+[ -- ] & [ -- ] & [ m ] & [ \cmark/\xmark ] & [ -- ] & [ \% ]\\[0pt]
+\hline
+HS\textsubscript{Htot} & Htot & 3999 & \cmark & 3430 & 25.52\\[0pt]
+HS\textsubscript{H1} & H1 & 482 & \cmark & 3430 & 25.52\\[0pt]
+HS\textsubscript{thickness} & \emph{thickness} & Locale & \cmark & 3222 & 23.19\\[0pt]
+nostokes & \xmark & \xmark & \xmark & 3412 & 25.31\\[0pt]
 \hline
 \end{tabular}
-\end{center}
+\end{table}
+
+Donc, le constat est évident : \textbf{le problème ne vient pas de la dérive de Stokes}, mais plutôt de la variabilité locale et à haute fréquence de \(taux_{Oc}\) et \(tauy_{Oc}\).
+Rapellons que tous les \emph{spin up} avaient été utilisés. \bigskip
+
+\nb \textit{<2023-11-06 lun.> } Je viens de remarquer que mon spectre Jonswap était orienté vers l'ouest et non l'est (car on utilise la convention océanographique pour orienter le vecteur du vent).
+Il se peut que ça ait une incidence sur les résultats.
+Par exemple, on voyait une inversion du courant, ce qui venait éliminer les structures à grandes échelles et faisait apparaître des \emph{ripples} géostrophiques sur toutes les couches.
+Je ne pense pas que ça change grand chose étant donné que l'on laisse le modèle de vagues se stabiliser avant de le coupler, mais nous n'avons rien à perdre. 
 
 \subsection{Rappel sur le modèle -- \textit{<2023-11-03 ven.>}}
-\label{sec:org5549b57}
+\label{sec:orgf453c3d}
 
 Petit rappel sur la rampe.
 On change progressivement d'un régime à l'autre à l'aide d'une rampe.
@@ -266,15 +283,15 @@ Bref, ne prenons aucune chance, comme rien ne marche.
    \draw (5.7,2.3) node [BurntOrange!50!red!90] {$\boldsymbol{\tau_{oc}}$};
 \end{tikzpicture}
 \end{center}
-\caption{\label{org4519fd8}Illustration conceptuelle de la rampe pour éviter le \emph{spin up} du modèle de vagues.}
+\caption{\label{org37c691f}Illustration conceptuelle de la rampe pour éviter le \emph{spin up} du modèle de vagues.}
 \end{figure}
 
 \subsection{Rappel sur les équations -- \textit{<2023-11-03 ven.>}}
-\label{sec:org558001a}
+\label{sec:org01077f7}
 
 On rappel que dans le \href{rapport-2023-10-06.org}{rapport du 6 octobre}, nous avions les équations du mouvement pour un système Boussinesq
 \begin{equation}
-\label{eq:orgb0adb00}
+\label{eq:org753f8ad}
    \pdv{\uu}{t} = \qty(f+\zeta)\pt \kvf\times\uu = -\gradient{B} + \boldsymbol{D} + \frac{\boldsymbol{\tau_a}}{\rho_o H},
 \end{equation}
 où la fonction de Bernouilli (\(B\)) est exprimée par \(B = p/\rho_o + \uu^2/2\).\bigskip
@@ -290,7 +307,7 @@ En somme,
 \item Les termes de Stokes-Coriolis, Craik-Leibovic et la nouvelle fonction de Bernouilli découlent donc directement cette au référentiel en mouvement. \bigskip
 \end{itemize}
 
-Lorsqu'on ajoute cette contribution lagrangienne à notre courant, l'expression \ref{eq:orgb0adb00} devient plutôt
+Lorsqu'on ajoute cette contribution lagrangienne à notre courant, l'expression \ref{eq:org753f8ad} devient plutôt
 \begin{equation}
    \pdv{\uu}{t} = \qty(f+\zeta)\pt \kvf\ \times\underbrace{\grande\qty(\uu + \uu_S)}_{\substack{\text{Courant} \\ \text{Lagrangien}}} = \underbrace{\grande-\gradient{B_S}}_\text{B.-Stokes} + \ \boldsymbol{D} \underbrace{+ \frac{\tau_o}{\rho_o H}.}_{\substack{\text{Contr. des} \\ \text{Vagues}}}
 \end{equation}
@@ -299,9 +316,57 @@ où la nouvelle fonction de Bernouilli qui tient compte de la dérive de Stokes 
    B_S = B + \uu\cdot\uu_S + \uu_S^2/2.
 \end{align}
 
+Par contre, il faudrait partir de ça pour obtenir les équations en \emph{shallow water} avec la contrainte sur l'épaisseur des couches.
+
+\section{Investigation sur la contrainte de cisaillement des vagues -- \textit{<2023-11-06 lun.>}}
+\label{sec:org0da9da2}
+
+Après vérification des animations, l'hypothèse est que les hautes fréquences dans le champ de vagues viennent briser la circulation géostrophique.
+Par contre, il est difficile de le confirmer avec les animations réalisées.
+\begin{align}
+\label{eq:org84c4bb8}
+   && \boldsymbol{\tau}_{Oc} = \underbrace{\tall\boldsymbol{\tau}_{fv}}_\text{Rugosité}  - \ \underbrace{(\tall\boldsymbol{\tau}_{in} - \boldsymbol{\tau}_{ds}).}_{\substack{\text{Injection} \\ \text{Dissipation}}}
+   && \text{où}
+   && \boldsymbol{\tau}_{fv} = \rho_{atm} \abs{\uu_*}\pt\uu_*. &&
+\end{align}
+
+Dans l'équation \ref{eq:org84c4bb8}, on sait de prime abord que la partie \emph{friction velocity} est assez lisse, mais il faudrait caractériser la divergence et le rotationnel des contraintes de cisaillement reliées au champ de vagues. \bigskip
+
+\begin{itemize}
+\item[{$\square$}] Pour se faire, il faut modifier le code de Wavewatch, et donc rajouter un canal MPI de plus.
+\item[{$\square$}] Il faut aussi mettre à jour le code du modèle en \emph{shallow water}.
+\item[{$\square$}] recompiler et relancer les \emph{runs} précédentes.
+\end{itemize}
+
+
+Voici un récapitulatif des quantités qu'on peut extraire en \emph{output} du modèles Wavewatch III (tableau \ref{tab:orgcb80831}).
+
+\begin{table}[htbp]
+\caption{\label{tab:orgcb80831}Tableau récapitulatif des outputs de Wavewatch III.}
+\centering
+\begin{tabular}{lcl|lc|c}
+\hline
+\hline
+\textbf{Documentation} &  &  & \textbf{Code} &  & \textbf{Litérature}\\[0pt]
+Nom de code & output tag & Description (ww3 shel.inp) & Variable & Unitées & Symbole\\[0pt]
+\hline
+UST & UST & \emph{Friction velocity} & UST & m & \(\ust\)\\[0pt]
+CHARN & CHA & \emph{Charnok parameter} & CHARN & -- & \\[0pt]
+CGE & CGE & \emph{Energy flux} & CGE & Wm\textsuperscript{-2} & \\[0pt]
+PHIAW & FAW & \emph{Air-sea energy flux} & PHIAW & Wm\textsuperscript{-2} & \\[0pt]
+TAUWI[X,Y] & TAW & \emph{Net wave-supported stress} & TAUWIX/Y & m\textsuperscript{2}s\textsuperscript{-2} & \(\tau\)\textsubscript{w}\\[0pt]
+TAUWN[X,Y] & TWA & \emph{Negative part of the wave-supported stress} & TAUWNX/Y & m\textsuperscript{2}s\textsuperscript{-2} & \\[0pt]
+\hline
+TAUO[X,Y] & TWO & \emph{Wave to ocean momentum flux} & TAUOX/Y & m\textsuperscript{2}s\textsuperscript{-2} & \\[0pt]
+PHIOC & FOC & \emph{Wave to ocean energy flux} & PHIOC & Wm\textsuperscript{-2} & \\[0pt]
+TUS[X,Y] & TUS & \emph{Stokes transport} & TUSX/Y & m\textsuperscript{2}s\textsuperscript{-1} & \\[0pt]
+USS[X,Y] & USS & \emph{Surface Stokes drift} & USSX/Y & ms\textsuperscript{-1} & \\[0pt]
+\hline
+\end{tabular}
+\end{table}
 
 \section{Switches de Wavewatch III}
-\label{sec:orgd97ae52}
+\label{sec:orgf5158c3}
 
 \bibliography{/aos/home/celizotte/Desktop/Documentation/master-bibliography}
 \end{document}
