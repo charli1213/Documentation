@@ -143,29 +143,31 @@ Après vérification des animations, l'hypothèse est que les hautes fréquences
 Par contre, il est difficile de le confirmer avec les animations réalisées.
 #+NAME: eq:tauwaves
 \begin{align}
-   && \boldsymbol{\tau}_{Oc} = \underbrace{\tall\boldsymbol{\tau}_{fv}}_\text{Rugosité}  - \ \underbrace{(\tall\boldsymbol{\tau}_{in} - \boldsymbol{\tau}_{ds}).}_{\substack{\text{Injection} \\ \text{Dissipation}}}
+   && \boldsymbol{\tau}_{O} = \underbrace{\tall\boldsymbol{\tau}_{fv}}_\text{Rugosité}  - \ \underbrace{(\tall\boldsymbol{\tau}_{in} - \boldsymbol{\tau}_{ds}).}_{\substack{\text{Injection} \\ \text{Dissipation}}}
    && \text{où}
    && \boldsymbol{\tau}_{fv} = \rho_{atm} \abs{\uu_*}\pt\uu_*. &&
 \end{align}
 
-Dans l'équation [[eq:tauwaves]], on sait de prime abord que la partie /friction velocity/ est assez lisse, mais il faudrait caractériser la divergence et le rotationnel des contraintes de cisaillement reliées au champ de vagues. \bigskip
-
-+ [ ] Pour se faire, il faut modifier le code de Wavewatch, et donc rajouter un canal MPI de plus.
-+ [ ] Il faut aussi mettre à jour le code du modèle en /shallow water/.
+Dans l'équation [[eq:tauwaves]], on sait de prime abord que la partie /friction velocity/ est assez lisse, mais il faudrait caractériser la divergence et le rotationnel des contraintes de cisaillement reliées au champ de vagues.
+Quelques étapes d'investigation : 
++ [X] Pour se faire, il faut modifier le code de Wavewatch, et donc rajouter un canal MPI de plus.
++ [X] Il faut aussi mettre à jour le code du modèle en /shallow water/.
 + [ ] recompiler et relancer les /runs/ précédentes.
 
+** Retour sur les variables et quantités -- <2023-11-06 Mon>
 
-Voici un récapitulatif des quantités qu'on peut extraire en /output/ du modèles Wavewatch III (tableau [[tab:output]]).
+Au tableau [[tab:output]], on retrouve un récapitulatif des quantités physiques extractable comme /output/.
+Les descriptions proviennent du code source du modèle, de la documentation de Wavewatch III et de la litérature scientifique ( par exemple, voir [cite/t/c:@ardhuin2010semiempirical], [cite:@couvelard2020development] et [cite/t/f:@wu_breivik_2019]).
 
 #+NAME: tab:output
-#+CAPTION: Tableau récapitulatif des outputs de Wavewatch III.
+#+CAPTION: Tableau d'investigation récapitulatif des outputs de Wavewatch III.
 #+attr_latex: :align lcl|lc|c
 |-----------------+------------+----------------------------------------------+----------+-------------+--------------|
 |-----------------+------------+----------------------------------------------+----------+-------------+--------------|
 | *Documentation* |            |                                              | *Code*   |             | *Litérature* |
 | Nom de code     | output tag | Description (ww3 shel.inp)                   | Variable | Unitées     | Symbole      |
 |-----------------+------------+----------------------------------------------+----------+-------------+--------------|
-| UST             | UST        | /Friction velocity/                          | UST      | m           | $\ust$       |
+| UST             | UST        | /Friction velocity/                          | UST      | ms^{-1}     | $\ust$       |
 | CHARN           | CHA        | /Charnok parameter/                          | CHARN    | --          |              |
 | CGE             | CGE        | /Energy flux/                                | CGE      | Wm^{-2}     |              |
 | PHIAW           | FAW        | /Air-sea energy flux/                        | PHIAW    | Wm^{-2}     |              |
@@ -176,7 +178,166 @@ Voici un récapitulatif des quantités qu'on peut extraire en /output/ du modèl
 | PHIOC           | FOC        | /Wave to ocean energy flux/                  | PHIOC    | Wm^{-2}     |              |
 | TUS[X,Y]        | TUS        | /Stokes transport/                           | TUSX/Y   | m^{2}s^{-1} |              |
 | USS[X,Y]        | USS        | /Surface Stokes drift/                       | USSX/Y   | ms^{-1}     |              |
-|-----------------+------------+----------------------------------------------+----------+-------------+--------------|
+|-----------------+------------+---n-------------------------------------------+----------+-------------+--------------|
+
+Dans la litérature, il est extrêmement clair que les quantités physiques nommées /wave-supported stress/ ($\boldsymbol{\tau}_{IN}$) et /wave to ocean momentum flux/ ($\boldsymbol{\tau}_{DS}$) représentent une contrainte de cisaillement ou un stress (voir [cite/t/c:@breivik_al_2015], [cite/t/c:@ardhuin2010semiempirical] et [cite/t/c:@couvelard2020development] en exemple).
+La figure [[fig:qty_couv]] montre justement quelques quantiés retenues dans la dernière citation.
+Donc, si c'est bien le cas, on parle d'unités de pression par surface, et donc de $\mathrm{N}/\mathrm{m}^2$.\bigskip
+
+Par contre, dans le code source de Wavewatch, il est mentionné à *plusieurs reprises* que ce sont des $\mathrm{m}^2/\mathrm{s}^2$.
+Dans la documentation de Wavewatch -- plus précisément dans la description de la /switch/ ST3 -- et dans le code source, la contrainte de cisaillement sur le modèle de vagues est est de nouveau énoncée en $\mathrm{m}^2/\mathrm{s}^2$.
+
+#+NAME: fig:qty_couv
+#+CAPTION: Tableau tiré de [cite/t/s:@couvelard2020development].
+#+ATTR_LATEX: :placement [ht] :width 0.5\textwidth
+[[File:figures/articles/gmd-13-3067-2020-t01-web.png]]
+
+
+** Analyse dimensionnelle -- <2023-11-07 Tue>
+<<sec:analysedim>>
+
+Avant tout, on n'oublie pas que la contrainte de cisaillement modifiée lorsqu'il y a des vagues est donnée par l'équation [[eq:tauwaves]]. 
+Normalement, lorsqu'on parle d'une contrainte de cisaillement ou d'un stress, les unités sont les même que pour la pression, soit des $N\cdot m^{-2}$ ou des $kg\cdot m^{-1}s^{-2}$.
+En somme, on les obtient facilement à l'aide de l'équation du frottement visqueux, soit
+\begin{align}
+   && \boxed{\boldsymbol{\tau}_{A} = \rho_A c_D \abs{\uu_{10}} \uu_{10}\tall }
+   && \text{où}\  \tau_A \sim \mathscr{O}\qty(0.1)
+   && \text{avec}
+   && \tau_A \rightarrow \qty[\frac{kg}{ms^2}],
+   && \rho_A \rightarrow \qty[\frac{Kg}{m^3}],
+   && \uu_{10} \rightarrow \qty[\frac{m}{s^2}].
+\end{align}
+
+Lorsqu'on parle des contrainte de cisaillement du vent et des vagues, on s'attend donc à des $N m^{-2}$.
+Un esprit avisé remarquerait que l'on peut facilement retrouver des unité de stress en multipliant par une densité $\rho$.
+Appellons cette contrainte modifiée $\tau^*$ pour la différentier,
+\begin{align}
+   && \boxed{\tau = \rho \cdot \tau^*\tall}
+   &&\Longrightarrow
+   &&\qty[\qty(\frac{Kg}{m^3})\cdot \qty(\frac{m^2}{s^2})]
+   &&\longrightarrow
+   &&\qty[ \frac{Kg}{m\pt s^2} ]
+   &&\longrightarrow
+   &&\qty[\qty(\frac{Kg\cdot m}{s^2})\cdot \qty(\frac{1}{m^2})]
+   &&\longrightarrow
+   &&\qty[N \cdot m^{-2}]. &&
+\end{align}
+
+Mais la question se pose : quelle densité $\rho$ devons-nous prendre? Celle de l'atmosphère ou celle de l'océan?
+Initialement, j'avais pris celle de l'océan ($\rho_O$) pour être en accord avec la question des échelles.
+Je me souviens qu'on avait eu une discussion là-dessus au milieu de ma maîtrise.
+
+#+attr_latex: :align l|cccc
+|--------------------+-------------------------+------------------------------------+---------------------------------+---------------------------------|
+|--------------------+-------------------------+------------------------------------+---------------------------------+---------------------------------|
+| Quantité à l'étude | \tau_A                  | $\tau_{fv} = \rho_A\abs{\uu_*}\uu$ | $\rho_O(\tau_{IN} - \tau_{DS})$ | $\rho_A(\tau_{IN} - \tau_{IN})$ |
+| Échelle            | \sim $\mathscr{O}(0.1)$ | \sim $\mathscr{O}(0.1)$            | \sim $\mathscr{O}(0.15)$        | \sim $\mathscr{O}(0.0002)$      |
+|--------------------+-------------------------+------------------------------------+---------------------------------+---------------------------------|
+|--------------------+-------------------------+------------------------------------+---------------------------------+---------------------------------|
+
+** Retour sur le cadre théorique -- <2023-11-07 Tue>
+
+*** Wu et al, 2019 et Breivik, 2015
+
+Les articles de [cite/t/f:@wu_breivik_2019] et [cite/t/t:@breivik_al_2015] représentent explicitement le /wave-supported stress/ ( ou le transfert de momentum du vent vers les vagues) par
+\begin{equation}
+   \boldsymbol{\tau}_{IN} = \rho_O g \int_0^{2\pi} \int_0^{\pt\infty} \qty(\frac{\vb{k}}{\omega} S_{IN} )\pt\mathrm{d}\omega\pt \mathrm{d} \theta,
+\end{equation}
+Ici, $\tau$ a des unités de $N\cdot m^{-2}$.
+Donc, les termes reliés au transfert de momentum pour le champ de vagues $\tau_{IN}$ et $\tau_{DS}$ sont exprimés par
+\begin{equation}
+   \boldsymbol{\tau}_{O} = \boldsymbol{\tau}_A - \rho_O g \int_0^{2\pi} \int_0^{\pt\infty} \qty( \frac{\vb{k}}{\omega} \qty(S_{IN} + S_{DS}) )\pt\mathrm{d}\omega\pt \mathrm{d} \theta.
+\end{equation}
+Ces derniers s'appuient principalement sur [cite/t/c:@bidlot2012present], [cite/a/b: voir @janssen_1989] ([cite/na/b:@janssen_1989] et [cite/na/b:@janssen_1991]).
+
+*** Janssen, 1989
+
+Dans un premier temps, [cite/t/f:@janssen_1989] décrit le stress du vent avec des unitées de $N\cdot m^{-2}$.
+C'est donc une représentation indépendante de la densité qui est proposée pour le stress du vent.
+Dans ce papier, le transfert de momentum du vent proche de l'eau dans la vague elle-même comme une égalité définit par
+\begin{equation}
+   \boxed{\hspace{0.5cm}
+     \underbrace{
+       \pdv{}{t} \qty(\rho_A\int_0^{\pt\infty} U_0\pt \mathrm{d}z)\eval{}_{waves}\venti}_{\substack{\text{Momentum transfert from}\\ \text{the airflow to waves}}
+       }
+     =
+     \underbrace{
+       -\rho_O \int_0^{\pt\infty} \qty(\omega \pdv{}{t} \phi)\pt \mathrm{d} k \pt\eval{}_{wind}\venti}_{\substack{\text{Momentum transfert from}\\ \text{waves to the wind}}
+       } = - \boldsymbol{\tau}_{w} \hspace{0.5cm}
+   }
+\end{equation}
+
+Concrétement, on peut vraissemblablement représenter ce transfert de momentum à l'aide du comportement du champ de vagues.
+Ce qui se traduit par l'utilisation de $\rho_O$ et $\rho_A$ dépendemment du référentiel.\bigskip
+
+Hypothétiquement, il se peut que le $\boldsymbol{\tau}^*$ de Wavewatch III est décrit comme la quantité
+\begin{equation}
+   \boldsymbol{\tau}^* = \frac{\tau_w}{\rho_A} = \qty(\frac{\rho_O}{\rho_A}) \int_0^{\pt\infty} \qty(\omega \pdv{}{t} \phi) \pt\mathrm{d} k \hspace{0.5cm} \longrightarrow \hspace{0.5cm} \qty[\frac{m^2}{s^2}],
+\end{equation}
+et c'est ce que l'article de [cite/t/c:@bidlot2012present] semble indiquer à l'aide d'un /air-sea density ratio/ ($\varepsilon$).
+
+
+*** Janssen, 1991
+
+Dans un article subséquent (un article plutôt fondateur), [cite/t/f:@janssen_1991 voir eq. 7 et 8 de l'article]  stipule qu'au repos, on doit respecter l'équation de balance du momentum pour les vagues avec
+#+NAME: eq:balancetau
+\begin{equation}
+   \boldsymbol{\tau}_w + \boldsymbol{\tau}_{turb} + \boldsymbol{\tau}_{visc}  = \boldsymbol{\tau},
+\end{equation}
+où $\boldsymbol{\tau}$ est le stress total définit par $\boldsymbol{\tau} = \uu_*^2$.
+Rapidement, Janssen prend ici une représentation du stress avec des unitées de $m^{2} s^{-2}$, ce qui nous invite à trouver un $\rho$ quelque part.
+Mathématiquement, le transfert de momentum sur les vagues est exprimé par
+\begin{equation}
+   \boldsymbol{\tau}_w(z) = - \int_z^{\pt\infty} \mathrm{d}z\pt D_w \pdv[2]{}{z} U_0 \hspace{0.5cm} \longrightarrow \hspace{0.5cm} \qty[\frac{m^2}{s^2}].
+\end{equation}
+Ici, $D_z$ est un « coefficient de diffusion des vagues ».
+Mentionnons aussi que Janssen se débarasser de $\omega$ et $k$ à l'aide d'une condition de résonnance, mais $D_z$ pourrait s'apparenter à un terme source dans notre nomenclature.
+D'ici, il est possible de multiplier toute l'équation [[eq:balancetau]] par $\rho_A$ et de se dire que le tour est joué.\bigskip
+
+\nb Dans cet article, Janssen fait apparaitre le concept de /air-sea density ratio/, avec la variable $\varepsilon$.
+
+
+*** Bidlot, 2012
+
+[cite/t/c:@bidlot2012present voir eq. 6 de l'article] décrit ce tansfert de momentum à l'aide de l'expression
+\begin{equation}
+   \boldsymbol{\tau}_w = \frac{g}{\varepsilon} \int \mathrm{d}\omega\pt \mathrm{d}\theta\pt S_{IN} \vb{k} = \qty(\frac{\rho_O}{\rho_A}) \int \mathrm{d}\omega\pt \mathrm{d}\theta\pt g\pt S_{IN} \vb{k}.
+\end{equation}
+Avec $S_{IN} = \gamma N$.
+Et c'est ici qu'on voit finalement apparaître le /air-sea density ratio/ ($\varepsilon$).
+Notamment, $\tau_w$ est ici une quantité donnée en $m^2\pt s^{-2}$ et c'est d'ailleurs la formulation qui est utilisée dans ECWAM.
+Donc, est-ce que le $\tau_{IN}$ offert par Wavewatch III est ouvertement divisé par $\rho_A$ avant d'être transmis en /output/?
+/The plot thickens.../
+
+*** Que dit le code de Wavewatch III? -- <2023-11-08 Wed>
+
+Après un peu de recherche, le code ne peut pas être plus clair (voir figure [[fig:code]]). 
+
+#+NAME: fig:code
+#+CAPTION: «Screenshot» du code de Wavewatch où ils sont assez explicites sur la nature de $\tau_{IN}$. 
+[[file:figures/articles/Screenshot from 2023-11-08 15-59-22.png]]
+
+
+\nb *L'expérience de pensée qu'il faut faire* : On se fout de l'eau ou plutôt du matériau de la vagues.
+La vague pourrait être en roche ou en lave, le transfert de momentum de l'air sur la surface ondulée reste exactement le même.
+Ensuite, le momentum va faire réagir la surface ondulée ou le mur dépendement de la densité du matériau.
+Mais le momentum qu'on retire au vent ne dépend tout simplement pas de la densité de l'eau. \bigskip
+
+
+
+* Rencontre -- <2023-11-09 Thu>
+
+On veut absolument comparer l'effet des vagues sur l'énergie, en tout cas.
+
+Les effets de la /roughness lenght/.
+
+Liste d'épicerie :
++ Vent constant versus hautes fréquences.
++ Couplé et non-couplé.
+
+Faut juste le faire.
+
+Au début : /thickness/ va à zéro. Quick fix, on pre
 
 * Switches de Wavewatch III
 
