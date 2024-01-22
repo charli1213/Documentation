@@ -337,8 +337,6 @@ Liste d'épicerie :
 
 Faut juste le faire.
 
-Au début : /thickness/ va à zéro. Quick fix, on pre
-
-* Switches de Wavewatch III
+Au début : /thickness/ va à zéro. Quick fix. 
 
 #+print_bibliography:

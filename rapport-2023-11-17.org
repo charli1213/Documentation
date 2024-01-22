@@ -1,0 +1,71 @@
+#+title: Carnet de bord, Université McGill
+#+author: Charles-Édouard Lizotte
+#+date:11/11/2023
+#+LATEX_CLASS: org-report
+#+CITE_EXPORT: natbib
+#+LANGUAGE: fr
+#+BIBLIOGRAPHY: master-bibliography.bib
+#+OPTIONS: toc:nil title:nil
+
+
+\mytitlepage
+\tableofcontents\newpage
+
+* Gestion de l'épaisseur et transfert de momentum du vent -- <2023-11-14 Tue>
+
+Traditionnellement, la contrainte de cisaillement ou les stress associé au vent est exprimé en différence finit comme suit,
+\begin{align}
+   &&\mathrm{RHS}\pt\tau^x = \qty(\frac{1}{\rho_O})\pt\pdv{\tau_A^x}{z}
+   && \Longrightarrow
+   &&\mathrm{RHS}\pt\tau^x = \qty(\frac{1}{\rho_O})\pt\eval{\qty(\frac{\tau_A^x}{z})\ }_{z=0}^{z=H_1}
+   && =
+   &&\qty(\frac{1}{\rho_O})\qty(\frac{\Delta \tau_A^x}{\Delta z}). &&
+\end{align}
+
+Donc, on voit que l'/input/ d'énergie est ici dépendant de l'épaisseur de la première couche.
+Généralement, le tout suit un profil logarithmique d'une épaisseur de quelques mêtres.
+Donc, on ajoute effectivement plus de vitesse dans notre $\pdv{u}{t}$, comme la couche la couche est plus mince.
+Par contre, au total, le momentum général est respecté, car il prend effectivement plus d'énergie pour déplacer une plus grosse couche.\bigskip
+
+\nb Ça serait pertinent de parler de ça à Jean-Michel au MIT. 
+
+
+* Re-structuration des fonctions d'output -- <2023-11-14 Tue>
+
+Dès maintenant, il est important de changer la manière qu'on lit les fichiers dans les codes Python.
+Bref, je laisse cette section ici pour m'assurer que je me souvienne de ce changement.
+On crée des /xarray.DataArray/ et on les transfert en /xarray.Dataset/ par la suite pour finalement créer des fichiers de type /netCDF/. \bigskip
+
+Avant, on réunissait tout avant dans un xarray dataset.
+
+
+\begin{tikzpicture}
+   \filldraw [orange!30] (0,0) rectangle (8,4);
+   \draw (1,3.5) node [red,righ] {tls.bintods};
+   \filldraw [BurntOrange!50] (0.5,0.5) rectangle (7.5,3);
+   \draw (1.5,2.5) node [orange,align left] {tls.bintoda};
+\end{tikzpicture}
+
+
+* Expériences lancées -- <2023-11-15 Wed>
+
+Comme lors de la maîtrise, il faudrait des comparatifs entre les /runs/ couplées et non-couplées.
+
+|   <c>   | <l>          |      <c>      |     <c>     | <l>              |
+|---------+--------------+---------------+-------------+------------------|
+|---------+--------------+---------------+-------------+------------------|
+| Symbole | Dénominateur |   Couplage    | Valeur Step | Description      |
+| [ -- ]  | [ -- ]       | \cmark/\xmark |    [ % ]    | [ -- ]           |
+|---------+--------------+---------------+-------------+------------------|
+|    A    | SW-step0.0   |    \xmark     |    0.00     | Échantillon SW   |
+|    B    | SW-step5.0   |    \xmark     |    5.00     | Échantillon SW   |
+|    C    | COU-step0.0  |    \cmark     |    0.00     | Échantillon test |
+|    D    | COU-step5.0  |    \cmark     |    5.00     | Échantillon test |
+|---------+--------------+---------------+-------------+------------------|
+
+
+** Énergie cinétique
+
+
+
+#+print_bibliography:
