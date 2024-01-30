@@ -103,7 +103,8 @@ L'absence d'indice temporel dénote donc le pas de temps courant d'une quantité
 Une meilleure description du pas de temps est fournie dans la section [[sec:gradpress]]. \bigskip
 
 
-\nb Mentionnons que l'expression $\delta(k,i)$ réfère ici au delta de Dirac, qui s'apparente à une /switch/ de valeur 1 lorsque $k=i$ et 0 autrement, soit
+\nb Mentionnons que l'expression $\delta(k,i)$ réfère ici au delta de Kronecker, soit une /switch/ de valeur 1 lorsque $k=i$ et 0 autrement.
+Mathématiquement
 \begin{equation}
    \delta(k,i) = \left\lbrace \hspace{0.2cm}\begin{matrix}
      \hspace{0.3cm}1 & \text{si}\hspace{0.5cm} k=i, \\
@@ -349,7 +350,7 @@ On passe donc d'un stress atmosphérique fixe à un stress dépendant du champ d
 \begin{equation}
    \boldsymbol{\tau}\ =\ \underbrace{\tall\delta_{COU}\cdot\boldsymbol{\tau}_{oc}}_\text{Couplé}\ + \ \underbrace{(1-\delta_{COU}) \cdot \boldsymbol{\tau}_a\tall}_\text{Non-couplé}.
 \end{equation}
-  
+\nb De plus amples informations sur le stress et le vent se retrouvent aux sections [[sec:vent]] et [[sec:inputww3]].
   
 ** Champs échangés par les deux modèles
 
@@ -390,7 +391,6 @@ C'est mentionné explicitement dans la sous-routine du modèle /w3src3md.ftn/, m
 \newpage
 
 ** Interpolation géométrique
-
 #+NAME: fig:interp
 #+caption: En a), mise en relation de la grille du modèle «shallow water» (haute résolution, indicateurs bleus) par rapport à la grille de Wavewatch III (basse résolution, indicateurs noirs). En b) et c) « Stencil » utilisé pour réaliser l'interpolation géométrique à ratio $R$ impair.
 \begin{wrapfigure}[41]{r}{0.45\textwidth}
@@ -628,32 +628,113 @@ Après toutes expériences que j'ai réalisées, je peux dire que le modèle de 
 
 * Paramètres physiques des équations
 
-** Vent à la surface des deux modèles
-
-Le stress du vent à la surface est donné par
+** Stress du vent appliqué à la surface des deux modèles
+<<sec:vent>>
+Stress du vent appliqué à la surface est donné par
+#+name:cisaillementvent
 \begin{equation}
-   \tau = \frac{\tau_0}{2}\cdot\underbrace{\qty(1-\cos(\frac{2\pi y}{L_y}))\venti}_\text{Variation y} \pt\cdot\pt \underbrace{\venti\qty(1+S\cdot\sin(f\cdot t)),}_\text{Variation temps}
+   \boldsymbol{\tau}_{atm} = \ivf\pt\qty(\venti\frac{\tau_0}{2})\cdot\underbrace{\qty(\venti1-\cos(\frac{2\pi\cdot y}{L_y}))\venti}_\text{Variation y} \pt\cdot\pt \underbrace{\venti\qty(1+S\cdot\sin(f\cdot t))}_\text{Variation temps},
 \end{equation}
-où $f$ est une fréquence en [rad s^{-1}] -- soit la fréquence de Coriolis dans notre cas.
-Comme Wavewatch III ne prend que la valeur du vent à 10 m d'altitude, il est important de transférer d'une contrainte de cisaillement à un vent dans nos /input/.
-En premier lieu, on connait la relation
+où $f$ est une fréquence en [rad s^{-1}] -- soit la fréquence de Coriolis dans notre cas.\bigskip
+
+\nb L'équation précédente est observable dans la sous-routine /model/subs/rhs.f90/.
+
+|   <c>    | <l>            | <l>           | <l>                                     |
+| Variable | Valeur         | Unités        | Description                             |
+|----------+----------------+---------------+-----------------------------------------|
+|  \tau_0  | 0.1            | N\pt m^{-2}   | Valeur maximale du stress atmosphérique |
+|    y     | [0, L_x]       | m             | Déplacement latitudinal                 |
+|   L_y    | 2\times10^6    | m             | Longueur du domaine                     |
+|    f     | 7\times10^{-7} | rad\pt s^{-1} | Fréquence de Coriolis                   |
+|    t     | --             | s             | Temps                                   |
+
+** Vent donné en input de Wavewatch III
+<<sec:inputww3>>
+Comme données entrantes,  Wavewatch ne prend pas le stress atmosphérique $\boldsymbol{\tau}_{atm}$, car il le calcule à l'interne.
+Il prend plutôt le vecteur vent à $z=10$ m de la surface de l'eau ($\vb{u}_{10}$).
+En premier lieu, pour transformer notre contrainte de cisaillement [[cisaillementvent]], on connait la relation
 \begin{equation}
    \tau_a = \rho_a c_D |\uu_{10}| \uu_{10},
 \end{equation}
 où \rho_a est la densité de l'air et c_D est le coefficient de trainée au dessus de l'océan.
-Si l'on assume la valeur de la contrainte de cisaillement (0.1 N m^{-2} dans notre cas), alors on peu facilement trouver le vent à 10m d'altitude.
-On commence par trouve la valeur de c_D à l'aide de la relation de Charnok [cite:@charnock1955wind], tirée de [cite/t/c:@gill-atmosphere-ocean p.30], 
+Si l'on assume la valeur de la contrainte de cisaillement (0.1 N m^{-2} dans notre cas), alors on peu facilement trouver le vent à 10m d'altitude $\vb{u}_{10}$.\bigskip
+
+On commence par obtenir la valeur de $c_D$ à l'aide de la relation de Charnok [cite:@charnock1955wind] aussi tirée de [cite/t/c:@gill-atmosphere-ocean p.30],
+#+name:cd
 \begin{align}
-   &&c_D = \qty[\frac{\kappa}{\ln(10/z_0)}],
+   &&c_D = \qty[\frac{\kappa}{\ln(z/z_{\pt0})}]_{\ z=10\pt m}
    && \text{où} &&
-   &&z_0 = \frac{\gamma_{Ch}\tau_a}{g}. &&
+   z_0 = \frac{\gamma_{Ch}\tau_a}{g}. &&
 \end{align}
-Puis enfin, on retrouve $u_{10}$ à l'aide de \rho_a et c_D.
-La valeur de ces constantes se retrouve dans le tableau de la section suivante. \bigskip
+Puis enfin, on retrouve $\vb{u}_{10}$ à l'aide de \rho_a et c_D,
+\begin{equation}
+   u_{10} = \sqrt{\frac{\tau_a}{\rho_a c_D}}.
+\end{equation}
 
-Bien que cette formulation soir indépendante des vagues, elle nous permet de s'assurer que le modèle de vagues voit bien le vent qu'on veut lui donner avant tout.
+\nb Toutes ces équations se retrouvent dans la fonction python /build winds.py/ qui construit un fichier de type NetCDF déchiffrable par /Wavewatch III/.
+|    <c>    | <l>          | <l>       | <l>                                            |
+| Variable  | Valeur       | Unités    | Description                                    |
+|-----------+--------------+-----------+------------------------------------------------|
+|    c_D    | À déterminer | --        | Coefficient de traînée                         |
+|  \kappa   | 0.41         | --        | Constante de Von Karman                        |
+|     z     | 10           | m         | Hauteur de la mesure du vent (Typiquement 10m) |
+|    z_0    | À déterminer | m         | Rugosité de l'interface (/roughness lenght/)     |
+| \gamma_Ch | 0.0185       | --        | Valeur minimale du paramètre de Charnock       |
+|  \tau_a   | [0, 0.1]     | N m^{-2}  | Stress atmosphérique                           |
+|     g     | 9.81         | m s^{-2}  | Accélération gravitationnelle                  |
+|  \rho_a   | 1.225        | Kg m^{-3} | Densité atmosphérique                          |
 
-** Tableau des quantités physiques intéressantes
+**  Le paramètre de Charnock (désambiguation)
+Comme illustré dans le tableau précédent, nous avons utilisé 0.0185 comme valeur du paramètre de Charnock.
+Le paramètre de Charnock est une quantité adimensionnelle qui dépend de l'état du champ de vagues et qui est curieusement corrélé à l'age du champ de vagues [cite:@janssen2004interaction p.60].
+On le calcule à l'aide de la relation
+\begin{equation}
+   \alpha_c = \frac{z_0 g}{u_*^2}.
+\end{equation}
+Comme mentionné dans [cite/t/c:@janssen2004interaction], sa valeur est très ambigüe -- [[https://codes.ecmwf.int/grib/param-db/148][le modèle de vagues de l'ECWAM]] utilise une valeur de 0.0185 mais [[https://glossary.ametsoc.org/wiki/Charnock%27s_relation#:~:text=An%20empirical%20expression%20for%20aerodynamic,due%20to%20increasing%20surface%20stress.][l'American Meteorological Society]] propose plutôt une valeur de 0.015.\bigskip
+
+Donc, si l'on ne connait pas vraiment l'état des vagues, on ne peut pas vraiment estimer le coefficient de trainée de l'équation [[cd]] sans le coefficient de Charnock.
+Par contre, le [[https://codes.ecmwf.int/grib/param-db/148][site du modèle ECWAM]] mentionne ceci :
+
+#+begin_quote
+/This parameter accounts for increased aerodynamic roughness as wave heights grow due to increasing surface stress. It depends on the wind speed, wave age and other aspects of the sea state and is used to calculate how much the waves slow down the wind./
+
+/When the atmospheric model is run without the ocean model, this parameter has a constant value of 0.018. When the atmospheric model is coupled to the ocean model, this parameter is calculated by the ECMWF Wave Model./
+#+end_quote
+
+et l'article de [cite/t/c:@janssen2004interaction p.163] mentionnne
+
+#+begin_quote
+/The constant $\hat{\alpha}$ was chosen in such a way
+that for old windsea the Charnock parameter [$\alpha_{ch}$] has the value of 0.0185 in
+agreement with observations collected by Wu (1982) on the drag over sea
+waves./
+#+end_quote
+
+Donc, c'est pourquoi j'ai pris la valeur de 0.0185 pour calculer le vent à 10 mètre de la surface, à l'aide des relations de la sous-section [[sec:inputww3]].
+
+** Ce que Wavewatch III voit en input
+
+Comme la /switch/ ST3 est activée, le modèle utilise le module /wavewatch/ftn/w3src3md.ftn/ et donc il calcule la /friction velocity/ à l'aide de la sous-routine /CALC USTAR(WINDSPEED,TAUW,USTAR,Z0,CHARN)/.
+Plus précisément,
+1. Il calcule la partie du *transfert de momentum vers les vagues* $\tau_w$ (/wave supported stress/) à *l'aide de tables* (voir sous-routine /w3sin3/ dans /wavewatch/ftn/w3src3md.ftn/).
+2. Il *se sert de nouveau de tables* pour trouver la *vitesse de friction* $u_*$ (/friction velocity)/ en fonction du transfert de momentum aux vagues $\tau_w$ ou $\tau_{IN}$;
+3. Il calcule le *coefficient de trainée* $c_D$ à l'aide de la relation
+   \begin{equation}
+      c_d = \qty(\venti\frac{u_*}{u_{10}})^2;
+   \end{equation}
+4. Il calcule la *rugosité* $z_0$ (/roughness lenght/) à l'aide de
+   \begin{equation}
+      z_0 = 10 \exp \qty(-\kappa \sqrt{c_D});
+   \end{equation}
+5. Il trouve le *paramètre de Charnok* $/alpha_{ch}$ và l'aide de 
+   \begin{equation}
+      \alpha_{ch} = \frac{z_0 g}{u_*^2}.
+   \end{equation}
+
+
+
+** Tableau et résumé des quantités physiques importantes
 
 J'ai réunis dans le tableau suivant tous les paramètres physiques intéressants pour recréer les expériences.
 
@@ -693,7 +774,7 @@ J'ai réunis dans le tableau suivant tous les paramètres physiques intéressant
 | *Vent*           | Stress maximum du vent              | \tau_0                              |                 0.1 | N m^{-1}         |
 |                  | Écart de variation (/Step/)         | S                                   |                0.05 | --               |
 |                  | Accélération gravitationnelle       | g                                   |                9.81 | m s^{-2}         |
-|                  | Constante de Von Karmann            | \kappa                              |                 0.4 | ?                |
+|                  | Constante de Von Karmann            | \kappa                              |                 0.41 | --               |
 |                  | Coefficient de Charnok              | \gamma_{Ch}                         |              0.0185 | --               |
 |                  | Densité de l'air                    | \rho_a                              |               1.225 | kg m^{-3}        |
 |------------------+-------------------------------------+-------------------------------------+---------------------+------------------|
