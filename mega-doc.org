@@ -633,7 +633,7 @@ Après toutes expériences que j'ai réalisées, je peux dire que le modèle de 
 Stress du vent appliqué à la surface est donné par
 #+name:cisaillementvent
 \begin{equation}
-   \boldsymbol{\tau}_{atm} = \ivf\pt\qty(\venti\frac{\tau_0}{2})\cdot\underbrace{\qty(\venti1-\cos(\frac{2\pi\cdot y}{L_y}))\venti}_\text{Variation y} \pt\cdot\pt \underbrace{\venti\qty(1+S\cdot\sin(f\cdot t))}_\text{Variation temps},
+   \boldsymbol{\tau}_{atm} = \qty(\venti\frac{\tau_0}{2})\cdot\underbrace{\qty(\venti1-\cos(\frac{2\pi\cdot y}{L_y}))\venti}_\text{Variation y} \pt\cdot\pt \underbrace{\venti\qty(1+S\cdot\sin(f\cdot t))}_\text{Variation temps}\pt\cdot \ivf,
 \end{equation}
 où $f$ est une fréquence en [rad s^{-1}] -- soit la fréquence de Coriolis dans notre cas.\bigskip
 
@@ -727,7 +727,7 @@ Plus précisément,
    \begin{equation}
       z_0 = 10 \exp \qty(-\kappa \sqrt{c_D});
    \end{equation}
-5. Il trouve le *paramètre de Charnok* $/alpha_{ch}$ và l'aide de 
+5. Il trouve le *paramètre de Charnok* $\alpha_{ch}$ và l'aide de 
    \begin{equation}
       \alpha_{ch} = \frac{z_0 g}{u_*^2}.
    \end{equation}
