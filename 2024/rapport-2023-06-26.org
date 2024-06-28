@@ -1,0 +1,219 @@
+#+title: Rapport hebdomadaire
+#+subtitle: Contrat Été 2024
+#+author: Charles-Édouard Lizotte
+#+date:28/06/2024
+#+LANGUAGE: fr
+#+BIBLIOGRAPHY: master-bibliography.bib
+#+OPTIONS: toc:nil title:nil 
+#+LaTeX_class: org-report
+
+\mytitlepage
+\tableofcontents\newpage
+
+* Les glaces dans le modèle de Elizabeth Hunke 
+
+** Mise en contexte 
+La *rhéologie* est définit comme la science de la déformation des matériaux.
+[cite/t/c:@coon1974modeling] propose une rhéologie élasto-plastique pour les paquets de glace (/see ice pack/).
+[cite/t/c:@hibler1979dynamic] propose une rhéologie comme un plastique visqueux non-linéaire.
+Le papier de [cite/t/c:@hunke1997elastic] présente une méthode numérique implicite pour solver les équation du model VP.
+Selon [cite/a:@hunke1997elastic], l'enjeu vient du fait qu'il est difficile de modéliser la riche gamme de viscosités exprimé à l'intérieur d'un simple domaine de glace hétérogène.
+Bref, un nombre impressionnant de rhéologies a été exploré.\bigskip
+
+\nb Un model explicite extrapole le futur à l'aide des quantités passées tandis qu'un schéma implicite évaluerait le futur à l'aide de quantités inconnues à $n+1$.\bigskip
+
+** Les équations en jeu 
+La balance des forces par unité d'aire dans la glace est donnée par l'équation du mouvement en deux dimensions,
+
+\begin{equation}
+   \underbrace{\venti m \qty(\pdv{u_i}{t})}_\text{Évolution}
+   = \underbrace{\venti\qty(\pdv{\sigma_{ij}}{x_j})}_{\substack{\text{Strenght of}\\\text{the ice}}}
+   +\underbrace{\venti\ \tau_{ai}\ +\ \venti\tau_{wi}}_{\substack{\text{Contraintes}\short\\\text{Vent-Ocean}}}
+   +\ \underbrace{\venti\varepsilon_{ij3} m f u_j}_\text{Coriolis}
+   -\ \underbrace{\venti \qty(mg \pdv{H_o}{x_i})}_{\substack{\text{Élévation}\\\text{de l'eau}}},
+\end{equation}
+où $\boldsymbol{\tau}_a = \qty(\tau_{ai},\pt\tau_{aj})$ et $\boldsymbol{\tau}_w = \qty(\tau_{wi},\pt\tau_{wj})$ sont le vent et les contrainte de déformation.
+Comme mentionné dans l'article : 
+#+begin_quote
+   /The strenght of the ice is represented by the internal stress tensor $\sigma_{ij}$./
+#+end_quote
+La masse de glace est exprimée par l'expression
+\begin{equation}
+   m = \rho_i\qty[cH + (1-c)h] + \rho_s\qty[cH_s (1-c)h_s].
+\end{equation}
+
+Pour ce qui est de la rhéologie, [cite/t/c:@hibler1979dynamic] proposait une rhéologie elliptique de la forme
+\begin{equation}
+   \sigma_{ij} = 2 \eta \dot{\epsilon}_{ij} + \qty(\zeta - \eta) \dot{\epsilon}_{kk} \delta_{ij} - P \cdot\delta_{ij}/2,
+\end{equation}
+où la variable
+\begin{equation}
+   \dot{\epsilon}_{ij} = \frac{1}{2} \qty(\pdv{u_i}{x_j}+\pdv{u_j}{x_i}),
+\end{equation}
+est un genre de jacobien.\bigskip.
+
+Selon [cite/t/c:@hunke1997elastic], la pression ($P$) est en quelque sorte une mesure de la force de la glace qui dépend de la robustesse et de l'épaisseur de la glace.
+\begin{equation}
+   P = P^\ast c He \exp[-c^\ast(1-c)],
+\end{equation}
+où $P^\ast$ et $c^\ast$ sont des constantes données dans une table quelque part.
+C'est pas mal semblable à la formulation de [cite/t/c:@hibler1979dynamic], car $cH$ est approximativement la même chose que son /equivalent ice thickness/.
+La viscosité augmente avec la pression de sorte à obtenir
+\begin{align}
+   \zeta = \frac{P}{2\Delta}, && \eta = \frac{P}{2\Delta e^2}, && \Delta = \qty[(\dot{\epsilon}^2_{11} + \dot{\epsilon}^2_{22})(1 + e^{-2}) + 4 e^{-2}\dot{\epsilon}^2_{12} + 2 \dot{\epsilon}^2_{11}\dot{\epsilon}^2_{22}(1-e^{-2})]^{\sfrac{1}{2}}_.
+\end{align}
+Il semble que sans tension (/strain/), la viscosité devienne infinie... ce qui nous force à mettre des viscosités minimum et maximum.
+Selon [cite/a:@hunke1997elastic], c'est un solution qui amène ses propres problèmes, donc on cherche de nouvelles solutions.\bigskip
+
+On peut quand même se permettre de combiner les équations précédentes, ce qui donne un beau /ice jumble d'équations/,
+\begin{align}
+   m \pdv{u}{t} = \pdv{}{x}\qty[(\eta + \zeta)\pdv{u}{x}] &+\pdv{}{y}\qty(\eta\pdv{u}{y}) + \pdv{}{x}\qty[(\zeta-\eta)\pdv{v}{y}] + \pdv{}{y}\qty(\eta \pdv{v}{x}) - \frac{1}{2}\pdv{P}{x}\nonumber\\
+     & + c'\qty[\qty(U_w-u)\cos\theta - \qty(V_w-v)\sin\theta] + \tau_{ai} + mfv - mg\pdv{H_o}{x},
+\end{align}
+
+Commençons par poser une équation dynamique simple, soit
+\begin{equation}
+   m\pdf{\uu}{t} = \eta \laplacian{\uu} + \vb{R},
+\end{equation}
+où $\vb{R}$ est une variable qui englobe Coriolis ($f$), la pression ($P$) et les contrainte de surface ($\boldsymbol{\tau}}$).
+Lorsque $\eta=$, on obtient le cas spécial d'un fluide en cavitation -- un fluide dépourvu de viscosité.
+
+
+
+
+
+
+
+* Présentation de Dany à l'Institut Isaac Newton
+
+** Mise en contexte
+
+Dans sa [[https://www.youtube.com/watch?v=_V7ozTp6SJM][présentation à l'Institut Isaac Newton (2023)]], Dany décrit la dynamique de la zone marginale à l'aide de l'équation
+#+name: eq:dynamique
+\begin{equation}
+   \rho_i h \qty(\dv{\uu}{t} + f \kvf\times\uu) = \vb{F}_i + \divergence{\boldsymbol{\sigma}},
+\end{equation}
+où la somme des forces est décrite comme
+\begin{equation}
+   \vb{F}_i =
+    \underbrace{\grande\boldsymbol{\tau}_g}_{\substack{\text{Gradient}\short\\\text{de surface}}}
+   +\underbrace{\grande\boldsymbol{\tau}_a}_{\tall\text{Vent}}
+   +\underbrace{\grande\boldsymbol{\tau}_o}_{\tall\text{Courant}}
+   +\underbrace{\grande\boldsymbol{\tau}_b}_{\substack{\text{Plancher}\vphantom{A^2p}\\\text{océanique}}}
+   +\underbrace{\grande\boldsymbol{\tau}_w}_{\substack{\text{Stress}\short\vphantom{A^1}\\\text{radiatif}\short\\\text{des vagues}}} .
+\end{equation}
+$\bigstar$ Il faudrait préciser la provenance de l'équation [[eq:dynamique]], même si ça semble juste être une version modifiée de Navier-Stokes.\bigskip
+
+Le terme $\divergence{\sigma}$ -- définit comme étant la *rhéologie* -- est décrit à l'aide de l'équation de *déformation d'un plastique visqueux* [cite:@hunke1997elastic],
+\begin{align}
+   & \divergence{\boldsymbol{\sigma}} = \pdv{\sigma_{ij}}{x_i},\\
+   & \sigma_{ij} = 2\eta \pt\dot{\epsilon}_{ij} + \qty(\zeta - \eta) \dot{\epsilon}_{kk} \delta_{ij} - \frac{1}{2} \delta_{ij}.
+\end{align}
+où $\eta$ et $\zeta$ sont des viscosités (à définir).
+La variable $\dot{\epsilon}_{ij}$ est le tenseur de tension ou d'étirement (/strain tensor/).\bigskip
+
+#+name: fig:ice
+#+caption: Illustration d'un cas de figure observé à la baie du Ha-Ha.
+[[file:Figures/photos/glace-evanescente.png]]
+
+L'onde en question se propage à la manière d'une onde évanescente dans le medium.
+L'équation [[eq:dynamique]] nous permet de visualiser deux équilibres entre l'énergie des vagues et la rhéologie, soit
+\begin{equation}
+   \boldsymbol{\tau}_w + \divergence{\boldsymbol{\sigma}} = 0.
+\end{equation}
+En posant la limite de la zone marginale à $x=0$ (comme illustré à la figure [[fig:ice]]) et l'arrivée des vagues avec un angle $\phi$, on obtient deux équilibres entre les différentes forces :\bigskip
+
++ *Équilibre compressif* -- Stress radiatif balance les termes de pression.
+#+name:eq:compressif
+\begin{equation}
+   \overbrace{\venti\phantom{x}\tau_{wx}\phantom{x}}^{\substack{\text{Momentum}\short\\\text{vagues-x}\short}} +\ \overbrace{\venti\frac{1}{2}\qty(\pdv{P}{x})}^{\text{Pression}\tall}\ = 0,
+\end{equation}
+
++ *Équilibre de cisaillement* -- Cisaillement le long du /ice edge/ qui balance les forces visqueuses : 
+\begin{equation}
+   \overbrace{\venti\phantom{x}\tau_{wy}\phantom{x}}^{\substack{\text{Momentum}\short\\\text{vagues-y}\short}} +\ \overbrace{\venti\eta\qty(\pdv[\pt2]{\bar{v}}{x})}^{\text{Viscosité}\tall}\ = 0.
+\end{equation}
+
+\nb On s'attarde principalement à l'équilibre entre le transfert de momentum des vagues et la rhéologie, car le vent a peu d'impact à l'échelle désirée.
+Dany élaborera son argument vers la fin de la présentation.
+
+** Équilibre radiatif entre les vagues et la pression interne de la glace
+
+Dans le milieu à l'étude, l'objectif est de représenter au moins trois types de glaces de manière générale.
+On mentionne ici trois types de /slush/.
+Ces interactions sont modelisées à l'aide de la friction de Mohr-Coulomb. 
+Dany introduit donc le /ice jumble model for the compressive strenght/ (voir [cite/t/c: @uzuner1976theoretical; @hopkins1999compression; @dai2004wave])
+
++ Friction de Mohr-Coulomb dans le plan x-z
+\begin{align}
+   & \sigma_x = \sigma_z\qty(\frac{1+\sin \phi}{1-\sin\phi}) \\
+   & P\ = \qty(\frac{h^2}{2}) \qty(1-\frac{\rho_i}{\rho_w})(1-n)\rho_ig_e \qty(\frac{1+\sin \phi}{1-\sin\phi}) \hspace{1cm} \text{ou plutôt}\hspace{0.7cm} \boxed{\ P = K_r \cdot h^2.\ } 
+\end{align}
+Grossièrement, c'est proportionnel à l'épaisseur au carré ($h^2$) et il y a aussi un terme de /porosité/ ($n$) dans le but de représenter le fait qu'il y a des craques et des interstices dans la glace.
+On définit $K_r$ comme
+\begin{equation}
+   K_r =  \frac{1}{2}\qty(1-\frac{\rho_i}{\rho_w}) \qty(\frac{1+\sin \phi}{1-\sin\phi})(1-n)\rho_ig_e
+\end{equation}
+\bigskip
+
+On introduit maintenant le tenseur pour la contrainte radiative des vagues  [cite:voir @longuet1964radiation],
+\begin{align}
+   & \vb{R} = \rho g \int_0^\infty\int_0^{2\pi} F(k,\theta)
+     \qty(\begin{matrix}
+       c_g \cos^2 \theta + \qty(\frac{c_g}{c} - \frac{1}{2}) & c_g \cos^2 \theta \sin \theta \\
+       c_g \cos^2 \theta \sin\theta & c_g \cos^2 \theta + \qty(\frac{c_g}{c} - \frac{1}{2})
+     \end{matrix})
+   k \cdot \dd k\pt \dd\theta\\
+   & \boldsymbol{\tau}_w = - \divergence{\boldsymbol{R}} = \qty(\pdv{R_{ij}}{x_i})\cdot \evf_j
+\end{align}
+
+*À incidence normale et en eau profonde*, c'est un cas spcécial.
+On se souvient que $c_g = \sfrac{1}{2} c$, ainsi
+\begin{equation}
+   \boldsymbol{\tau}_w = -\frac{1}{2}\rho g \qty(\pdv{E}{x}) \ivf
+\end{equation}
+En partant de l'équation d'équilibre compressif ([[eq:compressif]]), on obtient une solution pour l'épaisseur de la glace, soit
+\begin{equation}
+   \boxed{\ h^2(x) = - \frac{\rho_w g_e E_0}{K_r}\qty(1-e^{-\alpha x}),\ }
+\end{equation}
+où $E_0$ est l'énergie de l'onde incidente; $K_r$ est un fonction de la porosité, de la friction interne et de l'angle d'incidence; puis le binôme $(1-\exp(-\alpha x))$ est la décroissance de l'énergie des vagues le long de l'axe x.
+On voit apparaître un gradient dans la distribution des floes (Voir figure [[fig:dist-floes]]).
+
+#+NAME:fig:dist-floes
+#+CAPTION: Distribution radiale des floes dans la baie du Ha-Ha. 
+[[file:Figures/photos/gradient_floes.png]]
+
+** Résultats empiriques pour l'équilibre radiatif
+
+Dans la baie du Ha-Ha, ils ont mesuré l'épaisseur du /ice jumble/ ainsi que l'énergie des vagues le long du transect.
+De cette manière, on trouve le coefficient d'atténuation ($\alpha$)  et la relation de dispersion de l'onde dans le milieu.
+On peut même trouver l'atténuation en fonction de la fréquence de l'onde.
+Le labo arrive environ à
+\begin{equation}
+   \alpha(\omega)  = 5.8 \times 10^{-3} \omega^{3.2}.
+\end{equation}
+
+Et on voit directement une énorme différence (2 ordres de grandeur) entre la rhéologie de Hibler et mixte
+\begin{align}
+   &P_{Hibler} = P^* h,\\
+   &P_{MC} = K_r \cdot h^2, \hspace{1cm}\Leftarrow\hspace{1cm}\text{Pas mal meilleur}
+\end{align}
+où $P^*$ est une constante.
+
+** Équilibre de cisaillement
+
+Pas le temps pour ça.
+
+** Conclusions
+
++ Dans la zone marginale stationnaire, on a isolé l'équilibre entre le transfert de momentum radiatif des vagues et la pression interne.
++ La force compressive (ou la résistance) de la glace correspod au modèle de friction de Mohr-Coulomb dans une /ice jumble/.
++ La porosité est possiblement une nouvelle variable qui a besoin de recherche active.
++ La dépendance à l'épaisseur de la glace est quadratique comparativement à la version linéaire de [cite/t/c:@hibler1979dynamic]
+
+Aussi :
++ Un équilibre dynamique le long du /ice edge/ existe est peut être utilisé pour quantifier les viscosité de cisaillement et valider les modèles.
++ La contrainte radiative des vagues peut aussi pousser le frasil sous la glace consolidée sur de longues distances, bien plus loin que le /ice edge/.
+
+  
+#+Print_bibliography:

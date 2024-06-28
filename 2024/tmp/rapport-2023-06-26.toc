@@ -1,0 +1,10 @@
+\babel@toc {french}{}\relax 
+\contentsline {section}{\numberline {1}Les glaces dans le modèle de Elizabeth Hunke}{2}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Mise en contexte}{2}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2}Les équations en jeu}{2}{subsection.1.2}%
+\contentsline {section}{\numberline {2}Présentation de Dany à l'Institut Isaac Newton}{3}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Mise en contexte}{3}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Équilibre radiatif entre les vagues et la pression interne de la glace}{4}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Résultats empiriques pour l'équilibre radiatif}{5}{subsection.2.3}%
+\contentsline {subsection}{\numberline {2.4}Équilibre de cisaillement}{5}{subsection.2.4}%
+\contentsline {subsection}{\numberline {2.5}Conclusions}{6}{subsection.2.5}%
