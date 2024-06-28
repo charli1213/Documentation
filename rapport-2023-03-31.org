@@ -1,15 +1,13 @@
 #+title: Rapport hebdomadaire -- McGill
+#+subtitle: Contrat Été 2023
 #+author: Charles-Édouard Lizotte
 #+date: 31/03/2023
-#+LATEX_CLASS: org-report
-#+CITE_EXPORT: natbib
 #+LANGUAGE: fr
 #+BIBLIOGRAPHY: master-bibliography.bib
 #+OPTIONS: toc:nil title:nil
 
 \mytitlepage
 \tableofcontents\newpage
-
 
 * DONE Run du modèle multicouches
 DEADLINE: <2023-03-30 Thu 19:00>

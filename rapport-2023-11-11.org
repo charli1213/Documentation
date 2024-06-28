@@ -1,8 +1,8 @@
 #+title: Carnet de bord, Université McGill
+#+subtitle: Contrat Été 2023
 #+author: Charles-Édouard Lizotte
 #+date:11/11/2023
 #+LATEX_CLASS: org-report
-#+CITE_EXPORT: natbib
 #+LANGUAGE: fr
 #+BIBLIOGRAPHY: master-bibliography.bib
 #+OPTIONS: toc:nil title:nil
@@ -30,7 +30,7 @@
 
 Cette rencontre avec David et LP a été productive.
 Le modèle se rend plus loin depuis qu'on a modifié
-+ /grad2u/ et /grad2v/ sont nuls aux murs, de sorte à ce que /grad4u/ et /grad4v/ soient calculés en fonction d'uen valeur nullw;
++ /grad2u/ et /grad2v/ sont nuls aux murs, de sorte à ce que /grad4u/ et /grad4v/ soient calculés en fonction d'une valeur nulle;
 + On a rajouté la réflection des vagues aux murs ( à l'aide du paramètre /REFCOAST=0.1/ );
 + On initialise maintenant le modèle de vagues avec un /Jonswap/.
   Ainsi, tout est plus /smooth/ au départ;

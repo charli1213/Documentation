@@ -1,8 +1,8 @@
 #+title: Carnet de bord, Université McGill
+#+subtitle: Contrat Été 2023
 #+author: Charles-Édouard Lizotte
 #+date:01/09/2023
 #+LATEX_CLASS: org-report
-#+CITE_EXPORT: natbib
 #+LANGUAGE: fr
 #+BIBLIOGRAPHY: master-bibliography.bib
 #+OPTIONS: toc:nil title:nil

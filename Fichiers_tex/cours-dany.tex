@@ -1,0 +1,313 @@
+% Created 2024-06-16 Sun 00:13
+% Intended LaTeX compiler: pdflatex
+ocumentclass[10pt]{article}% =================================BASE====================================%
+\documentclass[10pt]{report}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry} % Marges
+\usepackage[T1]{fontenc} % Nécessaire avec FrenchBabel
+\usepackage[utf8]{inputenc} % Important pour symboles Francophones, é,à,etc
+\usepackage{csquotes} % Recommandé par PDFLatex lors de la compilation. 
+
+
+% Calligraphie
+%\usepackage{lmodern} % Ça, ça set latin modern
+%\usepackage{mathrsfs} %Permet la command \mathscr (Lettres attachées genre) \mathscr(B)
+
+% Calligraphie
+%\usepackage{pxfonts} % Met le texte ET les maths en Palatino + donne accès à des symboles math
+\usepackage{palatino} % Cette commande met seulement le texte en police palatino
+\usepackage{lmodern} % Pour les maths?
+% Use lmodern for sans-serif
+\usepackage{mathrsfs} % Permet la command \mathscr (Lettres attachées genre) \mathscr(B)
+
+
+
+
+
+% Bibliographie
+%\usepackage[backend=bibtex,style=phys,sorting=ynt]{biblatex}
+\usepackage[backend=biber,sorting=ynt,style=ieee]{biblatex}
+\addbibresource{/home/charlesedouard/Desktop/Travail/Documentation/master-bibliography.bib}
+
+
+
+\usepackage{amsmath, amssymb, amsthm} % Symb. math. (Mathmode+Textmode) + Beaux théorèmes.
+\usepackage{mathtools,cancel,xfrac} % Utilisation de boîtes \boxed{} + \cancelto{}{}, xfrac
+\usepackage{graphicx, wrapfig} % Géstion des figures.
+\usepackage{hyperref} % Permettre l'utilisation d'hyperliens.
+\usepackage{color} % Permettre l'utilisation des couleurs.
+\usepackage{colortbl} % Color tables
+\usepackage[dvipsnames]{xcolor} % Couleurs avancées.
+\usepackage{titling} % Donne accès à \theauthor, \thetitle, \thedate
+
+% Physique
+\usepackage{physics} % Meilleur package pour physicien. 
+
+
+% Style
+\usepackage{lipsum} % For fun
+\usepackage{tikz} % Realisation de figures TIKZ.
+\usepackage{empheq} % Boite autour de MULTIPLE équations
+\usepackage{bbding}
+
+% Français
+\usepackage[french]{babel} % Environnements en Français.
+% ==============================BASE-(END)=================================%
+
+
+
+% ================================SETTINGS=================================%
+% Pas d'indentation en début de paragraphe :
+\setlength\parindent{0pt}
+\setlength{\parskip}{0.15cm}
+
+% Tableaux/tabular
+% Espace vertical dans les tabular/tableaux
+\renewcommand{\arraystretch}{1.2}
+% Couleur des tableaux/tabular
+\rowcolors{2}{violet!5}{}
+
+% Couleurs de hyperliens :
+\definecolor{mypink}{RGB}{147, 0, 255}
+\hypersetup{colorlinks, 
+             filecolor=mypink,
+             urlcolor=mypink, 
+             citecolor=mypink, 
+             linkcolor=mypink, 
+             anchorcolor=mypink}
+
+
+\usepackage{titling} % Donne accès à \theauthor, \thetitle, \thedate
+
+% Physique
+\usepackage{physics} % Meilleur package pour physicien. 
+
+
+% Style
+\usepackage{lipsum} % For fun
+\usepackage{tikz} % Realisation de figures TIKZ.
+\usepackage{empheq} % Boite autour de MULTIPLE équations
+
+% Français
+\usepackage[french]{babel} % Environnements en Français.
+% ==============================BASE-(END)=================================%
+
+
+
+
+
+% ================================SETTINGS=================================%
+% Pas d'indentation en début de paragraphe :
+\setlength\parindent{0pt}
+\setlength{\parskip}{0.15cm}
+
+% Tableaux/tabular
+% Espace vertical dans les tabular/tableaux
+\renewcommand{\arraystretch}{1.2}
+% Couleur des tableaux/tabular
+\rowcolors{2}{violet!5}{}
+
+% Couleurs de hyperliens :
+\definecolor{mypink}{RGB}{147, 0, 255}
+\hypersetup{colorlinks, 
+             filecolor=mypink,
+             urlcolor=mypink, 
+             citecolor=mypink, 
+             linkcolor=mypink, 
+             anchorcolor=mypink}
+
+
+% Numéros d'équations suivent les sections :
+\numberwithin{equation}{section} 
+
+% Les « captions » sont en italique et largeur limitée
+\usepackage[textfont = it]{caption} 
+\captionsetup[wrapfigure]{margin=0.5cm}
+
+% Retirer l'écriture en gras dans la table des matières
+\usepackage{tocloft}
+\renewcommand{\cftsecfont}{\normalfont}
+\renewcommand{\cftsecpagefont}{\normalfont}
+
+% Change bullet style
+\usepackage{pifont}
+\usepackage{enumitem}
+%\setlist[itemize,1]{label=\ding{224}}
+\setlist[itemize,1]{label=\ding{239}}
+\renewcommand{\boxtimes}{\blacksquare}
+% ================================SETTINGS=================================%
+
+
+
+% ==============================NEWCOMMANDS================================%
+
+% Vecteurs de base :
+\newcommand{\nvf}{\vb{\hat{n}}}
+\newcommand{\ivf}{\vb{\hat{i}}}
+\newcommand{\jvf}{\vb{\hat{j}}}
+\newcommand{\kvf}{\vb{\hat{k}}}
+\newcommand{\uu}{\vb{u}}
+\newcommand{\vv}{\vb{v}}
+\newcommand{\ust}{\vb{u}_{\ast}}
+
+% Physics empty spaces 
+\newcommand{\typical}{\vphantom{A}}
+\newcommand{\tall}{\vphantom{A^{x^x}_p}}
+\newcommand{\grande}{\vphantom{\frac{1}{xx}}}
+\newcommand{\venti}{\vphantom{\sum_x^x}}
+\newcommand{\pt}{\hspace{1pt}} % One horizontal pt space
+
+% Moyenne numérique entre deux points de grilles. 
+\newcommand{\xmean}[1]{\overline{#1}^x}
+\newcommand{\ymean}[1]{\overline{#1}^y}
+\newcommand{\zmean}[1]{\overline{#1}^z}
+\newcommand{\xymean}[1]{\overline{#1}^{xy}}
+
+% Tilde over psi
+\newcommand{\tpsi}{\tilde{\psi}}
+\newcommand{\tphi}{\tilde{\phi}}
+
+% Nota Bene env : (\ding{89})
+%\newcommand{\nb}{$\boxed{\text{\footnotesize\EightStarConvex}\pt \mathfrak{N. B.}}$\hspace{4pt}}
+\newcommand{\nb}{\underline{{\footnotesize\EightStarConvex}\pt $\mathfrak{N.B.}$\vphantom{p}}\hspace{3pt}}
+
+
+% Define the nota bene environment
+\usepackage{tcolorbox}
+\newtcolorbox{notabene}{
+     colback=blue!5,
+     colframe=black,
+     boxrule=0.5pt,
+     arc=2pt,
+     left=5pt,
+     right=5pt,
+     top=5pt,
+     bottom=5pt,
+}
+
+
+\newcommand{\cmark}{\ding{52}}
+\newcommand{\xmark}{\ding{55}}
+% ==============================NEWCOMMANDS================================%
+
+
+
+% ==============================PAGE-TITRE=================================%
+% Titlepage 
+\newcommand{\mytitlepage}{
+\begin{titlepage}
+\begin{center}
+{\Huge Contrat Été 2023 \par}
+\vspace{2cm}
+{\Huge \MakeUppercase{\thetitle} \par}
+\vspace{2cm}
+RÉALISÉ DANS LE CADRE\\ D'UN PROJET POUR \par
+\vspace{2cm}
+{\Huge ISMER--UQAR \par}
+\vspace{2cm}
+{\thedate}
+\end{center}
+\vfill
+Rédaction \\
+{\theauthor}\\
+\url{charles-edouard.lizotte@uqar.ca}\\
+ISMER-UQAR\\
+Police d'écriture : \textbf{CMU Serif Roman}
+\end{titlepage}
+}
+% ==============================PAGE-TITRE=================================%
+
+
+
+% =================================ENTÊTE==================================%
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\setlength{\headheight}{13pt}
+\renewcommand{\headrulewidth}{0.025pt} % Ligne horizontale en haut
+
+\fancyhead[R]{\textit{\thetitle}}
+\fancyhead[L]{\ \thepage}
+\fancyfoot[R]{\textit{\theauthor}}
+\fancyfoot[L]{}
+\fancyfoot[C]{} 
+% =================================ENTÊTE==================================%
+\author{Charles-Édouard Lizotte}
+\date{28/11/2023}
+\title{Résumé formel de la recherche}
+\hypersetup{
+ pdfauthor={Charles-Édouard Lizotte},
+ pdftitle={Résumé formel de la recherche},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 27.1 (Org mode 9.6.7)}, 
+ pdflang={French}}
+\begin{document}
+
+
+\section{CICE}
+\label{sec:org397bbb7}
+
+CICE est un modèle de prévision de croissance des glaces.
+Le \href{https://github.com/CICE-Consortium}{GitHub de CICE} est super bien organisé et efficace, il est fortement conseillé de le visiter .
+
+
+\section{Une introduction à la glace}
+\label{sec:orga427062}
+
+Création de Frasier par le vent et le froid.
+Ce dernier s'accumule sur les berges, c'est comme une genre de \emph{slush} qui se concentre jusqu'à devenir de la glace sous-compression et avec le transfert de chaleur avec l'environnement.
+\bigskip
+
+Dans les modèles, la frasier n'existe pas.
+C'est tout simplement quelque chose qui apprait lorsqu'on a un transfert radiatif.
+Donc ça se fait pas advecter, ça ne se fait pas déplacer et ça ne s'accumule pas.\bigskip
+
+Déjà, le but d'ajouter la glace, c'est d'avoir une bonne évaluation de l'albedo.
+
+Donc ça nous prend un modèle de vagues pour comprendre comment la glace se forme.
+
+\begin{equation}
+   \pdv{E} + \vb{c}_g\cdot \gradient{E} = S_{in} + S_{ds} + S_{nl} + S_{ice},
+\end{equation}
+où \(E\) est le momentum des vagues.
+
+Pour ce qui est de la glace, l'équation
+\begin{equation}
+   \rho_i h \qty(\dv{\vb{u}}{t} + f \kvf\times \vb{u}) = \vb{F}_i + \div{\boldsymbol{\sigma}},
+\end{equation}
+décrit la rhéologie.
+\begin{equation}
+   \vb{F_i = \boldsymbol{\tau}_g + \boldsymbol{\tau}_a + \boldsymbol{\tau}_o + \boldsymbol{\tau}_b + \boldsymbol{\tau}_w
+\end{equation}
+
+Donc, lorsque le vent soufle sur l'océan, la glace mobile va se faire pousser et puis entraîne l'océan de manière directe.
+Le transfert d'énergie vers l'océan est plus important lorsqu'il y a des glaces, parce qu'on ne transmet pas d'énergie dans le champ de vagues.
+De plus, la glace agit comme un \emph{drag} direct à la surface, elle se fait emporter par sa forme étrange et du fait qu'elle sort de l'eau, donc elle est directement en contact avec l'atmosphère. \bigskip
+
+
+
+Mettons qu'on simplifie beaucoup (sur la tête d'Elie), le \emph{wave radiatif stress} peut être comparé avec la rhéologie.
+\begin{equation}
+   \boldsymbol{\tau}_w + \div{\boldsymbol{\sigma}} = 0.
+\end{equation}
+
+Équilibre
+\begin{equation}
+   \tau_{wx} = \frac{1}{2} \pdv{P}{x}.
+\end{equation}
+Équilibre
+\begin{equation}
+   \tau_{wy} + \eta \pdv[2]{\bar{v}}{x}
+\end{equation}
+Pas de méthode ou de modèle pour représenter \(\eta\), soit la viscosité de la glace.
+Y'a le modèle d'écoulement granulaire dense. 
+
+\subsection{La rhéologie}
+\label{sec:org00daec5}
+
+Papiers importants dans la théorie de la glace : 
+\begin{itemize}
+\item \emph{Elizabeth Hunke}, 1997, \textbf{An elastic-viscous-plastic (EVP) model for sea ice dynamics}.
+\item Elizabeth Hunke, 2001, \textbf{Viscous-plastic sea ice dynamics with the EVP model \ldots{}}
+\item 
+\end{itemize}
+\end{document}

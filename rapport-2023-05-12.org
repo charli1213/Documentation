@@ -1,8 +1,7 @@
 #+title: Carnet de bord, Université McGill
+#+subtitle: Contrat Été 2023
 #+author: Charles-Édouard Lizotte
 #+date: 12/05/2023
-#+LATEX_CLASS: org-report
-#+CITE_EXPORT: natbib
 #+LANGUAGE: fr
 #+BIBLIOGRAPHY: master-bibliography.bib
 #+OPTIONS: toc:nil title:nil
@@ -33,8 +32,8 @@ Puis à l'aide de ce courant barotrope, on peut construire une vorticité barotr
 
 Mais on peut aussi calculer la vorticité de notre futur courant, de sorte à retrouver
 \begin{align}
-& \zeta^{t+1}_{BT} = \kvf \cdot \qty[\curl{\uu^{t+1}_{BT}}],\bigno\nonumber\\
-& \zeta^{t+1}_{BT} = \kvf \cdot \qty[\curl(\tilde{\uu}_{BT} + \gradient{\phi})],\bigno\nonumber\\
+& \zeta^{t+1}_{BT} = \kvf \cdot \qty[\curl{\uu^{t+1}_{BT}}],\venti\nonumber\\
+& \zeta^{t+1}_{BT} = \kvf \cdot \qty[\curl(\tilde{\uu}_{BT} + \gradient{\phi})],\venti\nonumber\\
 & \zeta^{t+1}_{BT} = \kvf \cdot \qty[\curl{\tilde{\uu}_{BT}}] + \cancelto{0}{\kvf\cdot\qty[\curl{\gradient{\phi}}]}.
 \end{align}
 Comme le rotationnel d'un gradient est toujours nul, on arrive à la conclusion inévitable que

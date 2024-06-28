@@ -1,26 +1,40 @@
 #+title: Résumé formel de la recherche
 #+author: Charles-Édouard Lizotte
 #+date:28/11/2023
-#+LATEX_CLASS: org-report
-#+CITE_EXPORT: natbib
 #+LANGUAGE: fr
 #+BIBLIOGRAPHY: master-bibliography.bib
-#+OPTIONS: toc:nil title:nil
-
+#+OPTIONS: toc:nil title:nil 
+#+LaTeX_class: org-document
 
 \mytitlepage
 \tableofcontents\newpage
 
-* Description du modèle en eau peu profonde
 
-** Équations du mouvement
+* Le modèle en eau peu profonde à plusieurs couches
 
+** Les équations du mouvement
 
-#+caption: Exemple de modèle « shallow water » à 4 couches.
+Le système d'équation décrivant l'écoulement dans le modèle en eau peu profonde (/shallow water/) est exprimé par 
+#+NAME: eq:mvmt
+\begin{equation}
+   \pdv{\uu_k}{t} + \qty(f+\zeta_k)\pt \kvf\times\uu_k = -\gradient{B_k} + \boldsymbol{D}_k + \delta(k,1)\cdot \qty(\frac{\boldsymbol{\tau_a}}{\rho_o\pt H_k})
+   \hspace{0.6cm} \text{où} \hspace{0.6cm} k\pt \in\pt \lbrace 1,\pt2,\cdots ,\pt n_z\rbrace.
+\end{equation}
+où l'indice $k$ représente l'indicateur numérique de la couche et $n_z$ est le nombre total de couches, comme illustré à la figure [[fig:4couches]].
+Dans l'expression précédente, la fonction de Bernouilli $B_k$ -- une quantité qui illustre les transferts entre l'énergie cinétique et potentielle -- est exprimée par
+\begin{equation}
+   B_k =  \rho_k^{-1} p_k^{} + \abs{\uu_k}^2/2.
+\end{equation}
+
+Rapidement, $\uu_k$ est la vitesse du courant horizontal dans la couche $k$, $f$ est la fréquence de Coriolis (en $Rad/s$), $\zeta_k$ la vorticité horizontale dans la couche $k$, la quantité $\boldsymbol{\tau}_a$ représente la contrainte de cisaillement imposée par le vent à la surface, $\rho_k$ est la densité de l'eau dans la couche $k$ et $H_k$ est l'épaisseur fixe moyenne de cette même couche.
+La quantité $p_s$ représente la pression de surface induite par la surface fixe (/rigid lid/) et le vecteur $\vb{D}_k$ décrit la dissipation dans chaque couche, nous y reviendrons bientôt.
+Il est aussi courant d'utiliser la variable $\phi_k = \rho_k^{-1} p_k$ en $\qty[m^2/s^2]$ dans la description du gradient de pression.\bigskip
+
+#+caption: Illustration conceptuelle d'un modèle « shallow water » à n_z = 4 couches. La densité volumique de chaque couche est grossièrement illustrée à l'aide du contrate des couleurs.
 #+NAME: fig:4couches
-\begin{wrapfigure}[18]{r}{0.45\textwidth}
+\begin{wrapfigure}[17]{r}{0.45\textwidth}
 \begin{center}
-\vspace{-2\baselineskip}
+\vspace{-3\baselineskip}
 \begin{tikzpicture}[scale=1.1]
 % Fond : 
 \fill[NavyBlue!5] (0, 0) rectangle (4,-1);
@@ -64,59 +78,45 @@
 \end{wrapfigure}
 
 
-
-Formellement, pour chaque couche, les équations du mouvement du modèle /shallow water/ sont données par
-#+NAME: eq:mvmt
+Dans l'expression du gradient de la fonction de Bernouilli $\gradient{B_k}$, la pression  $p_k$ est décomposée selon la couche, de sorte que
 \begin{equation}
-   \pdv{\uu_k}{t} + \qty(f+\zeta_k)\pt \kvf\times\uu_k = -\gradient{B_k} + \boldsymbol{D}_k + \delta(k,1)\cdot \qty(\frac{\boldsymbol{\tau_a}}{\rho_o\pt H_k})\pt,
-\end{equation}
-où la fonction de Bernouilli $B_k$ est exprimée par
-\begin{equation}
-   B_k = \rho^{-1}_1 p_s + \rho^{-1}_k p_k + \uu_k^2/2.
-\end{equation}
-
-L'indice $k$ représente l'indicateur numérique de la couche.
-$\uu_k$ est la vitesse du courant horizontal, $f$ représente la fréquence de Coriolis (en $Rad/s$), $\zeta_k$ est la vorticité horizontale, $\boldsymbol{\tau}_a$ est la contrainte de cisaillement du vent à la surface, $\rho_k$ est la densité de l'eau dans la couche courante et $H_k$ est l'épaisseur fixe moyenne de cette dernière.
-La quantité $p_s$ représente la pression de surface induite par la surface fixe (/rigid lid/) et le vecteur $\vb{D}_k$ décrit la dissipation dans chaque couche, nous y reviendrons bientôt.
-Il est aussi courant d'utiliser la variable $\phi_k = \rho_1^{-1} p_k$.\bigskip
-
-Dans l'expression du gradient de la fonction de Bernouilli $\gradient{B_k}$, la pression $p_k$ est décomposée selon la couche, de sorte que
-\begin{align}
-   && p_k = \left\lbrace\hspace{0.3cm}\begin{matrix}
+    p_k = \left\lbrace\hspace{0.3cm}\begin{matrix}
      p_s & \text{si}\hspace{0.5cm} k=1 \\
      p_{k-1} + \rho_1 g'_k \eta_k & \text{autrement} \\
-   \end{matrix}\hspace{0.3cm}\right\rbrace &&
-   && \text{où} &&
-   &&g_k' = g \pt\qty(\frac{\rho_k - \rho_{k-1}}{\rho_1}) &&
-\end{align}
+   \end{matrix}\hspace{0.3cm}\right\rbrace 
+\end{equation}
+où
+\begin{equation}
+   g_k' = g \pt\qty(\frac{\rho_k - \rho_{k-1}}{\rho_1}) 
+\end{equation}
 est la gravité réduite de la couche $k$.\bigskip
 
-\nb Rapellons que, *dans notre propre nomenclature, la quantité* « $\eta_k$ » *représente l'élévation de la surface d'une couche* « /k/ », en opposition à la nomenclature de [cite/t/c:@vallis_2006], où $\eta_k$ représente l'élévation du bas de la couche $k$ (voir figure [[fig:4couches]]).\bigskip
+\nb Dans notre propre nomenclature, la quantité « $\eta_k$ » représente l'élévation de la surface d'une couchex « /k/ », en opposition à la nomenclature de [cite/t/c:@vallis_2006], où $\eta_k$ représente l'élévation du bas de la couche $k$.
+En cas de doute, se référer à la figure [[fig:4couches]]).
+Le but est de rester cohérent avec l'article de [cite/t:@chen_2021].
+\bigskip
 
 De leur côté, les termes de dissipation $\boldsymbol{D}_k$ sont exprimés par
 \begin{equation}
    \boldsymbol{D}_k = \underbrace{\tall-A_h\pt\gradient^{\pt4}\pt\uu^{t-1}_k}_\text{Hyperviscosité}
-   \ - \ \underbrace{\tall\delta(k,nz) \cdot r\pt \uu^{t-1}_k.}_{\substack{\text{Frottement}\\\text{au fond}}}
+   \ - \ \underbrace{\tall\delta(k,n_z) \cdot r\pt \uu^{t-1}_k,}_{\substack{\text{Frottement}\\\text{au fond}}}
 \end{equation}
-L'indicateur $t-1$ réfère au pas de temps précédent, car nous utilisons un schéma temporel de type /leapfrog/.
-L'absence d'indice temporel dénote donc le pas de temps courant d'une quantité, soit $\uu^t$ par exemple. 
-Une meilleure description du pas de temps est fournie dans la section [[sec:gradpress]]. \bigskip
-
-
-\nb Mentionnons que l'expression $\delta(k,i)$ réfère ici au delta de Kronecker, soit une /switch/ de valeur 1 lorsque $k=i$ et 0 autrement.
-Mathématiquement
+où l'expression $\delta(k,i)$ réfère ici au delta de Kronecker qui est l'expression mathématique d'une /switch/ dont les valeurs sont 1 lorsque $k=i$ et 0 autrement,
 \begin{equation}
    \delta(k,i) = \left\lbrace \hspace{0.2cm}\begin{matrix}
      \hspace{0.3cm}1 & \text{si}\hspace{0.5cm} k=i, \\
      \hspace{0.3cm}0 & \text{autrement}.
    \end{matrix}\right.
 \end{equation}
+L'indicateur $t-1$ réfère au pas de temps précédent, car nous utilisons un schéma temporel de type /leapfrog/.
+L'absence d'indice temporel dénote donc le pas de temps courant d'une quantité, soit $\uu^t$ par exemple. 
+Une meilleure description du pas de temps est fournie dans la section [[sec:gradpress]]. \bigskip
 
 ** Conservation de la masse
 
-En eau peu profonde, l'équation de conservation de la masse est exprimée par 
+Dans le modèle en eau peu profonde, le système d'équation incarnant la conservation de la masse est donné par
 \begin{equation}
-   \pdv{h_k}{t} =  \divergence(h_k\uu_k)\ +\ \underbrace{\delta(k=1)\cdot \qty(\divergence{\vb{U}^b}),}_{\substack{\text{Autre transport}\\ \text{de surface}}}
+   \pdv{h_k}{t} =  \divergence(h_k\uu_k)\ +\ \underbrace{\delta(k,1)\cdot \qty(\divergence{\vb{U}^b}),}_{\substack{\text{Autre transport}\\ \text{de surface}}}
 \end{equation}
 où $\vb{U}^b$ pourrait représenter n'importe quel transport de surface, tel que le transport de Stokes, le transport d'Ekman, comme dans [cite/t/c:@chen_2021].
 De base, aucune quantité n'est précisée ici, donc gardons $\vb{U}^b = 0$. 
@@ -142,15 +142,16 @@ Conceptuellement, on peut décomposer notre courant en deux sections, soit une c
 La composante barotrope est le courant moyenné par l'épaisseur des couches, tandis que la composante barocline représente l'anomalie par rapport à cette moyenne, de sorte à retrouver
 \begin{subequations}
 \begin{align}
- && \tilde{\uu}_{BT} = \frac{1}{H} \qty(\sum_k^n d_k \tilde{\uu}_k), &&
+ && \tilde{\uu}_{BT} = \frac{1}{H} \qty(\sum_k^n d_k \tilde{\uu}_k) && \text{et}
  && \tilde{\uu}_{BC,\pt k} = \tilde{\uu}_k - \tilde{\uu}_{BT}. &&
 \end{align}
 \end{subequations}
 
 Puis à l'aide de ce courant barotrope, on peut construire une vorticité barotrope
 \begin{equation}
- \tilde{\zeta}_{BT} = \kvf \cdot \qty[\curl{\tilde{\uu}_{BT}}].
+ \tilde{\zeta}_{BT} = \kvf \cdot \qty[\curl{\tilde{\uu}_{BT}}],
 \end{equation}
+qui est définit sur toute la hauteur de la colone d'eau.\bigskip
 
 Mais on peut aussi calculer la vorticité de notre futur courant, de sorte à retrouver
 \begin{align}
@@ -158,14 +159,14 @@ Mais on peut aussi calculer la vorticité de notre futur courant, de sorte à re
 & \zeta^{t+1}_{BT} = \kvf \cdot \qty[\curl(\tilde{\uu}_{BT} + \gradient{\phi_s})],\venti\nonumber\\
 & \zeta^{t+1}_{BT} = \kvf \cdot \qty[\curl{\tilde{\uu}_{BT}}] + \cancelto{0}{\kvf\cdot\qty[\curl{\gradient{\phi_s}}]}.
 \end{align}
-Comme le rotationnel d'un gradient est toujours nul, on arrive à la conclusion inévitable que
+Comme le rotationnel d'unpp gradient est toujours nul, on arrive à la conclusion inévitable que
 \begin{equation}
  \zeta^{t+1}_{BT} = \tilde{\zeta}_{BT}.
 \end{equation}
 La correspondance entre la vorticité relative est donnée par $\zeta = \laplacian{\psi}$, donc on obtient une nouvelle équation de Poisson donnée par
 \begin{equation}
 \boxed{\hspace{0.3cm}
- \laplacian{\psi_{BT}} = \kvf \cdot \qty[\curl{\tilde{\uu}_{BT}}]
+ \laplacian{\psi_{BT}^{t+1}} = \kvf \cdot \qty[\curl{\tilde{\uu}_{BT}}]
  \hspace{0.31cm}\text{avec C.F. Dirichlet}\hspace{0.31cm}
  \eval{\psi_{BT}\pt}_{x_0,\pt x_f} = \ \eval{\psi_{BT}\pt}_{y_0,\pt y_f} = 0.
 \hspace{0.3cm} }
@@ -174,7 +175,7 @@ Donc en trouvant $\psi_{BT}$ à l'aide d'un solveur elliptique (Fishpack dans no
 \begin{align}
 &&u = -\pdv{\psi}{y} &&\text{et} && v = \pdv{\psi}{x}.&&
 \end{align}
-Puis finalement, on retrouve les courants mis-à-jour à l'aide de la relation
+Puis finalement, on recombine les courants mis-à-jour à l'aide de la relation
 \begin{align}
  \uu^{t+1}_k =&\pt \uu_{BT} + \uu_{BC,\pt k} \\
             =&\pt \curl{\qty(\kvf\psi_{BT})} + \uu_{BC,\pt k},
@@ -278,57 +279,163 @@ Ce qui se traduit concrétement par
 \end{subequations}
 
 *** Condition sur les laplaciens et la fonction de courant
-Au murs, on retrouve les quantités $\gradient^2{\uu}$, $\gradient^2{\vv}$, \zeta et $\psi$.
+Au murs, on retrouve les quantités $\gradient^2{\uu}$, $\gradient^2{\vv}$, $\zeta$ et $\psi$.
 Pour se simplifier la tâche et faire comme dans l'article de [cite:@duhaut2006], on applique
 \begin{equation}
    \eval{\gradient^2\pt\uu = \gradient^2\pt\vv = \psi = \zeta =  0\ }_\text{au mur}.
 \end{equation}
 
 
-* Description du couplage avec les vagues
+* Aperçu théorique de l'ajout des vagues au modèle en eau peu profonde
 
-** La dérive de Stokes (Conceptuellement)
+** La dérive de Stokes selon [cite/a/cf:@suzuki2016understanding]
 
-Dans leur résumé, [cite/t/c:@suzuki2016understanding]  définissent la dérive de Stokes $\uu_S$ comme une contribution lagrangienne à notre écoulement, de sorte qu'on peut décrire ce courant lagrangien $\uu_L$ par
+\nb Comme dans la notation de [cite/t/cf:@vallis_2006], le vecteur $\vv = \qty(u,v,w)$ dénote le courant d'un écoulement 3D, tandis que le vecteur $\uu = (u,v)$ est en deux dimensionslp.\bigskip
+
+On peut définir une dérive de Stokes ($\vv_S$) lorsqu'il y a un fort rapports suffisant d'échelle en dimension et en temps entre les vagues et la circulation.
+Comme l'expriment [cite/t/cf:voir @suzuki2016understanding pour un résumé],\smallskip
+#+begin_quote
+   « /For these equations to be valid, there must be a separation of horizontal and temporal scales between the waves and the circulation, and the steepness of the waves must be limited [McWilliams et al., 2004].
+   In the coastal zone, strong variations of currents and surf zones may violate these limitations, but in open water they are more easily satisﬁed. »/\bigskip
+#+end_quote
+ce qui nous permet de /filter/ la dynamique des vagues pour étudier la dérive de Stokes comme une propriété émergente de l'effet des vagues. \bigskip
+
+[cite/t/cf:@suzuki2016understanding]  caractérisent la dérive de Stokes ($\vv_S$) comme un courant lagrangien (/wave-ﬁltered Lagrangian velocity/).
+Dans le langage courant, un *quantité lagrangienne* se fait advecter (p.e. un traceur lagrangien).
+Dans le cadre de l'article, on parle plus d'un *courant lagrangien* ($\vv_L$) comme un courant qui advecte à l'intérieur des équations du mouvement [[eq:wab]].
+Le courant lagrangien est définit comme
 \begin{equation}
-   \uu_L = \uu + \uu_S.
+   \vv_L = \vv + \vv_S.
 \end{equation}
-En somme, 
-+ Ce courant lagrangien $\uu_L$ se substitue dans les termes d'advection, de la même manière qu'un référentiel en mouvement ;
-+ Les termes de Stokes-Coriolis, Craik-Leibovic et la nouvelle fonction de Bernouilli découlent donc directement de l'ajout de ce référentiel en mouvement.
+\nb Autrement dit, les vagues se font advecter, mais la dérive de Stokes non.
+Par contre, elle participe à advecter le courant $\vv$, c'est pourquoi est elle est aussi comptée comme une force qui agit avec Coriolis, aussi.
 
-*** Les équations du mouvement
-Lorsqu'on ajoute cette contribution lagrangienne aux équations du mouvement pour un système Boussinesq et en retrouvant les équations /shallow water/ à l'aide des approximations nécessaire, le système d'équations [[eq:mvmt]] devient plutôt
-#+name: eq:mvmtvagues
+*** Les équations du mouvement WAB
+
+[cite/t/cf:@suzuki2016understanding] divisent l'influence de la dérive de Stokes en 3 effets notoirslp afin de formuler les équations Boussinesq moyennées sur la période des vagues (/wave-averaged Boussinesq equations/) d'où l'acronyme WAB.
+Le système d'équations Boussinesq avec vagues le plus fondamental (autrement dit, le plus clair) est celui illustré à l'équation (5) du même article, soit
+#+name:eq:wab
 \begin{equation}
-   \pdv{\uu}{t} = \qty(f+\zeta)\pt \kvf\ \times\underbrace{\grande\qty(\uu + \uu_S)}_{\substack{\text{Courant} \\ \text{Lagrangien}}} = \underbrace{\grande-\gradient{B_S}}_\text{B.-Stokes} + \ \boldsymbol{D} \underbrace{+ \frac{\boldsymbol{\tau}_o}{\rho_1 H_1}.}_{\substack{\text{Contr. des} \\ \text{Vagues}}},
+   \pdv{\vv}{t}
+   +\underbrace{\qty( \vv_L\cdot\gradient{})\vv\grande}_{\substack{\text{Advection}\\\text{lagrangienne}}}
+   = \underbrace{-\grande\vb{f}\times\vv_L}_{\substack{\text{Force Cori.}\\\text{lagrangienne}}}
+   +\vb{b} + \vb{D} - \gradient p
+   \underbrace{\grande- u_L^j\gradient{u_S^j},}_{\substack{\text{Cisaillement}\\\text{de Stokes}}}
 \end{equation}
-*pour la première couche*.
-L'introduction de $\boldsymbol{\tau}_o$ dans l'équation [[eq:mvmtvagues]] est confirmée par [cite/t/c:@breivik_al_2015], mais nous y reviendrons à la section [[sec:tau]].
-La nouvelle fonction de Bernouilli prenant en compte de la dérive de Stokes est maintenant donnée par
-\begin{align}
-   B_S = B + \uu\cdot\qty(\vb{U}_S/H_k) + \qty(\vb{U}_S^2/H_S^2)/2 + \phi_s,
-\end{align}
-où $\vb{U}_S$ est le transport de Stokes fournit par le modèle de vagues.\bigskip
+où les indices « /j/ » dénotent la sommation d'Einstein.
+Ce système d'équation permet de diviser la dynamique en trois comportements. 
+Comme mentionné par [cite/a/cf:@suzuki2016understanding] :
 
-Si l'on développe les termes de l'équation [[eq:mvmtvagues]], on obtient 
-#+name: eq:mvmtdev
++ *L'advection lagrangienne* (/lagrangian advection/) transfert de l'énergie entre le courant moyen et la turbulence.
++ *La force de Coriolis lagrangienne* et la *force de cisaillement de Stokes* (/Stokes shear force/) transfèrent plutôt de l'énergie des vagues vers la circulation sous-jacente ou la turbulence. 
+
+Il est possible de ré-écrire le système d'équations [[eq:wab]] dans une notation plus propice à développer les équations en eau peu profonde [cite/bc:Voir @suzuki2016understanding équation 1], soit
 \begin{equation}
-   \pdv{\uu_1}{t}
-   \pt + \pt \qty(f+\zeta_1)\pt \kvf\pt \times \uu_1
-   \pt + \pt \underbrace{\grande\zeta_1\pt \kvf\pt \times \uu_S}_{\substack{\text{Craik-}\\ \text{Leibovich}}}
+   \pdv{\vv}{t}
+   +\underbrace{\grande\qty(\curl{\vv}) \times \vv_L}_{\substack{\text{Wave influenced}\\ \text{vertex force}}}
+   +\underbrace{\grande f\pt\kvf\times \vv_L}_{\substack{\text{Force de}\\\text{Stokes-Cori.}}}
+   = \vb{b} + \vb{D} -\gradient{}\Big( p + \underbrace{\frac{1}{2}\abs{\vv_L}^2}_{\substack{\text{Modif.}\\\text{pression}}}\Big).
+\end{equation}
+
+*** Connecter les équations WAB avec le modèle en eau peu profonde
+
+Le modèle en *eau peu profonde* est caractérisé par deux approximations :
++ Dans une couche, la densité volumique de l'eau est constante,
+  \begin{equation}
+     \rho(x,y,z,t) = \rho_o.   
+  \end{equation}
+
++ On assume que les courants verticaux sont très faibles en comparaison des courant horizontaux,
+  \begin{equation}
+     w \ll (u,v) \hspace{0.3cm} \Longrightarrow \hspace{0.3cm} \qty(\dv{w}{t}),\pt w^2 \longrightarrow 0.
+  \end{equation}
+L'équation du courant vertical est réduite à l'expression de la pression hydrostatique ([[eq:hydro-sw]]) -- qu'on intègre verticalement pour obtenir la pression dans la première couche, soit
+#+name:eq:hydro-sw
+\begin{equation}
+   b = \pdv{p}{z} = \rho_o g \hspace{0.3cm}
+   \Rightarrow \hspace{0.3cm} \int_{z}^{\eta_1=0} \qty( \pdv{p}{z} = \rho_o g ) \dd z \hspace{0.3cm}
+   \Rightarrow \hspace{0.3cm} p(x,y,z) = \rho_o gz + p_s(x,y)
+\end{equation}
+où la surface fixe (/rigid lid/), nous permet d'imposer la pression de surface $p_s(x,y)\ \forall \ (x,y)$ comme constante d'intégration en $z$ puisque la surface fixe impose $z=\eta_1=0\ \forall\ (x,y)$.
+Dans notre couche de surface, le gradient de pression est donc décomposé de manière à obtenir,
+\begin{equation}
+   \gradient{p} = \underbrace{\qty[\pdv{}{x}\ivf + \pdv{}{y} \jvf]}_{\gradient_h }p_s + \rho_o g \pt\kvf.
+\end{equation}
+\nb Dans un modèle à plusieurs couches, l'intégration en [[eq:hydro-sw]] donnerait plutôt l'expression générale
+\begin{equation}
+   p_k(x,y,z) = p_s(x,y) + \qty(\sum_{i=1}^{k-1} \rho_i g h_i) + g\rho_k \tilde{z}
+   \hspace{0.6cm} \text{où}\hspace{0.6cm}
+   \tilde{z}\equiv z-\qty(\sum_i^{k-1} h_i).
+\end{equation}
+et le gradient de pression se convertirait en
+\begin{equation}
+   \gradient{p} = \underbrace{\qty[\ivf\pdv{}{x} + \jvf\qty(\pdv{}{y})]}_{\gradient_h }\qty(p_s + g \sum_i^{k-1} \rho_i h_i(x,y))
+   +\rho_k g \pt\kvf,
+\end{equation}
+où l'indice $k$ dénote la couche en question.\bigskip
+
+L'expression décrivant l'écoulement horizontal du modèle en eau peu profonde est ainsi formulée par
+#+name:eq:wasw1
+\begin{equation}
+   \pdv{\uu}{t}
+   \pt + \pt \qty(f+\zeta)\pt \kvf\pt \times \uu
+   \pt + \pt \underbrace{\grande\zeta\pt \kvf\pt \times \uu_S}_{\substack{\text{Craik-}\\ \text{Leibovich}}}
    \pt + \pt \underbrace{\grande f\pt \kvf\pt \times \uu_S  }_{\substack{\text{Stokes-}\\ \text{Coriolis}}}
    \pt = \pt -\gradient{B_S}
    \pt + \pt \ \boldsymbol{D}
-   \pt + \pt \frac{\boldsymbol{\tau}_o}{\rho_1 H_1},
+    \pt \underbrace{+\pt\frac{\boldsymbol{\tau}_o}{\rho H},}_{\substack{\text{Modulation}\\ \text{du vent}}}
+\end{equation}
+où la nouvelle fonction de Bernouilli prenant compte de la dérive de Stokes ($B_S$) est exprimée par
+\begin{align}
+   B_S = B + \uu\cdot\qty(\vb{U}_S/H_k) + \qty(\vb{U}_S^2/H_S^2)/2 + \phi_s,
+\end{align}
+où $\vb{U}_S$ est le transport de Stokes fournit par le modèle de vagues et $\phi_s\equiv p_s/\rho_o$.
+L'introduction de $\boldsymbol{\tau}_o$ dans l'équation [[eq:wasw1]] est confirmée par [cite/t/c:@breivik_al_2015], mais nous y reviendrons à la section [[sec:tau]].
+\bigskip
+
+À plusieurs couches, les équations horizontales du modèle en eau peu profonde sont exprimées par
+#+name: eq:mvmtdev
+\begin{equation}
+   \pdv{\uu_k}{t}
+   \pt + \pt \qty(f+\zeta_k)\pt \kvf\pt \times \uu_k
+   \pt + \pt \underbrace{\delta(k,1)\cdot\grande\qty(f + \zeta_1)\pt \kvf\pt \times \uu_S}_{\substack{\text{Stokes-Coriolis}\\ \text{et Craik-Leibovich}}}
+   \pt = \pt -\gradient{B_{S,k}}
+   \pt + \pt \ \boldsymbol{D}_k
+   +\pt \underbrace{\delta(k,1)\cdot\qty(\frac{\boldsymbol{\tau}_o}{\rho_k H_k}),}_{\substack{\text{Modulation du}\\ \text{vent par vagues}}}
 \end{equation}
 ce qui laisse apparaître deux termes importants, soient Stokes-Coriolis et Craik-Leibovich.
 D'autres termes associés à la dérive de Stokes pourraient être implémentés (voir [cite/t/c:@wu_breivik_2019] par exemple) si l'on considère aussi la vorticité associée à la dérive de Stokes dans l'équation [[eq:mvmtdev]], mais ça ne fera pas partie de notre étude.
+La fonction de Bernouilli serait exprimée par
+\begin{align}
+   & B_{S,k} = B_k + \delta(k,1)\cdot\qty(\tall\uu_1\cdot\vb{u}_S + \vb{u}_S^2/2), \\
+   & B_k = p_k + \vb{u}_k^2/2.
+\end{align}
+
 
 *** Conservation de la masse
 
-L'article de [cite/t/c:@wu_breivik_2019] est assez explicite sur l'addition du transport de Stokes dans l'équation de conservation de la masse.
-Sans faire la démarche, on peut obtenir l'équation de conservation de la masse en intégrant la composante verticale des équations du mouvement Boussinesq et en appliquant l'approximation hydrostatique, de sorte que
+On peut obtenir l'équation de conservation de la masse dans chaque couche en intégrant l'équation d'incompressibilité.
+Rapidement,
+\begin{align}
+   \nonumber&\qty(\div{\vv}) = \qty(\pdv{w}{z}) + \qty(\pdv{u}{x} + \pdv{v}{y}) = 0,\\
+   \rhd\hspace{0.5cm}\venti\nonumber & \int_{z_{bot}}^{z_{top}} \qty{\qty(\pdv{w}{z}) + \qty(\pdv{u}{x} + \pdv{v}{y}) = 0}\ \dd z,\\
+   \rhd\hspace{0.5cm}\venti\nonumber & \underbrace{\grande w(z_{top}) - w(z_{bot})}_{\sfrac{\partial h_k}{\partial t}} + \int_{z_{bot}}^{z_{top}} \qty(\div{\uu_k}) = 0,\\
+   \rhd\hspace{0.5cm}\venti\nonumber & \pdv{h_k}{t} + \div(\int_{z_{bot}}^{z_{top}}\uu_k) = 0,\\
+   \rhd\hspace{0.5cm}\venti & \boxed{\ \pdv{h_k}{t} + \div(h_k \uu_k) = 0,\ }
+\end{align}
+où $z_{top}$ et $z_{bot}$ décrivent respectivement le haut et le bas de la couche d'eau en question.\bigskip
+
+\begin{notabene}
+   \nb L'expression
+   \begin{equation}
+      \int_{z_{bot}}^{z_{top}} \qty(\div{\uu_k}) = \div(\int_{z_{bot}}^{z_{top}}\uu_k) = \div(h_k\uu_k),
+   \end{equation}
+   est valide pour deux raison : les variables $z$ et $x,y$ sont indépendantes et le courant est homogène dans chaque couches comme approximation dans le modèle en eau peu profonde.
+\end{notabene}
+
+  
+L'article de [cite/t/c:@wu_breivik_2019] est assez explicite sur l'addition du transport de Stokes à l'intérieur de l'équation de conservation de la masse.\bigskip
+
 \begin{equation}
    \pdv{h_k}{t} =  \divergence(h_k\uu_k)\ +\ \underbrace{\delta\pt(k,1)\cdot \qty(\divergence{\vb{U}_S}).}_{\substack{\text{Transport}\\ \text{de Stokes}}}
 \end{equation}
@@ -370,25 +477,29 @@ C'est mentionné explicitement dans la sous-routine du modèle /w3src3md.ftn/, m
 #+NAME: tab:output
 #+CAPTION: Tableau d'investigation récapitulatif des outputs de Wavewatch III.
 #+attr_latex: :align lll|lc|c
-|-----------------+------------+----------------------------------------------+----------+-------------+--------------------------|
-|-----------------+------------+----------------------------------------------+----------+-------------+--------------------------|
-| *Documentation* |            |                                              | *Code*   |             | *Litérature*             |
-| Nom de code     | output tag | Description (ww3 shel.inp)                   | Variable | Unitées     | Symbole                  |
-|-----------------+------------+----------------------------------------------+----------+-------------+--------------------------|
-| UST             | UST        | /Friction velocity/                          | UST      | ms^{-1}     | $\ust$                   |
-| CHARN           | CHA        | /Charnok parameter/                          | CHARN    | --          | \alpha                   |
-| CGE             | CGE        | /Energy flux/                                | CGE      | Wm^{-2}     | $C_gE$                   |
-| PHIAW           | FAW        | /Air-sea energy flux/                        | PHIAW    | Wm^{-2}     | ?                        |
-| TAUWI[X,Y]      | TAW        | /Net wave-supported stress/                  | TAUWIX/Y | m^{2}s^{-2} | $\tau_w$  ou $\tau_{IN}$ |
-| TAUWN[X,Y]      | TWA        | /Negative part of the wave-supported stress/ | TAUWNX/Y | m^{2}s^{-2} | $\tau_w<0$               |
-|-----------------+------------+----------------------------------------------+----------+-------------+--------------------------|
-| TAUO[X,Y]       | TWO        | /Wave to ocean momentum flux/                | TAUOX/Y  | m^{2}s^{-2} | $\tau_{DS}$              |
-| PHIOC           | FOC        | /Wave to ocean energy flux/                  | PHIOC    | Wm^{-2}     | ?                        |
-| TUS[X,Y]        | TUS        | /Stokes transport/                           | TUSX/Y   | m^{2}s^{-1} | $\vb{U}_S$               |
-| USS[X,Y]        | USS        | /Surface Stokes drift/                       | USSX/Y   | m s^{-1}    |    $\uu_S$               |
-|-----------------+------------+----------------------------------------------+----------+-------------+--------------------------|
+|---------------+------------+--------------------------------------------+-------------+-------------+--------------------------|
+|---------------+------------+--------------------------------------------+-------------+-------------+--------------------------|
+| *Documentation* | *de WW3*     | (Voir /ww3 shel.inp/)                        | *Code de WW3* |             | *Litérature*               |
+|---------------+------------+--------------------------------------------+-------------+-------------+--------------------------|
+| Nom de code   | Output tag | Description                                | Variable    | Unitées     | Symbole                  |
+|---------------+------------+--------------------------------------------+-------------+-------------+--------------------------|
+| UST           | UST        | /Friction velocity/                          | UST         | ms^{-1}     | $\ust$                   |
+| CHARN         | CHA        | /Charnok parameter/                          | CHARN       | --          | \alpha                   |
+| CGE           | CGE        | /Energy flux/                                | CGE         | Wm^{-2}     | $C_gE$                   |
+| PHIAW         | FAW        | /Air-sea energy flux/                        | PHIAW       | Wm^{-2}     | ?                        |
+| TAUWI[X,Y]    | TAW        | /Net wave-supported stress/                  | TAUWIX/Y    | m^{2}s^{-2} | $\tau_w$  ou $\tau_{IN}$ |
+| TAUWN[X,Y]    | TWA        | /Negative part of wave-supported stress/ | TAUWNX/Y    | m^{2}s^{-2} | $\tau_w<0$               |
+|---------------+------------+--------------------------------------------+-------------+-------------+--------------------------|
+| TAUO[X,Y]     | TWO        | /Wave to ocean momentum flux/                | TAUOX/Y     | m^{2}s^{-2} | $\tau_{DS}$              |
+| PHIOC         | FOC        | /Wave to ocean energy flux/                  | PHIOC       | Wm^{-2}     | ?                        |
+| TUS[X,Y]      | TUS        | /Stokes transport/                           | TUSX/Y      | m^{2}s^{-1} | $\vb{U}_S$               |
+| USS[X,Y]      | USS        | /Surface Stokes drift/                       | USSX/Y      | m s^{-1}    | $\uu_S$                  |
+|---------------+------------+--------------------------------------------+-------------+-------------+--------------------------|
+|---------------+------------+--------------------------------------------+-------------+-------------+--------------------------|
 
-\newpage
+
+
+* Techniques numériques en lien avec le couplage
 
 ** Interpolation géométrique
 #+NAME: fig:interp
@@ -516,6 +627,11 @@ Mathématiquement, ça se traduit par
    \sum_{\substack{k=1 + (i-1)\times R\\ l=1 + (j-1)\times R}}^{i\times R,\pt j\times R}
    (u_{\pt k,\pt l},\pt v_{\pt k,\pt l}),
 \end{equation}
+
+\begin{align}
+   &\int_0^1 x^2 \dd x = \sfrac{1}{3} && \sum_{k=0}^\infty \frac{1}{k^2} = \frac{\pi^2}{6}. && \mathcal{ABC}\mathfrak{ABC}\mathbb{CNQP} &
+\end{align}
+
 mais ça revient juste à faire la moyenne dans un carré de R^2 = 3\times 3, comme on passe de la grosse grille à la petite grille (comme on peut le voir à la figure [[fig:interp]]a). \bigskip
 
 \nb L'indice en exposant réfère à la grille de résolution plus faible (donc celle qui sera envoyée à Wavewatch III) et l'indice au pied réfère à la grille à haute résolution, soit celle du modèle /shallow water/.
@@ -558,7 +674,7 @@ On effectue l'étape inverse lorsqu'on reçoit les champs de Wavewatch III.
 Avant de réaliser l'échange des champs par canal MPI, l'ordre des étapes est le suivant :
 1. Le modèle /shallow water/ interpole les champs de courant de la première couche $(u_1,v_1)$ sur une grille A :
    \begin{equation}
-      (\pt u_1^{\pt C},v_1^{\pt C}\pt) \hspace{0.3cm}\Longmapsto \hspace{0.3cm} (\pt u_1^{\pt A},v_1^{\pt A}\pt),
+      (\pt u_1^{\pt C},v_1^{\pt C}\pt) \hspace{0.3cm}\longmapsto \hspace{0.3cm} (\pt u_1^{\pt A},v_1^{\pt A}\pt),
    \end{equation}
 2. Le modèle /shallow water/ fait un moyennage des cases pour atteindre la résolution réduite de Wavewatch III (voir équation [[eq:moyenne]]). 
 3. On envoit le courant à faible résolution sur une grille A à Wavewatch III par un canal MPI.
@@ -572,7 +688,7 @@ Avant de réaliser l'échange des champs par canal MPI, l'ordre des étapes est 
         \qty(u_*^{\pt A},v_*^{\pt A}),   &
         \qty(U_S^{\pt A},V_S^{\pt A})
       \end{matrix}}
-      \hspace{0.3cm}\Longmapsto \hspace{0.3cm}\qty{\
+      \hspace{0.3cm}\longmapsto \hspace{0.3cm}\qty{\
       \begin{matrix}
         \qty(\tau_{x,IN}^{\pt C},\tau_{y,IN}^{\pt C}\pt), &
         \qty(\tau_{x,DS}^{\pt C},\tau_{y,DS}^{\pt C}\pt), \\
@@ -870,4 +986,5 @@ La compilation du modèle /Wavewatch III/ n'est nécessaire qu'une seule fois --
 ** Rouler les modèles en MPI 
 
 \newpage
+
 #+print_bibliography:

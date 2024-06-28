@@ -1,0 +1,486 @@
+% Created 2024-06-16 Sun 00:13
+% Intended LaTeX compiler: pdflatex
+ocumentclass[10pt]{article}% =================================BASE====================================%
+\documentclass[10pt]{report}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry} % Marges
+\usepackage[T1]{fontenc} % Nécessaire avec FrenchBabel
+\usepackage[utf8]{inputenc} % Important pour symboles Francophones, é,à,etc
+\usepackage{csquotes} % Recommandé par PDFLatex lors de la compilation. 
+
+
+% Calligraphie
+%\usepackage{lmodern} % Ça, ça set latin modern
+%\usepackage{mathrsfs} %Permet la command \mathscr (Lettres attachées genre) \mathscr(B)
+
+% Calligraphie
+%\usepackage{pxfonts} % Met le texte ET les maths en Palatino + donne accès à des symboles math
+\usepackage{palatino} % Cette commande met seulement le texte en police palatino
+\usepackage{lmodern} % Pour les maths?
+% Use lmodern for sans-serif
+\usepackage{mathrsfs} % Permet la command \mathscr (Lettres attachées genre) \mathscr(B)
+
+
+
+
+
+% Bibliographie
+%\usepackage[backend=bibtex,style=phys,sorting=ynt]{biblatex}
+\usepackage[backend=biber,sorting=ynt,style=ieee]{biblatex}
+\addbibresource{/home/charlesedouard/Desktop/Travail/Documentation/master-bibliography.bib}
+
+
+
+\usepackage{amsmath, amssymb, amsthm} % Symb. math. (Mathmode+Textmode) + Beaux théorèmes.
+\usepackage{mathtools,cancel,xfrac} % Utilisation de boîtes \boxed{} + \cancelto{}{}, xfrac
+\usepackage{graphicx, wrapfig} % Géstion des figures.
+\usepackage{hyperref} % Permettre l'utilisation d'hyperliens.
+\usepackage{color} % Permettre l'utilisation des couleurs.
+\usepackage{colortbl} % Color tables
+\usepackage[dvipsnames]{xcolor} % Couleurs avancées.
+\usepackage{titling} % Donne accès à \theauthor, \thetitle, \thedate
+
+% Physique
+\usepackage{physics} % Meilleur package pour physicien. 
+
+
+% Style
+\usepackage{lipsum} % For fun
+\usepackage{tikz} % Realisation de figures TIKZ.
+\usepackage{empheq} % Boite autour de MULTIPLE équations
+\usepackage{bbding}
+
+% Français
+\usepackage[french]{babel} % Environnements en Français.
+% ==============================BASE-(END)=================================%
+
+
+
+% ================================SETTINGS=================================%
+% Pas d'indentation en début de paragraphe :
+\setlength\parindent{0pt}
+\setlength{\parskip}{0.15cm}
+
+% Tableaux/tabular
+% Espace vertical dans les tabular/tableaux
+\renewcommand{\arraystretch}{1.2}
+% Couleur des tableaux/tabular
+\rowcolors{2}{violet!5}{}
+
+% Couleurs de hyperliens :
+\definecolor{mypink}{RGB}{147, 0, 255}
+\hypersetup{colorlinks, 
+             filecolor=mypink,
+             urlcolor=mypink, 
+             citecolor=mypink, 
+             linkcolor=mypink, 
+             anchorcolor=mypink}
+
+
+\usepackage{titling} % Donne accès à \theauthor, \thetitle, \thedate
+
+% Physique
+\usepackage{physics} % Meilleur package pour physicien. 
+
+
+% Style
+\usepackage{lipsum} % For fun
+\usepackage{tikz} % Realisation de figures TIKZ.
+\usepackage{empheq} % Boite autour de MULTIPLE équations
+
+% Français
+\usepackage[french]{babel} % Environnements en Français.
+% ==============================BASE-(END)=================================%
+
+
+
+
+
+% ================================SETTINGS=================================%
+% Pas d'indentation en début de paragraphe :
+\setlength\parindent{0pt}
+\setlength{\parskip}{0.15cm}
+
+% Tableaux/tabular
+% Espace vertical dans les tabular/tableaux
+\renewcommand{\arraystretch}{1.2}
+% Couleur des tableaux/tabular
+\rowcolors{2}{violet!5}{}
+
+% Couleurs de hyperliens :
+\definecolor{mypink}{RGB}{147, 0, 255}
+\hypersetup{colorlinks, 
+             filecolor=mypink,
+             urlcolor=mypink, 
+             citecolor=mypink, 
+             linkcolor=mypink, 
+             anchorcolor=mypink}
+
+
+% Numéros d'équations suivent les sections :
+\numberwithin{equation}{section} 
+
+% Les « captions » sont en italique et largeur limitée
+\usepackage[textfont = it]{caption} 
+\captionsetup[wrapfigure]{margin=0.5cm}
+
+% Retirer l'écriture en gras dans la table des matières
+\usepackage{tocloft}
+\renewcommand{\cftsecfont}{\normalfont}
+\renewcommand{\cftsecpagefont}{\normalfont}
+
+% Change bullet style
+\usepackage{pifont}
+\usepackage{enumitem}
+%\setlist[itemize,1]{label=\ding{224}}
+\setlist[itemize,1]{label=\ding{239}}
+\renewcommand{\boxtimes}{\blacksquare}
+% ================================SETTINGS=================================%
+
+
+
+% ==============================NEWCOMMANDS================================%
+
+% Vecteurs de base :
+\newcommand{\nvf}{\vb{\hat{n}}}
+\newcommand{\ivf}{\vb{\hat{i}}}
+\newcommand{\jvf}{\vb{\hat{j}}}
+\newcommand{\kvf}{\vb{\hat{k}}}
+\newcommand{\uu}{\vb{u}}
+\newcommand{\vv}{\vb{v}}
+\newcommand{\ust}{\vb{u}_{\ast}}
+
+% Physics empty spaces 
+\newcommand{\typical}{\vphantom{A}}
+\newcommand{\tall}{\vphantom{A^{x^x}_p}}
+\newcommand{\grande}{\vphantom{\frac{1}{xx}}}
+\newcommand{\venti}{\vphantom{\sum_x^x}}
+\newcommand{\pt}{\hspace{1pt}} % One horizontal pt space
+
+% Moyenne numérique entre deux points de grilles. 
+\newcommand{\xmean}[1]{\overline{#1}^x}
+\newcommand{\ymean}[1]{\overline{#1}^y}
+\newcommand{\zmean}[1]{\overline{#1}^z}
+\newcommand{\xymean}[1]{\overline{#1}^{xy}}
+
+% Tilde over psi
+\newcommand{\tpsi}{\tilde{\psi}}
+\newcommand{\tphi}{\tilde{\phi}}
+
+% Nota Bene env : (\ding{89})
+%\newcommand{\nb}{$\boxed{\text{\footnotesize\EightStarConvex}\pt \mathfrak{N. B.}}$\hspace{4pt}}
+\newcommand{\nb}{\underline{{\footnotesize\EightStarConvex}\pt $\mathfrak{N.B.}$\vphantom{p}}\hspace{3pt}}
+
+
+% Define the nota bene environment
+\usepackage{tcolorbox}
+\newtcolorbox{notabene}{
+     colback=blue!5,
+     colframe=black,
+     boxrule=0.5pt,
+     arc=2pt,
+     left=5pt,
+     right=5pt,
+     top=5pt,
+     bottom=5pt,
+}
+
+
+\newcommand{\cmark}{\ding{52}}
+\newcommand{\xmark}{\ding{55}}
+% ==============================NEWCOMMANDS================================%
+
+
+
+% ==============================PAGE-TITRE=================================%
+% Titlepage 
+\newcommand{\mytitlepage}{
+\begin{titlepage}
+\begin{center}
+{\Huge Contrat Été 2023 \par}
+\vspace{2cm}
+{\Huge \MakeUppercase{\thetitle} \par}
+\vspace{2cm}
+RÉALISÉ DANS LE CADRE\\ D'UN PROJET POUR \par
+\vspace{2cm}
+{\Huge ISMER--UQAR \par}
+\vspace{2cm}
+{\thedate}
+\end{center}
+\vfill
+Rédaction \\
+{\theauthor}\\
+\url{charles-edouard.lizotte@uqar.ca}\\
+ISMER-UQAR\\
+Police d'écriture : \textbf{CMU Serif Roman}
+\end{titlepage}
+}
+% ==============================PAGE-TITRE=================================%
+
+
+
+% =================================ENTÊTE==================================%
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\setlength{\headheight}{13pt}
+\renewcommand{\headrulewidth}{0.025pt} % Ligne horizontale en haut
+
+\fancyhead[R]{\textit{\thetitle}}
+\fancyhead[L]{\ \thepage}
+\fancyfoot[R]{\textit{\theauthor}}
+\fancyfoot[L]{}
+\fancyfoot[C]{} 
+% =================================ENTÊTE==================================%
+\author{Charles-Édouard Lizotte}
+\date{29/09/2023}
+\title{Carnet de bord, Université McGill}
+\hypersetup{
+ pdfauthor={Charles-Édouard Lizotte},
+ pdftitle={Carnet de bord, Université McGill},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 27.1 (Org mode 9.6.7)}, 
+ pdflang={French}}
+\begin{document}
+
+\mytitlepage
+\tableofcontents\newpage
+
+\section{{\bfseries\sffamily TODO} Résoudre le problème de densité [83\%] -- \textit{<2023-09-25 Mon>}}
+\label{sec:orgc182ea7}
+\begin{wrapfigure}[12]{r}{0.4\textwidth}
+\vspace{-\baselineskip}
+\begin{center}
+\begin{tikzpicture}   
+   \draw[dotted] (0,0) grid (4.5,4.5);
+   \draw[->] (0,0) -- (4.5,0);
+   \draw[->] (0,0) -- (0,4.5);
+   \draw[blue] (0,0) -- (4,4);
+  % x-axis
+   \draw (1,-0.3) node [] {$\sfrac{1}{nz}$};
+   \draw (2,-0.3) node [] {$\sfrac{2}{nz}$};
+   \draw (3,-0.3) node [] {$\cdots$};
+   \draw (4,-0.3) node [] {$\sfrac{nz}{nz}$};
+  % y-axis
+   \draw (-0.4,1) node [] {$\sfrac{1}{nz}$};
+   \draw (-0.4,2) node [] {$\sfrac{2}{nz}$};
+   \draw (-0.4,3) node [] {$\cdots$};
+   \draw (-0.4,4) node [] {$\sfrac{nz}{nz}$};
+\end{tikzpicture}
+\bigskip
+\begin{tikzpicture}   
+   \draw[dotted] (0,0) grid (4.5,4.5);
+   \draw[->] (0,0) -- (4.5,0);
+   \draw[->] (0,0) -- (0,4.5);
+  % x-axis
+   \draw (1,-0.3) node [] {$\sfrac{1}{nz}$};
+   \draw (2,-0.3) node [] {$\sfrac{2}{nz}$};
+   \draw (3,-0.3) node [] {$\cdots$};
+   \draw (4,-0.3) node [] {$\sfrac{nz}{nz}$};
+  % y-axis
+   \draw (-0.4,1) node [] {$\sfrac{1}{nz}$};
+   \draw (-0.4,2) node [] {$\sfrac{2}{nz}$};
+   \draw (-0.4,3) node [] {$\cdots$};
+   \draw (-0.4,4) node [] {$\sfrac{nz}{nz}$};
+   \draw[scale=1,domain=0:4,smooth,variable=\x,blue] plot ({\x},{1.1*exp(2*\x/4)/2.718+1.0});
+\end{tikzpicture}
+\end{center}
+\caption{\label{org281d19c}Discrétisation des épaisseurs de couches pour un cas linéaire et exponentiel.}
+\end{wrapfigure}
+
+
+On va tout faire ça d'un coup.
+
+\begin{itemize}
+\item[{$\boxtimes$}] \textbf{Transférer le code du modèle \emph{shallow water} sur Oxygen à l'aide de \emph{git} ;}
+
+Ça fonctionne très bien, tous les compilateurs sont installés.
+J'ai parlé à Ambrish et tout devrait être en ordre, techniquement.
+Il m'a aussi donné accès au \emph{storage} de Oxygen.\bigskip
+
+\item[{$\boxtimes$}] \textbf{Création d'un lanceur \emph{bash} pour tester entre 2 et 10 couches sur Oxygen ;}
+
+Essentiellement, il fallait aussi reconfigurer les tous les code simples qui avaient été réalisés pendant la maîtrise.
+Ça m'a permis de me remettre à jour en \emph{bash}.
+Entre autres, les codes à remetter à jour étaient
+\begin{itemize}
+\item \emph{create case oxygen} ;
+\item \emph{create case local} ;
+\item \emph{compile model}.\bigskip
+\end{itemize}
+
+\item[{$\boxtimes$}] \textbf{Écriture d'un « decay scale » pour la densité ;}
+
+On se souvient que le \emph{decay scale} devrait donner une stratification telle que
+\begin{align}
+\label{eq:org62603f1}
+  && \rho(z) = \rho_0 - \tilde{\rho}\exp{\ z/\chi\tall\ } && \text{où} && \chi = 1000\ [m]. &&
+\end{align}
+Après un peu de \emph{fuck around and find out}, j'ai \emph{fine tunné} les paramètres de l'équation \ref{eq:org62603f1} pour obtenir une estimation réaliste de la densité de l'océan.
+Ces paramètes se retrouvent dans le tableau \ref{tab:org8686eb4}.\bigskip
+\end{itemize}
+
+\begin{table}[htbp]
+\caption{\label{tab:org8686eb4}Résumé des paramètres utilisés dans notre configuration pour la densité (eq. \ref{eq:org62603f1}).}
+\centering
+\begin{tabular}{lccc}
+\hline
+\hline
+Description & Symbole & Valeur & Unitées\\[0pt]
+\hline
+Amplitude de l'exponentielle & \(\tilde{\rho}\) & 3.00 & kg\(\cdot\) m\textsuperscript{-3}\\[0pt]
+Densité maximale & \(\rho\)\textsubscript{0} & 1028 & kg\(\cdot\) m\textsuperscript{-3}\\[0pt]
+Longueur de décroissance (\emph{decay scale}) & \(\chi\) & 1000 & m\\[0pt]
+profondeur & z & --- & m\\[0pt]
+\hline
+\end{tabular}
+\end{table}
+
+\begin{itemize}
+\item[{$\boxtimes$}] \textbf{Créer un mécanisme qui détermine l'épaisseur des couches ;}
+
+Techniquement, on veut des épaisseurs qui croîent exponentiellement en fonction de la profondeur, comme illustré à la figure \ref{org281d19c}.
+\end{itemize}
+
+
+\begin{itemize}
+\item[{$\boxtimes$}] \textbf{Lancement des runs sur Oxygen ;}
+
+Pour se connecter sur Oxygen,
+\begin{verbatim}
+     ssh -Y celizotte@jump.meteo.mcgill.ca
+\end{verbatim}
+À partir de là, il est possible d'ouvrir Oxygen à l'aide de la commande
+\begin{verbatim}
+     ssh -Y oxygen.meteo.mcgill.ca
+\end{verbatim}
+Il ne faut pas oublier le -Y pour pouvoir ouvrir des figures.
+
+\item[{$\square$}] \textbf{Adaptation du paramètre de frottement au fond (\(r_{drag}\)) ;}
+
+Selon le résultat de la fonction de courant barotrope moyennée dans le temps, il serait pertinent d'obtenir une énergie similaire dans tous les cas.
+Plus la couche est épaisse, plus on retire du courant, donc il faudrait que ce paramètre soit modulable en fonction de l'épaisseur de cette dernière.
+\end{itemize}
+
+Une fois ces quatre étapes accomplies, le \emph{set-up} de référence sera assez solide.
+On espère seulement qu'il n'y aura pas trop d'erreur numérique et/ou de couches qui arrivent à zéro.
+
+\subsection{Premier test -- \textit{<2023-09-26 Tue>}}
+\label{sec:orge31fb11}
+
+Toutes les tests ont eu des couches qui ont atteinte des épaisseurs nulles.
+La stratification était définie selon l'équation \ref{eq:org62603f1}.
+
+\begin{table}[htbp]
+\caption{\label{tab:orge0439a8}Résumé des paramètres utilisés dans notre configuration pour la densité (eq. \ref{eq:org62603f1}).}
+\centering
+\begin{tabular}{lccc}
+\hline
+\hline
+Description & Symbole & Valeur & Unitées\\[0pt]
+\hline
+Amplitude de l'exponentielle & \(\tilde{\rho}\) & 4.00 & kg\(\cdot\) m\textsuperscript{-3}\\[0pt]
+Densité maximale & \(\rho\)\textsubscript{0} & 1028 & kg\(\cdot\) m\textsuperscript{-3}\\[0pt]
+Longueur de décroissance (\emph{decay scale}) & \(\chi\) & 1000 & m\\[0pt]
+profondeur & z & --- & m\\[0pt]
+\hline
+\end{tabular}
+\end{table}
+
+Ce qui nous donnait des paramètres de tourbillons énoncés dans le tableau \ref{tab:org5a36f29}. 
+
+\begin{table}[htbp]
+\caption{\label{tab:org5a36f29}Portrait des ondes barocliniques retrouvées dans nos test  associées à la stratification énoncée au tableau \ref{tab:orge0439a8}.}
+\centering
+\begin{tabular}{cccccc}
+\hline
+\hline
+Nombre de couches & 2 & 4 & 6 & 8 & 10\\[0pt]
+\hline
+ & \(\infty\) & \(\infty\) & \(\infty\) & \(\infty\) & \(\infty\)\\[0pt]
+c\textsubscript{cb} & 3.4 & 3.1 & 3.1 & 3.1 & 3.1\\[0pt]
+[m\(\cdot\) s\textsuperscript{-1}] &  & 1.7 & à & à & à\\[0pt]
+ &  & 1.2 & 1.1 & 0.4 & 0.4\\[0pt]
+\hline
+ & \(\infty\) & \(\infty\) & \(\infty\) & \(\infty\) & \(\infty\)\\[0pt]
+L\textsubscript{d} & 48.0 & 16.7 & 8.9 & 5.7 & 4.2\\[0pt]
+[km] &  & à & à & à & à\\[0pt]
+ &  & 44.6 & 44.2 & 44.2 & 44.1\\[0pt]
+\hline
+\end{tabular}
+\end{table}
+
+Bref, les trosi dernières expériences ont des niveaux qui ont atteint une épaisseur nulle.
+On se lance donc dans le prochain test.
+
+\subsection{Tests subséquents -- \textit{<2023-09-27 Wed>}}
+\label{sec:orga17ea7f}
+
+On augmente de nouveau la stratification en espérant que ça permette de retenir un peu l'épaisseur des couches.
+je ne crois pas qu'on soit rendu au point critique où l'instabilité numérique apparaisse. 
+\begin{table}[htbp]
+\caption{\label{tab:org28ec2e3}Résumé des paramètres utilisés dans notre configuration pour la densité (eq. \ref{eq:org62603f1}).}
+\centering
+\begin{tabular}{lccc}
+\hline
+\hline
+Description & Symbole & Valeur & Unitées\\[0pt]
+\hline
+Amplitude de l'exponentielle & \(\tilde{\rho}\) & 5.00 & kg\(\cdot\) m\textsuperscript{-3}\\[0pt]
+Densité maximale & \(\rho\)\textsubscript{0} & 1028 & kg\(\cdot\) m\textsuperscript{-3}\\[0pt]
+Longueur de décroissance (\emph{decay scale}) & \(\chi\) & 1000 & m\\[0pt]
+profondeur & z & --- & m\\[0pt]
+\hline
+\end{tabular}
+\end{table}
+
+On a aussi fait des test pour \(\tilde{\rho}\) de 6.00 et 7.00, mais sans succès (Voir tableau \ref{tab:org41df7e9}).
+\textbf{Toutes les runs} ont atteint des épaisseurs nulles à un point où un autre.
+Il semble qu'on atteint des courants de surface de 4.5 m/s, ce qui est \textbf{très curieux}.
+
+\begin{table}[htbp]
+\caption{\label{tab:org41df7e9}Nombre d'outputs avant que l'épaisseur de la première couche devienne nulle.}
+\centering
+\begin{tabular}{cccccc}
+\hline
+\hline
+Paramètre \(\tilde{\rho}\) & 2 couches & 4 couches & 6 couches & 8 couches & 10 couches\\[0pt]
+\hline
+5 & 11114 & 4660 & 607 & 376 & 297\\[0pt]
+6 & 11069 & 4451 & 771 & 387 & 304\\[0pt]
+7 & 11632 & 4188 & 980 & 399 & 311\\[0pt]
+\hline
+\end{tabular}
+\end{table}
+
+Au devant de ces échecs, j'ai relancé 9 runs à \emph{nz} = (2 6 8) et un multiplicateur du coefficient de friction de \(r_{drag}\) = (2 4 6).
+
+\section{Travail sur les runs couplées [0\%] -- \textit{<2023-09-28 Thu>}}
+\label{sec:org66b4707}
+
+\subsection{Installation de Wavewatch III sur Oxygen [33\%]}
+\label{sec:orgb1b5009}
+\begin{itemize}
+\item[{$\boxtimes$}] \textbf{Extraction du modèle depuis le site web de la NOAA ;}
+Comme mentionné dans le \href{rapport-2023-09-22.pdf}{rapport précédent}, on peut trouver le modèle sur le site \url{https://polar.ncep.noaa.gov/waves/wavewatch/distribution/}.
+Les indicatifs sont donnés par
+\begin{verbatim}
+    username: converter1091
+    password: contractor8409
+\end{verbatim}
+\item[{$\square$}] \textbf{Installation ;}
+Pour l'installation, il faut s'assurer que l'exécutable qui ouvre tous les \textbf{.tar} fonctionne bien.
+Tout a bien été, par contre, il faut demander à Ambrish d'installer la commande \emph{nc-config}, car Wavewatch s'en sert pour faire fonctionner les NetCDF.
+\item[{$\square$}] \textbf{Création de la config ;}
+Il faudrait juste s'assurer que la config que j'ai créée sur mon portable fonctionne avec le compilateur Intel et les \emph{switches} que j'ai choisit.
+\end{itemize}
+
+Une fois ces tâches accomplies, on peut se lancer à 100$\backslash$% sur les runs couplées. 
+
+\subsection{Lancement des runs couplées sur Oxygen}
+\label{sec:orgf675202}
+Avant de lancer le couplage, il faut juste s'assurer que
+\begin{itemize}
+\item[{$\square$}] La sous-routine \emph{ww3 shel} a les bonnes dates;
+\item[{$\square$}] Les \emph{restart files} fonctionnent bien.
+\end{itemize}
+\end{document}

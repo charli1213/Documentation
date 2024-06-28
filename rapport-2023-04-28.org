@@ -1,8 +1,7 @@
 #+title: Carnet de bord, Université McGill
+#+subtitle: Contrat Été 2023
 #+author: Charles-Édouard Lizotte
 #+date: 28/04/2023
-#+LATEX_CLASS: org-report
-#+CITE_EXPORT: natbib
 #+LANGUAGE: fr
 #+BIBLIOGRAPHY: master-bibliography.bib
 #+OPTIONS: toc:nil title:nil
@@ -18,7 +17,7 @@ Dans notre modèle en eau peu profonde, le système d'équations aux différence
 #+NAME: eq:dynamic
 \begin{subequations}
 \begin{align}
-&u^{\pt t+1}_k = u^{\pt t}_k + \Delta t \cdot \qty(G^t_x(x,y) - \pdv{\phi^{t+1/2}}{x})\pt,\\
+&u^{n\pt t+1}_k = u^{\pt t}_k + \Delta t \cdot \qty(G^t_x(x,y) - \pdv{\phi^{t+1/2}}{x})\pt,\\
 &v^{\pt t+1}_k = v^{\pt t}_k + \Delta t \cdot \qty(G^t_y(x,y) - \pdv{\phi^{t+1/2}}{y})\pt;
 \end{align}
 \end{subequations}
@@ -33,11 +32,11 @@ Finalement, les termes $G_{x,y}$ sont des termes valise incorporant tout le /RHS
 Ces derniers sont donc exprimés par
 \begin{equation}
 \vb*{G}^t(x,y) =
-\underbrace{ \bigno\uu \cdot \gradient{\uu}\ }_\text{Advec.}
-\underbrace{ \bigno + \vb{f}\times \uu\ }_\text{Coriolis} 
-\underbrace{ \bigno+\pt \frac{\delta_{(k,1)}\pt \boldsymbol{\tau}_{oc}}{\rho_i h_1}}_\text{Vent}
-\underbrace{ \bigno+\ g'_{k} \gradient(\eta_k)}_\text{Press. hydro.}
-\underbrace{ \bigno+ \vb*{D}}_\text{Dissip.}
+\underbrace{ \venti\uu \cdot \gradient{\uu}\ }_\text{Advec.}
+\underbrace{ \venti + \vb{f}\times \uu\ }_\text{Coriolis} 
+\underbrace{ \venti+\pt \frac{\delta_{(k,1)}\pt \boldsymbol{\tau}_{oc}}{\rho_i h_1}}_\text{Vent}
+\underbrace{ \venti+\ g'_{k} \gradient(\eta_k)}_\text{Press. hydro.}
+\underbrace{ \venti+ \vb*{D}}_\text{Dissip.}
 \end{equation}
 Finalement, l'équation de continuité pour le système est donnée par la conservation du transport barotrope, de sorte que
 #+NAME: eq:continuity

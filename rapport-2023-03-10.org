@@ -3,7 +3,6 @@
 #+author: Charles-Édouard Lizotte
 #+date: 10/03/2023
 #+LATEX_CLASS: org-report
-#+CITE_EXPORT: natbib
 #+LANGUAGE: fr
 #+OPTIONS: toc:nil title:nil
 \mytitlepage

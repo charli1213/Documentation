@@ -1,0 +1,333 @@
+% Created 2024-06-16 Sun 00:14
+% Intended LaTeX compiler: pdflatex
+ocumentclass[10pt]{article}% =================================BASE====================================%
+\documentclass[10pt]{report}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry} % Marges
+\usepackage[T1]{fontenc} % Nécessaire avec FrenchBabel
+\usepackage[utf8]{inputenc} % Important pour symboles Francophones, é,à,etc
+\usepackage{csquotes} % Recommandé par PDFLatex lors de la compilation. 
+
+
+% Calligraphie
+%\usepackage{lmodern} % Ça, ça set latin modern
+%\usepackage{mathrsfs} %Permet la command \mathscr (Lettres attachées genre) \mathscr(B)
+
+% Calligraphie
+%\usepackage{pxfonts} % Met le texte ET les maths en Palatino + donne accès à des symboles math
+\usepackage{palatino} % Cette commande met seulement le texte en police palatino
+\usepackage{lmodern} % Pour les maths?
+% Use lmodern for sans-serif
+\usepackage{mathrsfs} % Permet la command \mathscr (Lettres attachées genre) \mathscr(B)
+
+
+
+
+
+% Bibliographie
+%\usepackage[backend=bibtex,style=phys,sorting=ynt]{biblatex}
+\usepackage[backend=biber,sorting=ynt,style=ieee]{biblatex}
+
+
+
+
+\usepackage{amsmath, amssymb, amsthm} % Symb. math. (Mathmode+Textmode) + Beaux théorèmes.
+\usepackage{mathtools,cancel,xfrac} % Utilisation de boîtes \boxed{} + \cancelto{}{}, xfrac
+\usepackage{graphicx, wrapfig} % Géstion des figures.
+\usepackage{hyperref} % Permettre l'utilisation d'hyperliens.
+\usepackage{color} % Permettre l'utilisation des couleurs.
+\usepackage{colortbl} % Color tables
+\usepackage[dvipsnames]{xcolor} % Couleurs avancées.
+\usepackage{titling} % Donne accès à \theauthor, \thetitle, \thedate
+
+% Physique
+\usepackage{physics} % Meilleur package pour physicien. 
+
+
+% Style
+\usepackage{lipsum} % For fun
+\usepackage{tikz} % Realisation de figures TIKZ.
+\usepackage{empheq} % Boite autour de MULTIPLE équations
+\usepackage{bbding}
+
+% Français
+\usepackage[french]{babel} % Environnements en Français.
+% ==============================BASE-(END)=================================%
+
+
+
+% ================================SETTINGS=================================%
+% Pas d'indentation en début de paragraphe :
+\setlength\parindent{0pt}
+\setlength{\parskip}{0.15cm}
+
+% Tableaux/tabular
+% Espace vertical dans les tabular/tableaux
+\renewcommand{\arraystretch}{1.2}
+% Couleur des tableaux/tabular
+\rowcolors{2}{violet!5}{}
+
+% Couleurs de hyperliens :
+\definecolor{mypink}{RGB}{147, 0, 255}
+\hypersetup{colorlinks, 
+             filecolor=mypink,
+             urlcolor=mypink, 
+             citecolor=mypink, 
+             linkcolor=mypink, 
+             anchorcolor=mypink}
+
+
+\usepackage{titling} % Donne accès à \theauthor, \thetitle, \thedate
+
+% Physique
+\usepackage{physics} % Meilleur package pour physicien. 
+
+
+% Style
+\usepackage{lipsum} % For fun
+\usepackage{tikz} % Realisation de figures TIKZ.
+\usepackage{empheq} % Boite autour de MULTIPLE équations
+
+% Français
+\usepackage[french]{babel} % Environnements en Français.
+% ==============================BASE-(END)=================================%
+
+
+
+
+
+% ================================SETTINGS=================================%
+% Pas d'indentation en début de paragraphe :
+\setlength\parindent{0pt}
+\setlength{\parskip}{0.15cm}
+
+% Tableaux/tabular
+% Espace vertical dans les tabular/tableaux
+\renewcommand{\arraystretch}{1.2}
+% Couleur des tableaux/tabular
+\rowcolors{2}{violet!5}{}
+
+% Couleurs de hyperliens :
+\definecolor{mypink}{RGB}{147, 0, 255}
+\hypersetup{colorlinks, 
+             filecolor=mypink,
+             urlcolor=mypink, 
+             citecolor=mypink, 
+             linkcolor=mypink, 
+             anchorcolor=mypink}
+
+
+% Numéros d'équations suivent les sections :
+\numberwithin{equation}{section} 
+
+% Les « captions » sont en italique et largeur limitée
+\usepackage[textfont = it]{caption} 
+\captionsetup[wrapfigure]{margin=0.5cm}
+
+% Retirer l'écriture en gras dans la table des matières
+\usepackage{tocloft}
+\renewcommand{\cftsecfont}{\normalfont}
+\renewcommand{\cftsecpagefont}{\normalfont}
+
+% Change bullet style
+\usepackage{pifont}
+\usepackage{enumitem}
+%\setlist[itemize,1]{label=\ding{224}}
+\setlist[itemize,1]{label=\ding{239}}
+\renewcommand{\boxtimes}{\blacksquare}
+% ================================SETTINGS=================================%
+
+
+
+% ==============================NEWCOMMANDS================================%
+
+% Vecteurs de base :
+\newcommand{\nvf}{\vb{\hat{n}}}
+\newcommand{\ivf}{\vb{\hat{i}}}
+\newcommand{\jvf}{\vb{\hat{j}}}
+\newcommand{\kvf}{\vb{\hat{k}}}
+\newcommand{\uu}{\vb{u}}
+\newcommand{\vv}{\vb{v}}
+\newcommand{\ust}{\vb{u}_{\ast}}
+
+% Physics empty spaces 
+\newcommand{\typical}{\vphantom{A}}
+\newcommand{\tall}{\vphantom{A^{x^x}_p}}
+\newcommand{\grande}{\vphantom{\frac{1}{xx}}}
+\newcommand{\venti}{\vphantom{\sum_x^x}}
+\newcommand{\pt}{\hspace{1pt}} % One horizontal pt space
+
+% Moyenne numérique entre deux points de grilles. 
+\newcommand{\xmean}[1]{\overline{#1}^x}
+\newcommand{\ymean}[1]{\overline{#1}^y}
+\newcommand{\zmean}[1]{\overline{#1}^z}
+\newcommand{\xymean}[1]{\overline{#1}^{xy}}
+
+% Tilde over psi
+\newcommand{\tpsi}{\tilde{\psi}}
+\newcommand{\tphi}{\tilde{\phi}}
+
+% Nota Bene env : (\ding{89})
+%\newcommand{\nb}{$\boxed{\text{\footnotesize\EightStarConvex}\pt \mathfrak{N. B.}}$\hspace{4pt}}
+\newcommand{\nb}{\underline{{\footnotesize\EightStarConvex}\pt $\mathfrak{N.B.}$\vphantom{p}}\hspace{3pt}}
+
+
+% Define the nota bene environment
+\usepackage{tcolorbox}
+\newtcolorbox{notabene}{
+     colback=blue!5,
+     colframe=black,
+     boxrule=0.5pt,
+     arc=2pt,
+     left=5pt,
+     right=5pt,
+     top=5pt,
+     bottom=5pt,
+}
+
+
+\newcommand{\cmark}{\ding{52}}
+\newcommand{\xmark}{\ding{55}}
+% ==============================NEWCOMMANDS================================%
+
+
+
+% ==============================PAGE-TITRE=================================%
+% Titlepage 
+\newcommand{\mytitlepage}{
+\begin{titlepage}
+\begin{center}
+{\Huge Contrat Été 2023 \par}
+\vspace{2cm}
+{\Huge \MakeUppercase{\thetitle} \par}
+\vspace{2cm}
+RÉALISÉ DANS LE CADRE\\ D'UN PROJET POUR \par
+\vspace{2cm}
+{\Huge ISMER--UQAR \par}
+\vspace{2cm}
+{\thedate}
+\end{center}
+\vfill
+Rédaction \\
+{\theauthor}\\
+\url{charles-edouard.lizotte@uqar.ca}\\
+ISMER-UQAR\\
+Police d'écriture : \textbf{CMU Serif Roman}
+\end{titlepage}
+}
+% ==============================PAGE-TITRE=================================%
+
+
+
+% =================================ENTÊTE==================================%
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\setlength{\headheight}{13pt}
+\renewcommand{\headrulewidth}{0.025pt} % Ligne horizontale en haut
+
+\fancyhead[R]{\textit{\thetitle}}
+\fancyhead[L]{\ \thepage}
+\fancyfoot[R]{\textit{\theauthor}}
+\fancyfoot[L]{}
+\fancyfoot[C]{} 
+% =================================ENTÊTE==================================%
+\author{Charles-Édouard Lizotte}
+\date{10/03/2023}
+\title{Rapport hebdomadaire -- McGill\\\medskip
+\large Semaine du 3 mars 2023}
+\hypersetup{
+ pdfauthor={Charles-Édouard Lizotte},
+ pdftitle={Rapport hebdomadaire -- McGill},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 27.1 (Org mode 9.6.7)}, 
+ pdflang={French}}
+\begin{document}
+
+\mytitlepage
+\tableofcontents\newpage
+
+
+\section{{\bfseries\sffamily DONE} Organisation du travail [3/3]}
+\label{sec:orgb8265ad}
+Lors de ma maîtrise -- de 2019 à 2022 --, j'ai constaté que mon organisation du travail était extrêmement maladroite.
+Entre-autres, j'avais une grande difficulté à recenser les tâches accomplies ou incomplètes. 
+C'est pourquoi j'ai créé ce \emph{template} en \textbf{org-mode}, un language d'écriture \textbf{Emacs} exportable en \LaTeX{}.
+Ces petits résumés agissent principalement comme un cahier de laboratoire. 
+Ils me permettront donc d'écrire ce que j'ai retenu de nos rencontres, les idées à développer et les tâches à accomplir.\\[0pt]
+
+Tâches : 
+\begin{itemize}
+\item[{$\boxtimes$}] Apprendre le langage \textbf{org-mode} en construisant quelques tutoriels.
+\item[{$\boxtimes$}] Commencer à utiliser le \textbf{org-agenda}.
+\item[{$\boxtimes$}] Créer ce \emph{template} en \LaTeX{} et commencer les rapports hebdomadaires.
+\end{itemize}
+
+\section{Retour sur le modèle \emph{shallow water} [3/3]}
+\label{sec:orgca6d3f7}
+\subsection{{\bfseries\sffamily DONE} Télécharger le modèle \emph{shallow water} et créer un \emph{git} [2/2]}
+\label{sec:orgd55dc5b}
+Avant tout, il faut se reconnecter sur la grappe de calcul \textbf{mingan} pour aller chercher le modèle \emph{shallow-water}. 
+Pour des raisons obscures, mon compte mingan ne fonctionnait plus.
+J'ai du contacter le gestionnaire du soutient technique de l'UQAR, Dany Lemay, pour créer un nouvel identifiant. 
+Sur Pélerin, les commandes de connexion sont maintenant : 
+\begin{verbatim}
+   >>> ssh -Y lizoch01@calculs.uqar.ca
+   >>> <mot-de-passe>
+\end{verbatim}
+
+Une fois connecté sur le noeud \emph{Calculs}, on peut entrer sur \emph{mingan} à l'aide des commandes
+\begin{verbatim}
+   >>> ssh -Y celiz2@mingan.uqar.ca
+   >>> <mot-de-passe>
+\end{verbatim}
+À noter \emph{git} ne fonctionne plus sur \emph{mingan}, donc il a fallut tout transférer sur le noeud \emph{calculs} avant de mettre quelque chose sur le \emph{git}.\\[0pt]
+
+Étapes : 
+\begin{itemize}
+\item[{$\boxtimes$}] Créer un git et mettre le modèle \emph{shallow-water} sur \emph{Github}.
+\item[{$\boxtimes$}] Déplacement des sous-routines de couplage et d'analyse.
+\begin{itemize}
+\item[{$\boxtimes$}] Déplacer toutes les sous-routines d'analyse Python de ma maîtrise sur \emph{Github} (Y'en a beaucoup)
+\item[{$\boxtimes$}] Télécharger les routines modifiées de Wavewatch III sur le \emph{Github}.
+\end{itemize}
+\end{itemize}
+
+\subsection{{\bfseries\sffamily DONE} Ménage \emph{mingan} et transfert vers \emph{pelerin} [2/2]}
+\label{sec:org38c3a25}
+Comme la grappe de calculs \emph{mingan} en est à ses derniers heures de vie, je vais devoir transférer tous mes codes vers \emph{pelerin}.
+Dany Lemay propose avant tout de créer un \emph{git} pour que ça aille plus rapidement.
+À mentionner que ça fait un bout que j'ai laissé ça tarder, j'aurais peut-être du faire ça vers la fin de ma maîtrise..\\[0pt]
+
+Étapes : 
+\begin{itemize}
+\item[{$\boxtimes$}] Vider le \emph{home/celiz2}
+\begin{itemize}
+\item[{$\boxtimes$}] Transférer le modèle \emph{shallow-water} du stage 2016 sur \emph{Github}.
+\item[{$\boxtimes$}] Faire le ménage et supprimer l'ancienne version de Wavewatch III (WW3-Caroline).
+\item[{$\boxtimes$}] Ramener les routines Python de génération \emph{mapsta} et de conditions initiales (BoxPy) sur Pelerin.
+\end{itemize}
+\item[{$\boxtimes$}] Vider le \emph{share/work/celiz2} :
+\begin{itemize}
+\item[{$\boxtimes$}] Ramener les routines d'analyse Python du modèle couplé sur \emph{Github}.
+\item[{$\boxtimes$}] Filtrer les expériences WW3 à garder et transférer sur le noeud \emph{calculs}.
+\end{itemize}
+\end{itemize}
+
+\subsection{{\bfseries\sffamily DONE} Rencontre avec David Straub}
+\label{sec:orgf0a3eea}
+La tâche consiste principalement à modifier le modèle \emph{shallow-water} que David et Yanxu Chen avaient codés, soit celui que j'ai utilisé au cours de ma maîtrise.
+Le modèle fonctionne uniquement à 2 couches, car il n'a pas été codé pour en avoir plus, pour l'instant.
+Considérant que les \emph{near-inertial waves} s'accumulaient dans la première couche, David et Louis-Philippe ont émis l'hypothèse que l'ajout de plusieurs couches pourrait \emph{damper} la force des ondes quasi-inertielles. 
+L'énergie serait graduellement transmise depuis le haut vers le bas en perdant de l'intensité à chaque \emph{étage} sous l'effet de la viscosité.\\[0pt]
+
+\begin{enumerate}
+\item Le modèle prévois avoir \emph{n} couches, mais comme la surface est fixe \(\eta_1(i,j)=0\), on peut affirmer qu'on utilise tout simplement pas \(\eta_1\) ou plutôt que \(\eta_1 = 0\) (L390 : \emph{main.f90}). 
+En gros, on a la variation de l'épaisseur de la couche partout \(\Delta h(i,j)\), mais il faut retrouver les \(\eta_i\) d'une manière ou d'une autre.
+On a \emph{n-1} variations de l'interface, donc il faut trouver un moyen d'imbriquer tout ça dans une \emph{n loop} qui part du bas. 
+David a proposé de faire une \textbf{do loop} qui part du bas avec un vecteru temporaire qui s'additionne à chaque étape (voir courriel).
+
+\item Va falloir renommer les \emph{RHS-eta} parce que tous ces \emph{RHS} décrivent plutôt le comportement de \emph{RHS-d}, soit des épaisseurs \(h_k(i,j)\).
+
+\item On va se débarrasser de la couche d'Ekman dans le modèle, car c'est vraiment peu pertinent si on a plusieurs couches.
+\end{enumerate}
+\end{document}

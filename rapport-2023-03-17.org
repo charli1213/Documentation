@@ -1,8 +1,7 @@
 #+title: Rapport hebdomadaire -- McGill
+#+subtitle: Contrat Été 2023
 #+author: Charles-Édouard Lizotte
 #+date: 17/03/2023
-
-#+LATEX_CLASS: org-report
 #+LANGUAGE: fr
 #+OPTIONS: toc:nil title:nil
 

@@ -2,11 +2,10 @@
 #+SUBTITLE: Semaine du 20 mars 2023
 #+AUTHOR: Charles-Édouard Lizotte
 #+DATE: 24/03/2023
-#+LATEX_CLASS: org-report
-#+CITE_EXPORT: natbib
 #+LANGUAGE: fr
 #+BIBLIOGRAPHY: master-bibliography.bib
 #+OPTIONS: toc:nil title:nil
+
 
 \mytitlepage
 \tableofcontents\newpage
