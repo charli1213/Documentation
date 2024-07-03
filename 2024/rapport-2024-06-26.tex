@@ -1,0 +1,501 @@
+% Created 2024-07-02 Tue 14:42
+% Intended LaTeX compiler: pdflatex
+\documentclass[10pt]{article}
+% =================================BASE====================================%
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry} % Marges
+\usepackage[T1]{fontenc} % Nécessaire avec FrenchBabel
+\usepackage[utf8]{inputenc} % Important pour symboles Francophones, é,à,etc
+\usepackage{csquotes} % Recommandé par PDFLatex lors de la compilation. 
+
+% Calligraphie
+%\usepackage{pxfonts} % Met le texte ET les maths en Palatino + donne accès à des symboles math
+\usepackage{palatino} % Cette commande met seulement le texte en police palatino
+\usepackage{lmodern} % Pour les maths? Lmodern pour les maths
+% Use lmodern for sans-serif
+\usepackage{mathrsfs} % Permet la command \mathscr (Lettres attachées genre) \mathscr(B)
+
+% Bibliographie
+%\usepackage[backend=bibtex,style=phys,sorting=ynt]{biblatex}
+\usepackage[backend=biber,sorting=ynt,style=authoryear]{biblatex} % N'est pas utilisé par le compilateur org-mode, mais NÉCESSAIRE. Voir le fichier init.el pour changer le style. 
+\addbibresource{/home/charlesedouard/Desktop/Travail/Documentation/2024/master-bibliography.bib}
+
+
+\usepackage{amsmath, amssymb, amsthm} % Symb. math. (Mathmode+Textmode) + Beaux théorèmes.
+\usepackage{mathtools,cancel,xfrac} % Utilisation de boîtes \boxed{} + \cancelto{}{}, xfrac
+\usepackage{graphicx, wrapfig} % Géstion des figures.
+\usepackage{hyperref} % Permettre l'utilisation d'hyperliens.
+\usepackage{color} % Permettre l'utilisation des couleurs.
+\usepackage{colortbl} % Color tables
+\usepackage[dvipsnames]{xcolor} % Couleurs avancées.
+
+% Physique
+\usepackage{physics} % Meilleur package pour physicien. 
+
+% Style
+\usepackage{lipsum} % For fun
+\usepackage{tikz} % Realisation de figures TIKZ.
+\usepackage{empheq} % Boite autour de MULTIPLE équations
+\usepackage{bbding}
+
+% Français
+\usepackage[french]{babel} % Environnements en Français.
+
+\usepackage{titling} % Donne accès à \theauthor, \thetitle, \thedate
+
+% ==============================BASE-(END)=================================%
+
+
+
+
+
+% ================================SETTINGS=================================%
+% Pas d'indentation en début de paragraphe :
+\setlength\parindent{0pt}
+\setlength{\parskip}{0.15cm}
+
+% Tableaux/tabular
+% Espace vertical dans les tabular/tableaux
+\renewcommand{\arraystretch}{1.2}
+% Couleur des tableaux/tabular
+% \rowcolors{3}{violet!5}{}
+
+% Couleurs de hyperliens :
+\definecolor{mypink}{RGB}{147, 0, 255}
+\hypersetup{colorlinks, 
+             filecolor=mypink,
+             urlcolor=mypink, 
+             citecolor=mypink, 
+             linkcolor=mypink, 
+             anchorcolor=mypink}
+
+
+% Numéros d'équations suivent les sections :
+\numberwithin{equation}{section} 
+
+% Les « captions » sont en italique et largeur limitée
+\usepackage[textfont = it]{caption} 
+\captionsetup[wrapfigure]{margin=0.5cm}
+
+% Retirer l'écriture en gras dans la table des matières
+\usepackage{tocloft}
+\renewcommand{\cftsecfont}{\normalfont}
+\renewcommand{\cftsecpagefont}{\normalfont}
+
+% Change bullet style
+\usepackage{pifont}
+\usepackage{enumitem}
+%\setlist[itemize,1]{label=\ding{224}}
+\setlist[itemize,1]{label=\ding{239}}
+\renewcommand{\boxtimes}{\blacksquare}
+% ================================SETTINGS=================================%
+
+
+
+% ==============================NEWCOMMANDS================================%
+
+% Vecteurs de base :
+\newcommand{\nvf}{\vb{\hat{n}}}
+\newcommand{\evf}{\vb{\hat{e}}}
+\newcommand{\ivf}{\vb{\hat{i}}}
+\newcommand{\jvf}{\vb{\hat{j}}}
+\newcommand{\kvf}{\vb{\hat{k}}}
+\newcommand{\uu}{\vb{u}}
+\newcommand{\vv}{\vb{v}}
+\newcommand{\ust}{\vb{u}_{\ast}}
+
+% Physics empty spaces 
+\newcommand{\short}{\vphantom{pA}}
+\newcommand{\tall}{\vphantom{pA^{x^x}_p}}
+\newcommand{\grande}{\vphantom{\frac{1}{xx}}}
+\newcommand{\venti}{\vphantom{\sum_x^x}}
+\newcommand{\pt}{\hspace{1pt}} % One horizontal pt space
+
+% Moyenne numérique entre deux points de grilles. 
+\newcommand{\xmean}[1]{\overline{#1}^x}
+\newcommand{\ymean}[1]{\overline{#1}^y}
+\newcommand{\zmean}[1]{\overline{#1}^z}
+\newcommand{\xymean}[1]{\overline{#1}^{xy}}
+
+% Tilde over psi
+\newcommand{\tpsi}{\tilde{\psi}}
+\newcommand{\tphi}{\tilde{\phi}}
+
+% Nota Bene env : (\ding{89})
+%\newcommand{\nb}{$\boxed{\text{\footnotesize\EightStarConvex}\pt \mathfrak{N. B.}}$\hspace{4pt}}
+\newcommand{\nb}{\underline{{\footnotesize\EightStarConvex}\pt $\mathfrak{N.B.}$\vphantom{p}}\hspace{3pt}}
+
+
+% Define the nota bene environment
+\usepackage{tcolorbox}
+\newtcolorbox{notabene}{
+     colback=blue!5,
+     colframe=black,
+     boxrule=0.5pt,
+     arc=2pt,
+     left=5pt,
+     right=5pt,
+     top=5pt,
+     bottom=5pt,
+}
+
+
+\newcommand{\cmark}{\ding{52}}
+\newcommand{\xmark}{\ding{55}}
+% ==============================NEWCOMMANDS================================%
+
+
+
+% ==============================PAGE-TITRE=================================%
+% Titlepage 
+\newcommand{\mytitlepage}{
+\begin{titlepage}
+\begin{center}
+{\Huge \thesubtitle \par}
+\vspace{2cm}
+{\Huge \MakeUppercase{\thetitle} \par}
+\vspace{2cm}
+RÉALISÉ DANS LE CADRE\\ D'UN PROJET POUR \par
+\vspace{2cm}
+{\Huge ISMER--UQAR \par}
+\vspace{2cm}
+{\thedate}
+\end{center}
+\vfill
+Rédaction \\
+{\theauthor}\\
+\url{charles-edouard.lizotte@uqar.ca}\\
+ISMER-UQAR\\
+Police d'écriture : \textbf{CMU Serif Roman}
+\end{titlepage}
+}
+% ==============================PAGE-TITRE=================================%
+
+
+
+% =================================ENTÊTE==================================%
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\setlength{\headheight}{13pt}
+\renewcommand{\headrulewidth}{0.025pt} % Ligne horizontale en haut
+
+\fancyhead[R]{\textit{\thetitle}}
+\fancyhead[L]{\ \thepage}
+\fancyfoot[R]{\textit{\theauthor}}
+\fancyfoot[L]{}
+\fancyfoot[C]{} 
+% =================================ENTÊTE==================================%
+\author{Charles-Édouard Lizotte}
+\date{28/06/2024}
+\title{Rapport hebdomadaire}
+\newcommand{\thesubtitle}{Contrat Été 2024}
+\hypersetup{
+ pdfauthor={Charles-Édouard Lizotte},
+ pdftitle={Rapport hebdomadaire},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 27.1 (Org mode 9.6.7)}, 
+ pdflang={French}}
+\begin{document}
+
+\mytitlepage
+\tableofcontents\newpage
+
+\section{Les glaces dans le modèle de Elizabeth Hunke}
+\label{sec:org9de2747}
+
+\subsection{Mise en contexte}
+\label{sec:org77b2be2}
+La \textbf{rhéologie} est définit comme la science de la déformation des matériaux.
+\Textcite{coon1974modeling} propose une rhéologie élasto-plastique pour les paquets de glace (\emph{see ice pack}).
+\Textcite{hibler1979dynamic} propose une rhéologie comme un plastique visqueux non-linéaire.
+Le papier de \Textcite{hunke1997elastic} présente une méthode numérique implicite pour solver les équation du model VP.
+Selon \citeauthor*{hunke1997elastic}, l'enjeu vient du fait qu'il est difficile de modéliser la riche gamme de viscosités exprimé à l'intérieur d'un simple domaine de glace hétérogène.
+Bref, un nombre impressionnant de rhéologies a été exploré.\bigskip
+
+\nb Un model explicite extrapole le futur à l'aide des quantités passées tandis qu'un schéma implicite évaluerait le futur à l'aide de quantités inconnues à \(n+1\).\bigskip
+
+\subsection{Les équations en jeu}
+\label{sec:orgf575c85}
+La balance des forces par unité d'aire dans la glace est donnée par l'équation du mouvement en deux dimensions,
+
+\begin{equation}
+   \underbrace{\venti m \qty(\pdv{u_i}{t})}_\text{Évolution}
+   = \underbrace{\venti\qty(\pdv{\sigma_{ij}}{x_j})}_{\substack{\text{Strenght of}\\\text{the ice}}}
+   +\underbrace{\venti\ \tau_{ai}\ +\ \venti\tau_{wi}}_{\substack{\text{Contraintes}\short\\\text{Vent-Ocean}}}
+   +\ \underbrace{\venti\varepsilon_{ij3} m f u_j}_\text{Coriolis}
+   -\ \underbrace{\venti \qty(mg \pdv{H_o}{x_i})}_{\substack{\text{Élévation}\\\text{de l'eau}}},
+\end{equation}
+où \(\boldsymbol{\tau}_a = \qty(\tau_{ai},\pt\tau_{aj})\) et \(\boldsymbol{\tau}_w = \qty(\tau_{wi},\pt\tau_{wj})\) sont le vent et les contrainte de déformation.
+Comme mentionné dans l'article : 
+\begin{quote}
+\emph{The strenght of the ice is represented by the internal stress tensor \(\sigma_{ij}\).}
+\end{quote}
+La masse de glace est exprimée par l'expression
+\begin{equation}
+   m = \rho_i\qty[cH + (1-c)h] + \rho_s\qty[cH_s (1-c)h_s].
+\end{equation}
+
+Pour ce qui est de la rhéologie, \Textcite{hibler1979dynamic} proposait une rhéologie elliptique \textbf{visco-plastique} qui relie les contraintes internes à l'intérieur de la glace (\emph{internal ice stress}) avec le dégré  d'étirement ou de déformation (\emph{rate of strain}) -- ou le \textbf{taux de changement de la déformation} pour être plus précis. 
+Et donc la forme de cette rhéologie est donnée par
+\begin{equation}
+   \sigma_{ij} = 2 \eta \dot{\epsilon}_{ij} + \qty(\zeta - \eta) \dot{\epsilon}_{kk} \delta_{ij} - P \cdot\delta_{ij}/2,
+\end{equation}
+où la variable
+\begin{equation}
+   \dot{\epsilon}_{ij} = \frac{1}{2} \qty(\pdv{u_i}{x_j}+\pdv{u_j}{x_i}),
+\end{equation}
+est un genre de jacobien.
+On réécrit le \textbf{tenseur de déformation dans le domaine plastique} de manière plus évidente,
+\begin{equation}
+\label{eq:orgc97a849}
+   \boxed{\ \frac{1}{2\eta} \sigma_{ij} + \frac{\eta-\zeta}{4\eta\zeta} \sigma_{kk}\delta_{ij} + \frac{P}{4\zeta} \delta_{ij} = \dot{\epsilon}_{ij},\ }\hspace{1cm}\text{\textbf{Déformation plastique}}}
+\end{equation}
+car ça va être important un peu plus loin.
+Grossièrement, cette rhéologie permet au paquets de glace de diverger avec très peu de contrainte, mais résiste grandement à la compression et au cisaillement.\bigskip
+
+Selon \Textcite{hunke1997elastic}, la pression (\(P\)) est en quelque sorte une mesure de la force de la glace qui dépend de la robustesse et de l'épaisseur de la glace.
+\begin{equation}
+   P = P^\ast c He \exp[-c^\ast(1-c)],
+\end{equation}
+où \(P^\ast\) et \(c^\ast\) sont des constantes données dans une table quelque part.
+C'est pas mal semblable à la formulation de \Textcite{hibler1979dynamic}, car \(cH\) est approximativement la même chose que son \emph{equivalent ice thickness}.
+La viscosité augmente avec la pression de sorte à obtenir
+\begin{align}
+   \zeta = \frac{P}{2\Delta}, && \eta = \frac{P}{2\Delta e^2}, && \Delta = \qty[(\dot{\epsilon}^2_{11} + \dot{\epsilon}^2_{22})(1 + e^{-2}) + 4 e^{-2}\dot{\epsilon}^2_{12} + 2 \dot{\epsilon}^2_{11}\dot{\epsilon}^2_{22}(1-e^{-2})]^{\sfrac{1}{2}}_.
+\end{align}
+Il semble que sans tension (\emph{strain}), la viscosité devienne infinie\ldots{} ce qui nous force à mettre des viscosités minimum et maximum.
+Selon \citeauthor*{hunke1997elastic}, c'est un solution qui amène ses propres problèmes, donc on cherche de nouvelles solutions.\bigskip
+
+On peut quand même se permettre de combiner les équations précédentes, ce qui donne un beau \emph{ice jumble d'équations},
+\begin{align}
+   m \pdv{u}{t} = \pdv{}{x}\qty[(\eta + \zeta)\pdv{u}{x}] &+\pdv{}{y}\qty(\eta\pdv{u}{y}) + \pdv{}{x}\qty[(\zeta-\eta)\pdv{v}{y}] + \pdv{}{y}\qty(\eta \pdv{v}{x}) - \frac{1}{2}\pdv{P}{x}\nonumber\\
+     & + c'\qty[\qty(U_w-u)\cos\theta - \qty(V_w-v)\sin\theta] + \tau_{ai} + mfv - mg\pdv{H_o}{x},\\
+   m \pdv{v}{t} = \pdv{}{y}\qty[(\eta + \zeta)\pdv{v}{y}] &+\pdv{}{x}\qty(\eta\pdv{v}{x}) + \pdv{}{y}\qty[(\zeta-\eta)\pdv{u}{x}] + \pdv{}{x}\qty(\eta \pdv{u}{y}) - \frac{1}{2}\pdv{P}{y}\nonumber\\
+     & + c'\qty[\qty(V_w-v)\cos\theta - \qty(U_w-u)\sin\theta] + \tau_{aj} + mfu - mg\pdv{H_o}{y}.
+\end{align}
+
+Si on réorganise les termes du système d'équations précédentes, on retrouve une version simplifiée où les termes de Coriolis, les contraintes de surfaces (\emph{surface stresses}), la pression et les termes de \emph{tilt} sont sont incorporés dans une variable \(\vb{R}\), soit
+\begin{equation}
+\label{eq:org39f7e45}
+   m\qty(\pdv{\uu}{t}) = \eta \laplacian{\uu} + \vb{R}.
+\end{equation}
+C'est grossièrement l'équation qui nous permet le mieux de comprendre la nature plastique de la glace, même si c'est une équation d'onde. 
+Lorsque \(\eta=0\), on obtient le cas spécial d'un fluide en cavitation -- un fluide dépourvu de viscosité.\bigskip
+
+La condition de stabilité unidimensionelle pour une discrétisation explicite nous donnerait un pas de temps numérique de l'ordre de
+\begin{equation}
+   \Delta t \geq \frac{m}{2\eta} \Delta x^2.
+\end{equation}
+Bref, si on \emph{plug} les constantes, on voit qu'on obtient des temps de calculs beaucoup trop longs ou une très mauvaise précision.
+Si on reprend l'équation précédente, mais en ajoutant une dimension élastique (Ajout de \(E\)) et un amortissement (\emph{damping}),
+\begin{equation}
+\label{eq:orgddd4d84}
+   m \pdv[2]{\uu}{t} =E \qty(\laplacian{\uu} + \frac{\vb{R}}{\eta}) + \text{amortissement},
+\end{equation}
+où \(E\) est un coefficient qui s'apparente au module de Young -- comme avec les bon vieux ressorts. 
+Pour citer \Textcite{hunke1997elastic},
+\begin{quote}
+\emph{This equation is meant to represent, albeit very crudely, an elastic–plastic model of the sea ice in the regime where elastic waves dominate.}
+\end{quote}
+Cette formulation devrait converger au même état d'équilibre que \ref{eq:org39f7e45}, tout en représentant un modèle élastique et plastique de la glace de mer où les ondes élastiques dominent.
+
+\nb L'équation \ref{eq:orgddd4d84} diffère de \ref{eq:org39f7e45} du fait qu'on a \(\sfrac{\partial^2 u}{\partial t^2}\) plutôt que \(\sfrac{\partial u}{\partial t}\), donc l'étirement n'est pas proportionnel 
+
+\subsubsection{La formulation élastique}
+\label{sec:orgffd4e5a}
+Pour construire un modèle élastique, il faudrait séparer le tenseur de tension en deux parties, soit un domaine plastique et un domaine élastique.
+La partie «plastique» a déjà été prise en compte à l'équation \ref{eq:orgc97a849} et la partie élastique devrait être approximée par
+\begin{equation}
+   \frac{1}{E} \pdv{\sigma_{ij}}{t} = \dot{\epsilon}_{ij}. \hspace{1cm} \text{\textbf{Déformation élastique}}
+\end{equation}
+
+Lorsqu'on ajoute les contributions élastiques et plastiques (\ref{eq:orgc97a849}), on obtient
+\begin{equation}
+   \boxed{\ \frac{1}{E} \qty(\pdv{\sigma_{ij}}{t}) + \frac{1}{2\eta}\sigma_{ij} + \qty(\frac{\eta - \zeta}{4\eta\zeta}) \sigma_{kk} \delta_{ij} + \qty(\frac{P}{4\zeta}) \delta_{ij} = \dot{\epsilon}_{ij}.\ }
+\end{equation}
+
+
+\subsection{Simplification du modèle EVP (pour mieux comprendre)}
+\label{sec:orgf0f049c}
+On assume que
+\begin{itemize}
+\item Toutes les variations spatiales arrivent dans la direction \(x\).
+\item Tous les coefficients sont constants, tous les forçages sont absorbés dans le terme \(\boldsymbol{\tau}\).
+\item Le terme constant \(P/4\zeta\) est absorbé dans \(\sigma = \sigma_{11}\) et \(\sigma_{12}=\sigma_{22} = 0\).
+\end{itemize}
+
+Les équations résultantes sont
+\begin{align}
+   \frac{1}{E}\pdv{\sigma}{t} + \frac{\sigma}{\zeta} &= \pdv{u}{x}, \\
+   m\pdv{u}{t} &= \pdv{\sigma}{x} + \tau,
+\end{align}
+où \(\zeta\) est une constante effective de viscosité comme auparavant.
+Mentionnons qu'on retrouve le modèle VP (\emph{viscous plastic}) (\ref{eq:orgc97a849}) dans la limite où \(E\rightarrow\infty\),
+\begin{equation}
+   m\pdv{u}{t} = \zeta\pdv[2]{u}{x} + \tau,
+\end{equation}
+tandis que la limite où \(\zeta\rightarrow\infty\), on retrouve le modèle purement élastique amortit, soit
+\begin{equation}
+   \pdv[2]{u}{t} = c_e^2\pdv[2]{u}{x} + \frac{1}{m}\pdv{1}{\tau},
+\end{equation}
+où \(c_e = \sqrt{\sfrac{E}{m}}\), soit la vitesse des ondes élastiques. 
+
+\section{Présentation de Dany à l'Institut Isaac Newton}
+\label{sec:org397290d}
+
+\subsection{Mise en contexte}
+\label{sec:org2e94db7}
+
+Dans sa \href{https://www.youtube.com/watch?v=\_V7ozTp6SJM}{présentation à l'Institut Isaac Newton (2023)}, Dany décrit la dynamique de la zone marginale à l'aide de l'équation
+\begin{equation}
+\label{eq:orgbf74c5c}
+   \rho_i h \qty(\dv{\uu}{t} + f \kvf\times\uu) = \vb{F}_i + \divergence{\boldsymbol{\sigma}},
+\end{equation}
+où la somme des forces est décrite comme
+\begin{equation}
+   \vb{F}_i =
+    \underbrace{\grande\boldsymbol{\tau}_g}_{\substack{\text{Gradient}\short\\\text{de surface}}}
+   +\underbrace{\grande\boldsymbol{\tau}_a}_{\tall\text{Vent}}
+   +\underbrace{\grande\boldsymbol{\tau}_o}_{\tall\text{Courant}}
+   +\underbrace{\grande\boldsymbol{\tau}_b}_{\substack{\text{Plancher}\vphantom{A^2p}\\\text{océanique}}}
+   +\underbrace{\grande\boldsymbol{\tau}_w}_{\substack{\text{Stress}\short\vphantom{A^1}\\\text{radiatif}\short\\\text{des vagues}}} .
+\end{equation}
+\(\bigstar\) Il faudrait préciser la provenance de l'équation \ref{eq:orgbf74c5c}, même si ça semble juste être une version modifiée de Navier-Stokes.\bigskip
+
+Le terme \(\divergence{\sigma}\) -- définit comme étant la \textbf{rhéologie} -- est décrit à l'aide de l'équation de \textbf{déformation d'un plastique visqueux} \autocite{hunke1997elastic},
+\begin{align}
+   & \divergence{\boldsymbol{\sigma}} = \pdv{\sigma_{ij}}{x_i},\\
+   & \sigma_{ij} = 2\eta \pt\dot{\epsilon}_{ij} + \qty(\zeta - \eta) \dot{\epsilon}_{kk} \delta_{ij} - \frac{1}{2} \delta_{ij}.
+\end{align}
+où \(\eta\) et \(\zeta\) sont des viscosités (à définir).
+La variable \(\dot{\epsilon}_{ij}\) est le tenseur de tension ou d'étirement (\emph{strain tensor}).\bigskip
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\linewidth]{Figures/photos/glace-evanescente.png}
+\caption{\label{fig:org64763e9}Illustration d'un cas de figure observé à la baie du Ha-Ha.}
+\end{figure}
+
+L'onde en question se propage à la manière d'une onde évanescente dans le medium.
+L'équation \ref{eq:orgbf74c5c} nous permet de visualiser deux équilibres entre l'énergie des vagues et la rhéologie, soit
+\begin{equation}
+   \boldsymbol{\tau}_w + \divergence{\boldsymbol{\sigma}} = 0.
+\end{equation}
+En posant la limite de la zone marginale à \(x=0\) (comme illustré à la figure \ref{fig:org64763e9}) et l'arrivée des vagues avec un angle \(\phi\), on obtient deux équilibres entre les différentes forces :\bigskip
+
+\begin{itemize}
+\item \textbf{Équilibre compressif} -- Stress radiatif balance les termes de pression.
+\end{itemize}
+\begin{equation}
+\label{eq:orgaa734a2}
+   \overbrace{\venti\phantom{x}\tau_{wx}\phantom{x}}^{\substack{\text{Momentum}\short\\\text{vagues-x}\short}} +\ \overbrace{\venti\frac{1}{2}\qty(\pdv{P}{x})}^{\text{Pression}\tall}\ = 0,
+\end{equation}
+
+\begin{itemize}
+\item \textbf{Équilibre de cisaillement} -- Cisaillement le long du \emph{ice edge} qui balance les forces visqueuses :
+\end{itemize}
+\begin{equation}
+   \overbrace{\venti\phantom{x}\tau_{wy}\phantom{x}}^{\substack{\text{Momentum}\short\\\text{vagues-y}\short}} +\ \overbrace{\venti\eta\qty(\pdv[\pt2]{\bar{v}}{x})}^{\text{Viscosité}\tall}\ = 0.
+\end{equation}
+
+\nb On s'attarde principalement à l'équilibre entre le transfert de momentum des vagues et la rhéologie, car le vent a peu d'impact à l'échelle désirée.
+Dany élaborera son argument vers la fin de la présentation.
+
+\subsection{Équilibre radiatif entre les vagues et la pression interne de la glace}
+\label{sec:orgca3ca26}
+
+Dans le milieu à l'étude, l'objectif est de représenter au moins trois types de glaces de manière générale.
+On mentionne ici trois types de \emph{slush}.
+Ces interactions sont modelisées à l'aide de la friction de Mohr-Coulomb. 
+Dany introduit donc le \emph{ice jumble model for the compressive strenght} (voir \Textcites{uzuner1976theoretical}[][]{hopkins1999compression}[][]{dai2004wave})
+
+\begin{itemize}
+\item Friction de Mohr-Coulomb dans le plan x-z
+\end{itemize}
+\begin{align}
+   & \sigma_x = \sigma_z\qty(\frac{1+\sin \phi}{1-\sin\phi}) \\
+   & P\ = \qty(\frac{h^2}{2}) \qty(1-\frac{\rho_i}{\rho_w})(1-n)\rho_ig_e \qty(\frac{1+\sin \phi}{1-\sin\phi}) \hspace{1cm} \text{ou plutôt}\hspace{0.7cm} \boxed{\ P = K_r \cdot h^2.\ } 
+\end{align}
+Grossièrement, c'est proportionnel à l'épaisseur au carré (\(h^2\)) et il y a aussi un terme de \emph{porosité} (\(n\)) dans le but de représenter le fait qu'il y a des craques et des interstices dans la glace.
+On définit \(K_r\) comme
+\begin{equation}
+   K_r =  \frac{1}{2}\qty(1-\frac{\rho_i}{\rho_w}) \qty(\frac{1+\sin \phi}{1-\sin\phi})(1-n)\rho_ig_e
+\end{equation}
+\bigskip
+
+On introduit maintenant le tenseur pour la contrainte radiative des vagues  \autocite[voir][]{longuet1964radiation},
+\begin{align}
+   & \vb{R} = \rho g \int_0^\infty\int_0^{2\pi} F(k,\theta)
+     \qty(\begin{matrix}
+       c_g \cos^2 \theta + \qty(\frac{c_g}{c} - \frac{1}{2}) & c_g \cos^2 \theta \sin \theta \\
+       c_g \cos^2 \theta \sin\theta & c_g \cos^2 \theta + \qty(\frac{c_g}{c} - \frac{1}{2})
+     \end{matrix})
+   k \cdot \dd k\pt \dd\theta\\
+   & \boldsymbol{\tau}_w = - \divergence{\boldsymbol{R}} = \qty(\pdv{R_{ij}}{x_i})\cdot \evf_j
+\end{align}
+
+\textbf{À incidence normale et en eau profonde}, c'est un cas spcécial.
+On se souvient que \(c_g = \sfrac{1}{2} c\), ainsi
+\begin{equation}
+   \boldsymbol{\tau}_w = -\frac{1}{2}\rho g \qty(\pdv{E}{x}) \ivf
+\end{equation}
+En partant de l'équation d'équilibre compressif (\ref{eq:orgaa734a2}), on obtient une solution pour l'épaisseur de la glace, soit
+\begin{equation}
+   \boxed{\ h^2(x) = - \frac{\rho_w g_e E_0}{K_r}\qty(1-e^{-\alpha x}),\ }
+\end{equation}
+où \(E_0\) est l'énergie de l'onde incidente; \(K_r\) est un fonction de la porosité, de la friction interne et de l'angle d'incidence; puis le binôme \((1-\exp(-\alpha x))\) est la décroissance de l'énergie des vagues le long de l'axe x.
+On voit apparaître un gradient dans la distribution des floes (Voir figure \ref{fig:org382a1e2}).
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\linewidth]{Figures/photos/gradient_floes.png}
+\caption{\label{fig:org382a1e2}Distribution radiale des floes dans la baie du Ha-Ha.}
+\end{figure}
+
+\subsection{Résultats empiriques pour l'équilibre radiatif}
+\label{sec:org3071eaa}
+
+Dans la baie du Ha-Ha, ils ont mesuré l'épaisseur du \emph{ice jumble} ainsi que l'énergie des vagues le long du transect.
+De cette manière, on trouve le coefficient d'atténuation (\(\alpha\))  et la relation de dispersion de l'onde dans le milieu.
+On peut même trouver l'atténuation en fonction de la fréquence de l'onde.
+Le labo arrive environ à
+\begin{equation}
+   \alpha(\omega)  = 5.8 \times 10^{-3} \omega^{3.2}.
+\end{equation}
+
+Et on voit directement une énorme différence (2 ordres de grandeur) entre la rhéologie de Hibler et mixte
+\begin{align}
+   &P_{Hibler} = P^* h,\\
+   &P_{MC} = K_r \cdot h^2, \hspace{1cm}\Leftarrow\hspace{1cm}\text{Pas mal meilleur}
+\end{align}
+où \(P^*\) est une constante.
+
+\subsection{Équilibre de cisaillement}
+\label{sec:org71928e4}
+
+Pas le temps pour ça.
+
+\subsection{Conclusions}
+\label{sec:org125c932}
+
+\begin{itemize}
+\item Dans la zone marginale stationnaire, on a isolé l'équilibre entre le transfert de momentum radiatif des vagues et la pression interne.
+\item La force compressive (ou la résistance) de la glace correspod au modèle de friction de Mohr-Coulomb dans une \emph{ice jumble}.
+\item La porosité est possiblement une nouvelle variable qui a besoin de recherche active.
+\item La dépendance à l'épaisseur de la glace est quadratique comparativement à la version linéaire de \Textcite{hibler1979dynamic}
+\end{itemize}
+
+Aussi :
+\begin{itemize}
+\item Un équilibre dynamique le long du \emph{ice edge} existe est peut être utilisé pour quantifier les viscosité de cisaillement et valider les modèles.
+\item La contrainte radiative des vagues peut aussi pousser le frasil sous la glace consolidée sur de longues distances, bien plus loin que le \emph{ice edge}.
+\end{itemize}
+
+
+\section{Résumé personnel}
+\label{sec:orgc7a91bb}
+
+
+
+\printbibliography
+\end{document}
