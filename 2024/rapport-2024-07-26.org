@@ -1,0 +1,42 @@
+#+title: Rapport hebdomadaire
+#+subtitle: Contrat Été 2024
+#+author: Charles-Édouard Lizotte
+#+date:26/07/2024
+#+LANGUAGE: fr
+#+BIBLIOGRAPHY: master-bibliography.bib
+#+OPTIONS: toc:nil title:nil 
+#+LaTeX_class: org-report
+
+\mytitlepage
+\tableofcontents\newpage
+
+
+* Maitrise de Eliot Bismuth
+
+Équations de base,
+\begin{equation}
+   \frac{1}{c_g}\qty(\dv{E}{t}) = (1-f_i)\qty(S_{in} + S_{wc}) + f_i S_{ice}.
+\end{equation}
+
+Grossièrement, le modèle de Bismuth fait un pas d'advection à l'aide de la [[https://en.wikipedia.org/wiki/Lax%E2%80%93Wendroff_method][méthode de Lax-Wendroff,]] soit une méthode très efficace pour résoudre les équations différentielles hyperboliques de la forme
+\begin{equation}
+   \pdv{u(x,t)}{t} = \pdv{}{x}\qty(f(u(x,t))).
+\end{equation}
+
+Notre advection a plutôt la forme
+\begin{equation}
+   \pdv{E(x,t)}{t} + u(x,t)\cdot\pdv{E(x,t)}{x} = 0
+\end{equation}
+Par contre, nous nous intéressons au cas sans courant ($u=0\ \forall\ x$), de sorte que le schéma peut être résolu comme *un cas linéaire* où $f(u) = A\cdot u$, soit
+\begin{equation}
+   u_i^{n+1} = u_i^n - \qty(\frac{\Delta t}{2\Delta x}) A \qty[u^n_{i+1} - u^n_{i-1}] + \qty(\frac{\Delta t^2}{2 \Delta x^2})A^2 \qty[u^n_{i+1} -2u^n_{i} + u^n_{i-1}],
+\end{equation}
+où $A$ = 0, donc
+\begin{equation}
+   \pdv{E}{t} = 0,
+\end{equation}
+donc il n'y a tout simplement pas d'advection... Anyway, les termes source sont donnés par
+\begin{equation}
+   
+\end{equation}
+

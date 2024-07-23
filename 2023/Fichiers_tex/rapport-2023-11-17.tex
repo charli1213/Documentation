@@ -1,33 +1,23 @@
-% Created 2024-06-16 Sun 00:13
+% Created 2024-07-23 Tue 11:42
 % Intended LaTeX compiler: pdflatex
-ocumentclass[10pt]{article}% =================================BASE====================================%
-\documentclass[10pt]{report}
+\documentclass[10pt]{article}
+% =================================BASE====================================%
 \usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry} % Marges
 \usepackage[T1]{fontenc} % Nécessaire avec FrenchBabel
 \usepackage[utf8]{inputenc} % Important pour symboles Francophones, é,à,etc
 \usepackage{csquotes} % Recommandé par PDFLatex lors de la compilation. 
 
-
-% Calligraphie
-%\usepackage{lmodern} % Ça, ça set latin modern
-%\usepackage{mathrsfs} %Permet la command \mathscr (Lettres attachées genre) \mathscr(B)
-
 % Calligraphie
 %\usepackage{pxfonts} % Met le texte ET les maths en Palatino + donne accès à des symboles math
 \usepackage{palatino} % Cette commande met seulement le texte en police palatino
-\usepackage{lmodern} % Pour les maths?
+\usepackage{lmodern} % Pour les maths? Lmodern pour les maths
 % Use lmodern for sans-serif
 \usepackage{mathrsfs} % Permet la command \mathscr (Lettres attachées genre) \mathscr(B)
 
-
-
-
-
 % Bibliographie
 %\usepackage[backend=bibtex,style=phys,sorting=ynt]{biblatex}
-\usepackage[backend=biber,sorting=ynt,style=ieee]{biblatex}
-\addbibresource{/home/charlesedouard/Desktop/Travail/Documentation/master-bibliography.bib}
-
+\usepackage[backend=biber,sorting=ynt,style=authoryear]{biblatex} % N'est pas utilisé par le compilateur org-mode, mais NÉCESSAIRE. Voir le fichier init.el pour changer le style. 
+\addbibresource{/home/charlesedouard/Desktop/Travail/Documentation/2023/master-bibliography.bib}
 
 
 \usepackage{amsmath, amssymb, amsthm} % Symb. math. (Mathmode+Textmode) + Beaux théorèmes.
@@ -37,58 +27,22 @@
 \usepackage{color} % Permettre l'utilisation des couleurs.
 \usepackage{colortbl} % Color tables
 \usepackage[dvipsnames]{xcolor} % Couleurs avancées.
-\usepackage{titling} % Donne accès à \theauthor, \thetitle, \thedate
 
 % Physique
 \usepackage{physics} % Meilleur package pour physicien. 
 
-
 % Style
 \usepackage{lipsum} % For fun
 \usepackage{tikz} % Realisation de figures TIKZ.
+\usetikzlibrary{arrows.meta,bending} % Arrow heads 
 \usepackage{empheq} % Boite autour de MULTIPLE équations
 \usepackage{bbding}
 
 % Français
 \usepackage[french]{babel} % Environnements en Français.
-% ==============================BASE-(END)=================================%
-
-
-
-% ================================SETTINGS=================================%
-% Pas d'indentation en début de paragraphe :
-\setlength\parindent{0pt}
-\setlength{\parskip}{0.15cm}
-
-% Tableaux/tabular
-% Espace vertical dans les tabular/tableaux
-\renewcommand{\arraystretch}{1.2}
-% Couleur des tableaux/tabular
-\rowcolors{2}{violet!5}{}
-
-% Couleurs de hyperliens :
-\definecolor{mypink}{RGB}{147, 0, 255}
-\hypersetup{colorlinks, 
-             filecolor=mypink,
-             urlcolor=mypink, 
-             citecolor=mypink, 
-             linkcolor=mypink, 
-             anchorcolor=mypink}
-
 
 \usepackage{titling} % Donne accès à \theauthor, \thetitle, \thedate
 
-% Physique
-\usepackage{physics} % Meilleur package pour physicien. 
-
-
-% Style
-\usepackage{lipsum} % For fun
-\usepackage{tikz} % Realisation de figures TIKZ.
-\usepackage{empheq} % Boite autour de MULTIPLE équations
-
-% Français
-\usepackage[french]{babel} % Environnements en Français.
 % ==============================BASE-(END)=================================%
 
 
@@ -104,13 +58,13 @@
 % Espace vertical dans les tabular/tableaux
 \renewcommand{\arraystretch}{1.2}
 % Couleur des tableaux/tabular
-\rowcolors{2}{violet!5}{}
+% \rowcolors{3}{violet!5}{}
 
 % Couleurs de hyperliens :
 \definecolor{mypink}{RGB}{147, 0, 255}
 \hypersetup{colorlinks, 
              filecolor=mypink,
-             urlcolor=mypink, 
+             urlcolor=Violet, 
              citecolor=mypink, 
              linkcolor=mypink, 
              anchorcolor=mypink}
@@ -139,9 +93,12 @@
 
 
 % ==============================NEWCOMMANDS================================%
+% CQFD symbol
+\renewcommand{\qedsymbol}{$\hfill\blacksquare$}
 
 % Vecteurs de base :
 \newcommand{\nvf}{\vb{\hat{n}}}
+\newcommand{\evf}{\vb{\hat{e}}}
 \newcommand{\ivf}{\vb{\hat{i}}}
 \newcommand{\jvf}{\vb{\hat{j}}}
 \newcommand{\kvf}{\vb{\hat{k}}}
@@ -150,8 +107,8 @@
 \newcommand{\ust}{\vb{u}_{\ast}}
 
 % Physics empty spaces 
-\newcommand{\typical}{\vphantom{A}}
-\newcommand{\tall}{\vphantom{A^{x^x}_p}}
+\newcommand{\short}{\vphantom{pA}}
+\newcommand{\tall}{\vphantom{pA^{x^x}_p}}
 \newcommand{\grande}{\vphantom{\frac{1}{xx}}}
 \newcommand{\venti}{\vphantom{\sum_x^x}}
 \newcommand{\pt}{\hspace{1pt}} % One horizontal pt space
@@ -170,6 +127,14 @@
 %\newcommand{\nb}{$\boxed{\text{\footnotesize\EightStarConvex}\pt \mathfrak{N. B.}}$\hspace{4pt}}
 \newcommand{\nb}{\underline{{\footnotesize\EightStarConvex}\pt $\mathfrak{N.B.}$\vphantom{p}}\hspace{3pt}}
 
+\newcommand{\exemple}{
+\parbox[center]{2.2cm}{\begin{tcolorbox}[sharp corners, rounded corners=northeast, rounded corners=southeast,
+colback=Violet!5, colframe=black,
+size=small, width=2cm, left=-0.25pt, bottom=-0.5pt,
+arc is angular, arc=2.5mm, boxrule=0.35pt, leftrule=4pt, %bottomrule=1pt,
+after={\enskip}] Exemple \end{tcolorbox}}}
+
+\newcommand{\cqfd}{\hfill$\blacktriangleleft$}
 
 % Define the nota bene environment
 \usepackage{tcolorbox}
@@ -196,7 +161,7 @@
 \newcommand{\mytitlepage}{
 \begin{titlepage}
 \begin{center}
-{\Huge Contrat Été 2023 \par}
+{\Huge \thesubtitle \par}
 \vspace{2cm}
 {\Huge \MakeUppercase{\thetitle} \par}
 \vspace{2cm}
@@ -233,6 +198,7 @@ Police d'écriture : \textbf{CMU Serif Roman}
 \author{Charles-Édouard Lizotte}
 \date{11/11/2023}
 \title{Carnet de bord, Université McGill}
+\newcommand{\thesubtitle}{Contrat Été 2023}
 \hypersetup{
  pdfauthor={Charles-Édouard Lizotte},
  pdftitle={Carnet de bord, Université McGill},
@@ -246,7 +212,7 @@ Police d'écriture : \textbf{CMU Serif Roman}
 \tableofcontents\newpage
 
 \section{Gestion de l'épaisseur et transfert de momentum du vent -- \textit{<2023-11-14 Tue>}}
-\label{sec:orgadb2b59}
+\label{sec:org2b3ccea}
 
 Traditionnellement, la contrainte de cisaillement ou les stress associé au vent est exprimé en différence finit comme suit,
 \begin{align}
@@ -266,7 +232,7 @@ Par contre, au total, le momentum général est respecté, car il prend effectiv
 
 
 \section{Re-structuration des fonctions d'output -- \textit{<2023-11-14 Tue>}}
-\label{sec:org652de71}
+\label{sec:orga61c443}
 
 Dès maintenant, il est important de changer la manière qu'on lit les fichiers dans les codes Python.
 Bref, je laisse cette section ici pour m'assurer que je me souvienne de ce changement.
@@ -284,7 +250,7 @@ Avant, on réunissait tout avant dans un xarray dataset.
 
 
 \section{Expériences lancées -- \textit{<2023-11-15 Wed>}}
-\label{sec:org027ec4e}
+\label{sec:org2d4e2bf}
 
 Comme lors de la maîtrise, il faudrait des comparatifs entre les \emph{runs} couplées et non-couplées.
 
@@ -305,7 +271,7 @@ D & COU-step5.0 & \cmark & 5.00 & Échantillon test\\[0pt]
 
 
 \subsection{Énergie cinétique}
-\label{sec:org3416462}
+\label{sec:org484782c}
 
 
 

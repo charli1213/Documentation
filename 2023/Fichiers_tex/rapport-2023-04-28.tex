@@ -1,33 +1,23 @@
-% Created 2024-06-16 Sun 00:13
+% Created 2024-07-23 Tue 11:41
 % Intended LaTeX compiler: pdflatex
-ocumentclass[10pt]{article}% =================================BASE====================================%
-\documentclass[10pt]{report}
+\documentclass[10pt]{article}
+% =================================BASE====================================%
 \usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry} % Marges
 \usepackage[T1]{fontenc} % Nécessaire avec FrenchBabel
 \usepackage[utf8]{inputenc} % Important pour symboles Francophones, é,à,etc
 \usepackage{csquotes} % Recommandé par PDFLatex lors de la compilation. 
 
-
-% Calligraphie
-%\usepackage{lmodern} % Ça, ça set latin modern
-%\usepackage{mathrsfs} %Permet la command \mathscr (Lettres attachées genre) \mathscr(B)
-
 % Calligraphie
 %\usepackage{pxfonts} % Met le texte ET les maths en Palatino + donne accès à des symboles math
 \usepackage{palatino} % Cette commande met seulement le texte en police palatino
-\usepackage{lmodern} % Pour les maths?
+\usepackage{lmodern} % Pour les maths? Lmodern pour les maths
 % Use lmodern for sans-serif
 \usepackage{mathrsfs} % Permet la command \mathscr (Lettres attachées genre) \mathscr(B)
 
-
-
-
-
 % Bibliographie
 %\usepackage[backend=bibtex,style=phys,sorting=ynt]{biblatex}
-\usepackage[backend=biber,sorting=ynt,style=ieee]{biblatex}
-\addbibresource{/home/charlesedouard/Desktop/Travail/Documentation/master-bibliography.bib}
-
+\usepackage[backend=biber,sorting=ynt,style=authoryear]{biblatex} % N'est pas utilisé par le compilateur org-mode, mais NÉCESSAIRE. Voir le fichier init.el pour changer le style. 
+\addbibresource{/home/charlesedouard/Desktop/Travail/Documentation/2023/master-bibliography.bib}
 
 
 \usepackage{amsmath, amssymb, amsthm} % Symb. math. (Mathmode+Textmode) + Beaux théorèmes.
@@ -37,58 +27,22 @@
 \usepackage{color} % Permettre l'utilisation des couleurs.
 \usepackage{colortbl} % Color tables
 \usepackage[dvipsnames]{xcolor} % Couleurs avancées.
-\usepackage{titling} % Donne accès à \theauthor, \thetitle, \thedate
 
 % Physique
 \usepackage{physics} % Meilleur package pour physicien. 
 
-
 % Style
 \usepackage{lipsum} % For fun
 \usepackage{tikz} % Realisation de figures TIKZ.
+\usetikzlibrary{arrows.meta,bending} % Arrow heads 
 \usepackage{empheq} % Boite autour de MULTIPLE équations
 \usepackage{bbding}
 
 % Français
 \usepackage[french]{babel} % Environnements en Français.
-% ==============================BASE-(END)=================================%
-
-
-
-% ================================SETTINGS=================================%
-% Pas d'indentation en début de paragraphe :
-\setlength\parindent{0pt}
-\setlength{\parskip}{0.15cm}
-
-% Tableaux/tabular
-% Espace vertical dans les tabular/tableaux
-\renewcommand{\arraystretch}{1.2}
-% Couleur des tableaux/tabular
-\rowcolors{2}{violet!5}{}
-
-% Couleurs de hyperliens :
-\definecolor{mypink}{RGB}{147, 0, 255}
-\hypersetup{colorlinks, 
-             filecolor=mypink,
-             urlcolor=mypink, 
-             citecolor=mypink, 
-             linkcolor=mypink, 
-             anchorcolor=mypink}
-
 
 \usepackage{titling} % Donne accès à \theauthor, \thetitle, \thedate
 
-% Physique
-\usepackage{physics} % Meilleur package pour physicien. 
-
-
-% Style
-\usepackage{lipsum} % For fun
-\usepackage{tikz} % Realisation de figures TIKZ.
-\usepackage{empheq} % Boite autour de MULTIPLE équations
-
-% Français
-\usepackage[french]{babel} % Environnements en Français.
 % ==============================BASE-(END)=================================%
 
 
@@ -104,13 +58,13 @@
 % Espace vertical dans les tabular/tableaux
 \renewcommand{\arraystretch}{1.2}
 % Couleur des tableaux/tabular
-\rowcolors{2}{violet!5}{}
+% \rowcolors{3}{violet!5}{}
 
 % Couleurs de hyperliens :
 \definecolor{mypink}{RGB}{147, 0, 255}
 \hypersetup{colorlinks, 
              filecolor=mypink,
-             urlcolor=mypink, 
+             urlcolor=Violet, 
              citecolor=mypink, 
              linkcolor=mypink, 
              anchorcolor=mypink}
@@ -139,9 +93,12 @@
 
 
 % ==============================NEWCOMMANDS================================%
+% CQFD symbol
+\renewcommand{\qedsymbol}{$\hfill\blacksquare$}
 
 % Vecteurs de base :
 \newcommand{\nvf}{\vb{\hat{n}}}
+\newcommand{\evf}{\vb{\hat{e}}}
 \newcommand{\ivf}{\vb{\hat{i}}}
 \newcommand{\jvf}{\vb{\hat{j}}}
 \newcommand{\kvf}{\vb{\hat{k}}}
@@ -150,8 +107,8 @@
 \newcommand{\ust}{\vb{u}_{\ast}}
 
 % Physics empty spaces 
-\newcommand{\typical}{\vphantom{A}}
-\newcommand{\tall}{\vphantom{A^{x^x}_p}}
+\newcommand{\short}{\vphantom{pA}}
+\newcommand{\tall}{\vphantom{pA^{x^x}_p}}
 \newcommand{\grande}{\vphantom{\frac{1}{xx}}}
 \newcommand{\venti}{\vphantom{\sum_x^x}}
 \newcommand{\pt}{\hspace{1pt}} % One horizontal pt space
@@ -170,6 +127,14 @@
 %\newcommand{\nb}{$\boxed{\text{\footnotesize\EightStarConvex}\pt \mathfrak{N. B.}}$\hspace{4pt}}
 \newcommand{\nb}{\underline{{\footnotesize\EightStarConvex}\pt $\mathfrak{N.B.}$\vphantom{p}}\hspace{3pt}}
 
+\newcommand{\exemple}{
+\parbox[center]{2.2cm}{\begin{tcolorbox}[sharp corners, rounded corners=northeast, rounded corners=southeast,
+colback=Violet!5, colframe=black,
+size=small, width=2cm, left=-0.25pt, bottom=-0.5pt,
+arc is angular, arc=2.5mm, boxrule=0.35pt, leftrule=4pt, %bottomrule=1pt,
+after={\enskip}] Exemple \end{tcolorbox}}}
+
+\newcommand{\cqfd}{\hfill$\blacktriangleleft$}
 
 % Define the nota bene environment
 \usepackage{tcolorbox}
@@ -196,7 +161,7 @@
 \newcommand{\mytitlepage}{
 \begin{titlepage}
 \begin{center}
-{\Huge Contrat Été 2023 \par}
+{\Huge \thesubtitle \par}
 \vspace{2cm}
 {\Huge \MakeUppercase{\thetitle} \par}
 \vspace{2cm}
@@ -233,6 +198,7 @@ Police d'écriture : \textbf{CMU Serif Roman}
 \author{Charles-Édouard Lizotte}
 \date{28/04/2023}
 \title{Carnet de bord, Université McGill}
+\newcommand{\thesubtitle}{Contrat Été 2023}
 \hypersetup{
  pdfauthor={Charles-Édouard Lizotte},
  pdftitle={Carnet de bord, Université McGill},
@@ -246,23 +212,23 @@ Police d'écriture : \textbf{CMU Serif Roman}
 \tableofcontents\newpage
 
 \section{Système d'équations à résoudre}
-\label{sec:org476c4fa}
+\label{sec:org2ffca23}
 
 Dans cette section, nous posons les bases du problème à résoudre, soit trouver la solution du gradient de pression induit à la surface fixe, \(\gradient \phi\).
 Dans notre modèle en eau peu profonde, le système d'équations aux différences finies est donné par
 \begin{subequations}
-\label{eq:org9700105}
+\label{eq:orgc9ebf8d}
 \begin{align}
 &u^{n\pt t+1}_k = u^{\pt t}_k + \Delta t \cdot \qty(G^t_x(x,y) - \pdv{\phi^{t+1/2}}{x})\pt,\\
 &v^{\pt t+1}_k = v^{\pt t}_k + \Delta t \cdot \qty(G^t_y(x,y) - \pdv{\phi^{t+1/2}}{y})\pt;
 \end{align}
 \end{subequations}
 \begin{equation}
-\label{eq:orga77cdc4}
+\label{eq:org1e9f09f}
 h^{\pt t+1}_k = h^t_k + \Delta t \cdot \qty(\pdv{(h^t_k u^t_k)}{x} + \pdv{(h^t_k v^t_k)}{y}).
 \end{equation}
 
-Soit \(2 \times nk\) expressions pour les équations du mouvement (\ref{eq:org9700105}ab) et \(k\) expressions pour la conservation de la masse (\ref{eq:orga77cdc4}). 
+Soit \(2 \times nk\) expressions pour les équations du mouvement (\ref{eq:orgc9ebf8d}ab) et \(k\) expressions pour la conservation de la masse (\ref{eq:org1e9f09f}). 
 Sous cette notations, l'indice au pied \(k\) représente le niveau de la couche et l'exposant (\(t+1/2\) par exemple) représente le pas de temps.
 Finalement, les termes \(G_{x,y}\) sont des termes valise incorporant tout le \emph{RHS} des équations du mouvement, sans la correction \(\gradient \phi\).
 Ces derniers sont donc exprimés par
@@ -276,13 +242,13 @@ Ces derniers sont donc exprimés par
 \end{equation}
 Finalement, l'équation de continuité pour le système est donnée par la conservation du transport barotrope, de sorte que
 \begin{equation}
-\label{eq:orgcb61e1f}
+\label{eq:org4cef23c}
 \sum_{k=1}^{nk}  \qty(\pdv{(u^t_k\pt h^t_k)}{x} + \pdv{(v^t_k\pt h^t_k)}{y}) = \div{\vb*{U}^t_{BT}} = 0,
 \end{equation}
 
-Comme illustré dans la \href{http://mitgcm.org/public/r2\_manual/final/online\_documents/node33.html}{documentation du MITgcm} et/ou pour ceux et celles qui auront lu mon mémoire de maîtrise, il est possible de réarranger les équations \ref{eq:org9700105}ab et \ref{eq:orgcb61e1f} de sorte à obtenir une équation de Poisson,
+Comme illustré dans la \href{http://mitgcm.org/public/r2\_manual/final/online\_documents/node33.html}{documentation du MITgcm} et/ou pour ceux et celles qui auront lu mon mémoire de maîtrise, il est possible de réarranger les équations \ref{eq:orgc9ebf8d}ab et \ref{eq:org4cef23c} de sorte à obtenir une équation de Poisson,
 \begin{equation}
-\label{eq:org691f66b}
+\label{eq:org1d83f40}
 \boxed{\hspace{0.5cm} \pdv[2]{\phi^{t+1/2}}{x} + \pdv[2]{\phi^{t+1/2}}{y} = \frac{1}{2\Delta t}\pt \qty(\pdv{ \tilde{U}_{BT}}{x} + \pdv{\tilde{V}_{BT}}{y}),\hspace{0.5cm} }
 \end{equation}
 où
@@ -292,13 +258,13 @@ où
 \tilde{V}_{BT} = \sum_k^{nk} h^t_k\pt \qty(u^t_k + G^k_y\pt(x,y)).
 \end{equation}
 
-Bref, en trouvant la solution à l'équation \ref{eq:org691f66b}, nous aurons accomplit un premier pas de temps. \newpage
+Bref, en trouvant la solution à l'équation \ref{eq:org1d83f40}, nous aurons accomplit un premier pas de temps. \newpage
 
 \section{Conditions frontières}
-\label{sec:org7de40ca}
+\label{sec:org208b249}
 
 \subsection{Relier le gradient de pression et la frontière physique}
-\label{sec:orgfbaf6b7}
+\label{sec:org57595bc}
 
 \begin{wrapfigure}[13]{r}{0.35\textwidth}
 \vspace{-\baselineskip}
@@ -330,20 +296,20 @@ Bref, en trouvant la solution à l'équation \ref{eq:org691f66b}, nous aurons ac
 % Carré
 \filldraw (1.48,1.48) node[below] {$\phi\pt [1,1]$} rectangle (1.52,1.52) ;
 \end{tikzpicture}
-\caption{\label{orgd07e92e}Illustration du nouveau schéma de différence finit avec \(\tilde{\phi}\).}
+\caption{\label{orgfad0503}Illustration du nouveau schéma de différence finit avec \(\tilde{\phi}\).}
 \end{wrapfigure}
 
 
 
 
-Pour résoudre l'équation \ref{eq:org691f66b}, il nous faut au moins une condition frontières de type Dirichlet (soit \(\phi\) définit aux frontières).
+Pour résoudre l'équation \ref{eq:org1d83f40}, il nous faut au moins une condition frontières de type Dirichlet (soit \(\phi\) définit aux frontières).
 Par contre, il est aussi possible de résoudre l'équation de Poisson à l'aide d'une condition Neumann (moyennant l'apparition d'une constante d'intégration inconnue), comme illustré dans le \href{rapport-2023-04-21.org}{rapport précédent}.
 Dans le cas qui nous intéresse, nous n'avons malheureusement aucune condition frontière Dirichlet sur la pression \(\phi\), mais nous en avons une pour le gradient de \(\phi\) aux murs.
 C'est pourquoi allons donc appliquer une condition Neumann.\bigskip
 
-La condition \emph{no normal flow} aux frontières nécessitent que les équations \ref{eq:org9700105}ab satisfassent les relations
+La condition \emph{no normal flow} aux frontières nécessitent que les équations \ref{eq:orgc9ebf8d}ab satisfassent les relations
 \begin{subequations}
-\label{eq:org7965055}
+\label{eq:org1c8a3a4}
 \begin{align}
 && &\text{(Murs est \& ouest)}
 &&\eval{\pdv{\phi^{\pt t+1/2}}{x}}_{x_0,x_f} =  \Delta t\cdot G^k_x\pt (\{x_0,x_f\},y)\ \forall\ y,&&\\
@@ -351,7 +317,7 @@ La condition \emph{no normal flow} aux frontières nécessitent que les équatio
 &&\eval{\pdv{\phi^{\pt t+1/2}}{y}}_{y_0,y_f} =  \Delta t\cdot G^k_y\pt (x,\{y_0,y_f\})\ \forall\ x.&&
 \end{align}
 \end{subequations}
-\textbf{N.B.} Notre condition Neumann aux frontières est donc satisfaite par (\ref{eq:org7965055}ab) pour toutes les couches \(k\).
+\textbf{N.B.} Notre condition Neumann aux frontières est donc satisfaite par (\ref{eq:org1c8a3a4}ab) pour toutes les couches \(k\).
 Il serait donc probablement possible de faire le calcul avec toutes les couches et moyenner la réponse et/ou se vérifier.\bigskip
 
 Le solveur d'équation elliptique à l'étude est MUDPACK (voir le \href{rapport-2023-04-21.org}{rapport précédent}).
@@ -359,20 +325,20 @@ Généralement, les solveurs d'équations elliptiques ne sont pas \emph{staggere
 Par conséquent, il est \textbf{impératif} de placer nos points de grille pour \(\phi\) sur la frontière si l'on veut avoir une condition frontière.
 
 \subsection{La problématique en quelques mots}
-\label{sec:org8970f19}
+\label{sec:orgb25e3cd}
 
 Deux problèmes découlent de cette situation :
 \begin{itemize}
-\item L'endroit où nous avons définit la pression \(\phi\), ainsi que le \emph{RHS} de l'équation \ref{eq:org691f66b} n'est pas en contact avec la frontière du modèles (au points \(u\) à l'ouest et au points \(v\) au sud);
-\item Si l'on recentre \(\phi\) de sorte à se définir une \(\tilde{\phi}\) à la même position que \(f\) et \(\zeta\), (voir figure \ref{orgd07e92e}), alors il faudrait extrapoler et/ou moyenner les termes \(G_{\pt x,y}\) pour les obtenir aux murs, car les conditions frontière sur \(\pdv*{\phi}{x}\pt \& \pt \pdv*{\phi}{y}\) sont données par les équations \ref{eq:org7965055}ab.
+\item L'endroit où nous avons définit la pression \(\phi\), ainsi que le \emph{RHS} de l'équation \ref{eq:org1d83f40} n'est pas en contact avec la frontière du modèles (au points \(u\) à l'ouest et au points \(v\) au sud);
+\item Si l'on recentre \(\phi\) de sorte à se définir une \(\tilde{\phi}\) à la même position que \(f\) et \(\zeta\), (voir figure \ref{orgfad0503}), alors il faudrait extrapoler et/ou moyenner les termes \(G_{\pt x,y}\) pour les obtenir aux murs, car les conditions frontière sur \(\pdv*{\phi}{x}\pt \& \pt \pdv*{\phi}{y}\) sont données par les équations \ref{eq:org1c8a3a4}ab.
 \end{itemize}
 
 \subsection{Première solution : Moyenner les conditions frontières issues des termes G}
-\label{sec:org6cc6469}
+\label{sec:org6640355}
 
-Assumons qu'on positionne la pression sur les mêmes points que \(\zeta\ \& \ f\), de sorte à définir un \(\tilde{\phi}\) dit \emph{unstaggered}, alors il faudrait moyenner les équations \ref{eq:org7965055} entre les \(G_{x,y}\), de sorte à obtenir
+Assumons qu'on positionne la pression sur les mêmes points que \(\zeta\ \& \ f\), de sorte à définir un \(\tilde{\phi}\) dit \emph{unstaggered}, alors il faudrait moyenner les équations \ref{eq:org1c8a3a4} entre les \(G_{x,y}\), de sorte à obtenir
 \begin{subequations}
-\label{eq:org0ce1ca9}
+\label{eq:orgccbba6d}
 \begin{align}
 && &\text{(Murs est \& ouest)}
 &&\eval{\pdv{\tilde{\phi}^{\pt t+1/2}}{x}}_\qty{x_0,\pt x_f}
@@ -390,7 +356,7 @@ Il faudrait donc extrapoler la valeur de \(\tilde{\phi}\) à l'aide d'une expans
 Finalement, une fois solvé, il faudrait par la suite retrouver le gradient de pression aux points \(u\ \&\ v\) en faisant une moyenne à 4 termes, ce qui nous fait perdre beaucoup de temps, mais qui n'est pas insurmontable.
 
 \subsection{Seconde solution : extrapoller les conditions frontières à l'aide d'une série de Taylor}
-\label{sec:orgdacff7f}
+\label{sec:org02d208f}
 Comme démontré dans le \href{rapport-2023-04-21.org}{rapport précédent}, il serait possible de directement calculer les termes \(G\) sur les points de grille \(\tilde{\phi}\), en estimant chacune des quantités au mur.
 Par exemple, nous savons que 
 \begin{subequations}
@@ -424,15 +390,15 @@ En gros,
 Concrétement, il serait donc avisé de ne pas faire ça\ldots{}
 
 \subsection{Troisième solution :}
-\label{sec:org3427508}
+\label{sec:org756223e}
 
 \section{Test MUDPACK avec}
-\label{sec:orgeb582fc}
+\label{sec:orgd92edd8}
 \subsection{Tableau des paramètres du test}
-\label{sec:org7d605be}
+\label{sec:org68267ec}
 
 \begin{table}[htbp]
-\caption{\label{tab:org12b7973}Tableau contenant l'ensemble des paramètres pour les test avec MUDPACK.}
+\caption{\label{tab:org6a784dd}Tableau contenant l'ensemble des paramètres pour les test avec MUDPACK.}
 \centering
 \begin{tabular}{llr}
 Paramètres & Symboles & Valeur\\[0pt]
@@ -470,11 +436,11 @@ intpol (valeur conseillée) & - & 3\\[0pt]
 
 
 \subsection{Tests avec conditions Dirichlet}
-\label{sec:orgbd9541f}
+\label{sec:org208defe}
 On arrive à un écart d'environ 2\(\%\)
 
 
 \subsection{Tests avec conditions mixtes}
-\label{sec:orgbd27b15}
+\label{sec:org97f4b81}
 Avec les conditions mixtes, j'arrive à une erreur d'envirion 3e-3\(\%\), ce qui est quand même bon
 \end{document}

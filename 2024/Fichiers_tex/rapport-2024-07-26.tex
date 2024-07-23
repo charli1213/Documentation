@@ -1,4 +1,4 @@
-% Created 2024-07-23 Tue 11:42
+% Created 2024-07-22 Mon 14:02
 % Intended LaTeX compiler: pdflatex
 \documentclass[10pt]{article}
 % =================================BASE====================================%
@@ -17,7 +17,7 @@
 % Bibliographie
 %\usepackage[backend=bibtex,style=phys,sorting=ynt]{biblatex}
 \usepackage[backend=biber,sorting=ynt,style=authoryear]{biblatex} % N'est pas utilisé par le compilateur org-mode, mais NÉCESSAIRE. Voir le fichier init.el pour changer le style. 
-
+\addbibresource{/home/charlesedouard/Desktop/Travail/Documentation/2024/master-bibliography.bib}
 
 
 \usepackage{amsmath, amssymb, amsthm} % Symb. math. (Mathmode+Textmode) + Beaux théorèmes.
@@ -196,12 +196,12 @@ Police d'écriture : \textbf{CMU Serif Roman}
 \fancyfoot[C]{} 
 % =================================ENTÊTE==================================%
 \author{Charles-Édouard Lizotte}
-\date{10/03/2023}
-\title{Rapport hebdomadaire -- McGill}
-\newcommand{\thesubtitle}{Semaine du 3 mars 2023}
+\date{26/07/2024}
+\title{Rapport hebdomadaire}
+\newcommand{\thesubtitle}{Contrat Été 2024}
 \hypersetup{
  pdfauthor={Charles-Édouard Lizotte},
- pdftitle={Rapport hebdomadaire -- McGill},
+ pdftitle={Rapport hebdomadaire},
  pdfkeywords={},
  pdfsubject={},
  pdfcreator={Emacs 27.1 (Org mode 9.6.7)}, 
@@ -212,87 +212,25 @@ Police d'écriture : \textbf{CMU Serif Roman}
 \tableofcontents\newpage
 
 
-\section{{\bfseries\sffamily DONE} Organisation du travail [3/3]}
-\label{sec:orgb6d5416}
-Lors de ma maîtrise -- de 2019 à 2022 --, j'ai constaté que mon organisation du travail était extrêmement maladroite.
-Entre-autres, j'avais une grande difficulté à recenser les tâches accomplies ou incomplètes. 
-C'est pourquoi j'ai créé ce \emph{template} en \textbf{org-mode}, un language d'écriture \textbf{Emacs} exportable en \LaTeX{}.
-Ces petits résumés agissent principalement comme un cahier de laboratoire. 
-Ils me permettront donc d'écrire ce que j'ai retenu de nos rencontres, les idées à développer et les tâches à accomplir.\\[0pt]
+\section{Maitrise de Eliot Bismuth}
+\label{sec:org7ac5431}
 
-Tâches : 
-\begin{itemize}
-\item[{$\boxtimes$}] Apprendre le langage \textbf{org-mode} en construisant quelques tutoriels.
-\item[{$\boxtimes$}] Commencer à utiliser le \textbf{org-agenda}.
-\item[{$\boxtimes$}] Créer ce \emph{template} en \LaTeX{} et commencer les rapports hebdomadaires.
-\end{itemize}
+Équations de base,
+\begin{equation}
+   \frac{1}{c_g}\qty(\dv{E}{t}) = (1-f_i)\qty(S_{in} + S_{wc}) + f_i S_{ice}.
+\end{equation}
 
-\section{Retour sur le modèle \emph{shallow water} [3/3]}
-\label{sec:org709389e}
-\subsection{{\bfseries\sffamily DONE} Télécharger le modèle \emph{shallow water} et créer un \emph{git} [2/2]}
-\label{sec:orgd8f2775}
-Avant tout, il faut se reconnecter sur la grappe de calcul \textbf{mingan} pour aller chercher le modèle \emph{shallow-water}. 
-Pour des raisons obscures, mon compte mingan ne fonctionnait plus.
-J'ai du contacter le gestionnaire du soutient technique de l'UQAR, Dany Lemay, pour créer un nouvel identifiant. 
-Sur Pélerin, les commandes de connexion sont maintenant : 
-\begin{verbatim}
-   >>> ssh -Y lizoch01@calculs.uqar.ca
-   >>> <mot-de-passe>
-\end{verbatim}
+Grossièrement, le modèle de Bismuth fait un pas d'advection à l'aide de la \href{https://en.wikipedia.org/wiki/Lax\%E2\%80\%93Wendroff\_method}{méthode de Lax-Wendroff,} soit une méthode très efficace pour résoudre les équations différentielles hyperboliques de la forme
+\begin{equation}
+   \pdv{u(x,t)}{t} = \pdv{}{x}\qty(f(u(x,t))).
+\end{equation}
 
-Une fois connecté sur le noeud \emph{Calculs}, on peut entrer sur \emph{mingan} à l'aide des commandes
-\begin{verbatim}
-   >>> ssh -Y celiz2@mingan.uqar.ca
-   >>> <mot-de-passe>
-\end{verbatim}
-À noter \emph{git} ne fonctionne plus sur \emph{mingan}, donc il a fallut tout transférer sur le noeud \emph{calculs} avant de mettre quelque chose sur le \emph{git}.\\[0pt]
-
-Étapes : 
-\begin{itemize}
-\item[{$\boxtimes$}] Créer un git et mettre le modèle \emph{shallow-water} sur \emph{Github}.
-\item[{$\boxtimes$}] Déplacement des sous-routines de couplage et d'analyse.
-\begin{itemize}
-\item[{$\boxtimes$}] Déplacer toutes les sous-routines d'analyse Python de ma maîtrise sur \emph{Github} (Y'en a beaucoup)
-\item[{$\boxtimes$}] Télécharger les routines modifiées de Wavewatch III sur le \emph{Github}.
-\end{itemize}
-\end{itemize}
-
-\subsection{{\bfseries\sffamily DONE} Ménage \emph{mingan} et transfert vers \emph{pelerin} [2/2]}
-\label{sec:org133fb12}
-Comme la grappe de calculs \emph{mingan} en est à ses derniers heures de vie, je vais devoir transférer tous mes codes vers \emph{pelerin}.
-Dany Lemay propose avant tout de créer un \emph{git} pour que ça aille plus rapidement.
-À mentionner que ça fait un bout que j'ai laissé ça tarder, j'aurais peut-être du faire ça vers la fin de ma maîtrise..\\[0pt]
-
-Étapes : 
-\begin{itemize}
-\item[{$\boxtimes$}] Vider le \emph{home/celiz2}
-\begin{itemize}
-\item[{$\boxtimes$}] Transférer le modèle \emph{shallow-water} du stage 2016 sur \emph{Github}.
-\item[{$\boxtimes$}] Faire le ménage et supprimer l'ancienne version de Wavewatch III (WW3-Caroline).
-\item[{$\boxtimes$}] Ramener les routines Python de génération \emph{mapsta} et de conditions initiales (BoxPy) sur Pelerin.
-\end{itemize}
-\item[{$\boxtimes$}] Vider le \emph{share/work/celiz2} :
-\begin{itemize}
-\item[{$\boxtimes$}] Ramener les routines d'analyse Python du modèle couplé sur \emph{Github}.
-\item[{$\boxtimes$}] Filtrer les expériences WW3 à garder et transférer sur le noeud \emph{calculs}.
-\end{itemize}
-\end{itemize}
-
-\subsection{{\bfseries\sffamily DONE} Rencontre avec David Straub}
-\label{sec:orgd287e9e}
-La tâche consiste principalement à modifier le modèle \emph{shallow-water} que David et Yanxu Chen avaient codés, soit celui que j'ai utilisé au cours de ma maîtrise.
-Le modèle fonctionne uniquement à 2 couches, car il n'a pas été codé pour en avoir plus, pour l'instant.
-Considérant que les \emph{near-inertial waves} s'accumulaient dans la première couche, David et Louis-Philippe ont émis l'hypothèse que l'ajout de plusieurs couches pourrait \emph{damper} la force des ondes quasi-inertielles. 
-L'énergie serait graduellement transmise depuis le haut vers le bas en perdant de l'intensité à chaque \emph{étage} sous l'effet de la viscosité.\\[0pt]
-
-\begin{enumerate}
-\item Le modèle prévois avoir \emph{n} couches, mais comme la surface est fixe \(\eta_1(i,j)=0\), on peut affirmer qu'on utilise tout simplement pas \(\eta_1\) ou plutôt que \(\eta_1 = 0\) (L390 : \emph{main.f90}). 
-En gros, on a la variation de l'épaisseur de la couche partout \(\Delta h(i,j)\), mais il faut retrouver les \(\eta_i\) d'une manière ou d'une autre.
-On a \emph{n-1} variations de l'interface, donc il faut trouver un moyen d'imbriquer tout ça dans une \emph{n loop} qui part du bas. 
-David a proposé de faire une \textbf{do loop} qui part du bas avec un vecteru temporaire qui s'additionne à chaque étape (voir courriel).
-
-\item Va falloir renommer les \emph{RHS-eta} parce que tous ces \emph{RHS} décrivent plutôt le comportement de \emph{RHS-d}, soit des épaisseurs \(h_k(i,j)\).
-
-\item On va se débarrasser de la couche d'Ekman dans le modèle, car c'est vraiment peu pertinent si on a plusieurs couches.
-\end{enumerate}
+Notre advection a plutôt la forme
+\begin{equation}
+   \pdv{E(x,t)}{t} + u(x,t)\cdot\pdv{E(x,t)}{x} = 0.
+\end{equation}
+Par contre, nous nous intéressons au cas sans courant (\(u=0\ \forall\ x\)), de sorte que le schéma peut être résolu comme \textbf{un cas linéaire} où \(f(u) = A\cdot u\), soit
+\begin{equation}
+   u_i^{n+1} = u_i^n - \qty(\frac{\Delta t}{2\Delta x}) A \qty[u^n_{i+1} - u^n_{i-1}] + \qty(\frac{\Delta t^2}{2 \Delta x^2})A^2 \qty[u^n_{i+1} -2u^n_{i} + u^n_{i-1}].
+\end{equation}
 \end{document}

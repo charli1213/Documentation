@@ -1,33 +1,23 @@
-% Created 2024-06-16 Sun 00:13
+% Created 2024-07-23 Tue 11:42
 % Intended LaTeX compiler: pdflatex
-ocumentclass[10pt]{article}% =================================BASE====================================%
-\documentclass[10pt]{report}
+\documentclass[10pt]{article}
+% =================================BASE====================================%
 \usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry} % Marges
 \usepackage[T1]{fontenc} % Nécessaire avec FrenchBabel
 \usepackage[utf8]{inputenc} % Important pour symboles Francophones, é,à,etc
 \usepackage{csquotes} % Recommandé par PDFLatex lors de la compilation. 
 
-
-% Calligraphie
-%\usepackage{lmodern} % Ça, ça set latin modern
-%\usepackage{mathrsfs} %Permet la command \mathscr (Lettres attachées genre) \mathscr(B)
-
 % Calligraphie
 %\usepackage{pxfonts} % Met le texte ET les maths en Palatino + donne accès à des symboles math
 \usepackage{palatino} % Cette commande met seulement le texte en police palatino
-\usepackage{lmodern} % Pour les maths?
+\usepackage{lmodern} % Pour les maths? Lmodern pour les maths
 % Use lmodern for sans-serif
 \usepackage{mathrsfs} % Permet la command \mathscr (Lettres attachées genre) \mathscr(B)
 
-
-
-
-
 % Bibliographie
 %\usepackage[backend=bibtex,style=phys,sorting=ynt]{biblatex}
-\usepackage[backend=biber,sorting=ynt,style=ieee]{biblatex}
-\addbibresource{/home/charlesedouard/Desktop/Travail/Documentation/master-bibliography.bib}
-
+\usepackage[backend=biber,sorting=ynt,style=authoryear]{biblatex} % N'est pas utilisé par le compilateur org-mode, mais NÉCESSAIRE. Voir le fichier init.el pour changer le style. 
+\addbibresource{/home/charlesedouard/Desktop/Travail/Documentation/2023/master-bibliography.bib}
 
 
 \usepackage{amsmath, amssymb, amsthm} % Symb. math. (Mathmode+Textmode) + Beaux théorèmes.
@@ -37,58 +27,22 @@
 \usepackage{color} % Permettre l'utilisation des couleurs.
 \usepackage{colortbl} % Color tables
 \usepackage[dvipsnames]{xcolor} % Couleurs avancées.
-\usepackage{titling} % Donne accès à \theauthor, \thetitle, \thedate
 
 % Physique
 \usepackage{physics} % Meilleur package pour physicien. 
 
-
 % Style
 \usepackage{lipsum} % For fun
 \usepackage{tikz} % Realisation de figures TIKZ.
+\usetikzlibrary{arrows.meta,bending} % Arrow heads 
 \usepackage{empheq} % Boite autour de MULTIPLE équations
 \usepackage{bbding}
 
 % Français
 \usepackage[french]{babel} % Environnements en Français.
-% ==============================BASE-(END)=================================%
-
-
-
-% ================================SETTINGS=================================%
-% Pas d'indentation en début de paragraphe :
-\setlength\parindent{0pt}
-\setlength{\parskip}{0.15cm}
-
-% Tableaux/tabular
-% Espace vertical dans les tabular/tableaux
-\renewcommand{\arraystretch}{1.2}
-% Couleur des tableaux/tabular
-\rowcolors{2}{violet!5}{}
-
-% Couleurs de hyperliens :
-\definecolor{mypink}{RGB}{147, 0, 255}
-\hypersetup{colorlinks, 
-             filecolor=mypink,
-             urlcolor=mypink, 
-             citecolor=mypink, 
-             linkcolor=mypink, 
-             anchorcolor=mypink}
-
 
 \usepackage{titling} % Donne accès à \theauthor, \thetitle, \thedate
 
-% Physique
-\usepackage{physics} % Meilleur package pour physicien. 
-
-
-% Style
-\usepackage{lipsum} % For fun
-\usepackage{tikz} % Realisation de figures TIKZ.
-\usepackage{empheq} % Boite autour de MULTIPLE équations
-
-% Français
-\usepackage[french]{babel} % Environnements en Français.
 % ==============================BASE-(END)=================================%
 
 
@@ -104,13 +58,13 @@
 % Espace vertical dans les tabular/tableaux
 \renewcommand{\arraystretch}{1.2}
 % Couleur des tableaux/tabular
-\rowcolors{2}{violet!5}{}
+% \rowcolors{3}{violet!5}{}
 
 % Couleurs de hyperliens :
 \definecolor{mypink}{RGB}{147, 0, 255}
 \hypersetup{colorlinks, 
              filecolor=mypink,
-             urlcolor=mypink, 
+             urlcolor=Violet, 
              citecolor=mypink, 
              linkcolor=mypink, 
              anchorcolor=mypink}
@@ -139,9 +93,12 @@
 
 
 % ==============================NEWCOMMANDS================================%
+% CQFD symbol
+\renewcommand{\qedsymbol}{$\hfill\blacksquare$}
 
 % Vecteurs de base :
 \newcommand{\nvf}{\vb{\hat{n}}}
+\newcommand{\evf}{\vb{\hat{e}}}
 \newcommand{\ivf}{\vb{\hat{i}}}
 \newcommand{\jvf}{\vb{\hat{j}}}
 \newcommand{\kvf}{\vb{\hat{k}}}
@@ -150,8 +107,8 @@
 \newcommand{\ust}{\vb{u}_{\ast}}
 
 % Physics empty spaces 
-\newcommand{\typical}{\vphantom{A}}
-\newcommand{\tall}{\vphantom{A^{x^x}_p}}
+\newcommand{\short}{\vphantom{pA}}
+\newcommand{\tall}{\vphantom{pA^{x^x}_p}}
 \newcommand{\grande}{\vphantom{\frac{1}{xx}}}
 \newcommand{\venti}{\vphantom{\sum_x^x}}
 \newcommand{\pt}{\hspace{1pt}} % One horizontal pt space
@@ -170,6 +127,14 @@
 %\newcommand{\nb}{$\boxed{\text{\footnotesize\EightStarConvex}\pt \mathfrak{N. B.}}$\hspace{4pt}}
 \newcommand{\nb}{\underline{{\footnotesize\EightStarConvex}\pt $\mathfrak{N.B.}$\vphantom{p}}\hspace{3pt}}
 
+\newcommand{\exemple}{
+\parbox[center]{2.2cm}{\begin{tcolorbox}[sharp corners, rounded corners=northeast, rounded corners=southeast,
+colback=Violet!5, colframe=black,
+size=small, width=2cm, left=-0.25pt, bottom=-0.5pt,
+arc is angular, arc=2.5mm, boxrule=0.35pt, leftrule=4pt, %bottomrule=1pt,
+after={\enskip}] Exemple \end{tcolorbox}}}
+
+\newcommand{\cqfd}{\hfill$\blacktriangleleft$}
 
 % Define the nota bene environment
 \usepackage{tcolorbox}
@@ -196,7 +161,7 @@
 \newcommand{\mytitlepage}{
 \begin{titlepage}
 \begin{center}
-{\Huge Contrat Été 2023 \par}
+{\Huge \thesubtitle \par}
 \vspace{2cm}
 {\Huge \MakeUppercase{\thetitle} \par}
 \vspace{2cm}
@@ -233,6 +198,7 @@ Police d'écriture : \textbf{CMU Serif Roman}
 \author{Charles-Édouard Lizotte}
 \date{07/07/2023}
 \title{Carnet de bord, Université McGill}
+\newcommand{\thesubtitle}{Contrat Été 2023}
 \hypersetup{
  pdfauthor={Charles-Édouard Lizotte},
  pdftitle={Carnet de bord, Université McGill},
@@ -248,7 +214,7 @@ Police d'écriture : \textbf{CMU Serif Roman}
 
 
 \section{{\bfseries\sffamily DONE} Présentation des résultats de maîtrise}
-\label{sec:orgd2a40ff}
+\label{sec:org99db7f0}
 Ce mercredi 5 juillet, le groupe à David m'avait proposé de réaliser une présentation sur mon projet de maîtrise (de 2019 à 2022).
 Personnellement, je trouvais que c'était une bonne occasion de me remettre à niveau sur ce qui avait été réalisé, tout en revisitant certains résultats intéressants datant du début du projet.
 Aussi, ça m'a permis de faire une présentation en Anglais, ce qui n'avait pas vraiment été pertinent jusqu'à maintenant.
@@ -264,34 +230,34 @@ Aussi, ça me permettrait de revisiter certains concepts, comme le calcul menant
 Bref, je met ça ici pour m'en souvenir.
 
 \section{Toujours des problèmes dans la divergence du courant barotrope}
-\label{sec:org1c0fe91}
+\label{sec:orgb3bda97}
 
 \subsection{Diagnostique}
-\label{sec:org271d4ad}
+\label{sec:org784fe1d}
 Encore et toujours, nous avons des problèmes avec la divergence du courant barotrope, comme démontré dans le dernier rapport.
 Certaines informations pertinentes :
 \begin{itemize}
-\item La divergence barotrope n'est pas nulle : Des «points» apparaissent dans la divergence et croient de manière linéaire avec le temps. C'est un problème car ça va créer de l'erreur numérique à long terme. L'erreur est de l'ordre de 1e-11 quand la divergence de chaque couche est autour de 1e-9 (voir figure \ref{fig:orgd3fc405}).
+\item La divergence barotrope n'est pas nulle : Des «points» apparaissent dans la divergence et croient de manière linéaire avec le temps. C'est un problème car ça va créer de l'erreur numérique à long terme. L'erreur est de l'ordre de 1e-11 quand la divergence de chaque couche est autour de 1e-9 (voir figure \ref{fig:org49a7948}).
 \item La divergence du RHS barotrope, soit la quantité qui sort directement de MUDPACK est de 1e-19. C'est donc énormément plus petit. On pourrait pas mal dire que c'est de l'ordre de l'erreur numérique.
 \end{itemize}
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figures/debuggage/2023_07_010_3div1.png}
-\caption{\label{fig:orgd3fc405}Figure illustrant trois quantités reliées à la divergence au dernier pas de temps -- autour de 1450 jours. En ordre : la divergence de la première couche; la divergence barotrope du courant pour toutes les couches; la divergence du RHS du modèle.}
+\caption{\label{fig:org49a7948}Figure illustrant trois quantités reliées à la divergence au dernier pas de temps -- autour de 1450 jours. En ordre : la divergence de la première couche; la divergence barotrope du courant pour toutes les couches; la divergence du RHS du modèle.}
 \end{figure}
 
-Avant le \emph{spin up}, les erreurs ont une forme légèrement différentes, mais le résultat est le même (voir figure \ref{fig:orga9387c4}).
+Avant le \emph{spin up}, les erreurs ont une forme légèrement différentes, mais le résultat est le même (voir figure \ref{fig:org0b97e83}).
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figures/debuggage/2023_07_010_3div1_t250.png}
-\caption{\label{fig:orga9387c4}Figure illustrant trois quantités reliées à la divergence au jour 250. En ordre : la divergence de la première couche; la divergence barotrope du courant pour toutes les couches; la divergence du RHS du modèle.}
+\caption{\label{fig:org0b97e83}Figure illustrant trois quantités reliées à la divergence au jour 250. En ordre : la divergence de la première couche; la divergence barotrope du courant pour toutes les couches; la divergence du RHS du modèle.}
 \end{figure}
 
 
 \subsection{Hypothèse}
-\label{sec:orgf0c45af}
+\label{sec:org4e432b2}
 Donc mon hypothèse est que ça se cache dans la partie barocline et non de MUDPACK.
 Voici l'argument que je fais :
 \begin{itemize}
@@ -305,28 +271,28 @@ Il faudrait trouver une solution.
 Après une rencontre ce vendredi avec David et LP, on propose cordialement de retirer la partie divergente à tous les dix pas de temps, ce qui devrait demander une autre run de MUDPACK, mais le coût numérique est très faible.
 
 \subsection{Solution}
-\label{sec:org06235b3}
+\label{sec:org5e50a5f}
 
 À tous les 100 pas de temps, on pourrait retirer la partie non-divergente de notre écoulement.
 Dans ce cas, on appliquerait donc une correction à notre écoulement barotrope.
 En premier lieu, il est extrêmement simple à prouver la moyenne barotrope des vorticités et égale au rotationnel du courant barotrope, soit
 \begin{equation}
-\label{eq:org7f29b7f}
+\label{eq:org0b36af5}
    \zeta_{BT} = \qty(\frac{1}{H})\sum_k^n h_k\zeta_k = \qty(\frac{1}{H})\sum_k^n h_k\pt \kvf \cdot \curl{\uu_k} = \qty(\frac{ \kvf}{H})\cdot\sum_k^n\curl(h_k\uu_k) = \kvf\cdot\curl(\frac{1}{H}\sum_k^n h_k\uu_k) = \kvf\cdot\curl{\uu_{BT}},
 \end{equation}
-car le produit vectoriel est un opérateur linéaire (\ref{eq:org7f29b7f}).
+car le produit vectoriel est un opérateur linéaire (\ref{eq:org0b36af5}).
 Il existe donc deux méthodes pour trouver la vorticités barotrope.\bigskip
 
 Le processus pour corriger notre écoulement est simple, on sait que
 \begin{equation}
-\label{eq:orga14203f}
+\label{eq:org02c5a47}
    \laplacian(\psi_{BT}) = \zeta_{BT}.
 \end{equation}
-Comme à l'habitude, notre écoulement est divisé en deux parties, soit barotropes (voir \ref{eq:org7f29b7f}) et baroclines ,
+Comme à l'habitude, notre écoulement est divisé en deux parties, soit barotropes (voir \ref{eq:org0b36af5}) et baroclines ,
 \begin{equation}
    \uu = \uu_{BT} + \uu_{BC}.
 \end{equation}
-Une fois \ref{eq:orga14203f} solvé, on retrouve notre courant barotrope corrigé (\(\uu_{BT}'\)) à l'aide de
+Une fois \ref{eq:org02c5a47} solvé, on retrouve notre courant barotrope corrigé (\(\uu_{BT}'\)) à l'aide de
 \begin{equation}
    \uu_{BT}' = \curl(k\psi_{BT}),
 \end{equation}
@@ -337,7 +303,7 @@ et l'on retroue le courant à l'aide de
 
 
 \subsection{Résultats}
-\label{sec:org1d12606}
+\label{sec:orgc065ab9}
 Ça ne parche pas vu qu'on est en périodique.
 Voici la nature du problème : les frontières sont périodiques, \emph{MUDPACK} essaie donc de relier les dérivées aux frontières sans considération de la constante d'intégration.
 Finalement, la solution relative par rapport à la constante d'intégration devient minuscule et on perd de plus en plus de précision.
@@ -351,11 +317,11 @@ Pour résumer, voici un passage de la documentation de MUDPACK :
 Donc, on embarque sur les murs au plus vite.
 
 \section{{\bfseries\sffamily TODO} Les murs}
-\label{sec:org7d5453f}
+\label{sec:org505859b}
 Ok, il faut absolument embarquer sur les murs avant que je parte en vacance.
 
 \subsection{{\bfseries\sffamily TODO} Nombre de points}
-\label{sec:org1ebffab}
+\label{sec:orgea1176a}
 
 \begin{wrapfigure}{r}{0.4\textwidth}
 \vspace{-\baselineskip}
@@ -388,7 +354,7 @@ Ok, il faut absolument embarquer sur les murs avant que je parte en vacance.
 {{\filldraw [black!85] (\i,\j) circle (0.8pt);}}
 \end{tikzpicture}
 \end{center}
-\caption{\label{orgc6321ff}Grille  avec frontières fixes.}
+\caption{\label{org28a2d20}Grille  avec frontières fixes.}
 \end{wrapfigure}
 
 
@@ -413,7 +379,7 @@ Pour être plus précis les dimensions seront données par
 \end{itemize}
 
 \subsection{Condition no-normal flow}
-\label{sec:org24a5df4}
+\label{sec:org3f836ea}
 La condition \emph{no-normal flow} est tout simplement donnée par
 \begin{align}
    && u\pt(\pt:\pt,1) = u\pt(:\pt,ny) = 0, && v\pt(1,:\pt) = v\pt(nx,:\pt) = 0. &&
@@ -421,7 +387,7 @@ La condition \emph{no-normal flow} est tout simplement donnée par
 
 
 \subsection{Condition free slip}
-\label{sec:org55e8588}
+\label{sec:org02cde21}
 Avec notre nouvelle définition de grille, la condition \emph{free slip} est tout simplement donnée par
 \begin{align}
     && u\pt(\pt0,:) = u\pt(1,:); && u\pt(nx+1,:) = u\pt(nx,:) && \\

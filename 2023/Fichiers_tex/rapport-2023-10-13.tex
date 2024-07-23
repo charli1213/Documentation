@@ -1,33 +1,23 @@
-% Created 2024-06-16 Sun 00:13
+% Created 2024-07-23 Tue 11:41
 % Intended LaTeX compiler: pdflatex
-ocumentclass[10pt]{article}% =================================BASE====================================%
-\documentclass[10pt]{report}
+\documentclass[10pt]{article}
+% =================================BASE====================================%
 \usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry} % Marges
 \usepackage[T1]{fontenc} % Nécessaire avec FrenchBabel
 \usepackage[utf8]{inputenc} % Important pour symboles Francophones, é,à,etc
 \usepackage{csquotes} % Recommandé par PDFLatex lors de la compilation. 
 
-
-% Calligraphie
-%\usepackage{lmodern} % Ça, ça set latin modern
-%\usepackage{mathrsfs} %Permet la command \mathscr (Lettres attachées genre) \mathscr(B)
-
 % Calligraphie
 %\usepackage{pxfonts} % Met le texte ET les maths en Palatino + donne accès à des symboles math
 \usepackage{palatino} % Cette commande met seulement le texte en police palatino
-\usepackage{lmodern} % Pour les maths?
+\usepackage{lmodern} % Pour les maths? Lmodern pour les maths
 % Use lmodern for sans-serif
 \usepackage{mathrsfs} % Permet la command \mathscr (Lettres attachées genre) \mathscr(B)
 
-
-
-
-
 % Bibliographie
 %\usepackage[backend=bibtex,style=phys,sorting=ynt]{biblatex}
-\usepackage[backend=biber,sorting=ynt,style=ieee]{biblatex}
-\addbibresource{/home/charlesedouard/Desktop/Travail/Documentation/master-bibliography.bib}
-
+\usepackage[backend=biber,sorting=ynt,style=authoryear]{biblatex} % N'est pas utilisé par le compilateur org-mode, mais NÉCESSAIRE. Voir le fichier init.el pour changer le style. 
+\addbibresource{/home/charlesedouard/Desktop/Travail/Documentation/2023/master-bibliography.bib}
 
 
 \usepackage{amsmath, amssymb, amsthm} % Symb. math. (Mathmode+Textmode) + Beaux théorèmes.
@@ -37,58 +27,22 @@
 \usepackage{color} % Permettre l'utilisation des couleurs.
 \usepackage{colortbl} % Color tables
 \usepackage[dvipsnames]{xcolor} % Couleurs avancées.
-\usepackage{titling} % Donne accès à \theauthor, \thetitle, \thedate
 
 % Physique
 \usepackage{physics} % Meilleur package pour physicien. 
 
-
 % Style
 \usepackage{lipsum} % For fun
 \usepackage{tikz} % Realisation de figures TIKZ.
+\usetikzlibrary{arrows.meta,bending} % Arrow heads 
 \usepackage{empheq} % Boite autour de MULTIPLE équations
 \usepackage{bbding}
 
 % Français
 \usepackage[french]{babel} % Environnements en Français.
-% ==============================BASE-(END)=================================%
-
-
-
-% ================================SETTINGS=================================%
-% Pas d'indentation en début de paragraphe :
-\setlength\parindent{0pt}
-\setlength{\parskip}{0.15cm}
-
-% Tableaux/tabular
-% Espace vertical dans les tabular/tableaux
-\renewcommand{\arraystretch}{1.2}
-% Couleur des tableaux/tabular
-\rowcolors{2}{violet!5}{}
-
-% Couleurs de hyperliens :
-\definecolor{mypink}{RGB}{147, 0, 255}
-\hypersetup{colorlinks, 
-             filecolor=mypink,
-             urlcolor=mypink, 
-             citecolor=mypink, 
-             linkcolor=mypink, 
-             anchorcolor=mypink}
-
 
 \usepackage{titling} % Donne accès à \theauthor, \thetitle, \thedate
 
-% Physique
-\usepackage{physics} % Meilleur package pour physicien. 
-
-
-% Style
-\usepackage{lipsum} % For fun
-\usepackage{tikz} % Realisation de figures TIKZ.
-\usepackage{empheq} % Boite autour de MULTIPLE équations
-
-% Français
-\usepackage[french]{babel} % Environnements en Français.
 % ==============================BASE-(END)=================================%
 
 
@@ -104,13 +58,13 @@
 % Espace vertical dans les tabular/tableaux
 \renewcommand{\arraystretch}{1.2}
 % Couleur des tableaux/tabular
-\rowcolors{2}{violet!5}{}
+% \rowcolors{3}{violet!5}{}
 
 % Couleurs de hyperliens :
 \definecolor{mypink}{RGB}{147, 0, 255}
 \hypersetup{colorlinks, 
              filecolor=mypink,
-             urlcolor=mypink, 
+             urlcolor=Violet, 
              citecolor=mypink, 
              linkcolor=mypink, 
              anchorcolor=mypink}
@@ -139,9 +93,12 @@
 
 
 % ==============================NEWCOMMANDS================================%
+% CQFD symbol
+\renewcommand{\qedsymbol}{$\hfill\blacksquare$}
 
 % Vecteurs de base :
 \newcommand{\nvf}{\vb{\hat{n}}}
+\newcommand{\evf}{\vb{\hat{e}}}
 \newcommand{\ivf}{\vb{\hat{i}}}
 \newcommand{\jvf}{\vb{\hat{j}}}
 \newcommand{\kvf}{\vb{\hat{k}}}
@@ -150,8 +107,8 @@
 \newcommand{\ust}{\vb{u}_{\ast}}
 
 % Physics empty spaces 
-\newcommand{\typical}{\vphantom{A}}
-\newcommand{\tall}{\vphantom{A^{x^x}_p}}
+\newcommand{\short}{\vphantom{pA}}
+\newcommand{\tall}{\vphantom{pA^{x^x}_p}}
 \newcommand{\grande}{\vphantom{\frac{1}{xx}}}
 \newcommand{\venti}{\vphantom{\sum_x^x}}
 \newcommand{\pt}{\hspace{1pt}} % One horizontal pt space
@@ -170,6 +127,14 @@
 %\newcommand{\nb}{$\boxed{\text{\footnotesize\EightStarConvex}\pt \mathfrak{N. B.}}$\hspace{4pt}}
 \newcommand{\nb}{\underline{{\footnotesize\EightStarConvex}\pt $\mathfrak{N.B.}$\vphantom{p}}\hspace{3pt}}
 
+\newcommand{\exemple}{
+\parbox[center]{2.2cm}{\begin{tcolorbox}[sharp corners, rounded corners=northeast, rounded corners=southeast,
+colback=Violet!5, colframe=black,
+size=small, width=2cm, left=-0.25pt, bottom=-0.5pt,
+arc is angular, arc=2.5mm, boxrule=0.35pt, leftrule=4pt, %bottomrule=1pt,
+after={\enskip}] Exemple \end{tcolorbox}}}
+
+\newcommand{\cqfd}{\hfill$\blacktriangleleft$}
 
 % Define the nota bene environment
 \usepackage{tcolorbox}
@@ -196,7 +161,7 @@
 \newcommand{\mytitlepage}{
 \begin{titlepage}
 \begin{center}
-{\Huge Contrat Été 2023 \par}
+{\Huge \thesubtitle \par}
 \vspace{2cm}
 {\Huge \MakeUppercase{\thetitle} \par}
 \vspace{2cm}
@@ -233,6 +198,7 @@ Police d'écriture : \textbf{CMU Serif Roman}
 \author{Charles-Édouard Lizotte}
 \date{13/10/2023}
 \title{Carnet de bord, Université McGill}
+\newcommand{\thesubtitle}{Contrat Été 2023}
 \hypersetup{
  pdfauthor={Charles-Édouard Lizotte},
  pdftitle={Carnet de bord, Université McGill},
@@ -246,25 +212,25 @@ Police d'écriture : \textbf{CMU Serif Roman}
 \tableofcontents\newpage
 
 \section{Épaisseur nulle pour le modèle non-couplée -- \textit{<2023-10-12 Thu>}}
-\label{sec:org383864e}
+\label{sec:orga8e9fd5}
 
 \begin{wrapfigure}[18]{l}{0.45\textwidth}\vspace{-\baselineskip} \centering
 \centering
 \includegraphics[width=0.45\textwidth]{figures/debuggage/2023_10_08_thickness1_histo.png}
-\caption{\label{fig:orgb7c69ca}Histograme de l'épaisseur de la première couche du dernier output avant que l'épaisseur atteingne zéro.}
+\caption{\label{fig:orge3bbad2}Histograme de l'épaisseur de la première couche du dernier output avant que l'épaisseur atteingne zéro.}
 \end{wrapfigure}
 
 
 Comme ajouté dans le dernier rapport, le modèle \emph{shallow water} dit maintenant à quel point spatial l'épaisseur a atteint une valeur nulle.
-Pour diagnostiquer l'erreur, on a maintenant un moyen d'observer ce qui se passe, comme illustré à la figure \ref{fig:org2d38e2f}.
+Pour diagnostiquer l'erreur, on a maintenant un moyen d'observer ce qui se passe, comme illustré à la figure \ref{fig:org89a681c}.
 Dans ce cas précis, le modèles \emph{shallow water} non couplé semble encore montrer des signes d'instabilités assez aléatoires.
 En somme, nous étions parti d'une \emph{run} précédente qui avait (elle aussi) atteint une épaisseur nulle pour voir ce qui se passait.
 Par contre, la \emph{run} n'a pas explosée immédiatement, ce qui vient confirmer que c'est probablement de l'erreur numérique.
-À la figure \ref{fig:org2d38e2f}, c'est pas mal ce qu'on peut voir.
+À la figure \ref{fig:org89a681c}, c'est pas mal ce qu'on peut voir.
 Un point bleu apparait très rapidement en haut à droite des quatres quadrants (1 \emph{output} aux deux heures). \bigskip
 
-Malheureusement, l'histograme n'est pas très évocateur, comme il manque définitivement des pas de temps (voir fig. \ref{fig:orgb7c69ca}).
-Malgré tout, aux vue de l'animation de la figure \ref{fig:org2d38e2f}, je pense que c'est une erreur de type numérique.\bigskip
+Malheureusement, l'histograme n'est pas très évocateur, comme il manque définitivement des pas de temps (voir fig. \ref{fig:orge3bbad2}).
+Malgré tout, aux vue de l'animation de la figure \ref{fig:org89a681c}, je pense que c'est une erreur de type numérique.\bigskip
 
 Principalement pour ces trois raisons : 
 \begin{enumerate}
@@ -277,18 +243,18 @@ Principalement pour ces trois raisons :
 \begin{figure}[!htpb]
 \centering
 \includegraphics[width=0.7\textwidth]{figures/debuggage/2023_10_08_thickness1_last4steps.png}
-\caption{\label{fig:org2d38e2f}Diagnostique de l'épaisseur d'une run précise du modèle \emph{shallow water}. On peut voir sur ce zoom que l'instabilité dans l'épaisseur apparait dans le haut à droite de tous les quadrant avant que le modèle s'arrête. De gauche à droite les temps -4, -3 et en bas : -2, -1.}
+\caption{\label{fig:org89a681c}Diagnostique de l'épaisseur d'une run précise du modèle \emph{shallow water}. On peut voir sur ce zoom que l'instabilité dans l'épaisseur apparait dans le haut à droite de tous les quadrant avant que le modèle s'arrête. De gauche à droite les temps -4, -3 et en bas : -2, -1.}
 \end{figure}
 
 \subsection{Solutions : Filtre de Robert plus fort? -- \textit{<2023-10-12 Thu>}}
-\label{sec:org217fac7}
+\label{sec:org86c4a73}
 On peut diminuer les pas de temps ou augmenter la puissance du filtre de Robert?
 Il faudrait voir avec David pour ça.
 pour l'instant, j'ai testé plusieurs amplitudes pour le filtre de Robert.
-Les valeurs utilisées sont illustrées dans le tableau \ref{tab:orgc8d292d} et l'on y retrouve aussi le nombre de pas de temps que le modèle s'est rendu avant de lâcher à cause d'une instabilité numérique causant une épaisseur nulle. 
+Les valeurs utilisées sont illustrées dans le tableau \ref{tab:orgc0ac769} et l'on y retrouve aussi le nombre de pas de temps que le modèle s'est rendu avant de lâcher à cause d'une instabilité numérique causant une épaisseur nulle. 
 
 \begin{table}[htbp]
-\caption{\label{tab:orgc8d292d}Résumé des valeurs utilisées comme filtre de Robert, dans le but de « smoother » les instabilités numériques.}
+\caption{\label{tab:orgc0ac769}Résumé des valeurs utilisées comme filtre de Robert, dans le but de « smoother » les instabilités numériques.}
 \centering
 \begin{tabular}{ccccc}
 \hline
@@ -310,7 +276,7 @@ Donc, je pourrais dire que ça n'a pas vraiment marché.
 On va passer à une autre solution.
 
 \subsection{Solution : pas de temps plus faible? -- \textit{<2023-10-13 Fri>}}
-\label{sec:orgd3651b5}
+\label{sec:org88173b1}
 
 Une autres solution proposée par David.
 Si notre diagnostique d'erreur numérique est bon, ça devrait régler le problème.
@@ -319,10 +285,10 @@ Tous ces tests sont réalisés avec un pas de temps de 200 secondes au lieu du 3
 
 Après avoir tenté l'expérience, j'ai vu que le pas de temps ne change arbitrairement rien.
 Au fond, il semble qu'il y ait des incursions lorsque deux « blobs » se séparent et il faudrait trouve un moyen de gérer ces incursions.
-Un résumé des expériences se retrouve dans le tableau \ref{tab:orge97ad20}.
+Un résumé des expériences se retrouve dans le tableau \ref{tab:orgf92c710}.
 
 \begin{table}[htbp]
-\caption{\label{tab:orge97ad20}Résumé des expériences lancées avec un pas de temps de 200 secondes au lieu de 300.}
+\caption{\label{tab:orgf92c710}Résumé des expériences lancées avec un pas de temps de 200 secondes au lieu de 300.}
 \centering
 \begin{tabular}{cccc}
 \hline
@@ -358,10 +324,10 @@ Tandis qu'on observe une incusrion à la frontière pour l'expérience à 4 couc
 \end{figure}
 
 \subsection{Le besoin d'un transfert de masse et/ou d'un Laplacien sur l'épaisseur des couches?}
-\label{sec:org0c40563}
+\label{sec:orgb59f1b0}
 
 \section{Retour rapide sur la « partial slip » -- \textit{<2023-10-13 Fri>}}
-\label{sec:org9a6d390}
+\label{sec:orgf9f9ab6}
 La \emph{partial} et la \emph{free slip} est maintenant controlée par la même sous-routine \emph{partial free slip.f90}.
 Tout passe maintenant par le paramètre « \(\alpha\) » qui décrit la proportion de la dérivée qui doit passer dans l'équation
 \begin{equation}
@@ -373,7 +339,7 @@ Simple comme ça.
 
 
 \section{« Spin up » de la dérive de Stokes -- \textit{<2023-10-12 Thu>}}
-\label{sec:org2473c7b}
+\label{sec:org73a7cbc}
 
 \begin{wrapfigure}[14]{r}{0.65\textwidth}
 \vspace{-\baselineskip}
@@ -400,39 +366,39 @@ Simple comme ça.
    \draw (6,0) node [below] {Temps};
 \end{tikzpicture}
 \end{center}
-\caption{\label{org9d2c53e}Illustration conceptuelle de la rampe pour éviter le \emph{spin up} du modèle de vagues.}
+\caption{\label{org1c00ecc}Illustration conceptuelle de la rampe pour éviter le \emph{spin up} du modèle de vagues.}
 \end{wrapfigure}
 
 En somme, le modèle de vagues a un \emph{spin up} extrême, pas en terme d'amplitude, mais en terme de vitesse et ça fait tout sauter -- l'épaisseur de la première couche atteint 0 en moins de 90 pas de temps.
 Donc, ce qu'on va faire, c'est une rampe différente que \emph{saute par dessus} le \emph{spin up} du modèle de vagues.
-Quelque chose qui ressemble à la figure \ref{org9d2c53e}. \bigskip
+Quelque chose qui ressemble à la figure \ref{org1c00ecc}. \bigskip
 
 Bien que je croyais que cette solution serait suffisante, il semble que la dérive de Stokes soit encore trop forte.
 Nous allons donc essayer d'autres avenues dans les sections suivantes. 
 
 \section{Problème de dérive de Stokes}
-\label{sec:org84f51ee}
+\label{sec:org37e223c}
 Après avoir tenté la solution proposée dans la section précédente, on voit qu'il faudra bien plus qu'une rampe pour satisfaire le modèle \emph{shallow water}.
-Sommairement, le modèle \emph{shallow water} ne tient pas le coups car la dérive de Stokes induit un gradient extrême dans la partie droite du domaine (Voir figure \ref{fig:org0596a03}).
+Sommairement, le modèle \emph{shallow water} ne tient pas le coups car la dérive de Stokes induit un gradient extrême dans la partie droite du domaine (Voir figure \ref{fig:org89022a1}).
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figures/debuggage/2023_10_13_UStokes.png}
-\caption{\label{fig:org0596a03}Figure instantanée du profil associé au transport de Stokes après trois jours.}
+\caption{\label{fig:org89022a1}Figure instantanée du profil associé au transport de Stokes après trois jours.}
 \end{figure}
 
-Lors de ma maîtrise, nous n'avions pas ce problème, car les zones primaires de productions de vagues (ZPPV) étaient à l'extérieur du domaine périodique, de sorte qu'on évitait le gradient élevé dans cette zonne (Voir figure \ref{fig:org4ca5f2f})
+Lors de ma maîtrise, nous n'avions pas ce problème, car les zones primaires de productions de vagues (ZPPV) étaient à l'extérieur du domaine périodique, de sorte qu'on évitait le gradient élevé dans cette zonne (Voir figure \ref{fig:org03485a3})
 
 \begin{figure}[!htpb]
 \centering
 \includegraphics[width=0.5\textwidth]{figures/debuggage/2023_10_13_Stokes_coupe.png}
-\caption{\label{fig:org4ca5f2f}Coupe horizontale du transport de Stokes après 4 jours.}
+\caption{\label{fig:org03485a3}Coupe horizontale du transport de Stokes après 4 jours.}
 \end{figure}
 
 Le même délire arrive aussi avec le \(\tau_{wave}\) et \(\tau_{dissipation}\), mais à moindre échelle.
 
 \section{Solutions à l'étude -- \textit{<2023-10-13 Fri>}}
-\label{sec:orge4b3ba9}
+\label{sec:orga4278b1}
 
 \begin{itemize}
 \item \textbf{Ramener le coefficient de réflection aux murs dans le modèle de vagues.}
@@ -486,7 +452,7 @@ Il faudrait seulement avoir un genre de stencil qui moyenne chaque partie, mais 
 \fill [red, opacity=0.3] (3,3) rectangle (4,4);
 \end{tikzpicture}
 \end{center}
-\caption{\label{org06eda71}« Stencil » utilisé pour obtenir le champs aux plus grandes échelles.}
+\caption{\label{org120c59e}« Stencil » utilisé pour obtenir le champs aux plus grandes échelles.}
 \end{figure}
 
 
@@ -494,10 +460,10 @@ Il faudrait seulement avoir un genre de stencil qui moyenne chaque partie, mais 
 \newpage
 
 \subsection{Résultats -- \textit{<2023-10-16 Mon>}}
-\label{sec:orgf6f000c}
+\label{sec:org6953624}
 
 \subsubsection{Enlever la dérive de Stokes}
-\label{sec:org9800e1d}
+\label{sec:orgdd08825}
 Ce test nous a permis de voir qu'au fond ce sont les variations dans la zone primaire de production de vagues qui viennent mettre à mal la circulation.
 Même si la dérive de Stokes est abscente, on a toujours le même problème avec la variation de l'interface.
 On se souvient que
@@ -511,7 +477,7 @@ Mentionnons que \(c_d(x,y)\) est dépendant du champ de vagues.
 \end{center}
 
 \subsubsection{Changer le type de vent}
-\label{sec:org2d853cf}
+\label{sec:org4ee77e1}
 J'ai implémenté le nouveau schéma pour le vent, mais sans succès
 
 \begin{center}

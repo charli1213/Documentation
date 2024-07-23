@@ -1,33 +1,23 @@
-% Created 2024-06-16 Sun 00:13
+% Created 2024-07-23 Tue 11:41
 % Intended LaTeX compiler: pdflatex
-ocumentclass[10pt]{article}% =================================BASE====================================%
-\documentclass[10pt]{report}
+\documentclass[10pt]{article}
+% =================================BASE====================================%
 \usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry} % Marges
 \usepackage[T1]{fontenc} % Nécessaire avec FrenchBabel
 \usepackage[utf8]{inputenc} % Important pour symboles Francophones, é,à,etc
 \usepackage{csquotes} % Recommandé par PDFLatex lors de la compilation. 
 
-
-% Calligraphie
-%\usepackage{lmodern} % Ça, ça set latin modern
-%\usepackage{mathrsfs} %Permet la command \mathscr (Lettres attachées genre) \mathscr(B)
-
 % Calligraphie
 %\usepackage{pxfonts} % Met le texte ET les maths en Palatino + donne accès à des symboles math
 \usepackage{palatino} % Cette commande met seulement le texte en police palatino
-\usepackage{lmodern} % Pour les maths?
+\usepackage{lmodern} % Pour les maths? Lmodern pour les maths
 % Use lmodern for sans-serif
 \usepackage{mathrsfs} % Permet la command \mathscr (Lettres attachées genre) \mathscr(B)
 
-
-
-
-
 % Bibliographie
 %\usepackage[backend=bibtex,style=phys,sorting=ynt]{biblatex}
-\usepackage[backend=biber,sorting=ynt,style=ieee]{biblatex}
-\addbibresource{/home/charlesedouard/Desktop/Travail/Documentation/master-bibliography.bib}
-
+\usepackage[backend=biber,sorting=ynt,style=authoryear]{biblatex} % N'est pas utilisé par le compilateur org-mode, mais NÉCESSAIRE. Voir le fichier init.el pour changer le style. 
+\addbibresource{/home/charlesedouard/Desktop/Travail/Documentation/2023/master-bibliography.bib}
 
 
 \usepackage{amsmath, amssymb, amsthm} % Symb. math. (Mathmode+Textmode) + Beaux théorèmes.
@@ -37,58 +27,22 @@
 \usepackage{color} % Permettre l'utilisation des couleurs.
 \usepackage{colortbl} % Color tables
 \usepackage[dvipsnames]{xcolor} % Couleurs avancées.
-\usepackage{titling} % Donne accès à \theauthor, \thetitle, \thedate
 
 % Physique
 \usepackage{physics} % Meilleur package pour physicien. 
 
-
 % Style
 \usepackage{lipsum} % For fun
 \usepackage{tikz} % Realisation de figures TIKZ.
+\usetikzlibrary{arrows.meta,bending} % Arrow heads 
 \usepackage{empheq} % Boite autour de MULTIPLE équations
 \usepackage{bbding}
 
 % Français
 \usepackage[french]{babel} % Environnements en Français.
-% ==============================BASE-(END)=================================%
-
-
-
-% ================================SETTINGS=================================%
-% Pas d'indentation en début de paragraphe :
-\setlength\parindent{0pt}
-\setlength{\parskip}{0.15cm}
-
-% Tableaux/tabular
-% Espace vertical dans les tabular/tableaux
-\renewcommand{\arraystretch}{1.2}
-% Couleur des tableaux/tabular
-\rowcolors{2}{violet!5}{}
-
-% Couleurs de hyperliens :
-\definecolor{mypink}{RGB}{147, 0, 255}
-\hypersetup{colorlinks, 
-             filecolor=mypink,
-             urlcolor=mypink, 
-             citecolor=mypink, 
-             linkcolor=mypink, 
-             anchorcolor=mypink}
-
 
 \usepackage{titling} % Donne accès à \theauthor, \thetitle, \thedate
 
-% Physique
-\usepackage{physics} % Meilleur package pour physicien. 
-
-
-% Style
-\usepackage{lipsum} % For fun
-\usepackage{tikz} % Realisation de figures TIKZ.
-\usepackage{empheq} % Boite autour de MULTIPLE équations
-
-% Français
-\usepackage[french]{babel} % Environnements en Français.
 % ==============================BASE-(END)=================================%
 
 
@@ -104,13 +58,13 @@
 % Espace vertical dans les tabular/tableaux
 \renewcommand{\arraystretch}{1.2}
 % Couleur des tableaux/tabular
-\rowcolors{2}{violet!5}{}
+% \rowcolors{3}{violet!5}{}
 
 % Couleurs de hyperliens :
 \definecolor{mypink}{RGB}{147, 0, 255}
 \hypersetup{colorlinks, 
              filecolor=mypink,
-             urlcolor=mypink, 
+             urlcolor=Violet, 
              citecolor=mypink, 
              linkcolor=mypink, 
              anchorcolor=mypink}
@@ -139,9 +93,12 @@
 
 
 % ==============================NEWCOMMANDS================================%
+% CQFD symbol
+\renewcommand{\qedsymbol}{$\hfill\blacksquare$}
 
 % Vecteurs de base :
 \newcommand{\nvf}{\vb{\hat{n}}}
+\newcommand{\evf}{\vb{\hat{e}}}
 \newcommand{\ivf}{\vb{\hat{i}}}
 \newcommand{\jvf}{\vb{\hat{j}}}
 \newcommand{\kvf}{\vb{\hat{k}}}
@@ -150,8 +107,8 @@
 \newcommand{\ust}{\vb{u}_{\ast}}
 
 % Physics empty spaces 
-\newcommand{\typical}{\vphantom{A}}
-\newcommand{\tall}{\vphantom{A^{x^x}_p}}
+\newcommand{\short}{\vphantom{pA}}
+\newcommand{\tall}{\vphantom{pA^{x^x}_p}}
 \newcommand{\grande}{\vphantom{\frac{1}{xx}}}
 \newcommand{\venti}{\vphantom{\sum_x^x}}
 \newcommand{\pt}{\hspace{1pt}} % One horizontal pt space
@@ -170,6 +127,14 @@
 %\newcommand{\nb}{$\boxed{\text{\footnotesize\EightStarConvex}\pt \mathfrak{N. B.}}$\hspace{4pt}}
 \newcommand{\nb}{\underline{{\footnotesize\EightStarConvex}\pt $\mathfrak{N.B.}$\vphantom{p}}\hspace{3pt}}
 
+\newcommand{\exemple}{
+\parbox[center]{2.2cm}{\begin{tcolorbox}[sharp corners, rounded corners=northeast, rounded corners=southeast,
+colback=Violet!5, colframe=black,
+size=small, width=2cm, left=-0.25pt, bottom=-0.5pt,
+arc is angular, arc=2.5mm, boxrule=0.35pt, leftrule=4pt, %bottomrule=1pt,
+after={\enskip}] Exemple \end{tcolorbox}}}
+
+\newcommand{\cqfd}{\hfill$\blacktriangleleft$}
 
 % Define the nota bene environment
 \usepackage{tcolorbox}
@@ -196,7 +161,7 @@
 \newcommand{\mytitlepage}{
 \begin{titlepage}
 \begin{center}
-{\Huge Contrat Été 2023 \par}
+{\Huge \thesubtitle \par}
 \vspace{2cm}
 {\Huge \MakeUppercase{\thetitle} \par}
 \vspace{2cm}
@@ -233,6 +198,7 @@ Police d'écriture : \textbf{CMU Serif Roman}
 \author{Charles-Édouard Lizotte}
 \date{06/10/2023}
 \title{Carnet de bord, Université McGill}
+\newcommand{\thesubtitle}{Contrat Été 2023}
 \hypersetup{
  pdfauthor={Charles-Édouard Lizotte},
  pdftitle={Carnet de bord, Université McGill},
@@ -246,13 +212,13 @@ Police d'écriture : \textbf{CMU Serif Roman}
 \tableofcontents\newpage
 
 \section{{\bfseries\sffamily DONE} Le problème des ondes de Kelvin au bord -- \textit{<2023-10-03 Tue>}}
-\label{sec:org95422f6}
+\label{sec:org85322dc}
 Depuis quelques temps, toutes les simulations numériques non-couplées plantaient.
 Lorsque nous analysions les \emph{output}, il était évident que quelque chose se passait aux bords.
 L'épaisseur de la couche de surface atteingnait son minimum au côtes nord et sud, come si une onde de Kelvin beaucoup trop forte s'y était développée.
 
 \subsection{Partial slip condition}
-\label{sec:org6e11471}
+\label{sec:org63582f5}
 David eu la brillante idée de vouloir « ralentir » l'onde -- et donc diminuer son amplitude -- en changeant sa vitesse aux frontières.
 Pour se faire, nous avions choisi de modifier la \emph{free slip condition} pour quelque chose qui retirerait du momentum aux frontières, donc une \emph{partial slip condition}.
 Aux frontières, la dérivée serait plutôt exprimée selon
@@ -274,7 +240,7 @@ De plus, notre longueur caractéristique \(L_c\) ne peut pas être si grande que
 Donc, malgré que la \emph{switch} est présente dans le fichier de paramètres, nous avons abandonné ce chemin.
 
 \subsection{Changer l'hyperviscosité par une viscosité -- \textit{<2023-10-04 Wed>}}
-\label{sec:org35d08d2}
+\label{sec:orgf51df31}
 David soupçonnait qu'il y avait un problème relié à l'hyperviscosité dans le modèle.
 Il aurait été possible que la manière qu'on avait implémenté l'hyperviscosité ne fonctionne pas bien avec les bords -- étant donné que ça met en jeu un Laplacien double, etc. 
 C'est pourquoi David m'a proposé de la changer pour une viscosité qui dépend du Laplacien directement.
@@ -287,7 +253,7 @@ Bien que nous ayons implémenté une viscosité au lieu d'une hyperviscosité, l
 Les couches du modèle atteingnaient des épaisseurs nulles après quelques pas de temps aux frontières nord et sud.
 
 \subsection{Changer le profil de vent -- \textit{<2023-10-04 Wed>}}
-\label{sec:org6c2edf0}
+\label{sec:org55223ab}
 Après avoir fait pas mal de recherche sur les ondes de Kelvin dans le \autocite{vallis_2006}, David est arrivé à la conclusion que ce n'étaient pas des ondes de Kelvin, mais plutôt de l'\emph{upwelling} induit par le courant de bord.
 Ce courant était trop fort à cause du vent, donc on est passé d'un vent
 \begin{equation}
@@ -301,9 +267,9 @@ On a aussi diminué la valeur de \(\tau_0\) de moitié et tout fonctionne mieux.
 Le modèle produit maintenant des instabilités barocliniques sans problème.
 
 \section{{\bfseries\sffamily DONE} Compute Canada -- \textit{<2023-10-05 Thu>}}
-\label{sec:orgbf49213}
+\label{sec:org2a59004}
 \subsection{Introduction}
-\label{sec:org66704dd}
+\label{sec:org8903d9a}
 Pour se connecter,
 \begin{verbatim}
   ssh -Y celiz2@beluga.computecanada.ca
@@ -312,7 +278,7 @@ Le mot de passe est laissé à la discrétion du lecteur de ce rapport.
 En résumé, nous travaillons sur la grappe de calcul de l'ETS, soit Beluga en l'honneur de la baleine qui est en train de crever dans le Saint-Laurent.
 
 \subsection{Importation des modules sur Compute Canada}
-\label{sec:org59f0e5d}
+\label{sec:org0183fa2}
 Pour faire fonctionner nos modèles, on a besoin d'une couple de modules.
 Au même titre que sur la grappe de calcul Mingan, il est toujours possible de voir les modules listés à l'aide de la commande
 \begin{verbatim}
@@ -350,12 +316,12 @@ Tandis que pour Wavewatch III, il faut absolument ajouter ces commandes à notre
 
 
 \subsection{Script bash de type SLURM -- \textit{<2023-10-10 Tue>}}
-\label{sec:org9dd719a}
+\label{sec:org15d111e}
 
 Pour faire fonctionner les module MPI sur compute Canada, il faut utiliser \emph{srun}, mais la commande \emph{mpirun} fonctionne aussi.\bigskip
 
 \subsection{Compilation des modèles numériques en MPI -- \textit{<2023-10-10 Tue>}}
-\label{sec:orgb299133}
+\label{sec:orgc0811a7}
 Un résumé rapide du travail effectué pour que ça \emph{marche} entre vendredi et mardi : \bigskip
 \begin{enumerate}
 \item Le modèle \emph{shallow water} doit \textbf{absolument} être compilé avec \emph{gfortran}, \emph{fishpack} n'a malheureusement pas été programé pour fonctionner avec \emph{ifort};\bigskip
@@ -374,10 +340,10 @@ Je voulais mettre ça ici, parce que ça m'a pris beaucoup de temps pour \emph{f
 
 
 \section{{\bfseries\sffamily DONE} Nouveau schéma pour l'introduction de la dérive de Stokes dans les équations du mouvement -- \textit{<2023-10-06 Fri>}}
-\label{sec:orgab49a9f}
+\label{sec:org92b92c6}
 Initialement, les équations du mouvement d'un système Boussinesq sont exprimées selon l'expression
 \begin{equation}
-\label{eq:orgc5f0991}
+\label{eq:orgc319734}
    \pdv{\uu}{t} = \qty(f+\zeta)\pt \kvf\times\uu = -\gradient{B} + \boldsymbol{D} + \frac{\boldsymbol{\tau_a}}{\rho_o H},
 \end{equation}
 où la fonction de Bernouilli (\(B\)) est exprimée par \(B = p/\rho_o + \uu^2/2\).\bigskip
@@ -392,7 +358,7 @@ En somme,
 \item Les termes de Stokes-Coriolis, Craik-Leibovic et la nouvelle fonction de Bernouilli découlent donc directement cette au référentiel en mouvement. \bigskip
 \end{itemize}
 
-Lorsqu'on ajoute cette contribution lagrangienne à notre courant, l'expression \ref{eq:orgc5f0991} devient plutôt
+Lorsqu'on ajoute cette contribution lagrangienne à notre courant, l'expression \ref{eq:orgc319734} devient plutôt
 \begin{equation}
    \pdv{\uu}{t} = \qty(f+\zeta)\pt \kvf\ \times\underbrace{\grande\qty(\uu + \uu_S)}_{\substack{\text{Courant} \\ \text{Lagrangien}}} = \underbrace{\grande-\gradient{B_S}}_\text{B.-Stokes} + \ \boldsymbol{D} \underbrace{+ \frac{\tau_o}{\rho_o H}.}_{\substack{\text{Contr. des} \\ \text{Vagues}}}
 \end{equation}

@@ -1,4 +1,4 @@
-% Created 2024-07-02 Tue 14:42
+% Created 2024-07-04 Thu 15:54
 % Intended LaTeX compiler: pdflatex
 \documentclass[10pt]{article}
 % =================================BASE====================================%
@@ -63,7 +63,7 @@
 \definecolor{mypink}{RGB}{147, 0, 255}
 \hypersetup{colorlinks, 
              filecolor=mypink,
-             urlcolor=mypink, 
+             urlcolor=Violet, 
              citecolor=mypink, 
              linkcolor=mypink, 
              anchorcolor=mypink}
@@ -92,6 +92,8 @@
 
 
 % ==============================NEWCOMMANDS================================%
+% CQFD symbol
+\renewcommand{\qedsymbol}{$\hfill\blacksquare$}
 
 % Vecteurs de base :
 \newcommand{\nvf}{\vb{\hat{n}}}
@@ -124,6 +126,14 @@
 %\newcommand{\nb}{$\boxed{\text{\footnotesize\EightStarConvex}\pt \mathfrak{N. B.}}$\hspace{4pt}}
 \newcommand{\nb}{\underline{{\footnotesize\EightStarConvex}\pt $\mathfrak{N.B.}$\vphantom{p}}\hspace{3pt}}
 
+\newcommand{\exemple}{
+\parbox[center]{2.2cm}{\begin{tcolorbox}[sharp corners, rounded corners=northeast, rounded corners=southeast,
+colback=Violet!5, colframe=black,
+size=small, width=2cm, left=-0.25pt, bottom=-0.5pt,
+arc is angular, arc=2.5mm, boxrule=0.35pt, leftrule=4pt, %bottomrule=1pt,
+after={\enskip}] Exemple \end{tcolorbox}}}
+
+\newcommand{\cqfd}{\hfill$\blacktriangleleft$}
 
 % Define the nota bene environment
 \usepackage{tcolorbox}
@@ -204,7 +214,7 @@ Police d'écriture : \textbf{CMU Serif Roman}
 \label{sec:org9de2747}
 
 \subsection{Mise en contexte}
-\label{sec:org77b2be2}
+\label{sec:orgc8d0a8d}
 La \textbf{rhéologie} est définit comme la science de la déformation des matériaux.
 \Textcite{coon1974modeling} propose une rhéologie élasto-plastique pour les paquets de glace (\emph{see ice pack}).
 \Textcite{hibler1979dynamic} propose une rhéologie comme un plastique visqueux non-linéaire.
@@ -238,6 +248,7 @@ La masse de glace est exprimée par l'expression
 Pour ce qui est de la rhéologie, \Textcite{hibler1979dynamic} proposait une rhéologie elliptique \textbf{visco-plastique} qui relie les contraintes internes à l'intérieur de la glace (\emph{internal ice stress}) avec le dégré  d'étirement ou de déformation (\emph{rate of strain}) -- ou le \textbf{taux de changement de la déformation} pour être plus précis. 
 Et donc la forme de cette rhéologie est donnée par
 \begin{equation}
+\label{eq:orgb331085}
    \sigma_{ij} = 2 \eta \dot{\epsilon}_{ij} + \qty(\zeta - \eta) \dot{\epsilon}_{kk} \delta_{ij} - P \cdot\delta_{ij}/2,
 \end{equation}
 où la variable
@@ -248,7 +259,7 @@ est un genre de jacobien.
 On réécrit le \textbf{tenseur de déformation dans le domaine plastique} de manière plus évidente,
 \begin{equation}
 \label{eq:orgc97a849}
-   \boxed{\ \frac{1}{2\eta} \sigma_{ij} + \frac{\eta-\zeta}{4\eta\zeta} \sigma_{kk}\delta_{ij} + \frac{P}{4\zeta} \delta_{ij} = \dot{\epsilon}_{ij},\ }\hspace{1cm}\text{\textbf{Déformation plastique}}}
+   \boxed{\ \frac{1}{2\eta} \sigma_{ij} + \frac{\eta-\zeta}{4\eta\zeta} \sigma_{kk}\delta_{ij} + \frac{P}{4\zeta} \delta_{ij} = \dot{\epsilon}_{ij},\ }\hspace{1cm}\text{\textbf{Déformation plastique}}
 \end{equation}
 car ça va être important un peu plus loin.
 Grossièrement, cette rhéologie permet au paquets de glace de diverger avec très peu de contrainte, mais résiste grandement à la compression et au cisaillement.\bigskip
@@ -289,7 +300,7 @@ La condition de stabilité unidimensionelle pour une discrétisation explicite n
 Bref, si on \emph{plug} les constantes, on voit qu'on obtient des temps de calculs beaucoup trop longs ou une très mauvaise précision.
 Si on reprend l'équation précédente, mais en ajoutant une dimension élastique (Ajout de \(E\)) et un amortissement (\emph{damping}),
 \begin{equation}
-\label{eq:orgddd4d84}
+\label{eq:org87fe396}
    m \pdv[2]{\uu}{t} =E \qty(\laplacian{\uu} + \frac{\vb{R}}{\eta}) + \text{amortissement},
 \end{equation}
 où \(E\) est un coefficient qui s'apparente au module de Young -- comme avec les bon vieux ressorts. 
@@ -297,9 +308,9 @@ Pour citer \Textcite{hunke1997elastic},
 \begin{quote}
 \emph{This equation is meant to represent, albeit very crudely, an elastic–plastic model of the sea ice in the regime where elastic waves dominate.}
 \end{quote}
-Cette formulation devrait converger au même état d'équilibre que \ref{eq:org39f7e45}, tout en représentant un modèle élastique et plastique de la glace de mer où les ondes élastiques dominent.
+Cette formulation devrait converger au même état d'équilibre que \ref{eq:org39f7e45}, tout en représentant un modèle élastique et plastique de la glace de mer où les ondes élastiques dominent.\bigskip
 
-\nb L'équation \ref{eq:orgddd4d84} diffère de \ref{eq:org39f7e45} du fait qu'on a \(\sfrac{\partial^2 u}{\partial t^2}\) plutôt que \(\sfrac{\partial u}{\partial t}\), donc l'étirement n'est pas proportionnel 
+\nb L'équation \ref{eq:org87fe396} diffère de \ref{eq:org39f7e45} du fait qu'on a \(\qty(\sfrac{\partial^2 u}{\partial t^2})\) plutôt que \(\qty(\sfrac{\partial u}{\partial t})\), donc l'étirement n'est pas proportionnel à la déformation, mais plutôt au taux de déformation.
 
 \subsubsection{La formulation élastique}
 \label{sec:orgffd4e5a}
@@ -311,6 +322,7 @@ La partie «plastique» a déjà été prise en compte à l'équation \ref{eq:or
 
 Lorsqu'on ajoute les contributions élastiques et plastiques (\ref{eq:orgc97a849}), on obtient
 \begin{equation}
+\label{eq:org4b2bb40}
    \boxed{\ \frac{1}{E} \qty(\pdv{\sigma_{ij}}{t}) + \frac{1}{2\eta}\sigma_{ij} + \qty(\frac{\eta - \zeta}{4\eta\zeta}) \sigma_{kk} \delta_{ij} + \qty(\frac{P}{4\zeta}) \delta_{ij} = \dot{\epsilon}_{ij}.\ }
 \end{equation}
 
@@ -344,7 +356,7 @@ où \(c_e = \sqrt{\sfrac{E}{m}}\), soit la vitesse des ondes élastiques.
 \label{sec:org397290d}
 
 \subsection{Mise en contexte}
-\label{sec:org2e94db7}
+\label{sec:org3030afb}
 
 Dans sa \href{https://www.youtube.com/watch?v=\_V7ozTp6SJM}{présentation à l'Institut Isaac Newton (2023)}, Dany décrit la dynamique de la zone marginale à l'aide de l'équation
 \begin{equation}
@@ -353,6 +365,7 @@ Dans sa \href{https://www.youtube.com/watch?v=\_V7ozTp6SJM}{présentation à l'I
 \end{equation}
 où la somme des forces est décrite comme
 \begin{equation}
+\label{eq:org58f9240}
    \vb{F}_i =
     \underbrace{\grande\boldsymbol{\tau}_g}_{\substack{\text{Gradient}\short\\\text{de surface}}}
    +\underbrace{\grande\boldsymbol{\tau}_a}_{\tall\text{Vent}}
@@ -362,10 +375,10 @@ où la somme des forces est décrite comme
 \end{equation}
 \(\bigstar\) Il faudrait préciser la provenance de l'équation \ref{eq:orgbf74c5c}, même si ça semble juste être une version modifiée de Navier-Stokes.\bigskip
 
-Le terme \(\divergence{\sigma}\) -- définit comme étant la \textbf{rhéologie} -- est décrit à l'aide de l'équation de \textbf{déformation d'un plastique visqueux} \autocite{hunke1997elastic},
+Le terme \(\divergence{\sigma}\) -- définit comme étant la \textbf{rhéologie} -- est décrit à l'aide de l'équation de \textbf{déformation d'un plastique visqueux} \autocite{hunke1997elastic} (voir équation \ref{eq:orgb331085} plus haut), soit
 \begin{align}
    & \divergence{\boldsymbol{\sigma}} = \pdv{\sigma_{ij}}{x_i},\\
-   & \sigma_{ij} = 2\eta \pt\dot{\epsilon}_{ij} + \qty(\zeta - \eta) \dot{\epsilon}_{kk} \delta_{ij} - \frac{1}{2} \delta_{ij}.
+   & \sigma_{ij} = 2\eta \pt\dot{\epsilon}_{ij} + \qty(\zeta - \eta) \dot{\epsilon}_{kk} \delta_{ij} - \frac{P}{2} \delta_{ij}.
 \end{align}
 où \(\eta\) et \(\zeta\) sont des viscosités (à définir).
 La variable \(\dot{\epsilon}_{ij}\) est le tenseur de tension ou d'étirement (\emph{strain tensor}).\bigskip
@@ -492,8 +505,122 @@ Aussi :
 \end{itemize}
 
 
-\section{Résumé personnel}
-\label{sec:orgc7a91bb}
+\section{Résumé personnel rapide}
+\label{sec:orga3a1ac9}
+
+La glace est considérées dans notre modèle comme un fluide en deux dimensions.
+On prend les équations de Navier-Stokes intégrées verticalement sur l'épaisseur de la couche de glace \(h\) pour décrire son comportement dynamique, soit
+\begin{equation}
+\label{eq:orge3d68d1}
+    \underbrace{\venti\rho h\qty(\dv{\uu}{t} + f\kvf\times\uu)}_{\substack{\text{Accélération}\\\text{référentiel}\\\text{en rotation}}}
+   =\underbrace{\venti\sum_i\vb{F}_i}_{\substack{\text{Somme}\\\text{des forces}}}
+   +\underbrace{\venti\divergence{\boldsymbol{\sigma}}.}_{\substack{\text{Terme de}\\\text{Rhéologie}}}
+\end{equation}
+La somme des forces \(\sum_i \vb{F}_i\) est vu comme une somme de contraintes ou de forces qui agissent sur la glace.
+Mentionnons que l'équation \ref{eq:orge3d68d1} est en Pa ou en \(\text{Nm}^{-2}\).
+Dans le modèle Wavewatch III, les \textbf{transferts de momentum} sont exprimés dans ces mêmes unités, ce qui pourrait rendre le couplage assez simple.
+«\(h\)» est l'épaisseur moyenne de la glace dans une cellule d'aire \(A\) \autocite[voir][pour un aperçu]{dumont2022marginal}. 
+Comme exprimé à l'équation \ref{eq:org58f9240}, ça peut représenter toutes les interactions externes à la glace, soient l'élévation du gradient de surface (\(\boldsymbol{\tau}_g\)), le vent (\(\boldsymbol{\tau}_a\)), les courants sous-jacents (\(\boldsymbol{\tau}_o\)), le contact avec le fond de l'eau (\(\boldsymbol{\tau}_b\)) ou la contrainte radiative des vagues (\(\boldsymbol{\tau}_w\)).\bigskip
+
+Pour l'essentiel, la \textbf{rhéologie} est la manière qu'un matériau réagit aux contraintes qui lui sont infligées.
+Concrétement, c'est le terme \(\divergence{\boldsymbol{\sigma}}\) qui agit comme un terme dans l'équation dynamique \ref{eq:orge3d68d1}. 
+On peut exprimer ce terme comme la divergence d'une matrice, qu'on appelle le \textbf{tenseur de contraintes} \(\boldsymbol{\sigma}\) (ou en notation matrices 2-dimensions \(\qty[\sigma_{ij}]\)).
+En \textbf{deux dimensions}, les contraintes sont illustrées à la figure \ref{org33697e5}.\bigskip
+
+\begin{figure}[h]
+\begin{center}
+\begin{tikzpicture}
+   % Étirement
+   \fill[red!10]  (0,0) rectangle (1,1);
+   \draw [-latex, line width = 1.5mm, orange] (-1,0.5) -- (0.2,0.5);
+   \draw [-latex, line width = 1.5mm, orange] (2,0.5) -- (0.8,0.5);
+   \filldraw [color=red!60,fill=red!25, thick] (0.25,0) rectangle (0.75,1);
+   \draw (0.5,1.7) node[] {Compression};
+   \draw[black, dotted] (0.5,-0.1) -- (0.5,1.2);
+\end{tikzpicture}\hspace{2cm}
+\begin{tikzpicture}
+   % Compression
+   \fill[blue!10] (-0.25,0) rectangle (1.25,1);
+   \draw [-latex, line width = 1.5mm, orange] (0,0.5) -- (-1,0.5);
+   \draw [-latex, line width = 1.5mm, orange] (1,0.5) -- (2,0.5);
+   \filldraw [color=blue!60,fill=blue!15, thick] (0,0) rectangle (1,1);
+   \draw (0.5,1.7) node[] {Étirement};
+   \draw[black, dotted] (0.5,-0.1) -- (0.5,1.2);
+\end{tikzpicture}\hspace{2cm}
+\begin{tikzpicture}
+   % Compression
+   \fill[red!10]  (0.25,0) rectangle (1.25,1);
+   \filldraw [color=orange!70,fill=orange!20, thick] (0,0) -- (0.5,1) -- (1.5,1) -- (1,0) -- (0,0);
+   \draw [-latex, line width = 1.5mm, orange] (0.5,0) -- (-0.75,0);
+   \draw [-latex, line width = 1.5mm, orange] (1,1) -- (2.25,1);
+   \draw (0.75,1.7) node[] {Cisaillement};
+   \draw[black, dotted] (0.75,-0.1) -- (0.75,1.2);
+\end{tikzpicture}
+\end{center}
+\caption{\label{org33697e5}Illustrations des différentes contraintes pouvant s'appliquer sur un élément infinitésimal en deux dimensions.}
+\end{figure}
+
+Différents matériaux réagiront différement aux contraintes, c'est pourquoi il est important de différentier les \textbf{contraintes} et la \textbf{déformation}.
+La déformation sera le résultat de l'effet de la contrainte sur le matériau.
+En deux dimensions, le taux de déformation (\emph{strain rate tensor}) est définit avec un tenseur (ou une matrice symmétrique) du même nom, soit
+\begin{equation}
+   [\dot{\epsilon}_{ij}]  = \qty[\frac{1}{2}\qty(\pdv{u_i}{x_j} + \pdv{u_j}{x_i})]
+   = \begin{bmatrix}
+     \sfrac{\partial u}{\partial x} & \qty(\sfrac{1}{2})\pt\pt\qty[\sfrac{\partial u}{\partial y}+\sfrac{\partial v}{\partial x}]\\
+     \qty(\sfrac{1}{2})\pt\qty[\sfrac{\partial u}{\partial y}+\sfrac{\partial v}{\partial x}] & \sfrac{\partial v}{\partial y}\\
+   \end{bmatrix}.
+\end{equation}
+de sorte que le taux de déformation est une fonction des contraintes de cisaillement
+\begin{equation}
+   \dot{\epsilon}_{ij} = f\qty(\sigma_{ij}),
+\end{equation}
+et c'est cette même fonction qui décrit comment le matériau se comporte.\bigskip
+
+\exemple Prenons l'exemple du fluide océanique dans le modèle \emph{shallow water}.
+Généralement, on ajoute une viscosité dans les modèles et ce terme possède la forme \(\nu\laplacian{\uu}\).
+Ce qui signifie que
+\begin{align}
+   \nu\laplacian{\uu} = \divergence{\qty(\nu\gradient{\uu})},
+\end{align}
+et donc que la relation entre les contraintes et le taux de déformation suit la règle
+\begin{align}
+   \boldsymbol{\sigma}
+   &= \nu\gradient{\uu} \nonumber\\
+   &= \nu \begin{bmatrix}
+     \pdv{u}{x} & \pdv{v}{x} \\
+     \pdv{u}{y} & \pdv{v}{y} \\
+   \end{bmatrix}\nonumber\\
+   &= \nu\pt \mathfrak{L}
+\end{align}
+À partir d'ici (et selon \href{https://en.wikipedia.org/wiki/Strain-rate\_tensor}{Wikipedia}), il est possible d'utiliser la matrice \(\mathfrak{L}\) pour construire deux tenseurs, soient :
+\begin{itemize}
+\item le \textbf{tenseur du taux de déformation}, définit par la relation
+\end{itemize}
+\begin{equation}
+   \mathfrak{E} = \frac{1}{2}\qty(\mathfrak{L} + \mathfrak{L}^\intercal),
+\end{equation}
+\begin{itemize}
+\item le \textbf{tenseur du taux de rotation}, définit par la relation
+\end{itemize}
+\begin{equation}
+   \mathfrak{W} = \frac{1}{2}\qty(\mathfrak{L} - \mathfrak{L}^\intercal),
+\end{equation}
+Donc, le lien entre notre tenseur de contraintes et le taux de déformation peut être exprimé par
+\begin{equation}
+   \mathfrak{E} = \frac{1}{2\nu}\qty(\boldsymbol{\sigma} + \boldsymbol{\sigma}^\intercal)
+\end{equation}
+Et donc, dans le cas de la viscosité océanique, la relation entre les éléments est donnée par
+\begin{equation}
+   \boxed{\ \dot{\epsilon}_{ij} = \frac{1}{2\nu}\qty(\sigma_{ij}+\sigma_{ji}),\ } 
+\end{equation}
+ce qui représente le rapport entre le taux de déformation est les contraintes appliquées sur notre fluide.\cqfd\bigskip
+
+Il existe plusieurs types de rhéologies.
+Dans sa \href{https://www.youtube.com/watch?v=\_V7ozTp6SJM}{présentation à l'Institut Isaac Newton (2023)}, Dany utilise principalement la formation de \Textcite{hibler1979dynamic} (eq. \ref{eq:orgb331085}), de sorte à obtenir un équilibre radiatif entre les vagues et la pression interne dans la glace.
+De cette manière, il obtient une distribution d'épaisseur de glace qui satisfait les observations.\medskip
+
+Dans l'article de \Textcite{hunke1997elastic}  l'ajout d'un terme à la rhéologie visco-plastique de \Textcite{hibler1979dynamic} (voir équation \ref{eq:orgc97a849}) vient régler quelques problèmes associées aux cas limites.
+De cette manière le modèle de glace est maintenant considéré comme visqueux, élastique et plastique (voir équation \ref{eq:org4b2bb40}) -- d'où le sobriquet \emph{EVP model}.
 
 
 

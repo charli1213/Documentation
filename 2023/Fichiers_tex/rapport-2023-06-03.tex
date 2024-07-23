@@ -1,33 +1,23 @@
-% Created 2024-06-16 Sun 00:13
+% Created 2024-07-23 Tue 11:41
 % Intended LaTeX compiler: pdflatex
-ocumentclass[10pt]{article}% =================================BASE====================================%
-\documentclass[10pt]{report}
+\documentclass[10pt]{article}
+% =================================BASE====================================%
 \usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry} % Marges
 \usepackage[T1]{fontenc} % Nécessaire avec FrenchBabel
 \usepackage[utf8]{inputenc} % Important pour symboles Francophones, é,à,etc
 \usepackage{csquotes} % Recommandé par PDFLatex lors de la compilation. 
 
-
-% Calligraphie
-%\usepackage{lmodern} % Ça, ça set latin modern
-%\usepackage{mathrsfs} %Permet la command \mathscr (Lettres attachées genre) \mathscr(B)
-
 % Calligraphie
 %\usepackage{pxfonts} % Met le texte ET les maths en Palatino + donne accès à des symboles math
 \usepackage{palatino} % Cette commande met seulement le texte en police palatino
-\usepackage{lmodern} % Pour les maths?
+\usepackage{lmodern} % Pour les maths? Lmodern pour les maths
 % Use lmodern for sans-serif
 \usepackage{mathrsfs} % Permet la command \mathscr (Lettres attachées genre) \mathscr(B)
 
-
-
-
-
 % Bibliographie
 %\usepackage[backend=bibtex,style=phys,sorting=ynt]{biblatex}
-\usepackage[backend=biber,sorting=ynt,style=ieee]{biblatex}
-\addbibresource{/home/charlesedouard/Desktop/Travail/Documentation/master-bibliography.bib}
-
+\usepackage[backend=biber,sorting=ynt,style=authoryear]{biblatex} % N'est pas utilisé par le compilateur org-mode, mais NÉCESSAIRE. Voir le fichier init.el pour changer le style. 
+\addbibresource{/home/charlesedouard/Desktop/Travail/Documentation/2023/master-bibliography.bib}
 
 
 \usepackage{amsmath, amssymb, amsthm} % Symb. math. (Mathmode+Textmode) + Beaux théorèmes.
@@ -37,58 +27,22 @@
 \usepackage{color} % Permettre l'utilisation des couleurs.
 \usepackage{colortbl} % Color tables
 \usepackage[dvipsnames]{xcolor} % Couleurs avancées.
-\usepackage{titling} % Donne accès à \theauthor, \thetitle, \thedate
 
 % Physique
 \usepackage{physics} % Meilleur package pour physicien. 
 
-
 % Style
 \usepackage{lipsum} % For fun
 \usepackage{tikz} % Realisation de figures TIKZ.
+\usetikzlibrary{arrows.meta,bending} % Arrow heads 
 \usepackage{empheq} % Boite autour de MULTIPLE équations
 \usepackage{bbding}
 
 % Français
 \usepackage[french]{babel} % Environnements en Français.
-% ==============================BASE-(END)=================================%
-
-
-
-% ================================SETTINGS=================================%
-% Pas d'indentation en début de paragraphe :
-\setlength\parindent{0pt}
-\setlength{\parskip}{0.15cm}
-
-% Tableaux/tabular
-% Espace vertical dans les tabular/tableaux
-\renewcommand{\arraystretch}{1.2}
-% Couleur des tableaux/tabular
-\rowcolors{2}{violet!5}{}
-
-% Couleurs de hyperliens :
-\definecolor{mypink}{RGB}{147, 0, 255}
-\hypersetup{colorlinks, 
-             filecolor=mypink,
-             urlcolor=mypink, 
-             citecolor=mypink, 
-             linkcolor=mypink, 
-             anchorcolor=mypink}
-
 
 \usepackage{titling} % Donne accès à \theauthor, \thetitle, \thedate
 
-% Physique
-\usepackage{physics} % Meilleur package pour physicien. 
-
-
-% Style
-\usepackage{lipsum} % For fun
-\usepackage{tikz} % Realisation de figures TIKZ.
-\usepackage{empheq} % Boite autour de MULTIPLE équations
-
-% Français
-\usepackage[french]{babel} % Environnements en Français.
 % ==============================BASE-(END)=================================%
 
 
@@ -104,13 +58,13 @@
 % Espace vertical dans les tabular/tableaux
 \renewcommand{\arraystretch}{1.2}
 % Couleur des tableaux/tabular
-\rowcolors{2}{violet!5}{}
+% \rowcolors{3}{violet!5}{}
 
 % Couleurs de hyperliens :
 \definecolor{mypink}{RGB}{147, 0, 255}
 \hypersetup{colorlinks, 
              filecolor=mypink,
-             urlcolor=mypink, 
+             urlcolor=Violet, 
              citecolor=mypink, 
              linkcolor=mypink, 
              anchorcolor=mypink}
@@ -139,9 +93,12 @@
 
 
 % ==============================NEWCOMMANDS================================%
+% CQFD symbol
+\renewcommand{\qedsymbol}{$\hfill\blacksquare$}
 
 % Vecteurs de base :
 \newcommand{\nvf}{\vb{\hat{n}}}
+\newcommand{\evf}{\vb{\hat{e}}}
 \newcommand{\ivf}{\vb{\hat{i}}}
 \newcommand{\jvf}{\vb{\hat{j}}}
 \newcommand{\kvf}{\vb{\hat{k}}}
@@ -150,8 +107,8 @@
 \newcommand{\ust}{\vb{u}_{\ast}}
 
 % Physics empty spaces 
-\newcommand{\typical}{\vphantom{A}}
-\newcommand{\tall}{\vphantom{A^{x^x}_p}}
+\newcommand{\short}{\vphantom{pA}}
+\newcommand{\tall}{\vphantom{pA^{x^x}_p}}
 \newcommand{\grande}{\vphantom{\frac{1}{xx}}}
 \newcommand{\venti}{\vphantom{\sum_x^x}}
 \newcommand{\pt}{\hspace{1pt}} % One horizontal pt space
@@ -170,6 +127,14 @@
 %\newcommand{\nb}{$\boxed{\text{\footnotesize\EightStarConvex}\pt \mathfrak{N. B.}}$\hspace{4pt}}
 \newcommand{\nb}{\underline{{\footnotesize\EightStarConvex}\pt $\mathfrak{N.B.}$\vphantom{p}}\hspace{3pt}}
 
+\newcommand{\exemple}{
+\parbox[center]{2.2cm}{\begin{tcolorbox}[sharp corners, rounded corners=northeast, rounded corners=southeast,
+colback=Violet!5, colframe=black,
+size=small, width=2cm, left=-0.25pt, bottom=-0.5pt,
+arc is angular, arc=2.5mm, boxrule=0.35pt, leftrule=4pt, %bottomrule=1pt,
+after={\enskip}] Exemple \end{tcolorbox}}}
+
+\newcommand{\cqfd}{\hfill$\blacktriangleleft$}
 
 % Define the nota bene environment
 \usepackage{tcolorbox}
@@ -196,7 +161,7 @@
 \newcommand{\mytitlepage}{
 \begin{titlepage}
 \begin{center}
-{\Huge Contrat Été 2023 \par}
+{\Huge \thesubtitle \par}
 \vspace{2cm}
 {\Huge \MakeUppercase{\thetitle} \par}
 \vspace{2cm}
@@ -233,6 +198,7 @@ Police d'écriture : \textbf{CMU Serif Roman}
 \author{Charles-Édouard Lizotte}
 \date{03/06/2023}
 \title{Carnet de bord, Université McGill}
+\newcommand{\thesubtitle}{Contrat Été 2023}
 \hypersetup{
  pdfauthor={Charles-Édouard Lizotte},
  pdftitle={Carnet de bord, Université McGill},
@@ -246,13 +212,13 @@ Police d'écriture : \textbf{CMU Serif Roman}
 \tableofcontents\newpage
 
 \section{Erreurs rencontrées}
-\label{sec:orgf3000b1}
+\label{sec:org8336a2a}
 
 \subsection{Ancienne méthode : Calculer la fonction de courant barotrope directement}
-\label{sec:orgffcd703}
+\label{sec:orge251cd8}
 Concrétement, l'ancienne méthode (voir \href{rapport-2023-04-28.org}{rapport précédent}) consistait à trouver le rotationnel de \(\uu_{BT}\), soit \(\zeta_{BT} = \curl(\uu_{BT})\) pour solutionner l'équation de Poisson,
 \begin{equation}
-\label{eq:org5f2318d}
+\label{eq:org9792dab}
    \laplacian(\psi_{BT}) =  \norm{\pt\curl{\uu_{BT}}\pt}.
 \end{equation}
 Une foit \(\psi_{BT}\) en main, il est trivial (on s'en rapelle) de retrouver \(\uu_{BT}\) à l'aide de la relation
@@ -263,17 +229,17 @@ Une foit \(\psi_{BT}\) en main, il est trivial (on s'en rapelle) de retrouver \(
 Malheureusement, certains problèmes émergeaient de l'application de cette méthode.
 
 \subsection{Fluctuation relative de la fonction de courant barotrope}
-\label{sec:org25e6af2}
+\label{sec:orga89f4aa}
 On définit la fluctuation relative de la fonction de courant barotrope \(\delta \psi_{BT}\) de sorte que cette quantité satisfait la relation
 \begin{equation}
    \psi_{BT}^{t+\delta t} = \psi_{BT}^t + \delta \psi_{BT} + Er\pt(\psi_{BT}),
 \end{equation}
 où \(Er\pt(\psi_{BT})\) est une fonction pseudo-aléatoirement linéaire qui représente l'erreur numérique associée à une solution.
-Cette dernière est proportionnelle à la solution de l'équation \ref{eq:orge478c1c}, de sorte que
+Cette dernière est proportionnelle à la solution de l'équation \ref{eq:org42662d8}, de sorte que
 \begin{equation}
     Er\pt(\psi_{BT}) \propto \psi_{BT}.
 \end{equation}
-Alors, si l'on solve l'équation \ref{eq:orge478c1c} avec une précision de 5 chiffres par exemple, l'erreur par rapport à la fluctuation relative de la fonction de courant barotrope va se faire sentir sur les résultats.
+Alors, si l'on solve l'équation \ref{eq:org42662d8} avec une précision de 5 chiffres par exemple, l'erreur par rapport à la fluctuation relative de la fonction de courant barotrope va se faire sentir sur les résultats.
 Essentiellement, l'erreur numérique donne naissance à l'inégalité suivante
 \begin{align}
    &&\text{Erreur relative} = \abs{\frac{Er\pt(\psi_{BT})}{\psi_{BT}}} \le \abs{ \frac{Er\pt(\psi_{BT})}{\delta \psi_{BT}} } &&\text{car (généralement)} && \abs{\psi_{BT}} \ge \abs{\delta \psi_{BT}}. &&
@@ -289,12 +255,12 @@ Si l'on faisait ça, nous aurions plutôt
 Nous aurions donc bien des avantages à changer de méthode (on va le faire).
 
 \subsection{Pas de temps}
-\label{sec:org5f47612}
+\label{sec:orgd64b6cb}
 
 Techniquement, on peut argumenter que nous calculions 2 fois le pas de temps, accidentellement.
 En différences finies, les équations du mouvement ont la forme
 \begin{equation}
-\label{eq:orgdd40fdf}
+\label{eq:org5179a13}
    \uu^{t+\delta t} =
    \underbrace{\uu^t + RHS\cdot \Delta t\tall}_{\tilde{u}}
    \underbrace{- \gradient{\phi}\cdot \Delta t.\tall}_\text{Correction P}
@@ -311,7 +277,7 @@ et on décompose en partie barotrope et barocline, de sorte que
    && \text{et}
    && \laplacian{\psi^{t+\delta t}}_{BC} = \zeta^{t+\delta t}_{BC}.&&
 \end{align}
-Comme présenté à l'équation \ref{eq:orgdd40fdf}, on peut décomposer le RHS de la dernière équation selon
+Comme présenté à l'équation \ref{eq:org5179a13}, on peut décomposer le RHS de la dernière équation selon
 \begin{align}
    \laplacian{\psi^{t+\delta t}}_{BT} = \tilde{\zeta}_{BT} - \cancelto{0}{\curl(\Delta t\cdot\gradient{\phi})}.
 \end{align}
@@ -321,17 +287,17 @@ On solutionne l'équation de Poisson, on trouve \(\psi^{t+\delta t}\), puis on r
 \end{equation}
 Finalement, on additionne les parties barocliniques et barotropes pour obtenir
 \begin{equation}
-\label{eq:orge4cdb97}
+\label{eq:orga0baec3}
    \uu^{t+\delta t} = \uu_{BT}^{t+\delta t} + \uu_{BC}^{t+\delta t}.
 \end{equation}
-Donc au final, s'il y a une erreur, elle est à l'équation \ref{eq:orge4cdb97}.
+Donc au final, s'il y a une erreur, elle est à l'équation \ref{eq:orga0baec3}.
 Concrétement, on additionne deux parties qui constituent une même chose.
 Par contre, on obtient ces quantités depuis une quantités qui est entre deux pas de temps, à un temps peu définit.
 Par exemple, on assume que
 \begin{equation}
    \uu^{t+\delta t} = \tilde{\uu} - \gradient{\phi} \cdot \Delta t.
 \end{equation}
-Puis, on décompose en deux parties à l'aide de \ref{eq:orge4cdb97}, soit barotrope et baroclines,
+Puis, on décompose en deux parties à l'aide de \ref{eq:orga0baec3}, soit barotrope et baroclines,
 \begin{subequations}
 \begin{align}
    & \uu^{t+\delta t}_{BT} = \zmean{\tilde{\uu} - \gradient{\phi} \cdot \Delta t}  = \tilde{\uu}_{BT} - \gradient{\phi} \cdot \Delta t,\\
@@ -353,7 +319,7 @@ Cette dernière quantité est la définition de \(\tilde{\uu}_{BC}\), donc on de
 \end{equation}
 
 \section{Nouvelle méthode proposée par David}
-\label{sec:org637cc6a}
+\label{sec:orgeee9965}
 Comme mentionné précédemment, il est possible de seulement calculer la correction à \(\psi_{BT}\) plutôt que \(\psi_{BT}\) pour minimiser l'erreur relative sur la solution.
 On divise notre \emph{RHS} en deux parties, soit barotropes et baroclines,
 \begin{equation}
@@ -362,7 +328,7 @@ On divise notre \emph{RHS} en deux parties, soit barotropes et baroclines,
 
 Nous savons que les équations
 \begin{align}
-\label{eq:orge478c1c}
+\label{eq:org42662d8}
    &&\laplacian{\psi^{t+\delta t}} = \curl{\uu^{t+\delta t}}
    &&\text{et}
    &&\laplacian{\psi^{t}} = \curl{\uu^{t}}&&
@@ -382,9 +348,9 @@ Les parties barocline et barotrope sont respectivement exprimées par
 \end{align}
 \end{subequations}
 étant donné que le gradient de pression est un phénomène barotrope.
-Pour cette même raison, on peut justement affirmer hors de tout doute que l'équation \ref{eq:orge478c1c} est séparable en partie barotrope et barcocline, soit
+Pour cette même raison, on peut justement affirmer hors de tout doute que l'équation \ref{eq:org42662d8} est séparable en partie barotrope et barcocline, soit
 \begin{subequations}
-\label{eq:org99cc3f7}
+\label{eq:org9bfd028}
 \begin{align}
    &\grande\laplacian{\psi_{BT}^{t}}\ \pt = \curl{\uu_{BT}^{t}}
    \hspace{0.5cm}\text{et}\hspace{0.5cm}
@@ -395,10 +361,10 @@ Pour cette même raison, on peut justement affirmer hors de tout doute que l'éq
 car \(\tilde{\uu}_{BC} = \uu^{t+\delta t}_{BC}\).
 Donc, en développant la partie barotrope, on obtient
 \begin{equation}
-\label{eq:orge16486a}
+\label{eq:orgad9e74c}
    \laplacian(\psi_{BT}^t+\delta \psi \cdot \Delta t) = \curl(\uu^t_{BT} + \vec{RHS}_{BT}\cdot\Delta t - \cancelto{0}{\gradient{\phi}}\cdot \Delta t),
 \end{equation}
-puis en soustrayant la relation \ref{eq:org99cc3f7}a à la dernière équation (\ref{eq:orge16486a}), on arrive à
+puis en soustrayant la relation \ref{eq:org9bfd028}a à la dernière équation (\ref{eq:orgad9e74c}), on arrive à
 \begin{equation}
    \laplacian(\delta \psi) = \curl(\vec{RHS}_{BT}).
 \end{equation}

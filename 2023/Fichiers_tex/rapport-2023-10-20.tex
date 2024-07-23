@@ -1,33 +1,23 @@
-% Created 2024-06-16 Sun 00:13
+% Created 2024-07-23 Tue 11:41
 % Intended LaTeX compiler: pdflatex
-ocumentclass[10pt]{article}% =================================BASE====================================%
-\documentclass[10pt]{report}
+\documentclass[10pt]{article}
+% =================================BASE====================================%
 \usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry} % Marges
 \usepackage[T1]{fontenc} % Nécessaire avec FrenchBabel
 \usepackage[utf8]{inputenc} % Important pour symboles Francophones, é,à,etc
 \usepackage{csquotes} % Recommandé par PDFLatex lors de la compilation. 
 
-
-% Calligraphie
-%\usepackage{lmodern} % Ça, ça set latin modern
-%\usepackage{mathrsfs} %Permet la command \mathscr (Lettres attachées genre) \mathscr(B)
-
 % Calligraphie
 %\usepackage{pxfonts} % Met le texte ET les maths en Palatino + donne accès à des symboles math
 \usepackage{palatino} % Cette commande met seulement le texte en police palatino
-\usepackage{lmodern} % Pour les maths?
+\usepackage{lmodern} % Pour les maths? Lmodern pour les maths
 % Use lmodern for sans-serif
 \usepackage{mathrsfs} % Permet la command \mathscr (Lettres attachées genre) \mathscr(B)
 
-
-
-
-
 % Bibliographie
 %\usepackage[backend=bibtex,style=phys,sorting=ynt]{biblatex}
-\usepackage[backend=biber,sorting=ynt,style=ieee]{biblatex}
-\addbibresource{/home/charlesedouard/Desktop/Travail/Documentation/master-bibliography.bib}
-
+\usepackage[backend=biber,sorting=ynt,style=authoryear]{biblatex} % N'est pas utilisé par le compilateur org-mode, mais NÉCESSAIRE. Voir le fichier init.el pour changer le style. 
+\addbibresource{/home/charlesedouard/Desktop/Travail/Documentation/2023/master-bibliography.bib}
 
 
 \usepackage{amsmath, amssymb, amsthm} % Symb. math. (Mathmode+Textmode) + Beaux théorèmes.
@@ -37,58 +27,22 @@
 \usepackage{color} % Permettre l'utilisation des couleurs.
 \usepackage{colortbl} % Color tables
 \usepackage[dvipsnames]{xcolor} % Couleurs avancées.
-\usepackage{titling} % Donne accès à \theauthor, \thetitle, \thedate
 
 % Physique
 \usepackage{physics} % Meilleur package pour physicien. 
 
-
 % Style
 \usepackage{lipsum} % For fun
 \usepackage{tikz} % Realisation de figures TIKZ.
+\usetikzlibrary{arrows.meta,bending} % Arrow heads 
 \usepackage{empheq} % Boite autour de MULTIPLE équations
 \usepackage{bbding}
 
 % Français
 \usepackage[french]{babel} % Environnements en Français.
-% ==============================BASE-(END)=================================%
-
-
-
-% ================================SETTINGS=================================%
-% Pas d'indentation en début de paragraphe :
-\setlength\parindent{0pt}
-\setlength{\parskip}{0.15cm}
-
-% Tableaux/tabular
-% Espace vertical dans les tabular/tableaux
-\renewcommand{\arraystretch}{1.2}
-% Couleur des tableaux/tabular
-\rowcolors{2}{violet!5}{}
-
-% Couleurs de hyperliens :
-\definecolor{mypink}{RGB}{147, 0, 255}
-\hypersetup{colorlinks, 
-             filecolor=mypink,
-             urlcolor=mypink, 
-             citecolor=mypink, 
-             linkcolor=mypink, 
-             anchorcolor=mypink}
-
 
 \usepackage{titling} % Donne accès à \theauthor, \thetitle, \thedate
 
-% Physique
-\usepackage{physics} % Meilleur package pour physicien. 
-
-
-% Style
-\usepackage{lipsum} % For fun
-\usepackage{tikz} % Realisation de figures TIKZ.
-\usepackage{empheq} % Boite autour de MULTIPLE équations
-
-% Français
-\usepackage[french]{babel} % Environnements en Français.
 % ==============================BASE-(END)=================================%
 
 
@@ -104,13 +58,13 @@
 % Espace vertical dans les tabular/tableaux
 \renewcommand{\arraystretch}{1.2}
 % Couleur des tableaux/tabular
-\rowcolors{2}{violet!5}{}
+% \rowcolors{3}{violet!5}{}
 
 % Couleurs de hyperliens :
 \definecolor{mypink}{RGB}{147, 0, 255}
 \hypersetup{colorlinks, 
              filecolor=mypink,
-             urlcolor=mypink, 
+             urlcolor=Violet, 
              citecolor=mypink, 
              linkcolor=mypink, 
              anchorcolor=mypink}
@@ -139,9 +93,12 @@
 
 
 % ==============================NEWCOMMANDS================================%
+% CQFD symbol
+\renewcommand{\qedsymbol}{$\hfill\blacksquare$}
 
 % Vecteurs de base :
 \newcommand{\nvf}{\vb{\hat{n}}}
+\newcommand{\evf}{\vb{\hat{e}}}
 \newcommand{\ivf}{\vb{\hat{i}}}
 \newcommand{\jvf}{\vb{\hat{j}}}
 \newcommand{\kvf}{\vb{\hat{k}}}
@@ -150,8 +107,8 @@
 \newcommand{\ust}{\vb{u}_{\ast}}
 
 % Physics empty spaces 
-\newcommand{\typical}{\vphantom{A}}
-\newcommand{\tall}{\vphantom{A^{x^x}_p}}
+\newcommand{\short}{\vphantom{pA}}
+\newcommand{\tall}{\vphantom{pA^{x^x}_p}}
 \newcommand{\grande}{\vphantom{\frac{1}{xx}}}
 \newcommand{\venti}{\vphantom{\sum_x^x}}
 \newcommand{\pt}{\hspace{1pt}} % One horizontal pt space
@@ -170,6 +127,14 @@
 %\newcommand{\nb}{$\boxed{\text{\footnotesize\EightStarConvex}\pt \mathfrak{N. B.}}$\hspace{4pt}}
 \newcommand{\nb}{\underline{{\footnotesize\EightStarConvex}\pt $\mathfrak{N.B.}$\vphantom{p}}\hspace{3pt}}
 
+\newcommand{\exemple}{
+\parbox[center]{2.2cm}{\begin{tcolorbox}[sharp corners, rounded corners=northeast, rounded corners=southeast,
+colback=Violet!5, colframe=black,
+size=small, width=2cm, left=-0.25pt, bottom=-0.5pt,
+arc is angular, arc=2.5mm, boxrule=0.35pt, leftrule=4pt, %bottomrule=1pt,
+after={\enskip}] Exemple \end{tcolorbox}}}
+
+\newcommand{\cqfd}{\hfill$\blacktriangleleft$}
 
 % Define the nota bene environment
 \usepackage{tcolorbox}
@@ -196,7 +161,7 @@
 \newcommand{\mytitlepage}{
 \begin{titlepage}
 \begin{center}
-{\Huge Contrat Été 2023 \par}
+{\Huge \thesubtitle \par}
 \vspace{2cm}
 {\Huge \MakeUppercase{\thetitle} \par}
 \vspace{2cm}
@@ -233,6 +198,7 @@ Police d'écriture : \textbf{CMU Serif Roman}
 \author{Charles-Édouard Lizotte}
 \date{20/10/2023}
 \title{Carnet de bord, Université McGill}
+\newcommand{\thesubtitle}{Contrat Été 2023}
 \hypersetup{
  pdfauthor={Charles-Édouard Lizotte},
  pdftitle={Carnet de bord, Université McGill},
@@ -245,10 +211,10 @@ Police d'écriture : \textbf{CMU Serif Roman}
 \mytitlepage
 \tableofcontents\newpage
 \section{Debuggage et implémentation transfert de masse -- \textit{<2023-10-16 Mon>}}
-\label{sec:org77d1693}
+\label{sec:orgcf3be1d}
 \subsection{Vérifier que ce n'est pas un problème de viscosité -- \textit{<2023-10-16 Mon>}}
-\label{sec:org5e06c89}
-\label{org71e3432}
+\label{sec:org0fe2d12}
+\label{org45afd4c}
 DEADLINE: \textit{<2023-10-17 Tue>}
 Avant tout, David a remarqué que les champs de vorticité (\(\zeta_k\)) étaient extrêmement bruités, ce qui signifie qu'il y a clairement un manque à gagner en terme de viscosité.
 Une viscosité plus forte permet essentiellement de se débarrasser des fluctuations aux plus petites échelles.
@@ -259,12 +225,12 @@ En sommes, de nouveaux test ont été effectuées pour le schéma de viscosité 
 \begin{equation}
    \vb{D} = Ah_2 \cdot \laplacian{\uu} - Ah_4\cdot \gradient^4\uu.
 \end{equation}
-En ce mardi matin, les résultats sont exprimés dans le tableau \ref{tab:orgec816ee}.
+En ce mardi matin, les résultats sont exprimés dans le tableau \ref{tab:orge3efbbd}.
 
 
 
 \begin{table}[htbp]
-\caption{\label{tab:orgec816ee}Résumé des expériences réalisées dans le but de retrouver la bonne viscosité.}
+\caption{\label{tab:orge3efbbd}Résumé des expériences réalisées dans le but de retrouver la bonne viscosité.}
 \centering
 \begin{tabular}{c|c|c|c|l}
 \hline
@@ -284,25 +250,25 @@ Ah\textsubscript{2} & Ah\textsubscript{4} & dx & min(\sfrac{$L_d$}{dx}) & Nombre
 
 
 Pour conclure, il semble que tous nos problèmes venaient bel et bien du changement de viscosité que nous avions appliqué pour régler le problème d'ondes de Kelvin aux bord (problème qui a été réglé \href{rapport-2023-10-06.pdf}{il y a deux rapports}).
-Comme on peut l'observer à la figure \ref{fig:org2fe6b1f}, les \emph{eddies} sont maintenant très \emph{smooth} et non-bruités -- ce qui contraste fortement avec le dernier schéma de viscosité où l'on utilisait une viscosité au deuxième ordre plutôt qu'un viscosité avec un Laplacien d'ordre 4.
+Comme on peut l'observer à la figure \ref{fig:org9a8de7f}, les \emph{eddies} sont maintenant très \emph{smooth} et non-bruités -- ce qui contraste fortement avec le dernier schéma de viscosité où l'on utilisait une viscosité au deuxième ordre plutôt qu'un viscosité avec un Laplacien d'ordre 4.
 Ce qu'il faut retenir de cela c'est que le schéma utilisé dans l'article de \Textcite{chen_2021} était robuste.
 Vaut mieux ne pas trop s'en éloigner. 
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figures/debuggage/2023_10_17_smooth_zeta.png}
-\caption{\label{fig:org2fe6b1f}Vorticité dans les trois couches après 1900 jours pour le modèle « shallow water ». On observe que les tourbillons sont très lisses dans la promière couche, en opposition au précédent schéma de viscosité utilisé.}
+\caption{\label{fig:org9a8de7f}Vorticité dans les trois couches après 1900 jours pour le modèle « shallow water ». On observe que les tourbillons sont très lisses dans la promière couche, en opposition au précédent schéma de viscosité utilisé.}
 \end{figure}
 
 
 \subsection{« Stencil » de transfert de masse -- \textit{<2023-10-23 Mon>}}
-\label{sec:org9dc0cf7}
-\label{orga811b83}
+\label{sec:org392bb24}
+\label{org088b10b}
 
-Louis-Philippe propose d'utiliser un stencil à 21 points pour redistribuer la masse (Voir figure \ref{org8de1f04}).
+Louis-Philippe propose d'utiliser un stencil à 21 points pour redistribuer la masse (Voir figure \ref{org0d0c255}).
 En gros, on en retirerait sur le point fautif pour rejouter du \emph{h} aux points des alentours, ce qui en fait une redistribution horizontale de la masse.\bigskip
 
-\nb Pour l'instant (\textit{<2023-10-18 Wed>}), je met tout ça sur la glace, car la solution trouvée à la section \ref{org71e3432} semble suffisante.
+\nb Pour l'instant (\textit{<2023-10-18 Wed>}), je met tout ça sur la glace, car la solution trouvée à la section \ref{org45afd4c} semble suffisante.
 Si la solution proposée à la prochaine section n'est pas suffisante, nous reviendrons sur le transfert de masse avec notre \emph{stencil}. 
 
 \begin{figure}[!h]
@@ -347,17 +313,17 @@ Si la solution proposée à la prochaine section n'est pas suffisante, nous revi
    \draw (\x-0.5,-0.5) node {\x};
    \draw (-0.5,\x-0.5) node {\x};}
 \end{tikzpicture}
-\caption{\label{org8de1f04}Stencil de redistribution de la masse. À gauche (a), transfert de masse horizontal vu du haut. Au milieu (b), le même transfert de masse vu en coupe verticale. À droite (c), cas tangeant au mur.}
+\caption{\label{org0d0c255}Stencil de redistribution de la masse. À gauche (a), transfert de masse horizontal vu du haut. Au milieu (b), le même transfert de masse vu en coupe verticale. À droite (c), cas tangeant au mur.}
 \end{figure}
 
-En somme, on crée une sous-routine qui peut vérifier l'épaisseur des couches produire un transfert de masse horizontal, comme illustré à la figure \ref{org8de1f04}.
+En somme, on crée une sous-routine qui peut vérifier l'épaisseur des couches produire un transfert de masse horizontal, comme illustré à la figure \ref{org0d0c255}.
 Par contre, il faudra bien faire attention lorsqu'on arrive aux murs pour que notre masque s'adapte à la forme désirée.
 En ordre, les étapes à suivre sont :
 
 \begin{enumerate}
 \item On vérifie si l'épaisseur de la couche (\(h_k = H_k + \eta_k + \eta_{k+1}\)) dépasse un \emph{treshold} ou une limite verticale.
 Dans notre cas, on commence à un rapport d'épaisseur de 15\% pour tester.
-\item On retire l'\emph{overshoot} ( ou l'écart avec la limite \(\delta h_k\)) à la case bleue de la figure \ref{org8de1f04}.
+\item On retire l'\emph{overshoot} ( ou l'écart avec la limite \(\delta h_k\)) à la case bleue de la figure \ref{org0d0c255}.
 Dans le code, c'est la quantité qu'on appelle \emph{hgap}.
 \item On recrée le masque en fonction de la position par rapport aux murs.
 Le poid accordé à chaque case dépend donc de la position.
@@ -430,29 +396,29 @@ Le poid accordé à chaque case dépend donc de la position.
 %
 \end{tikzpicture}
 \end{center}
-\caption{\label{orgd0309fb}« Stencil » utilisé pour obtenir le champs aux plus grandes échelles. À gauche (a), «stencil» pour une interoplation à ratio impair, à droite (b), «stencil» pour une interpolation à ratio pair.}
+\caption{\label{orgdc8c700}« Stencil » utilisé pour obtenir le champs aux plus grandes échelles. À gauche (a), «stencil» pour une interoplation à ratio impair, à droite (b), «stencil» pour une interpolation à ratio pair.}
 \end{figure}
 
 \newpage
 \section{Solution à la dérive de Stokes -- \textit{<2023-10-16 Mon>}}
-\label{sec:org7d88a85}
+\label{sec:orgeb482b5}
 Grossièrement, il est sorti deux possibilités pour régler le problème des petites échelles qui sortent de Wavewatch :
 \begin{enumerate}
-\item Il serait possible de diminuer la résolution de Wavewatch et de réinterpoler les points de courants à l'aide de la méthose employée dans la figure \ref{orgd0309fb}a.
-Pour une interpolation \textbf{paire}, le \emph{stencil} serait un peu différent (voir figure \ref{orgd0309fb}b).
+\item Il serait possible de diminuer la résolution de Wavewatch et de réinterpoler les points de courants à l'aide de la méthose employée dans la figure \ref{orgdc8c700}a.
+Pour une interpolation \textbf{paire}, le \emph{stencil} serait un peu différent (voir figure \ref{orgdc8c700}b).
 
-\item La seconde solution serait d'utiliser le stencil qui redistribue la masse, comme énoncé dans la section \ref{orga811b83}.
+\item La seconde solution serait d'utiliser le stencil qui redistribue la masse, comme énoncé dans la section \ref{org088b10b}.
 \end{enumerate}
 
 \section{Résumé de la rencontre de mercredi [42\%]  -- \textit{<2023-10-25 Wed>}}
-\label{sec:orgc174d6a}
+\label{sec:org3199868}
 
 \begin{itemize}
 \item[{$\boxtimes$}] Il faut tester jusqu'à combien de couches on peut se rendre.
 Bien que trois couches soit intéressant, il serait pertinent de savoir si plus de couches serait fonctionnel, maintenant que le modèle est véritablement testable.
 On lance les test sans transfert de masse, considérant que c'est pas au point.\bigskip
 
-\item[{$\boxtimes$}] Est-ce que Wavewatch est pogné avec ce \emph{fetch} là? Ça serait quand même facile de tester plusieurs \emph{switches} (voir section \ref{org5a63edf}). \bigskip
+\item[{$\boxtimes$}] Est-ce que Wavewatch est pogné avec ce \emph{fetch} là? Ça serait quand même facile de tester plusieurs \emph{switches} (voir section \ref{orgce73939}). \bigskip
 
 \item[{$\square$}] Un problème récurrent, c'est qu'on crée des plateaux en redistribuant la masse aux alentours.
 Louis-Philippe proposait deux choses pour contrer cet effet :
@@ -462,7 +428,7 @@ Rien ne nous oblige à ne pas ramener à 30\% et redistribuer toute cette masse-
 \item \textbf{Mettre un «threshold» plus gros} : Ça nous permettrait d'éviter que des pics d'épaisseur faible se développent dès le départ.\bigskip
 \end{enumerate}
 
-\item[{$\square$}] Les poids que j'utilise à la figure \ref{org8de1f04} sont un peu bizare.
+\item[{$\square$}] Les poids que j'utilise à la figure \ref{org0d0c255} sont un peu bizare.
 Louis-Philippe me l'a mentionné, mais ça ne doit pas être si grave. 
 \begin{enumerate}
 \item \textbf{Le masque devrait être cirulaire :}
@@ -481,18 +447,18 @@ Comme ça, ça ne changerait pas grand chose si l'épaisseur devenait nulle, mai
 \item[{$\boxtimes$}] Finalement, on a un gros problème d'ordre chronologique pour adapter les épaisseurs.
 Concrétement, on les modifie en même temps que trouver le \emph{RHS} des couches et des vitesses.
 Il faudrait plutôt les modifier avant de calculer les \emph{RHS} associés à la vitesse et tout.
-David a mentionné qu'il faut retrouver les \(\eta_k\) de la même manière qu'avec l'addition des \(RHS\ h_k\) (voir section \ref{org8919dd9}). \bigskip
+David a mentionné qu'il faut retrouver les \(\eta_k\) de la même manière qu'avec l'addition des \(RHS\ h_k\) (voir section \ref{org65b6f03}). \bigskip
 
 \item[{$\square$}] Si rien ne marche, on peut commencer à checker pour une solution incluant un genre de Laplacien (ou de viscosité) sur les épaisseurs.
 Faudra faire extrémement attention avec ça.
 \end{itemize}
 
 \section{Solutionner le chaos des vagues -- \textit{<2023-10-25 Wed>}}
-\label{sec:orga6f52b7}
+\label{sec:org195d421}
 
 \subsection{Réorganiser l'ordre du transfert de masse -- \textit{<2023-10-26 Thu>}}
-\label{sec:orgea28481}
-\label{org8919dd9}
+\label{sec:org59163f0}
+\label{org65b6f03}
 \textbf{Énoncé du problème :} En transférant de la masse aux niveaux adjacents, puis en calculant le \emph{RHS}, on vient modifier les épaisseurs en même temps qu'en calculant nos quantités importantes.
 Essentiellement, il faut trouver un moyen de corriger toutes les épaisseurs d'un coup pour \textbf{après} calculer les \emph{RHS}. \bigskip
 
@@ -514,8 +480,8 @@ De cette manière, on trouve les positions des incursions d'eau dans les autres 
 
 
 \subsection{Tester d'autres switches pour Wavewatch -- \textit{<2023-10-26 Thu>}}
-\label{sec:orgda49e8b}
-\label{org5a63edf}
+\label{sec:orgf3b68c1}
+\label{orgce73939}
 \begin{enumerate}
 \item{$\square$} ST1,
 \item{$\boxtimes$} ST2, FLX2 : Celui qu'on utilisait de base.
@@ -526,7 +492,7 @@ Donc, je suggère qu'on teste encore avec celle là.
 
 
 \subsection{Fenêtre de transfert de masse -- \textit{<2023-10-26 Thu>}}
-\label{sec:org4e08c66}
+\label{sec:org15f3969}
 Après avoir testé les \emph{switches} de la section précédentes, je vois qu'on a toujours tendance à corriger un seul point.
 Ceci me laisse à penser qu'on utilise clairement une mauvaise fenêtre de transfert de masse, comme l'avait prédit Louis-Philippe et Rosalie.
 Il faut donc se pencher sur ce thème-là aujourd'hui.

@@ -1,33 +1,23 @@
-% Created 2024-06-16 Sun 00:13
+% Created 2024-07-23 Tue 11:41
 % Intended LaTeX compiler: pdflatex
-ocumentclass[10pt]{report}% =================================BASE====================================%
 \documentclass[10pt]{report}
+% =================================BASE====================================%
 \usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry} % Marges
 \usepackage[T1]{fontenc} % Nécessaire avec FrenchBabel
 \usepackage[utf8]{inputenc} % Important pour symboles Francophones, é,à,etc
 \usepackage{csquotes} % Recommandé par PDFLatex lors de la compilation. 
 
-
-% Calligraphie
-%\usepackage{lmodern} % Ça, ça set latin modern
-%\usepackage{mathrsfs} %Permet la command \mathscr (Lettres attachées genre) \mathscr(B)
-
 % Calligraphie
 %\usepackage{pxfonts} % Met le texte ET les maths en Palatino + donne accès à des symboles math
 \usepackage{palatino} % Cette commande met seulement le texte en police palatino
-\usepackage{lmodern} % Pour les maths?
+\usepackage{lmodern} % Pour les maths? Lmodern pour les maths
 % Use lmodern for sans-serif
 \usepackage{mathrsfs} % Permet la command \mathscr (Lettres attachées genre) \mathscr(B)
 
-
-
-
-
 % Bibliographie
 %\usepackage[backend=bibtex,style=phys,sorting=ynt]{biblatex}
-\usepackage[backend=biber,sorting=ynt,style=ieee]{biblatex}
-\addbibresource{/home/charlesedouard/Desktop/Travail/Documentation/master-bibliography.bib}
-
+\usepackage[backend=biber,sorting=ynt,style=authoryear]{biblatex} % N'est pas utilisé par le compilateur org-mode, mais NÉCESSAIRE. Voir le fichier init.el pour changer le style. 
+\addbibresource{/home/charlesedouard/Desktop/Travail/Documentation/2023/master-bibliography.bib}
 
 
 \usepackage{amsmath, amssymb, amsthm} % Symb. math. (Mathmode+Textmode) + Beaux théorèmes.
@@ -37,58 +27,22 @@
 \usepackage{color} % Permettre l'utilisation des couleurs.
 \usepackage{colortbl} % Color tables
 \usepackage[dvipsnames]{xcolor} % Couleurs avancées.
-\usepackage{titling} % Donne accès à \theauthor, \thetitle, \thedate
 
 % Physique
 \usepackage{physics} % Meilleur package pour physicien. 
 
-
 % Style
 \usepackage{lipsum} % For fun
 \usepackage{tikz} % Realisation de figures TIKZ.
+\usetikzlibrary{arrows.meta,bending} % Arrow heads 
 \usepackage{empheq} % Boite autour de MULTIPLE équations
 \usepackage{bbding}
 
 % Français
 \usepackage[french]{babel} % Environnements en Français.
-% ==============================BASE-(END)=================================%
-
-
-
-% ================================SETTINGS=================================%
-% Pas d'indentation en début de paragraphe :
-\setlength\parindent{0pt}
-\setlength{\parskip}{0.15cm}
-
-% Tableaux/tabular
-% Espace vertical dans les tabular/tableaux
-\renewcommand{\arraystretch}{1.2}
-% Couleur des tableaux/tabular
-\rowcolors{2}{violet!5}{}
-
-% Couleurs de hyperliens :
-\definecolor{mypink}{RGB}{147, 0, 255}
-\hypersetup{colorlinks, 
-             filecolor=mypink,
-             urlcolor=mypink, 
-             citecolor=mypink, 
-             linkcolor=mypink, 
-             anchorcolor=mypink}
-
 
 \usepackage{titling} % Donne accès à \theauthor, \thetitle, \thedate
 
-% Physique
-\usepackage{physics} % Meilleur package pour physicien. 
-
-
-% Style
-\usepackage{lipsum} % For fun
-\usepackage{tikz} % Realisation de figures TIKZ.
-\usepackage{empheq} % Boite autour de MULTIPLE équations
-
-% Français
-\usepackage[french]{babel} % Environnements en Français.
 % ==============================BASE-(END)=================================%
 
 
@@ -104,13 +58,13 @@
 % Espace vertical dans les tabular/tableaux
 \renewcommand{\arraystretch}{1.2}
 % Couleur des tableaux/tabular
-\rowcolors{2}{violet!5}{}
+% \rowcolors{3}{violet!5}{}
 
 % Couleurs de hyperliens :
 \definecolor{mypink}{RGB}{147, 0, 255}
 \hypersetup{colorlinks, 
              filecolor=mypink,
-             urlcolor=mypink, 
+             urlcolor=Violet, 
              citecolor=mypink, 
              linkcolor=mypink, 
              anchorcolor=mypink}
@@ -139,9 +93,12 @@
 
 
 % ==============================NEWCOMMANDS================================%
+% CQFD symbol
+\renewcommand{\qedsymbol}{$\hfill\blacksquare$}
 
 % Vecteurs de base :
 \newcommand{\nvf}{\vb{\hat{n}}}
+\newcommand{\evf}{\vb{\hat{e}}}
 \newcommand{\ivf}{\vb{\hat{i}}}
 \newcommand{\jvf}{\vb{\hat{j}}}
 \newcommand{\kvf}{\vb{\hat{k}}}
@@ -150,8 +107,8 @@
 \newcommand{\ust}{\vb{u}_{\ast}}
 
 % Physics empty spaces 
-\newcommand{\typical}{\vphantom{A}}
-\newcommand{\tall}{\vphantom{A^{x^x}_p}}
+\newcommand{\short}{\vphantom{pA}}
+\newcommand{\tall}{\vphantom{pA^{x^x}_p}}
 \newcommand{\grande}{\vphantom{\frac{1}{xx}}}
 \newcommand{\venti}{\vphantom{\sum_x^x}}
 \newcommand{\pt}{\hspace{1pt}} % One horizontal pt space
@@ -170,6 +127,14 @@
 %\newcommand{\nb}{$\boxed{\text{\footnotesize\EightStarConvex}\pt \mathfrak{N. B.}}$\hspace{4pt}}
 \newcommand{\nb}{\underline{{\footnotesize\EightStarConvex}\pt $\mathfrak{N.B.}$\vphantom{p}}\hspace{3pt}}
 
+\newcommand{\exemple}{
+\parbox[center]{2.2cm}{\begin{tcolorbox}[sharp corners, rounded corners=northeast, rounded corners=southeast,
+colback=Violet!5, colframe=black,
+size=small, width=2cm, left=-0.25pt, bottom=-0.5pt,
+arc is angular, arc=2.5mm, boxrule=0.35pt, leftrule=4pt, %bottomrule=1pt,
+after={\enskip}] Exemple \end{tcolorbox}}}
+
+\newcommand{\cqfd}{\hfill$\blacktriangleleft$}
 
 % Define the nota bene environment
 \usepackage{tcolorbox}
@@ -196,7 +161,7 @@
 \newcommand{\mytitlepage}{
 \begin{titlepage}
 \begin{center}
-{\Huge Contrat Été 2023 \par}
+{\Huge \thesubtitle \par}
 \vspace{2cm}
 {\Huge \MakeUppercase{\thetitle} \par}
 \vspace{2cm}
@@ -247,18 +212,18 @@ Police d'écriture : \textbf{CMU Serif Roman}
 
 
 \chapter{Le modèle en eau peu profonde à plusieurs couches}
-\label{sec:org53e7401}
+\label{sec:org5bb5a50}
 
 \section{Les équations du mouvement}
-\label{sec:orgd5774d4}
+\label{sec:org46e7285}
 
 Le système d'équation décrivant l'écoulement dans le modèle en eau peu profonde (\emph{shallow water}) est exprimé par 
 \begin{equation}
-\label{eq:org46a3c13}
+\label{eq:org08592cd}
    \pdv{\uu_k}{t} + \qty(f+\zeta_k)\pt \kvf\times\uu_k = -\gradient{B_k} + \boldsymbol{D}_k + \delta(k,1)\cdot \qty(\frac{\boldsymbol{\tau_a}}{\rho_o\pt H_k})
    \hspace{0.6cm} \text{où} \hspace{0.6cm} k\pt \in\pt \lbrace 1,\pt2,\cdots ,\pt n_z\rbrace.
 \end{equation}
-où l'indice \(k\) représente l'indicateur numérique de la couche et \(n_z\) est le nombre total de couches, comme illustré à la figure \ref{org76e0591}.
+où l'indice \(k\) représente l'indicateur numérique de la couche et \(n_z\) est le nombre total de couches, comme illustré à la figure \ref{org2a7d559}.
 Dans l'expression précédente, la fonction de Bernouilli \(B_k\) -- une quantité qui illustre les transferts entre l'énergie cinétique et potentielle -- est exprimée par
 \begin{equation}
    B_k =  \rho_k^{-1} p_k^{} + \abs{\uu_k}^2/2.
@@ -311,7 +276,7 @@ Il est aussi courant d'utiliser la variable \(\phi_k = \rho_k^{-1} p_k\) en \(\q
 \draw[>=stealth, ->|] (H4) -- (4.3,-4);
 \end{tikzpicture}
 \end{center}
-\caption{\label{org76e0591}Illustration conceptuelle d'un modèle « shallow water » à n\textsubscript{z} = 4 couches. La densité volumique de chaque couche est grossièrement illustrée à l'aide du contrate des couleurs.}
+\caption{\label{org2a7d559}Illustration conceptuelle d'un modèle « shallow water » à n\textsubscript{z} = 4 couches. La densité volumique de chaque couche est grossièrement illustrée à l'aide du contrate des couleurs.}
 \end{wrapfigure}
 
 
@@ -329,7 +294,7 @@ où
 est la gravité réduite de la couche \(k\).\bigskip
 
 \nb Dans notre propre nomenclature, la quantité « \(\eta_k\) » représente l'élévation de la surface d'une couchex « \emph{k} », en opposition à la nomenclature de \Textcite{vallis_2006}, où \(\eta_k\) représente l'élévation du bas de la couche \(k\).
-En cas de doute, se référer à la figure \ref{org76e0591}).
+En cas de doute, se référer à la figure \ref{org2a7d559}).
 Le but est de rester cohérent avec l'article de \textcite{chen_2021}.
 \bigskip
 
@@ -347,10 +312,10 @@ où l'expression \(\delta(k,i)\) réfère ici au delta de Kronecker qui est l'ex
 \end{equation}
 L'indicateur \(t-1\) réfère au pas de temps précédent, car nous utilisons un schéma temporel de type \emph{leapfrog}.
 L'absence d'indice temporel dénote donc le pas de temps courant d'une quantité, soit \(\uu^t\) par exemple. 
-Une meilleure description du pas de temps est fournie dans la section \ref{org2837550}. \bigskip
+Une meilleure description du pas de temps est fournie dans la section \ref{orgcee7815}. \bigskip
 
 \section{Conservation de la masse}
-\label{sec:org12f6bc1}
+\label{sec:org8503419}
 
 Dans le modèle en eau peu profonde, le système d'équation incarnant la conservation de la masse est donné par
 \begin{equation}
@@ -360,15 +325,15 @@ où \(\vb{U}^b\) pourrait représenter n'importe quel transport de surface, tel 
 De base, aucune quantité n'est précisée ici, donc gardons \(\vb{U}^b = 0\). 
 
 \section{Résolution du gradient de pression}
-\label{sec:org12c3065}
-\label{org2837550}
+\label{sec:orgc462ef0}
+\label{orgcee7815}
 
 Concrétement, le \emph{timestepping} de type \emph{leapfrog} pour les équations du mouvement est exprimé par
 \begin{equation}
-\label{eq:orgcca339a}
+\label{eq:orgc792fed}
  \uu^{t+1}_k = \underbrace{ \uu^{t-1}_k + (2\Delta t)\cdot \vb*{G}^t_k}_{\tilde{\uu}_k} \ -\ \gradient{\phi_s}.
 \end{equation}
-où \(\vb{G}^t\) est un vecteur valise qui contient tout le \emph{RHS} des équations \ref{eq:org46a3c13}, mais sans le terme de pression de surface (\(\gradient{\phi_s}\)).
+où \(\vb{G}^t\) est un vecteur valise qui contient tout le \emph{RHS} des équations \ref{eq:org08592cd}, mais sans le terme de pression de surface (\(\gradient{\phi_s}\)).
 Le terme \(\boldsymbol{G}_k^t\) est calculé au pas de temps courant de manière à s'incruster dans le \emph{timestepping} de type \emph{leapfrog}.
 Ainsi, l'expression
 \begin{equation}
@@ -422,7 +387,7 @@ Puis finalement, on recombine les courants mis-à-jour à l'aide de la relation
 où \(\uu_{BC} = \tilde{\uu}_{BC}\) comme \(\gradient{\phi_s}\) est une composante barotrope.\newpage
 
 \section{Conditions frontières}
-\label{sec:org2b63184}
+\label{sec:orgb211157}
 
 \begin{wrapfigure}[18]{r}{0.4\textwidth}
 \vspace{-\baselineskip}
@@ -467,11 +432,11 @@ où \(\uu_{BC} = \tilde{\uu}_{BC}\) comme \(\gradient{\phi_s}\) est une composan
 \draw [-{latex}|] (dy1) -- (0.70,1);
 \draw [-{latex}|] (dy1) -- (0.70,2);
 \end{tikzpicture}
-\caption{\label{org887efe8}Représentation de la grille numérique utilisée pour le modèle en eau peu profonde (type \href{https://en.wikipedia.org/wiki/Arakawa\_grids}{Arakawa-C} )}
+\caption{\label{orgd7df41a}Représentation de la grille numérique utilisée pour le modèle en eau peu profonde (type \href{https://en.wikipedia.org/wiki/Arakawa\_grids}{Arakawa-C} )}
 \end{wrapfigure}
 
 \subsection{Conditions frontière sur les courants (No normal flow)}
-\label{sec:org50f004f}
+\label{sec:org9ee84cb}
 Aux murs, nous appliquons la condition \emph{no normal flow} (ou la condition d'imperméabilité).
 Cette condition de type Dirichlet est caractérisée par un courant normal nul aux frontières.
 Mathématiquement, la condition se traduit par
@@ -496,18 +461,18 @@ Avec nos points fantômes, on peut étendre les extrémités des frontières et 
 \end{subequations}
 
 \subsection{Conditions frontières sur la dérivée première (Free slip condition)}
-\label{sec:org4132589}
+\label{sec:org59300eb}
 
 La seconde condition est la \emph{free slip condition} (ou la condition de glissement libre).
 La \emph{free slip condition} tient à l'hypothèse que la couche limite est si petite qu'on peut essentiellement l'ignorer, ce qui est souvent le cas pour l'étude des fluides à grande échelle.
 Concrétement, il n'y a \href{https://physics.stackexchange.com/questions/383096/understanding-free-slip-boundary-condition\#:\~:text=On\%20the\%20other\%20hand\%2C\%20the,the\%20tangential\%20component\%20is\%20unrestricted.}{pas de contrainte de cisaillement au mur}, de sorte que
 \begin{align}
-\label{eq:org15f5f56}
+\label{eq:orgae09c46}
 &&\eval{\qty(\boldsymbol{\tau}_x = \mu \pdv{u}{y})\pt }_{\pt\{xi,xf\}} = 0\pt, && \text{et} &&
   \eval{\qty(\boldsymbol{\tau}_y = \mu \pdv{v}{x})\pt }_{\pt\{yi,yf\}} = 0\pt. &&
 \end{align}
 où \(\mu\) est la viscosité \autocite{tan2018applying}.
-Ainsi, l'expression \ref{eq:org15f5f56} force la condition frontière sur la dérivée première à satisfaire 
+Ainsi, l'expression \ref{eq:orgae09c46} force la condition frontière sur la dérivée première à satisfaire 
 \begin{equation}
 \boxed{\hspace{0.7cm}\eval{\pdv{v}{x}\pt }_{\pt\{xa,xf\}} = 0\pt\ \forall\ y,\hspace{1.3cm} \text{et} \hspace{1.3cm} \eval{\pdv{u}{y}\pt }_{\pt \{yi,yf\}} = 0\pt\ \forall\ x.\hspace{0.7cm}\venti}
 \end{equation}
@@ -520,7 +485,7 @@ Ce qui se traduit concrétement par
 \end{subequations}
 
 \subsection{Condition sur les laplaciens et la fonction de courant}
-\label{sec:org85ab65d}
+\label{sec:orgc28b158}
 Au murs, on retrouve les quantités \(\gradient^2{\uu}\), \(\gradient^2{\vv}\), \(\zeta\) et \(\psi\).
 Pour se simplifier la tâche et faire comme dans l'article de \autocite{duhaut2006}, on applique
 \begin{equation}
@@ -529,10 +494,10 @@ Pour se simplifier la tâche et faire comme dans l'article de \autocite{duhaut20
 
 
 \chapter{Aperçu théorique de l'ajout des vagues au modèle en eau peu profonde}
-\label{sec:org962c594}
+\label{sec:orgb9821d0}
 
 \section{La dérive de Stokes selon \Citeauthor{suzuki2016understanding}}
-\label{sec:org3b40207}
+\label{sec:org9ccc590}
 
 \nb Comme dans la notation de \textcite{vallis_2006}, le vecteur \(\vv = \qty(u,v,w)\) dénote le courant d'un écoulement 3D, tandis que le vecteur \(\uu = (u,v)\) est en deux dimensionslp.\bigskip
 
@@ -546,7 +511,7 @@ ce qui nous permet de \emph{filter} la dynamique des vagues pour étudier la dé
 
 \textcite{suzuki2016understanding}  caractérisent la dérive de Stokes (\(\vv_S\)) comme un courant lagrangien (\emph{wave-ﬁltered Lagrangian velocity}).
 Dans le langage courant, un \textbf{quantité lagrangienne} se fait advecter (p.e. un traceur lagrangien).
-Dans le cadre de l'article, on parle plus d'un \textbf{courant lagrangien} (\(\vv_L\)) comme un courant qui advecte à l'intérieur des équations du mouvement \ref{eq:org7221948}.
+Dans le cadre de l'article, on parle plus d'un \textbf{courant lagrangien} (\(\vv_L\)) comme un courant qui advecte à l'intérieur des équations du mouvement \ref{eq:org654e38b}.
 Le courant lagrangien est définit comme
 \begin{equation}
    \vv_L = \vv + \vv_S.
@@ -555,12 +520,12 @@ Le courant lagrangien est définit comme
 Par contre, elle participe à advecter le courant \(\vv\), c'est pourquoi est elle est aussi comptée comme une force qui agit avec Coriolis, aussi.
 
 \subsection{Les équations du mouvement WAB}
-\label{sec:org824870d}
+\label{sec:orgfb58f95}
 
 \textcite{suzuki2016understanding} divisent l'influence de la dérive de Stokes en 3 effets notoirslp afin de formuler les équations Boussinesq moyennées sur la période des vagues (\emph{wave-averaged Boussinesq equations}) d'où l'acronyme WAB.
 Le système d'équations Boussinesq avec vagues le plus fondamental (autrement dit, le plus clair) est celui illustré à l'équation (5) du même article, soit
 \begin{equation}
-\label{eq:org7221948}
+\label{eq:org654e38b}
    \pdv{\vv}{t}
    +\underbrace{\qty( \vv_L\cdot\gradient{})\vv\grande}_{\substack{\text{Advection}\\\text{lagrangienne}}}
    = \underbrace{-\grande\vb{f}\times\vv_L}_{\substack{\text{Force Cori.}\\\text{lagrangienne}}}
@@ -576,7 +541,7 @@ Comme mentionné par \Citeauthor{suzuki2016understanding} :
 \item \textbf{La force de Coriolis lagrangienne} et la \textbf{force de cisaillement de Stokes} (\emph{Stokes shear force}) transfèrent plutôt de l'énergie des vagues vers la circulation sous-jacente ou la turbulence.
 \end{itemize}
 
-Il est possible de ré-écrire le système d'équations \ref{eq:org7221948} dans une notation plus propice à développer les équations en eau peu profonde \autocite[Voir][équation 1]{suzuki2016understanding}, soit
+Il est possible de ré-écrire le système d'équations \ref{eq:org654e38b} dans une notation plus propice à développer les équations en eau peu profonde \autocite[Voir][équation 1]{suzuki2016understanding}, soit
 \begin{equation}
    \pdv{\vv}{t}
    +\underbrace{\grande\qty(\curl{\vv}) \times \vv_L}_{\substack{\text{Wave influenced}\\ \text{vertex force}}}
@@ -585,7 +550,7 @@ Il est possible de ré-écrire le système d'équations \ref{eq:org7221948} dans
 \end{equation}
 
 \subsection{Connecter les équations WAB avec le modèle en eau peu profonde}
-\label{sec:org956a437}
+\label{sec:orgb76d636}
 
 Le modèle en \textbf{eau peu profonde} est caractérisé par deux approximations :
 \begin{itemize}
@@ -599,9 +564,9 @@ Le modèle en \textbf{eau peu profonde} est caractérisé par deux approximation
    w \ll (u,v) \hspace{0.3cm} \Longrightarrow \hspace{0.3cm} \qty(\dv{w}{t}),\pt w^2 \longrightarrow 0.
 \end{equation}
 \end{itemize}
-L'équation du courant vertical est réduite à l'expression de la pression hydrostatique (\ref{eq:orgcd0867f}) -- qu'on intègre verticalement pour obtenir la pression dans la première couche, soit
+L'équation du courant vertical est réduite à l'expression de la pression hydrostatique (\ref{eq:org70e27df}) -- qu'on intègre verticalement pour obtenir la pression dans la première couche, soit
 \begin{equation}
-\label{eq:orgcd0867f}
+\label{eq:org70e27df}
    b = \pdv{p}{z} = \rho_o g \hspace{0.3cm}
    \Rightarrow \hspace{0.3cm} \int_{z}^{\eta_1=0} \qty( \pdv{p}{z} = \rho_o g ) \dd z \hspace{0.3cm}
    \Rightarrow \hspace{0.3cm} p(x,y,z) = \rho_o gz + p_s(x,y)
@@ -611,7 +576,7 @@ Dans notre couche de surface, le gradient de pression est donc décomposé de ma
 \begin{equation}
    \gradient{p} = \underbrace{\qty[\pdv{}{x}\ivf + \pdv{}{y} \jvf]}_{\gradient_h }p_s + \rho_o g \pt\kvf.
 \end{equation}
-\nb Dans un modèle à plusieurs couches, l'intégration en \ref{eq:orgcd0867f} donnerait plutôt l'expression générale
+\nb Dans un modèle à plusieurs couches, l'intégration en \ref{eq:org70e27df} donnerait plutôt l'expression générale
 \begin{equation}
    p_k(x,y,z) = p_s(x,y) + \qty(\sum_{i=1}^{k-1} \rho_i g h_i) + g\rho_k \tilde{z}
    \hspace{0.6cm} \text{où}\hspace{0.6cm}
@@ -626,7 +591,7 @@ où l'indice \(k\) dénote la couche en question.\bigskip
 
 L'expression décrivant l'écoulement horizontal du modèle en eau peu profonde est ainsi formulée par
 \begin{equation}
-\label{eq:orgb6a307b}
+\label{eq:org99eea13}
    \pdv{\uu}{t}
    \pt + \pt \qty(f+\zeta)\pt \kvf\pt \times \uu
    \pt + \pt \underbrace{\grande\zeta\pt \kvf\pt \times \uu_S}_{\substack{\text{Craik-}\\ \text{Leibovich}}}
@@ -640,12 +605,12 @@ où la nouvelle fonction de Bernouilli prenant compte de la dérive de Stokes (\
    B_S = B + \uu\cdot\qty(\vb{U}_S/H_k) + \qty(\vb{U}_S^2/H_S^2)/2 + \phi_s,
 \end{align}
 où \(\vb{U}_S\) est le transport de Stokes fournit par le modèle de vagues et \(\phi_s\equiv p_s/\rho_o\).
-L'introduction de \(\boldsymbol{\tau}_o\) dans l'équation \ref{eq:orgb6a307b} est confirmée par \Textcite{breivik_al_2015}, mais nous y reviendrons à la section \ref{org855623e}.
+L'introduction de \(\boldsymbol{\tau}_o\) dans l'équation \ref{eq:org99eea13} est confirmée par \Textcite{breivik_al_2015}, mais nous y reviendrons à la section \ref{orgbc29e26}.
 \bigskip
 
 À plusieurs couches, les équations horizontales du modèle en eau peu profonde sont exprimées par
 \begin{equation}
-\label{eq:org864126a}
+\label{eq:orga00fb53}
    \pdv{\uu_k}{t}
    \pt + \pt \qty(f+\zeta_k)\pt \kvf\pt \times \uu_k
    \pt + \pt \underbrace{\delta(k,1)\cdot\grande\qty(f + \zeta_1)\pt \kvf\pt \times \uu_S}_{\substack{\text{Stokes-Coriolis}\\ \text{et Craik-Leibovich}}}
@@ -654,7 +619,7 @@ L'introduction de \(\boldsymbol{\tau}_o\) dans l'équation \ref{eq:orgb6a307b} e
    +\pt \underbrace{\delta(k,1)\cdot\qty(\frac{\boldsymbol{\tau}_o}{\rho_k H_k}),}_{\substack{\text{Modulation du}\\ \text{vent par vagues}}}
 \end{equation}
 ce qui laisse apparaître deux termes importants, soient Stokes-Coriolis et Craik-Leibovich.
-D'autres termes associés à la dérive de Stokes pourraient être implémentés (voir \Textcite{wu_breivik_2019} par exemple) si l'on considère aussi la vorticité associée à la dérive de Stokes dans l'équation \ref{eq:org864126a}, mais ça ne fera pas partie de notre étude.
+D'autres termes associés à la dérive de Stokes pourraient être implémentés (voir \Textcite{wu_breivik_2019} par exemple) si l'on considère aussi la vorticité associée à la dérive de Stokes dans l'équation \ref{eq:orga00fb53}, mais ça ne fera pas partie de notre étude.
 La fonction de Bernouilli serait exprimée par
 \begin{align}
    & B_{S,k} = B_k + \delta(k,1)\cdot\qty(\tall\uu_1\cdot\vb{u}_S + \vb{u}_S^2/2), \\
@@ -663,7 +628,7 @@ La fonction de Bernouilli serait exprimée par
 
 
 \subsection{Conservation de la masse}
-\label{sec:orge864f28}
+\label{sec:org7ff8d3f}
 
 On peut obtenir l'équation de conservation de la masse dans chaque couche en intégrant l'équation d'incompressibilité.
 Rapidement,
@@ -692,8 +657,8 @@ L'article de \Textcite{wu_breivik_2019} est assez explicite sur l'addition du tr
 \end{equation}
 
 \section{Contrainte de cisaillement du vent à la surface}
-\label{sec:orga63cf67}
-\label{org855623e}
+\label{sec:orgc322b01}
+\label{orgbc29e26}
 
 Comme illustré dans l'article de \Textcite{breivik_al_2015}, la contrainte de cisaillement du vent à la surface est modifié de 3 manières :
 \begin{itemize}
@@ -711,10 +676,10 @@ On passe donc d'un stress atmosphérique fixe à un stress dépendant du champ d
 \begin{equation}
    \boldsymbol{\tau}\ =\ \underbrace{\tall\delta_{COU}\cdot\boldsymbol{\tau}_{oc}}_\text{Couplé}\ + \ \underbrace{(1-\delta_{COU}) \cdot \boldsymbol{\tau}_a\tall}_\text{Non-couplé}.
 \end{equation}
-\nb De plus amples informations sur le stress et le vent se retrouvent aux sections \ref{org08ed26d} et \ref{org6245d15}.
+\nb De plus amples informations sur le stress et le vent se retrouvent aux sections \ref{org12f16a1} et \ref{orgffa9632}.
 
 \section{Champs échangés par les deux modèles}
-\label{sec:org841f30f}
+\label{sec:org80cb7d5}
 
 Le modèle \emph{shallow water} envoie une seule quantité au modèle de vagues, soit
 \begin{itemize}
@@ -729,12 +694,12 @@ Le modèle Wavewatch III envoie 4 quantités au modèle \emph{shallow water}, so
 \item Le \textbf{momentum dispersé par le champ de vagues} à la circulation sous-jacente \(\boldsymbol{\tau}_{IN}\);\bigskip
 \end{itemize}
 
-Wavewatch pourrait aussi nous offrir plusieurs quantités intéressantes pous le couplage, j'en ai compilé une bonne partie dans le tableau \ref{tab:orgba5f895} avec les informations retrouvées dans la documentation de Wavewatch, son code et la littérature adjacente.
+Wavewatch pourrait aussi nous offrir plusieurs quantités intéressantes pous le couplage, j'en ai compilé une bonne partie dans le tableau \ref{tab:orga46f647} avec les informations retrouvées dans la documentation de Wavewatch, son code et la littérature adjacente.
 Comme il y a eu beaucoup d'incertitude quand à la nature des quantités, mentionnons que tous les \(\tau\) fournit par Wavewatch III sont divisé par \(\rho_{Atm}\).
 C'est mentionné explicitement dans la sous-routine du modèle \emph{w3src3md.ftn}, mais pas dans la documentation.
 
 \begin{table}[htbp]
-\caption{\label{tab:orgba5f895}Tableau d'investigation récapitulatif des outputs de Wavewatch III.}
+\caption{\label{tab:orga46f647}Tableau d'investigation récapitulatif des outputs de Wavewatch III.}
 \centering
 \begin{tabular}{lll|lc|c}
 \hline
@@ -762,10 +727,10 @@ USS[X,Y] & USS & \emph{Surface Stokes drift} & USSX/Y & m s\textsuperscript{-1} 
 
 
 \chapter{Techniques numériques en lien avec le couplage}
-\label{sec:orgb9fe97b}
+\label{sec:orga3edb46}
 
 \section{Interpolation géométrique}
-\label{sec:org675b7eb}
+\label{sec:org0153b14}
 \begin{wrapfigure}[41]{r}{0.45\textwidth}
 \vspace{-5\baselineskip}
 \begin{center}
@@ -874,11 +839,11 @@ pn% Axis:
 \end{tikzpicture}
 %
 \end{center}
-\caption{\label{org843c977}En a), mise en relation de la grille du modèle «shallow water» (haute résolution, indicateurs bleus) par rapport à la grille de Wavewatch III (basse résolution, indicateurs noirs). En b) et c) « Stencil » utilisé pour réaliser l'interpolation géométrique à ratio \(R\) impair.}
+\caption{\label{org154c50d}En a), mise en relation de la grille du modèle «shallow water» (haute résolution, indicateurs bleus) par rapport à la grille de Wavewatch III (basse résolution, indicateurs noirs). En b) et c) « Stencil » utilisé pour réaliser l'interpolation géométrique à ratio \(R\) impair.}
 \end{wrapfigure}
 
 \subsection{Du modèle « shallow water » au modèle Wavewatch}
-\label{sec:org58a1790}
+\label{sec:orga94123a}
 
 Le modèle Wavewatch III roule sur une grille \textbf{trois fois plus petite} que celle du modèle \emph{shallow water}, entre autres pour sauver du temps de computation.
 Donc, lorsqu'on envoie le champ de courant \((u_1,v_1)\) à Wavewatch III, on fait avant tout une moyenne de \(R^2\) points où \(R\) est le ratio des deux grilles (3 dans notre cas).
@@ -886,41 +851,37 @@ Donc, lorsqu'on envoie le champ de courant \((u_1,v_1)\) à Wavewatch III, on fa
 
 Mathématiquement, ça se traduit par
 \begin{equation}
-\label{eq:orgae2ab58}
+\label{eq:org341a5f3}
    (u^{\pt i,j},\pt v^{\pt i,j}) =
    \sum_{\substack{k=1 + (i-1)\times R\\ l=1 + (j-1)\times R}}^{i\times R,\pt j\times R}
    (u_{\pt k,\pt l},\pt v_{\pt k,\pt l}),
 \end{equation}
 
-\begin{align}
-   &\int_0^1 x^2 \dd x = \sfrac{1}{3} && \sum_{k=0}^\infty \frac{1}{k^2} = \frac{\pi^2}{6}. && \mathcal{ABC}\mathfrak{ABC}\mathbb{CNQP} &
-\end{align}
-
-mais ça revient juste à faire la moyenne dans un carré de R\textsuperscript{2} = 3\texttimes{} 3, comme on passe de la grosse grille à la petite grille (comme on peut le voir à la figure \ref{org843c977}a). \bigskip
+mais ça revient juste à faire la moyenne dans un carré de R\textsuperscript{2} = 3\texttimes{} 3, comme on passe de la grosse grille à la petite grille (comme on peut le voir à la figure \ref{org154c50d}a). \bigskip
 
 \nb L'indice en exposant réfère à la grille de résolution plus faible (donc celle qui sera envoyée à Wavewatch III) et l'indice au pied réfère à la grille à haute résolution, soit celle du modèle \emph{shallow water}.
 
 \subsection{De Wavewatch au modèle « shallow water »}
-\label{sec:orga355aff}
+\label{sec:org80de19b}
 
-À l'inverse, lorsqu'on reçoit les champs de Wavewatch III,  on utilise un \emph{stencil} de taille \(R^2\) qui fait la moyenne géométrique des points adjacents (comme illustré à la figure \ref{org843c977}b).
+À l'inverse, lorsqu'on reçoit les champs de Wavewatch III,  on utilise un \emph{stencil} de taille \(R^2\) qui fait la moyenne géométrique des points adjacents (comme illustré à la figure \ref{org154c50d}b).
 Par exemple, pour le modèle \emph{shallow water}, la quantité au point (4,4) \(Q^{\pt4,4}\) est calculée à l'aide d'une moyenne pondérée des points de Wavewatch, soit
 \begin{equation}
    {\color{MidnightBlue} Q_{\pt4,4}} = \qty[\ 1\times Q^{\pt1,1}+ 2\times Q^{\pt1,2}+ 2\times Q^{\pt2,1}+ 4\times Q^{\pt2,2}\ ]\pt/\pt9
 \end{equation}
 
-où le tout est divisé par \(R^2 = 9\) (voir figure \ref{org843c977}b).\bigskip
+où le tout est divisé par \(R^2 = 9\) (voir figure \ref{org154c50d}b).\bigskip
 
-À la frontière, on réduit la taille du \emph{stencil} de sorte à s'adapter à la forme du mur (voir figure \ref{org843c977}c).
+À la frontière, on réduit la taille du \emph{stencil} de sorte à s'adapter à la forme du mur (voir figure \ref{org154c50d}c).
 Par exemple, pour le modèle \emph{shallow water}, le point (1,3) est calculé à l'aide de la moyenne pondéré des points de Wavewatch, soit
 \begin{equation}
-\label{eq:org54c9e40}
+\label{eq:org0942f24}
    {\color{MidnightBlue} Q_{\pt1,3}} = \qty[\ 2\times Q^{\pt1,2} + 4\times Q^{\pt1,1}\ ]\pt/\pt6
 \end{equation}
-où le tout divisé par 2\texttimes{}3 = 6, soit la taille du \emph{stencil} (voir figure \ref{org843c977}c).
+où le tout divisé par 2\texttimes{}3 = 6, soit la taille du \emph{stencil} (voir figure \ref{org154c50d}c).
 
 \subsection{Interpolation grille C et grille A}
-\label{sec:org2902117}
+\label{sec:org441b5f1}
 
 Le modèle Wavewatch III est déployé sur une grille A, tandis que le modèle \emph{shallow water} est construit sur une grille de type Arakawa-C, ce qui vient avec son lot de problème.\bigskip
 
@@ -928,7 +889,7 @@ Une fois l'interpolation géométrique exécutée, il est important de replacer 
 C'est pourquoi nous interpolons la valeur des champs.
 Par exemple, avant d'être moyenné puis envoyé à Wavewatch, le courant de surface du modèle \emph{shallow water} \(u\) doit être interpolé de sorte à ce que
 \begin{equation}
-\label{eq:orge6e2f2d}
+\label{eq:org8910cf3}
    u^{\pt A}_{\pt i,j} = \qty[\ u^{\pt C}_{\pt i,j} + u^{\pt C}_{\pt i-1,j}\ ]\pt/\pt2,
 \end{equation}
 où l'exposant \(A\) réfère triviallement à la grille de type A et l'indice \(C\) réfère à la grille de type C.\bigskip
@@ -936,7 +897,7 @@ où l'exposant \(A\) réfère triviallement à la grille de type A et l'indice \
 On effectue l'étape inverse lorsqu'on reçoit les champs de Wavewatch III.
 
 \section{Cheminement des étapes de couplage et d'interpolation}
-\label{sec:orgb772ca9}
+\label{sec:org63ccd49}
 
 Avant de réaliser l'échange des champs par canal MPI, l'ordre des étapes est le suivant :
 \begin{enumerate}
@@ -944,10 +905,10 @@ Avant de réaliser l'échange des champs par canal MPI, l'ordre des étapes est 
 \begin{equation}
    (\pt u_1^{\pt C},v_1^{\pt C}\pt) \hspace{0.3cm}\longmapsto \hspace{0.3cm} (\pt u_1^{\pt A},v_1^{\pt A}\pt),
 \end{equation}
-\item Le modèle \emph{shallow water} fait un moyennage des cases pour atteindre la résolution réduite de Wavewatch III (voir équation \ref{eq:orgae2ab58}).
+\item Le modèle \emph{shallow water} fait un moyennage des cases pour atteindre la résolution réduite de Wavewatch III (voir équation \ref{eq:org341a5f3}).
 \item On envoit le courant à faible résolution sur une grille A à Wavewatch III par un canal MPI.
 \item On reçoit les quantités de Wavewatch à basse résolution par le canal MPI.
-\item On réalise l'interpolation géométrique sur les quantités pour avoir une meilleure résolution (voir équation \ref{eq:org54c9e40} et \ref{eq:orge6e2f2d}).
+\item On réalise l'interpolation géométrique sur les quantités pour avoir une meilleure résolution (voir équation \ref{eq:org0942f24} et \ref{eq:org8910cf3}).
 \item On fait une interpolation pour passer d'une grille Arakawa-A vers une grille Arakawa-C, de sorte que
 \begin{equation}\qty{\
    \begin{matrix}
@@ -970,7 +931,7 @@ et le tour est joué\ldots{}\bigskip
 Les deux modèles enchaînent ensuite sur leur \emph{timestepping} et leur propre \emph{RHS}.
 
 \section{Rampe au moment du couplage}
-\label{sec:orga948488}
+\label{sec:orgb5b5b2d}
 
 \begin{figure}
 \begin{center}
@@ -1003,7 +964,7 @@ Les deux modèles enchaînent ensuite sur leur \emph{timestepping} et leur propr
    \draw (5.6,2.1) node [BurntOrange!50!red!90] {$\vb{U}_{Stokes}$};
 \end{tikzpicture}
 \end{center}
-\caption{\label{org59dd99b}Illustration conceptuelle de la rampe pour éviter le \emph{spin up} du modèle de vagues.}
+\caption{\label{orge1677c2}Illustration conceptuelle de la rampe pour éviter le \emph{spin up} du modèle de vagues.}
 \end{figure}
 
 Comme le modèle Wavewatch a un \emph{spin up} assez \textbf{brutal}, on se permet de mettre une rampe de couplage étallée sur 1 mois (31 jours).
@@ -1012,14 +973,14 @@ De l'autre, ça donne un peu de temps au modèle de vagues pour se stabiliser.
 Après toutes expériences que j'ai réalisées, je peux dire que le modèle de vagues prend un bon 4 jours avant de se stabiliser complétement
 
 \chapter{Paramètres physiques des équations}
-\label{sec:orgf735f94}
+\label{sec:orgdfb7d08}
 
 \section{Stress du vent appliqué à la surface des deux modèles}
-\label{sec:orgfdbd1af}
-\label{org08ed26d}
+\label{sec:org946fc25}
+\label{org12f16a1}
 Stress du vent appliqué à la surface est donné par
 \begin{equation}
-\label{eq:org6ac2b82}
+\label{eq:org36eef4b}
    \boldsymbol{\tau}_{atm} = \ivf\pt\qty(\venti\frac{\tau_0}{2})\cdot\underbrace{\qty(\venti1-\cos(\frac{2\pi\cdot y}{L_y}))\venti}_\text{Variation y} \pt\cdot\pt \underbrace{\venti\qty(1+S\cdot\sin(f\cdot t))}_\text{Variation temps},
 \end{equation}
 où \(f\) est une fréquence en [rad s\textsuperscript{-1}] -- soit la fréquence de Coriolis dans notre cas.\bigskip
@@ -1039,11 +1000,11 @@ t & -- & s & Temps\\[0pt]
 \end{center}
 
 \section{Vent donné en input de Wavewatch III}
-\label{sec:org48845a2}
-\label{org6245d15}
+\label{sec:org009dbd0}
+\label{orgffa9632}
 Comme données entrantes,  Wavewatch ne prend pas le stress atmosphérique \(\boldsymbol{\tau}_{atm}\), car il le calcule à l'interne.
 Il prend plutôt le vecteur vent à \(z=10\) m de la surface de l'eau (\(\vb{u}_{10}\)).
-En premier lieu, pour transformer notre contrainte de cisaillement \ref{eq:org6ac2b82}, on connait la relation
+En premier lieu, pour transformer notre contrainte de cisaillement \ref{eq:org36eef4b}, on connait la relation
 \begin{equation}
    \tau_a = \rho_a c_D |\uu_{10}| \uu_{10},
 \end{equation}
@@ -1052,7 +1013,7 @@ Si l'on assume la valeur de la contrainte de cisaillement (0.1 N m\textsuperscri
 
 On commence par obtenir la valeur de \(c_D\) à l'aide de la relation de Charnok \autocite{charnock1955wind} aussi tirée de \Textcite[p.30]{gill-atmosphere-ocean},
 \begin{align}
-\label{eq:org9e04412}
+\label{eq:orgf49269f}
    &&c_D = \qty[\frac{\kappa}{\ln(z/z_{\pt0})}]_{\ z=10\pt m}
    && \text{où} &&
    z_0 = \frac{\gamma_{Ch}\tau_a}{g}. &&
@@ -1079,7 +1040,7 @@ g & 9.81 & m s\textsuperscript{-2} & Accélération gravitationnelle\\[0pt]
 \end{center}
 
 \section{Le paramètre de Charnock (désambiguation)}
-\label{sec:org22b577e}
+\label{sec:orgf825c0e}
 Comme illustré dans le tableau précédent, nous avons utilisé 0.0185 comme valeur du paramètre de Charnock.
 Le paramètre de Charnock est une quantité adimensionnelle qui dépend de l'état du champ de vagues et qui est curieusement corrélé à l'age du champ de vagues \autocite[p.60]{janssen2004interaction}.
 On le calcule à l'aide de la relation
@@ -1088,7 +1049,7 @@ On le calcule à l'aide de la relation
 \end{equation}
 Comme mentionné dans \Textcite{janssen2004interaction}, sa valeur est très ambigüe -- \href{https://codes.ecmwf.int/grib/param-db/148}{le modèle de vagues de l'ECWAM} utilise une valeur de 0.0185 mais \href{https://glossary.ametsoc.org/wiki/Charnock\%27s\_relation\#:\~:text=An\%20empirical\%20expression\%20for\%20aerodynamic,due\%20to\%20increasing\%20surface\%20stress.}{l'American Meteorological Society} propose plutôt une valeur de 0.015.\bigskip
 
-Donc, si l'on ne connait pas vraiment l'état des vagues, on ne peut pas vraiment estimer le coefficient de trainée de l'équation \ref{eq:org9e04412} sans le coefficient de Charnock.
+Donc, si l'on ne connait pas vraiment l'état des vagues, on ne peut pas vraiment estimer le coefficient de trainée de l'équation \ref{eq:orgf49269f} sans le coefficient de Charnock.
 Par contre, le \href{https://codes.ecmwf.int/grib/param-db/148}{site du modèle ECWAM} mentionne ceci :
 
 \begin{quote}
@@ -1106,10 +1067,10 @@ agreement with observations collected by Wu (1982) on the drag over sea
 waves.}
 \end{quote}
 
-Donc, c'est pourquoi j'ai pris la valeur de 0.0185 pour calculer le vent à 10 mètre de la surface, à l'aide des relations de la sous-section \ref{org6245d15}.
+Donc, c'est pourquoi j'ai pris la valeur de 0.0185 pour calculer le vent à 10 mètre de la surface, à l'aide des relations de la sous-section \ref{orgffa9632}.
 
 \section{Ce que Wavewatch III voit en input}
-\label{sec:org2cb6d71}
+\label{sec:org2917b12}
 
 Comme la \emph{switch} ST3 est activée, le modèle utilise le module \emph{wavewatch/ftn/w3src3md.ftn} et donc il calcule la \emph{friction velocity} à l'aide de la sous-routine \emph{CALC USTAR(WINDSPEED,TAUW,USTAR,Z0,CHARN)}.
 Plus précisément,
@@ -1133,7 +1094,7 @@ Plus précisément,
 
 
 \section{Tableau et résumé des quantités physiques importantes}
-\label{sec:orgb374df2}
+\label{sec:orgc91cfae}
 
 J'ai réunis dans le tableau suivant tous les paramètres physiques intéressants pour recréer les expériences.
 
@@ -1185,7 +1146,7 @@ J'ai réunis dans le tableau suivant tous les paramètres physiques intéressant
 
 
 \section{Switches du modèles Wavewatch III}
-\label{sec:orga02c9c4}
+\label{sec:orgbe9ae1d}
 
 Le modèle Wavewatch III est modulable à l'aide de \emph{switches}, voici celles qui ont été utilisées dans le cadre de cette recherche. 
 
@@ -1228,12 +1189,12 @@ O0 & Output of namelists in grid preprocessor.\\[0pt]
 \end{center}
 
 \chapter{Faire fonctionner les modèles couplées}
-\label{sec:org975adb9}
+\label{sec:org493df68}
 
 Voici les étapes à suivre pour faire rouler les deux modèles sur Oxygen.
 
 \section{Compilation du modèle \emph{shallow water}}
-\label{sec:org2e0296e}
+\label{sec:org28f1ca3}
 
 Avant tout, il faut aller dans le répertoire du modèle \emph{shallow water}.
 Dans le cas qui nous intéresse, le modèle sur Oxygen se trouve au répertoire
@@ -1243,7 +1204,7 @@ Dans le cas qui nous intéresse, le modèle sur Oxygen se trouve au répertoire
 \nb À chaque fois qu'on modifie le modèle \emph{shallow water}, il faut le recompiler.
 
 \subsection{Modifier le fichier « parameters.f90 »}
-\label{sec:orgd49cda2}
+\label{sec:org58ae5ad}
 
 Toutes les \emph{switches} et les paramètres à modifier se retrouvent dans le fichier \emph{parameters.f90}.
 Si l'on veut que le modèle soit couplé avec Wavewatch, il faut absolument utiliser la \emph{switch} COU = .true.\bigskip
@@ -1252,7 +1213,7 @@ Un exemple de fichier de paramètres pour les modèles couplés est fournit sous
 Tandis qu'un version non-couplée est fournit sous le nom de \emph{parameters tmp.f90}. 
 
 \subsection{Compilation du modèle avec l'exécutable « compile model »}
-\label{sec:orge7a15df}
+\label{sec:org1640b51}
 
 Une fois les paramètres modifiés à souhait, il faut compiler le modèle \emph{shallow water} à l'aide de l'exécutable \emph{compile model}.
 Lorsque ce dernier sera exécuté, il suffit de rentrer la valeur « 1 », pour signifier la compilation avec Oxygen.
@@ -1268,21 +1229,21 @@ Lorsque ce dernier sera exécuté, il suffit de rentrer la valeur « 1 », pour 
 Une fois compilé, l'exécutable du modèle « \emph{exec} » se déplace automatiquement dans le dossier \emph{newcase}, ainsi qu'un copie des paramètres utilisées pour la compilation. 
 
 \section{Compilation du modèle Wavewatch III}
-\label{sec:orgfc8d910}
+\label{sec:orgea39763}
 
 La compilation du modèle \emph{Wavewatch III} n'est nécessaire qu'une seule fois -- à moins que vous modifiez le fichier de \emph{switches}, ce qui arrive rarement. 
 
 \subsection{Compilation du modèle avec l'exécutable « make oxygen »}
-\label{sec:org9692c49}
+\label{sec:org4bb563c}
 
 \section{Création des inputs et assimilation par Wavewatch III}
-\label{sec:org62bd046}
+\label{sec:orgd9aa137}
 
 \subsection{Création d'un nouveau cas}
-\label{sec:orge680835}
+\label{sec:org1567173}
 
 \section{Rouler les modèles en MPI}
-\label{sec:orgf0c8646}
+\label{sec:orgcc16562}
 
 \newpage
 

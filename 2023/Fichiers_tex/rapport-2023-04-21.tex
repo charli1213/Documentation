@@ -1,33 +1,23 @@
-% Created 2024-06-16 Sun 00:14
+% Created 2024-07-23 Tue 11:42
 % Intended LaTeX compiler: pdflatex
-ocumentclass[10pt]{article}% =================================BASE====================================%
-\documentclass[10pt]{report}
+\documentclass[10pt]{article}
+% =================================BASE====================================%
 \usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry} % Marges
 \usepackage[T1]{fontenc} % Nécessaire avec FrenchBabel
 \usepackage[utf8]{inputenc} % Important pour symboles Francophones, é,à,etc
 \usepackage{csquotes} % Recommandé par PDFLatex lors de la compilation. 
 
-
-% Calligraphie
-%\usepackage{lmodern} % Ça, ça set latin modern
-%\usepackage{mathrsfs} %Permet la command \mathscr (Lettres attachées genre) \mathscr(B)
-
 % Calligraphie
 %\usepackage{pxfonts} % Met le texte ET les maths en Palatino + donne accès à des symboles math
 \usepackage{palatino} % Cette commande met seulement le texte en police palatino
-\usepackage{lmodern} % Pour les maths?
+\usepackage{lmodern} % Pour les maths? Lmodern pour les maths
 % Use lmodern for sans-serif
 \usepackage{mathrsfs} % Permet la command \mathscr (Lettres attachées genre) \mathscr(B)
 
-
-
-
-
 % Bibliographie
 %\usepackage[backend=bibtex,style=phys,sorting=ynt]{biblatex}
-\usepackage[backend=biber,sorting=ynt,style=ieee]{biblatex}
-\addbibresource{/home/charlesedouard/Desktop/Travail/Documentation/master-bibliography.bib}
-
+\usepackage[backend=biber,sorting=ynt,style=authoryear]{biblatex} % N'est pas utilisé par le compilateur org-mode, mais NÉCESSAIRE. Voir le fichier init.el pour changer le style. 
+\addbibresource{/home/charlesedouard/Desktop/Travail/Documentation/2023/master-bibliography.bib}
 
 
 \usepackage{amsmath, amssymb, amsthm} % Symb. math. (Mathmode+Textmode) + Beaux théorèmes.
@@ -37,58 +27,22 @@
 \usepackage{color} % Permettre l'utilisation des couleurs.
 \usepackage{colortbl} % Color tables
 \usepackage[dvipsnames]{xcolor} % Couleurs avancées.
-\usepackage{titling} % Donne accès à \theauthor, \thetitle, \thedate
 
 % Physique
 \usepackage{physics} % Meilleur package pour physicien. 
 
-
 % Style
 \usepackage{lipsum} % For fun
 \usepackage{tikz} % Realisation de figures TIKZ.
+\usetikzlibrary{arrows.meta,bending} % Arrow heads 
 \usepackage{empheq} % Boite autour de MULTIPLE équations
 \usepackage{bbding}
 
 % Français
 \usepackage[french]{babel} % Environnements en Français.
-% ==============================BASE-(END)=================================%
-
-
-
-% ================================SETTINGS=================================%
-% Pas d'indentation en début de paragraphe :
-\setlength\parindent{0pt}
-\setlength{\parskip}{0.15cm}
-
-% Tableaux/tabular
-% Espace vertical dans les tabular/tableaux
-\renewcommand{\arraystretch}{1.2}
-% Couleur des tableaux/tabular
-\rowcolors{2}{violet!5}{}
-
-% Couleurs de hyperliens :
-\definecolor{mypink}{RGB}{147, 0, 255}
-\hypersetup{colorlinks, 
-             filecolor=mypink,
-             urlcolor=mypink, 
-             citecolor=mypink, 
-             linkcolor=mypink, 
-             anchorcolor=mypink}
-
 
 \usepackage{titling} % Donne accès à \theauthor, \thetitle, \thedate
 
-% Physique
-\usepackage{physics} % Meilleur package pour physicien. 
-
-
-% Style
-\usepackage{lipsum} % For fun
-\usepackage{tikz} % Realisation de figures TIKZ.
-\usepackage{empheq} % Boite autour de MULTIPLE équations
-
-% Français
-\usepackage[french]{babel} % Environnements en Français.
 % ==============================BASE-(END)=================================%
 
 
@@ -104,13 +58,13 @@
 % Espace vertical dans les tabular/tableaux
 \renewcommand{\arraystretch}{1.2}
 % Couleur des tableaux/tabular
-\rowcolors{2}{violet!5}{}
+% \rowcolors{3}{violet!5}{}
 
 % Couleurs de hyperliens :
 \definecolor{mypink}{RGB}{147, 0, 255}
 \hypersetup{colorlinks, 
              filecolor=mypink,
-             urlcolor=mypink, 
+             urlcolor=Violet, 
              citecolor=mypink, 
              linkcolor=mypink, 
              anchorcolor=mypink}
@@ -139,9 +93,12 @@
 
 
 % ==============================NEWCOMMANDS================================%
+% CQFD symbol
+\renewcommand{\qedsymbol}{$\hfill\blacksquare$}
 
 % Vecteurs de base :
 \newcommand{\nvf}{\vb{\hat{n}}}
+\newcommand{\evf}{\vb{\hat{e}}}
 \newcommand{\ivf}{\vb{\hat{i}}}
 \newcommand{\jvf}{\vb{\hat{j}}}
 \newcommand{\kvf}{\vb{\hat{k}}}
@@ -150,8 +107,8 @@
 \newcommand{\ust}{\vb{u}_{\ast}}
 
 % Physics empty spaces 
-\newcommand{\typical}{\vphantom{A}}
-\newcommand{\tall}{\vphantom{A^{x^x}_p}}
+\newcommand{\short}{\vphantom{pA}}
+\newcommand{\tall}{\vphantom{pA^{x^x}_p}}
 \newcommand{\grande}{\vphantom{\frac{1}{xx}}}
 \newcommand{\venti}{\vphantom{\sum_x^x}}
 \newcommand{\pt}{\hspace{1pt}} % One horizontal pt space
@@ -170,6 +127,14 @@
 %\newcommand{\nb}{$\boxed{\text{\footnotesize\EightStarConvex}\pt \mathfrak{N. B.}}$\hspace{4pt}}
 \newcommand{\nb}{\underline{{\footnotesize\EightStarConvex}\pt $\mathfrak{N.B.}$\vphantom{p}}\hspace{3pt}}
 
+\newcommand{\exemple}{
+\parbox[center]{2.2cm}{\begin{tcolorbox}[sharp corners, rounded corners=northeast, rounded corners=southeast,
+colback=Violet!5, colframe=black,
+size=small, width=2cm, left=-0.25pt, bottom=-0.5pt,
+arc is angular, arc=2.5mm, boxrule=0.35pt, leftrule=4pt, %bottomrule=1pt,
+after={\enskip}] Exemple \end{tcolorbox}}}
+
+\newcommand{\cqfd}{\hfill$\blacktriangleleft$}
 
 % Define the nota bene environment
 \usepackage{tcolorbox}
@@ -196,7 +161,7 @@
 \newcommand{\mytitlepage}{
 \begin{titlepage}
 \begin{center}
-{\Huge Contrat Été 2023 \par}
+{\Huge \thesubtitle \par}
 \vspace{2cm}
 {\Huge \MakeUppercase{\thetitle} \par}
 \vspace{2cm}
@@ -233,6 +198,7 @@ Police d'écriture : \textbf{CMU Serif Roman}
 \author{Charles-Édouard Lizotte}
 \date{21/04/2023}
 \title{Carnet de bord, Université McGill}
+\newcommand{\thesubtitle}{Contrat Été 2023}
 \hypersetup{
  pdfauthor={Charles-Édouard Lizotte},
  pdftitle={Carnet de bord, Université McGill},
@@ -247,15 +213,15 @@ Police d'écriture : \textbf{CMU Serif Roman}
 
 
 \section{MUDPACK}
-\label{sec:org7621bfc}
+\label{sec:org5c7b6dc}
 \subsection{Mise en contexte}
-\label{sec:orgc76f4c5}
+\label{sec:org46cf6ab}
 
 
 \begin{wrapfigure}[17]{r}{0.41\textwidth} \vspace{-\baselineskip}
 \centering
 \includegraphics[width=0.38\textwidth]{figures/logos/SPHERE.png}
-\caption{\label{fig:org0069e37}Logo MUDPACK}
+\caption{\label{fig:org17336ba}Logo MUDPACK}
 \end{wrapfigure}
 
 \textbf{N.B.} Nous sommes jeudi le 13 avril et je commence enfin à \emph{jouer} avec la suite MUDPACK   \autocite{adams1989mudpack}.
@@ -273,7 +239,7 @@ Je trouve ça exceptionnel pour un langage de programmation que beaucoup de gens
 Bref, contre toutes attentes, les « excursions » numériques de David et Louis-Philippe commencent à me plaire.
 
 \subsection{Téléchargement de la suite MUDPACK}
-\label{sec:org4cd3878}
+\label{sec:org96610f2}
 Avant de débuter, on se doute qu'il faut -- au même titre que la suite LAPACK -- installer le module Fortran et lui assigner un \emph{PATH}, car il n'est probablement pas déjà installé sur les versions usuelles de Ubuntu.
 À première vue, la suite MUDPACK est introuvable sur la toile et il existe très peu de documentation, mis à part quelques pages GitHub personnelles.
 Comme pour l'installation de LAPACK, je me demandais s'il y avait un moyen d'installer une archive avec une commande Debian du type
@@ -304,7 +270,7 @@ Une fois téléchargé, on peut ouvrir le \emph{tar} à l'aide des commandes
 comme il est conseillé de faire dans le README en ligne.
 
 \subsection{Installation et compilation de la suite MUDPACK}
-\label{sec:org9b4b818}
+\label{sec:orgf936c36}
 Il sera nécessaire de constuire et compiler la suite à l'aide d'un \emph{Makefile}.
 Nous allons donc modifer le fichier \emph{bash} \emph{make.inc} qui construira un \emph{Makefile} à l'aide des bons compilateurs.
 \begin{enumerate}
@@ -378,9 +344,9 @@ Cette commande nous fait essentiellement mention de toutes les librairies utilis
 \end{verbatim}
 
 \section{Conditions frontières et schéma numérique}
-\label{sec:orgffe8d9d}
+\label{sec:org56fffa7}
 \subsection{Mise en contexte}
-\label{sec:org93a492c}
+\label{sec:org26855ac}
 \begin{wrapfigure}[20]{r}{0.45\textwidth}
 \vspace{-\baselineskip}
 \centering
@@ -422,7 +388,7 @@ Cette commande nous fait essentiellement mention de toutes les librairies utilis
 \draw [-{latex}|] (dy1) -- (0.70,1);
 \draw [-{latex}|] (dy1) -- (0.70,2);
 \end{tikzpicture}
-\caption{\label{org26c22df}Représentation de la grille numérique utilisée pour le modèle en eau peu profonde (type \href{https://en.wikipedia.org/wiki/Arakawa\_grids}{Arakawa-C} )}
+\caption{\label{orgdb17e08}Représentation de la grille numérique utilisée pour le modèle en eau peu profonde (type \href{https://en.wikipedia.org/wiki/Arakawa\_grids}{Arakawa-C} )}
 \end{wrapfigure}
 
 Pour débuter, nous voulons rajouter des murs aux frontières de notre expérience numérique.
@@ -440,7 +406,7 @@ Par contre, il faudra ajuster les conditions limites de sorte à ce que le coura
 \textbf{N.B.} Mentionnons que le nombre de conditions frontières nécessaires augmente directement avec l'ordre de l'équation différentielle que nous tentons de résoudre.
 
 \subsection{Conditions frontière sur les courants (No normal flow)}
-\label{sec:org073f367}
+\label{sec:org4fa8708}
 Pour les courants qui traversent les murs, on applique la condition \emph{no normal flow}.
 La condition \emph{no normal flow} est une condition de type Dirichlet qui est caractérisée par un courant normal nul aux frontières, bref comme si le fluide \emph{adhérait} aux murs.
 C'est donc une condition d'imperméabilité.
@@ -466,7 +432,7 @@ Numériquement, on peut énoncer que sur une grille cartésienne la condition \e
 \end{subequations}
 
 \subsection{Conditions frontières sur la dérivée première (Free slip condition)}
-\label{sec:orgbdc036b}
+\label{sec:org9362732}
 Avant tout, mentionnons qu'on fait régulièreement référence à un concept appelé la \emph{no slip condition}.
 Cette condition se caractérise par l'absence de courant tangeant au mur.
 Comme le courant normal aux frontières est généralement nul dans les cas à l'étude (\emph{no normal flow}), la \emph{no slip condition} réfère généralement au fait qu'aucun fluide ne bouge au mur.\bigskip
@@ -475,19 +441,19 @@ Par contre, on s'intéresse aujourd'hui à la \emph{free slip condition}.
 La \emph{free slip condition} tient à l'hypothèse que la couche limite est si petite qu'on peut essentiellement l'ignorer, ce qui est souvent le cas pour l'étude des fluides à grande échelle.
 Concrétement, il n'y a \href{https://physics.stackexchange.com/questions/383096/understanding-free-slip-boundary-condition\#:\~:text=On\%20the\%20other\%20hand\%2C\%20the,the\%20tangential\%20component\%20is\%20unrestricted.}{pas de contrainte de cisaillement au mur}, de sorte que
 \begin{align}
-\label{eq:org46f29f8}
+\label{eq:org39d524e}
 &&\eval{\qty(\boldsymbol{\tau}_x = \mu \pdv{u}{y})\pt }_{\pt\{xi,xf\}} = 0\pt, && \text{et} &&
   \eval{\qty(\boldsymbol{\tau}_x = \mu \pdv{u}{y})\pt }_{\pt\{yi,yf\}} = 0\pt. &&
 \end{align}
 où \(\mu\) est la viscosité \autocite{tan2018applying}.
-Ainsi, l'expression \ref{eq:org46f29f8} force la condition frontière sur la dérivée première à satisfaire 
+Ainsi, l'expression \ref{eq:org39d524e} force la condition frontière sur la dérivée première à satisfaire 
 \begin{equation}
 \boxed{\hspace{0.7cm}\eval{\pdv{v}{x}\pt }_{\pt\{xa,xf\}} = 0\pt\ \forall\ y,\hspace{1.3cm} \text{et} \hspace{1.3cm} \eval{\pdv{u}{y}\pt }_{\pt \{yi,yf\}} = 0\pt\ \forall\ x.\hspace{0.7cm}\bigno}
 \end{equation}
 
 
 \subsection{Calcul de la dérivée seconde en présence de murs}
-\label{sec:org6a8af41}
+\label{sec:org797a919}
 Pour calculer la dérivée seconde, on a besoin de trois points, de sorte que la courbure de notre champ est donnée par
 \begin{equation}
 \pdv[2]{u}{x} [i,:\pt] = \frac{u\pt[i-1,:\pt] + u\pt[i+1,:\pt] -2u\pt[i,:\pt]}{\Delta x^2}.
@@ -518,7 +484,7 @@ u''[1,:] = \frac{2}{3\Delta x} \big(\vphantom{()}\pt u'[2,:] - u'[1,:]\pt \big).
 Le même principe est applicable à chaque frontière et dans chaque direction.\newpage
 
 \subsection{Étude des conditions frontières et lien avec MUDPACK}
-\label{sec:orgf623966}
+\label{sec:orgeee1ce5}
 \begin{wrapfigure}[14]{r}{0.5\textwidth}
 \centering
 \begin{tikzpicture}[scale=0.8]
@@ -537,7 +503,7 @@ Le même principe est applicable à chaque frontière et dans chaque direction.\
    \draw (0.6,-1.2) node {\large$\phi|_{C_1} = \phi_0$};
    \draw (-1.1,2.1) node {\large $\eval{\pdv{\phi}{n}}_{C_2}\hspace{-0.3cm}= f$};
 \end{tikzpicture}
-\caption{\label{org7feacce}Condition frontière mixte autour d'une région \(\Omega\) borné par la courbe \(C = C_1\cup C_2\).}
+\caption{\label{org33e6c77}Condition frontière mixte autour d'une région \(\Omega\) borné par la courbe \(C = C_1\cup C_2\).}
 \end{wrapfigure}
 
 Pour chaque frontière, il est possible d'appliquer une condition différente sur la fonction \(\phi\).

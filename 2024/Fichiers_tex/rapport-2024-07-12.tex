@@ -1,0 +1,673 @@
+% Created 2024-07-22 Mon 13:47
+% Intended LaTeX compiler: pdflatex
+\documentclass[10pt]{article}
+% =================================BASE====================================%
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry} % Marges
+\usepackage[T1]{fontenc} % Nécessaire avec FrenchBabel
+\usepackage[utf8]{inputenc} % Important pour symboles Francophones, é,à,etc
+\usepackage{csquotes} % Recommandé par PDFLatex lors de la compilation. 
+
+% Calligraphie
+%\usepackage{pxfonts} % Met le texte ET les maths en Palatino + donne accès à des symboles math
+\usepackage{palatino} % Cette commande met seulement le texte en police palatino
+\usepackage{lmodern} % Pour les maths? Lmodern pour les maths
+% Use lmodern for sans-serif
+\usepackage{mathrsfs} % Permet la command \mathscr (Lettres attachées genre) \mathscr(B)
+
+% Bibliographie
+%\usepackage[backend=bibtex,style=phys,sorting=ynt]{biblatex}
+\usepackage[backend=biber,sorting=ynt,style=authoryear]{biblatex} % N'est pas utilisé par le compilateur org-mode, mais NÉCESSAIRE. Voir le fichier init.el pour changer le style. 
+\addbibresource{/home/charlesedouard/Desktop/Travail/Documentation/2024/master-bibliography.bib}
+
+
+\usepackage{amsmath, amssymb, amsthm} % Symb. math. (Mathmode+Textmode) + Beaux théorèmes.
+\usepackage{mathtools,cancel,xfrac} % Utilisation de boîtes \boxed{} + \cancelto{}{}, xfrac
+\usepackage{graphicx, wrapfig} % Géstion des figures.
+\usepackage{hyperref} % Permettre l'utilisation d'hyperliens.
+\usepackage{color} % Permettre l'utilisation des couleurs.
+\usepackage{colortbl} % Color tables
+\usepackage[dvipsnames]{xcolor} % Couleurs avancées.
+
+% Physique
+\usepackage{physics} % Meilleur package pour physicien. 
+
+% Style
+\usepackage{lipsum} % For fun
+\usepackage{tikz} % Realisation de figures TIKZ.
+\usetikzlibrary{arrows.meta,bending} % Arrow heads 
+\usepackage{empheq} % Boite autour de MULTIPLE équations
+\usepackage{bbding}
+
+% Français
+\usepackage[french]{babel} % Environnements en Français.
+
+\usepackage{titling} % Donne accès à \theauthor, \thetitle, \thedate
+
+% ==============================BASE-(END)=================================%
+
+
+
+
+
+% ================================SETTINGS=================================%
+% Pas d'indentation en début de paragraphe :
+\setlength\parindent{0pt}
+\setlength{\parskip}{0.15cm}
+
+% Tableaux/tabular
+% Espace vertical dans les tabular/tableaux
+\renewcommand{\arraystretch}{1.2}
+% Couleur des tableaux/tabular
+% \rowcolors{3}{violet!5}{}
+
+% Couleurs de hyperliens :
+\definecolor{mypink}{RGB}{147, 0, 255}
+\hypersetup{colorlinks, 
+             filecolor=mypink,
+             urlcolor=Violet, 
+             citecolor=mypink, 
+             linkcolor=mypink, 
+             anchorcolor=mypink}
+
+
+% Numéros d'équations suivent les sections :
+\numberwithin{equation}{section} 
+
+% Les « captions » sont en italique et largeur limitée
+\usepackage[textfont = it]{caption} 
+\captionsetup[wrapfigure]{margin=0.5cm}
+
+% Retirer l'écriture en gras dans la table des matières
+\usepackage{tocloft}
+\renewcommand{\cftsecfont}{\normalfont}
+\renewcommand{\cftsecpagefont}{\normalfont}
+
+% Change bullet style
+\usepackage{pifont}
+\usepackage{enumitem}
+%\setlist[itemize,1]{label=\ding{224}}
+\setlist[itemize,1]{label=\ding{239}}
+\renewcommand{\boxtimes}{\blacksquare}
+% ================================SETTINGS=================================%
+
+
+
+% ==============================NEWCOMMANDS================================%
+% CQFD symbol
+\renewcommand{\qedsymbol}{$\hfill\blacksquare$}
+
+% Vecteurs de base :
+\newcommand{\nvf}{\vb{\hat{n}}}
+\newcommand{\evf}{\vb{\hat{e}}}
+\newcommand{\ivf}{\vb{\hat{i}}}
+\newcommand{\jvf}{\vb{\hat{j}}}
+\newcommand{\kvf}{\vb{\hat{k}}}
+\newcommand{\uu}{\vb{u}}
+\newcommand{\vv}{\vb{v}}
+\newcommand{\ust}{\vb{u}_{\ast}}
+
+% Physics empty spaces 
+\newcommand{\short}{\vphantom{pA}}
+\newcommand{\tall}{\vphantom{pA^{x^x}_p}}
+\newcommand{\grande}{\vphantom{\frac{1}{xx}}}
+\newcommand{\venti}{\vphantom{\sum_x^x}}
+\newcommand{\pt}{\hspace{1pt}} % One horizontal pt space
+
+% Moyenne numérique entre deux points de grilles. 
+\newcommand{\xmean}[1]{\overline{#1}^x}
+\newcommand{\ymean}[1]{\overline{#1}^y}
+\newcommand{\zmean}[1]{\overline{#1}^z}
+\newcommand{\xymean}[1]{\overline{#1}^{xy}}
+
+% Tilde over psi
+\newcommand{\tpsi}{\tilde{\psi}}
+\newcommand{\tphi}{\tilde{\phi}}
+
+% Nota Bene env : (\ding{89})
+%\newcommand{\nb}{$\boxed{\text{\footnotesize\EightStarConvex}\pt \mathfrak{N. B.}}$\hspace{4pt}}
+\newcommand{\nb}{\underline{{\footnotesize\EightStarConvex}\pt $\mathfrak{N.B.}$\vphantom{p}}\hspace{3pt}}
+
+\newcommand{\exemple}{
+\parbox[center]{2.2cm}{\begin{tcolorbox}[sharp corners, rounded corners=northeast, rounded corners=southeast,
+colback=Violet!5, colframe=black,
+size=small, width=2cm, left=-0.25pt, bottom=-0.5pt,
+arc is angular, arc=2.5mm, boxrule=0.35pt, leftrule=4pt, %bottomrule=1pt,
+after={\enskip}] Exemple \end{tcolorbox}}}
+
+\newcommand{\cqfd}{\hfill$\blacktriangleleft$}
+
+% Define the nota bene environment
+\usepackage{tcolorbox}
+\newtcolorbox{notabene}{
+     colback=blue!5,
+     colframe=black,
+     boxrule=0.5pt,
+     arc=2pt,
+     left=5pt,
+     right=5pt,
+     top=5pt,
+     bottom=5pt,
+}
+
+
+\newcommand{\cmark}{\ding{52}}
+\newcommand{\xmark}{\ding{55}}
+% ==============================NEWCOMMANDS================================%
+
+
+
+% ==============================PAGE-TITRE=================================%
+% Titlepage 
+\newcommand{\mytitlepage}{
+\begin{titlepage}
+\begin{center}
+{\Huge \thesubtitle \par}
+\vspace{2cm}
+{\Huge \MakeUppercase{\thetitle} \par}
+\vspace{2cm}
+RÉALISÉ DANS LE CADRE\\ D'UN PROJET POUR \par
+\vspace{2cm}
+{\Huge ISMER--UQAR \par}
+\vspace{2cm}
+{\thedate}
+\end{center}
+\vfill
+Rédaction \\
+{\theauthor}\\
+\url{charles-edouard.lizotte@uqar.ca}\\
+ISMER-UQAR\\
+Police d'écriture : \textbf{CMU Serif Roman}
+\end{titlepage}
+}
+% ==============================PAGE-TITRE=================================%
+
+
+
+% =================================ENTÊTE==================================%
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\setlength{\headheight}{13pt}
+\renewcommand{\headrulewidth}{0.025pt} % Ligne horizontale en haut
+
+\fancyhead[R]{\textit{\thetitle}}
+\fancyhead[L]{\ \thepage}
+\fancyfoot[R]{\textit{\theauthor}}
+\fancyfoot[L]{}
+\fancyfoot[C]{} 
+% =================================ENTÊTE==================================%
+\author{Charles-Édouard Lizotte}
+\date{12/07/2024}
+\title{Rapport hebdomadaire}
+\newcommand{\thesubtitle}{Contrat Été 2024}
+\hypersetup{
+ pdfauthor={Charles-Édouard Lizotte},
+ pdftitle={Rapport hebdomadaire},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 27.1 (Org mode 9.6.7)}, 
+ pdflang={French}}
+\begin{document}
+
+\mytitlepage
+\tableofcontents\newpage
+
+\section{Notes tirées de Dumont (2022) et Herman (2022)}
+\label{sec:org09a975c}
+
+\subsection{Introduction}
+\label{sec:org756b479}
+
+\Textcite{dumont2022marginal} parle principalement de la MIZ (pout « \emph{Marginal Ice Zone »}) en mentionnant qu'elle est a un rôle important dans l'étude des deux pôles et nous fait un récapitulatif historique depuis 1970.
+Entre autre : 
+\begin{itemize}
+\item La glace de mer module l'échange de chaleur, de masse et de momentum entre l'océan et l'atmosphère;
+\item C'est un habitat très important pour beaucoup d'espèces et c'est un medium de transport pour de nombreuses communautés.
+\end{itemize}
+
+Comment définir la MIZ?
+À l'aide de satellites, il est possible d'acquérir la concentration de glace de mer (\emph{Sea Ice Concentration} [SIC]).
+On établie la glace de mer avec un niveau définit par
+\begin{equation}
+   15\% < SIC < 80\%. 
+\end{equation}
+
+Dans l'article de Liu et al (1993) \emph{Wave effects on ocean-ice interaction in the marginal ice
+zone}, on mentionne que
+\begin{quote}
+« Wave radiation stress acts to sharpen ice edges and enhances wind stress and thus amplifies the formation of eddies and the associated baroclinic response of the ocean, thus contributing to the two last mechanisms. »
+\end{quote}
+
+Dany pose la question : Quelles sont les avenues qui pourraient nous aider à systématiquement décrire le comportement de la glace dans la zone marginale (MIZ)?
+\begin{itemize}
+\item Reconnaissance de patron (\emph{patern recognition})?
+\item Comprendre la propagation des vagues dans la MIZ.
+\item Mesure systématique de la taille des floes dans un modèle granulaire.
+\end{itemize}
+
+
+\subsection{Équations dynamiques et balance}
+\label{sec:org9afab30}
+Essentiellement, tout a été fait par \Textcite{coon1974modeling} par le groupe AIDJEX dans les années 70.
+Ce qui est utilisé partout pour la dynamique
+\begin{equation}
+   \rho_i h \qty(\pdv{\uu}{t} + f\kvf\times\uu) = F_i + \divergence{\boldsymbol{\sigma}}.
+\end{equation}
+Le système d'équations précédent est exprimé en Pa, soit des \(\text{Nm}^{-2}\).
+
+De son côté, \textbf{l'équation de balance} est l'héritage principal de la mission AIDJEX \autocite{coon1974modeling,thorndike1975thickness}, cette dernière est définie comme
+\begin{equation}
+\label{eq:org762bb2e}
+   \underbrace{\venti\pdv{g}{t}}_{\text{Évolution}} =
+   -\underbrace{\venti\divergence{(g\uu)}}_{\substack{\text{Transport}\\\text{horizontal}}}\
+   +\underbrace{\venti\psi}_{\substack{\text{Conservation}\\\text{de la masse}}}
+   +\underbrace{\venti\pdv{(Fg)}{h}}_{\substack{\text{Fonte et}\\\text{croissance}}}
+   +\underbrace{\venti L }_{\substack{\text{Entrée}\\\text{de glace}}}.
+\end{equation}
+où \(g(h)\) est définit comme la fraction de l'aide de glace dont l'épaisseur se situe entre \(h\) et \(h+\dd h\).
+Grossièrement :
+\begin{itemize}
+\item \(\divergence{g\uu}\) est définit comme le transport horizontal;
+\item Le terme \(\psi\) décrit comment la glace e mer s'épaissit pendant la convergence, dans le but de conserver la masse, c'est ce qu'on appelle la redistribution des épaisseurs (\emph{thickness redistribution}) \autocite[Voir][]{thorndike1975thickness};
+\item \(\sfrac{\partial(Fg)}{\partial h}\) représente le changement dans la distribution des épaisseurs due à la fonte et à la croissance des glaces (par exemple les chutes de neige).
+\(F\) vient souvent d'une étude ou d'un modèle thermodynamique pour la transformation de la glace en eau de mer;
+\item \(L\) représente l'ajout ou l'entrée de glace dans l'océan.\bigskip
+\end{itemize}
+
+L'équation \ref{eq:org762bb2e} (aussi appelée la ITD pour « \emph{Ice Thickness Distribution} »)  est la seule connexion entre la dynamique de la glace de mer et la taille des floes qu'on connaissait jusqu'à très récemment.
+La dépendance spatio-temporelle de la taille des floes (\ref{eq:org762bb2e}) a initialement été introduite par \Textcite{zhang2015sea}, mais c'est \Textcite{horvat2015prognostic} qui ont généralisée l'équation \ref{eq:org762bb2e} de sorte à prendre en compte l'évolution de la taille des floes comme facteur important dans la description d'état de la glace de mer.\bigskip
+
+Considérant cela, \Textcite{horvat2015prognostic} relient ces deux variables dépendantes à l'aide d'une nouvelle distribution, la FSTD (pour « \emph{floe size and thickness distribution} »), dénotée par \(J(r,h)=J(\vb{r})\) où \(r\) est utilisé comme une variable d'échelle horizontale de nos floes et non strictement le rayon d'un disque -- comme on voit dans de nombreuses simulations.
+L'expression la plus générale est dénotée par 
+\begin{equation}
+   \pdv{J}{t} = \-\divergence{(J\uu)} + \qty(\mathcal{L}_M + \mathcal{L}_T + \mathcal{L}_W) J,
+\end{equation}
+où \(\mathcal{L}_M ,\ \mathcal{L}_T ,\ \mathcal{L}_W\) représentent respectivement
+\begin{itemize}
+\item la redistribution mécanique;
+\item les processus thermiques qui affectent la taille des floes et l'épaisseur;
+\item le « \emph{wave induced breakup} ».
+\end{itemize}
+Ce dernier est définit comme
+\begin{equation}
+   \mathcal{L}_W(r,h) = -Q(r,h) \int_0^\infty Q(r',h) \beta(r,r',h) \dd r'.
+\end{equation}
+où \(Q(r,h)\) est une fonction qui donne la taille des fragments quand un floe de taille «\(r'\)» se brise.
+On a malheureusement peu d'information sur tout ça, à part quelques expériences en laboratoire.
+
+\subsection{La rhéologie}
+\label{sec:org8d68159}
+
+La mission AIDJEX considérait la glace comme un matériau plastique qui ne se déforme seulement que sous une contrainte critique.
+C'est encore débattu dans la communauté si l'on devrait considérer la glace comme un matériau élastique, fragile, visqueux et/ou platique.
+Il faut noter qu'on fait généralement des paramétrisation, car on n'a peu de moyen de s'informer sur les processus aux petites échelles.
+Bref, on se souvient que \Textcite{hibler1979dynamic} définissait une rhéologie visco-plastique de la forme
+\begin{equation}
+   \sigma_{ij} = 2\eta \dot{\epsilon}_{ij} + (\eta + \zeta)\dot{\epsilon}_{kk} \delta_{ij} - \frac{p}{2}\delta_{ij},
+\end{equation}
+où \(p = (\sfrac{1}{2})(\sigma_1 + \sigma_2)\) est définit comme la \textbf{pression isotropique}.
+Tandis que \(/eta\) et \(/zeta\) sont les \emph{bulk} et \emph{shear nonlinear viscosities} qui dépendent litérallement de tout (Ouin\ldots{}).
+nn
+On définit le tenseur du taux de déformation (\emph{strain rate}) par
+\begin{equation}
+\label{eq:org9db9907}
+   \dot{\epsilon}_{ij} = \frac{1}{2}\qty(\pdv{u_i}{x_j} + \pdv{u_j}{x_i}). 
+\end{equation}
+
+\section{Parenthèse Wikipedia sur les tenseurs de déformation}
+\label{sec:orgbe89798}
+
+\subsection{Tenseur de contrainte de Cauchy}
+\label{sec:org1096349}
+\begin{wrapfigure}[13]{r}{0.30\textwidth}
+\begin{center}
+\vspace{-1.2cm}
+\begin{tikzpicture}
+   % Faces du cube : 
+   \filldraw[Mulberry!30] (0,0) -- (0,2) -- (2,2) -- (2,0) -- cycle; % Devant
+   \filldraw[Mulberry!15] (2,0) -- (2.5,0.5) -- (2.5,2.5) -- (2,2) -- cycle; % Dessus
+   \filldraw[Mulberry!5] (0,2) -- (0.5,2.5) -- (2.5,2.5) -- (2,2) -- cycle; % Droite
+
+   % Flèches :
+   \node [style={fill,circle,scale=0.3,Blue}] (devant) at (1,1) {};
+   \node [style={fill,circle,scale=0.3,Blue}] (droit) at (2.25,1.25) {};
+   \node [style={fill,circle,scale=0.3,Blue}] (dessus) at (1.25,2.25) {};
+
+   % Devant
+   \draw[-Triangle,thick, Blue] (devant.north) -- (1,1.5) node [left] {$F_{zy}$};
+   \draw[-Triangle,thick, Blue] (devant.east)  -- (1.5,1) node [above] {$F_{zx}$};
+   \draw[-Triangle,thick, Blue] (devant.south west) -- (0.75,0.75) node [left] {$F_{zz}$};
+
+   % Droit
+   \draw[-Triangle,thick, Blue] (droit.north) -- (2.25,1.75) node [right] {$F_{xy}$};
+   \draw[-Triangle,thick, Blue] (droit.east)  -- (2.75,1.25) node [below=1mm] {$F_{xx}$};
+   \draw[-Triangle,thick, Blue] (droit.south west) -- (2,1) node [below] {$F_{xz}$};
+
+   % Top
+   \draw[-Triangle,thick, Blue] (dessus.north) -- (1.25,2.75) node [left] {$F_{yy}$};
+   \draw[-Triangle,thick, Blue] (dessus.east)  -- (1.75,2.25) node [above] {$F_{yx}$};
+   \draw[-Triangle,thick, Blue] (dessus.south west) -- (1,2) node [left] {$F_{yz}$};
+
+   % Mesure
+   \node [] (A) at (3.2,1.5) {$a$};
+   \draw[|{Triangle}-] (3.2,0.5) -- (A.south);
+   \draw[|{Triangle}-] (3.2,2.5) -- (A.north);
+   \draw[dotted] (3.2,0.5) -- (2.5,0.5);
+   \draw[dotted] (3.2,2.5) -- (2.5,2.5);
+
+   % Rose des vents :
+   \node [] (rose) at (2.8,-0.2) {};
+   \draw (2.8,-0.2) -- (2.8, 0.1) node [above,scale=0.5] {y};
+   \draw (2.8,-0.2) -- (3.1,-0.2) node [right,scale=0.5] {x};
+   \draw (2.8,-0.2) -- (2.6,-0.4) node [below,scale=0.5] {z};
+\end{tikzpicture}
+\end{center}
+\caption{\label{org79fcff0}Forces s'appliquant sur un élément inifitésimal cubique de volume \(A^3\).}
+\end{wrapfigure}
+
+Le tenseur des contraintes (\href{https://en.wikipedia.org/wiki/Cauchy\_stress\_tensor}{tenseur de Cauchy}) est une matrice qui décrit \textbf{toutes les forces} pouvant s'appliquer, à la fois, sur les faces d'un élément cubique infinitésimal, mais aussi dans toutes les directions (Voir figure \ref{org79fcff0}).
+Pour un continuum ou un domaine pouvant se déformer, les contraintes \(\sigma_{ij}\) définies comme des unités de pression    (\(\pt\sfrac{\text{Force}}{\text{Aire}}\Rightarrow\qty[\sfrac{N}{m^2}]\pt\)).\bigskip
+\begin{equation}
+    \sigma_{ij} = \frac{F_{ij}}{a^2},
+\end{equation}
+\textbf{Pour chaque face de notre cube infinitésimal} -- dénotées par l'indice \(i\) -- on peut définir une force \(\vb{F}_i\) à l'aide de la base des vecteurs orthonormaux \(\evf_x,\evf_y\) et \(\evf_z\), s'appliquant sur cette même surface, soit
+\begin{equation}
+   \vb{F}_i =
+   \begin{pmatrix}
+     F_{ix} \\
+     F_{iy} \\
+     F_{iz} \\
+   \end{pmatrix}\  = \ \sum_j F_{ij}\evf_j\ = \ F_{ix}\evf_x + F_{iy}\evf_y + F_{iz}\evf_z
+\end{equation}
+où \(j\) la décrit la direction de la composante de la force s'appliquant sur la surface en question.
+Rappellons que l'indice \(i\) dénote le choix de la surface du cube, de sorte que le vecteur \(\evf_i\) est normal au plan \(i\).
+
+Finalement, le tenseur de contraintes de Cauchy \(\boldsymbol{\sigma}\) est condensé dans la matrice
+\begin{equation}
+   \boldsymbol{\sigma} = \frac{1}{a^2}
+   \begin{bmatrix}
+     \qty(\vb{F}_x)^\intercal\\
+     \qty(\vb{F}_y)^\intercal\\
+     \qty(\vb{F}_z)^\intercal\\
+   \end{bmatrix}
+   =
+   \frac{1}{a^2}
+   \begin{bmatrix}
+     F_{xx} & F_{xy} & F_{xz} \\
+     F_{yx} & F_{yy} & F_{yz} \\
+     F_{zx} & F_{zy} & F_{zz} \\
+   \end{bmatrix}
+   =
+   \begin{bmatrix}
+     \sigma_{xx} & \sigma_{xy} & \sigma_{xz} \\
+     \sigma_{yx} & \sigma_{yy} & \sigma_{yz} \\
+     \sigma_{zx} & \sigma_{zy} & \sigma_{zz} \\
+   \end{bmatrix}.
+\end{equation}
+Sur les lignes, ce sont les contraintes s'appliquant sur chaque faces.
+Tandis que les colones représentent les forces dans la même direction et c'est pourquoi la divergence de cette quantité devient intéressante. 
+Par coutûme, nous prenons la notation
+\begin{align}
+\label{eq:org8e2ae52}
+   &\boxed{\hspace{0.3cm}\boldsymbol{\sigma} =
+   \begin{bmatrix}
+     \sigma_{xx} & \tau_{xy} & \tau_{xz} \\
+     \tau_{yx} & \sigma_{yy} & \tau_{yz} \\
+     \tau_{zx} & \tau_{zy} & \sigma_{zz} \\
+   \end{bmatrix},\hspace{0.3cm}}
+\end{align}
+pour différentier la diagonale (les contraintes normales) des autres termes (les contraintes de cisaillement).
+Mentionnons aussi que le tenseur de contraintes est toujorus symmétrique.
+Le tenseur de contraintes est donc une matrice (ou un tenseur) qui entrepose toutes les contraintes possibles. \bigskip
+
+Donc, lorsqu'on applique cela à une rhéologie, concrétement on fait une différence de forces dans chaque directions, soit une divergence donnée par
+\begin{align}
+   \divergence{\boldsymbol{\sigma}}
+   &= \qty(\pdv{}{x},\ \pdv{}{y},\ \pdv{}{z}) \cdot
+   \begin{bmatrix}
+     \sigma_{xx} & \tau_{xy} & \tau_{xz} \\
+     \tau_{yx} & \sigma_{yy} & \tau_{yz} \\
+     \tau_{zx} & \tau_{zy} & \sigma_{zz} \\
+   \end{bmatrix}\nonumber\\
+   &
+   \begin{aligned}
+    =\Bigg(&\qty[\pdv{\sigma_{xx}}{x}+\pdv{\tau_{yx}}{y}+\pdv{\tau_{zx}}{z}], \\
+    &\quad\qty[\pdv{\tau_{xy}}{x}+\pdv{\sigma_{yy}}{y}+\pdv{\tau_{zy}}{z}],\\
+    &\quad\quad\qty[\pdv{\tau_{xz}}{x}+\pdv{\tau_{yz}}{y}+\pdv{\sigma_{zz}}{z}] \Bigg).\\
+   \end{aligned}
+\end{align}
+Si l'on désire observer de plus près, 
+\begin{equation}
+   \divergence{\boldsymbol{\sigma}} =  \Bigg(\underbrace{\venti\qty[\pdv{\sigma_{xx}}{x}+\pdv{\tau_{yx}}{y}+\pdv{\tau_{zx}}{z}]}_{\boxed{A}} ,\quad
+   \underbrace{\venti\qty[\pdv{\tau_{xy}}{x}+\pdv{\sigma_{yy}}{y}+\pdv{\tau_{zy}}{z}]}_{\boxed{B}} ,\quad
+   \underbrace{\venti\qty[\pdv{\tau_{xz}}{x}+\pdv{\tau_{yz}}{y}+\pdv{\sigma_{zz}}{z}]}_{\boxed{C}} \Bigg).
+\end{equation}
+
+\begin{wrapfigure}[12]{l}{0.30\textwidth}
+\vspace{-1cm}
+\begin{center}
+\begin{tikzpicture}
+   % Faces du cube : 
+   \filldraw[Mulberry!30] (0,0) -- (0,2) -- (2,2) -- (2,0) -- cycle; % Devant
+   \filldraw[Mulberry!15] (2,0) -- (2.5,0.5) -- (2.5,2.5) -- (2,2) -- cycle; % Dessus
+   \filldraw[Mulberry!5] (0,2) -- (0.5,2.5) -- (2.5,2.5) -- (2,2) -- cycle; % Droite
+
+   % Flèches :
+   \node [style={fill,circle,scale=0.3,Blue}] (devant) at (1,1) {};
+   \node [style={fill,circle,scale=0.3,Blue}] (droit) at (2.25,1.25) {};
+   \node [style={fill,circle,scale=0.3,Blue}] (dessus) at (1.25,2.25) {};
+   \draw[-Triangle,thick, Blue] (devant.east)  -- (1.75,1) node [above] {$\tau_{zx}$};
+   \draw[-Triangle,thick, Blue] (droit.east)  -- (3,1.25) node [below=1mm] {$\sigma_{xx}$};
+   \draw[-Triangle,thick, Blue] (dessus.east)  -- (2,2.25) node [above] {$\tau_{yx}$};
+
+   % Rose des vents :
+   \node [] (rose) at (2.8,-0.2) {};
+   \draw (2.8,-0.2) -- (2.8, 0.1) node [above,scale=0.5] {y};
+   \draw (2.8,-0.2) -- (3.1,-0.2) node [right,scale=0.5] {x};
+   \draw (2.8,-0.2) -- (2.6,-0.4) node [below,scale=0.5] {z};
+
+   %
+   \draw (3,2.25) node [] {\boxed{A}};
+\end{tikzpicture}
+\end{center}
+\caption{\label{org84ff9cd}Divergence des contraintes en x pour la composante \(\evf_x\) à l'intérieur d'un cube.}
+\end{wrapfigure}
+
+Observons principalement la quantité \(\boxed{A}\).
+Pour chaque nouvelle composante du vecteur \(\divergence{\boldsymbol{\sigma}}\), on prend uniquement la variation des contraintes dans la même direction (\(\tau_{ix}\)), comme si c'était une quantité scalaire (e.g. un traceur) (Voir figure \ref{org84ff9cd}). \bigskip
+
+
+\nb Mentionnons que ce sont des forces.
+L'important sera de lier ces forces à des propriétés émergentes de notre fluide ou de la glace.
+Par exemple, relier le tenseur de contrainte de Cauchy (\ref{eq:org8e2ae52}) avec le tenseur de déformation (\ref{eq:org9db9907}) est un bon moyen, comme dans le \href{rapport-2024-06-26.org}{rapport précédent}.
+
+\subsection{Les fluides newtoniens selon Wikipedia}
+\label{sec:org26a0965}
+
+Un \href{https://en.wikipedia.org/wiki/Newtonian\_fluid}{fluide newtonien} est un fluide dont les contraintes visqueuses -- qui sont produites par son écoulement -- sont proportionnelles à son degré de déformation.\bigskip
+
+Mathématiquement, la \textbf{relation de constitution} est donnée par le lien entre les contraintes de cisaillement et le taux de déformation, soit
+\begin{equation}
+   \boxed{\tall\quad\boldsymbol{\tau} \propto \dot{\boldsymbol{\epsilon}}.\quad}
+\end{equation}
+Dans une notation plus tensorielle, on pourrait dire que
+\begin{equation}
+\label{eq:org5f0b909}
+   \tau_{ij} = \mu \qty(\pdv{v_i}{x_j} + \pdv{v_j}{x_i}),
+\end{equation}
+où \(\mu\) est justement la constante de proportionnalité.
+On peut ensuite prendre l'équation \ref{eq:org5f0b909} en notation matrice pour obtenir la \emph{Stokes stress constitutive equation} (ou la loi des la viscosité de Newton) soit
+\begin{equation}
+   \boldsymbol{\tau} = \mu \qty(\gradient{\vv} + \divergence{\vv}^\intercal),
+\end{equation}
+où -- dans le monde des solide élatisques -- on utilise plutôt la notation
+\begin{align}
+   &&\boldsymbol{\tau} = 2\mu \dot{\boldsymbol{\epsilon}},
+   && \text{où}
+   && \dot{\epsilon}_{ij} = \frac{1}{2}\qty(\pdv{v_i}{x_j} + \pdv{v_j}{x_i}).&&
+\end{align}
+Mais tout ça, c'est du déjà vu.
+Il faut savoir qu'on peut diviser les contraintes \textbf{isotropiques} et \textbf{déviatoires} à l'aide de l'expression
+\begin{align}
+\label{eq:orgdf38f4d}
+   &&\boldsymbol{\sigma} = \underbrace{\frac{1}{3} \trace(\boldsymbol{\sigma})\mathbf{I}}_{\substack{\text{Partie}\\\text{isotrope}}} \quad \underbrace{+\quad\grande\boldsymbol{\sigma}',}_{\substack{\text{Partie}\\ \text{déviatoire}}}
+   && \text{où}
+   &&\sigma_{ij} = \pi\delta_{ij} + \sigma_{ij}'.&&
+\end{align}
+Comme énoncé ci-haut, la trace du tenseur de contraintes \(\boldsymbol{\sigma}\) est aussi souvent définit à l'aide de la variable \(\pi\), telle que
+\begin{equation}
+   \pi = \frac{\trace(\boldsymbol{\sigma})}{3} = \sum_k \frac{\sigma_{kk}}{3} = \frac{\sigma_{11} + \sigma_{22} +\sigma_{33}}{3} = \frac{\sigma_{kk}}{3}.
+\end{equation}
+La \textbf{partie isotrope} est aussi appelée le \href{https://en.wikipedia.org/wiki/Cauchy\_stress\_tensor}{tenseur de stress volumétrique}, car les forces normales à notre parcelle de fluide cubique infinitésimale n'ont un effet que sur sont volume.
+Tandis que la \textbf{partie déviatoire} tend à déformer notre élément cubique inifinitésimal.
+Le tenseur de stress déviatoire \(\boldsymbol{\sigma}'\) a donc la forme
+\begin{align}
+   &&\frac{1}{3} \trace(\boldsymbol{\sigma})\mathbf{I} =    \begin{bmatrix}
+     \pi & 0 & 0 \\
+     0 & \pi & 0 \\
+     0 & 0 & \pi \\
+   \end{bmatrix},
+   &&\boldsymbol{\sigma}' =    \begin{bmatrix}
+     \sigma_{xx}-\pi & \tau_{xy} & \tau_{xz} \\
+     \tau_{yx} & \sigma_{yy}-\pi & \tau_{yz} \\
+     \tau_{zx} & \tau_{zy} & \sigma_{zz}-\pi \\
+   \end{bmatrix}.&&
+\end{align}
+
+
+En thermodynamique, la pression agit comme une force normale à une surface, d'où les unités de \(\mathrm{N}\cdot\mathrm{m}^{-2}\).
+C'est aussi pourquoi un gradient de pression induit une force sur un élément infinitésimal de fluide.
+Mentionnons que par définition,
+\begin{equation}
+\label{eq:org0b697bd}
+   \trace(\boldsymbol{\sigma}') = \sum_k \qty(\sigma_{kk} - \pi) = \qty(\sum_k \sigma_{kk}) - 3\pi = \trace(\boldsymbol{\sigma}) - 3\cdot\qty(\frac{1}{3}\trace(\boldsymbol{\sigma})) = 0.
+\end{equation}
+
+
+Donc, \textbf{dans le cas d'un fluide incompressible}, \(\pi\) est littéralement la pression et on utilise la notation
+\begin{equation}
+   p = \frac{-\trace(\boldsymbol{\sigma}')}{3}.
+\end{equation}
+
+Selon \href{https://en.wikipedia.org/wiki/Newtonian\_fluid\#Newtonian\_law\_of\_viscosity}{Wikipedia}, la contrainte déviatoire \(\boldsymbol{\sigma}'\) coïncide avec le tenseur de contraintes \(\boldsymbol{\tau}\) (on va leur faire confiance là-dessus), 
+\begin{equation}
+   \boldsymbol{\sigma}' = \boldsymbol{\tau} = \mu \qty(\gradient{\vv} + \gradient{\vv}^\intercal),
+\end{equation}
+de sorte que l'éqation \ref{eq:orgdf38f4d} puisse se transformer comme
+\begin{align}
+\label{eq:org3002490}
+   &&\boxed{\quad\tall\boldsymbol{\sigma} = -p \mathbf{I} + \mu \qty(\gradient{\vv} + \gradient{\vv}^\intercal)\quad}
+   &&\text{ou}
+   &&\boxed{\quad\sigma_{ij} = -p\delta_{ij} + 2\mu\dot{\epsilon}_{ij}\quad\tall}&&
+\end{align}
+
+\subsection{Cas incompressible selon Wikipedia}
+\label{sec:org86a5b52}
+Rapidement, dans le cas incompressible, \textbf{l'équation de constitution} (\ref{eq:org3002490}) est bien plus complexe, car on ajoute des termes liés à l'élasticité de notre élément cubique infinitésimal.
+Grossièrement, on ajoute un tenseur de 4ème ordre pour la viscosité  «\(\pt\mathbf{C}\pt\)» plutôt qu'une constante \(\mu\), de sorte à ce que l'équation de constitution ait la forme \(\boldsymbol{\sigma}= - p\mathbf{I} + \mathbf{C}:\dot{\boldsymbol{\epsilon}}\) -- où le symbole «\(\pt:\pt\)» est le double produit scalaire (\emph{Double dot product}).
+ peut être représentée à l'aide des \textbf{paramètres de Lamé}, soient la seconde viscosité \(\lambda\) et la viscosité dynamique \(\mu\), à l'aide d'une décomposition de Helmholtz, donc
+\begin{equation}
+   \boldsymbol{\sigma}(\dot{ \boldsymbol{\epsilon}} ) = -p\mathbf{I} + \lambda\trace(\dot{\boldsymbol{\epsilon}}) \mathbf{I} + 2\mu\dot{\boldsymbol{\epsilon}}
+\end{equation}
+Selon \href{https://en.wikipedia.org/wiki/Newtonian\_fluid\#Newtonian\_law\_of\_viscosity}{Wikipedia}, cette décomposition peut explicitement être définit comme
+\begin{equation}
+\label{eq:org5d6c7ce}
+   \boldsymbol{\sigma} = -p\mathbf{I} + \lambda\qty(\divergence{\vv}) \mathbf{I} + \mu\qty(\gradient{\vv} + \qty(\gradient{\vv})^\intercal).
+\end{equation}
+Les traces de toutes les matrices de \ref{eq:org5d6c7ce} sont données par
+\begin{align}
+   &&\trace(\dot{\boldsymbol{\epsilon}}) = \divergence{\vv}
+   && \text{et}
+   &&\trace(I) = 3.&& 
+\end{align}
+Donc,
+\begin{align}
+   \trace(\boldsymbol{\sigma}) = &
+    -3p + \qty(3\lambda + 2\mu)\divergence{\vv}.
+\end{align}
+
+Maintenant, comme précédemment, on tente de diviser le tenseur de contrainte en partie \textbf{isotrope} et en partie \textbf{déviatoire}, soit
+\begin{equation}
+   \boldsymbol{\sigma} = -\qty[p + \qty(\lambda + \frac{2}{3}\mu)\qty(\divergence{\vv})]\mathbf{I} + \mu\qty(\gradient{\vv} + \qty(\gradient{\vv})^\intercal - \frac{2}{3}\qty(\divergence{\vv})\mathbf{I}).
+\end{equation}
+On introduit maintenant la \href{https://en.wikipedia.org/wiki/Volume\_viscosity}{viscosité de volume} (ou la \emph{bulk viscosity}), comme \(\zeta = \qty(\lambda + \frac{2}{3}\mu)\), et on arrive finalement à l'équation de constitution,
+\begin{equation}
+   \boldsymbol{\sigma} = \underbrace{\venti-\qty[p - \zeta\qty(\divergence{\vv})]\mathbf{I}}_\text{isotrope}
+   +\underbrace{\venti\mu\qty(\gradient{\vv} + \qty(\gradient{\vv})^\intercal - \frac{2}{3}\qty(\divergence{\vv})\mathbf{I})}_\text{déviatoire},
+\end{equation}
+qui peut être réarrangée de sorte à obtenir
+\begin{equation}
+   \boxed{\quad\boldsymbol{\sigma} = -p\mathbf{I} + \mu\qty(\gradient{\vv} + \qty(\gradient{\vv})^\intercal) + \qty(\zeta - \frac{2}{3}\mu)\qty(\divergence{\vv})\mathbf{I}.\quad}
+\end{equation}
+En notation tensorielle, la relation de constitution (qui lie le taux de déformation aux contraintes) est décrite par
+\begin{align}
+\label{eq:orgb90e044}
+   & \hspace{4.3cm}\text{Partie élastique}\nonumber\\
+   &\boxed{\sigma_{ij} = -p\delta_{ij} + 2\mu\dot{\epsilon}_{ij} + \overbrace{\qty(\zeta-\frac{2}{3}\mu) \delta_{ij}\underbrace{\qty(\sum_k\pdv{v_k}{x_k})}},}\\
+   & \hspace{5.8cm}\substack{\text{Volumetric}\\ \tall\pt\text{strain rate}}\nonumber
+\end{align}
+où l'on utilise la notation d'Einstein comme
+\begin{equation}
+   \divergence{\vv} = \sum_k \qty(\pdv{v_k}{x_k}) =
+   \underbrace{\pdv{v_k}{x_k}\venti}_{\tall\text{Einstein}} =
+   \underbrace{\venti\dot{\varepsilon}_V}_{\tall\text{Herman}} =
+   \underbrace{\venti\epsilon_{kk}}_{\tall\text{Hunke}},
+\end{equation}
+pour représenter le taux de déformation volumique (\emph{volumetric strain rate}).
+Mentionnons que dans l'article de \Textcite{herman2022granular}, on utilise la notation \(\varepsilon_V\) pour parler du taux de déformation volumique (\emph{Volumetric strain rate}), tandis que dans l'article de \Textcite{hunke1997elastic}, on utilise plutôt la notation \(\dot{\epsilon}_{kk}\) qui rappelle aussi la somme \(\sum_k \dot{\epsilon}_{kk}\) en utilisant la terminologie du tenseur associé au taux de déformation \(\dot{\epsilon}\).\bigskip
+
+Toujours selon Wikipedia, la pression n'est malheureusement plus proportionnelle aux termes de contraintes isotropiques, comme on a vu l'apparition de la viscosité volumique \(\zeta\), soit
+\begin{equation}
+   p = \frac{-1}{3} \trace(\boldsymbol{\sigma}) + \zeta\qty(\divergence{\vv}).
+\end{equation}
+
+\section{Retour à Herman}
+\label{sec:orgd97596d}
+
+\Textcite{herman2022granular} divise sont tenseur de contraintes de Cauchy \(\sigma_{ij}^c\) en deux catégories, soient la pression isotrope \(p^c\) et les contraintes déviatoires \(\hat{\sigma}^c_{ij}\),
+
+\begin{equation}
+   \sigma_{ij}^c = -p^c\delta_{ij} + \hat{\sigma}_{ij}^c,
+\end{equation}
+où la somme des \emph{normal stress components} est nulle, \(\hat{\sigma}^c_{11} + \hat{\sigma}^c_{22} = 0\) (voir eq. \ref{eq:org0b697bd}).
+Comme on l'a vu précédemment (voir \ref{eq:orgdf38f4d}),
+\begin{equation}
+\label{eq:orgf0885ce}
+   \boldsymbol{\sigma}^c = \begin{bmatrix}
+     -p^c + \hat{\sigma}^c_1 & \tau^c \\
+     \tau^c & -p^c + \hat{\sigma}^c_2 \\
+   \end{bmatrix},
+\end{equation}
+où \(\tau = \sigma_{12} = \sigma_{21}\) sont les \emph{tangential stress components} comme nous sommes en deux dimensions pour bien représenter le domaine de glace.
+Finalement, la \textbf{partie déviatoire} peut être décrite par
+\begin{subequations}
+\label{eq:org0f87221}
+\begin{align}
+   &\hat{\sigma}_i = 2\eta \dot{\varepsilon}_i + \qty(\zeta + \eta) \dot{\varepsilon}_V,\\
+   &\tau_c = 2\eta\dot{\gamma},
+\end{align}
+\end{subequations}
+où \(\dot{\gamma} = \dot{\varepsilon}_{12} = \dot{\varepsilon}_{21}\) et la \textbf{déformation volumique} est définit comme \(\dot{\varepsilon} = \dot{\varepsilon_1} + \dot{\varepsilon_2}\).
+Les équation \ref{eq:org0f87221}a,b sont complétement consistantes avec l'équation de constitution \ref{eq:orgb90e044} de la section précédente, si le lecteur est intéressé à vérifier.
+On ne montre seulement pas la partie isotrope liée à la pression comme dans \ref{eq:orgf0885ce}.\bigskip
+
+En \ref{eq:org0f87221}a et b, on référe à \(\eta\) comme étant la \textbf{viscosité dynamique} (\emph{shear viscosity}) et à \(\zeta\) comme étant la \textbf{viscosité volumique} (\emph{bulk viscosity}).
+Cette dernière quantité référe à la résistance d'une fluide aux changements rapide de volume.
+Pour un \textbf{fluide newtonien}, la viscosité dynamique \(\eta\) est un scalaire.
+Par contre, pour un \textbf{fluide non-newtonien}, \(\eta\) est une viscosité apparente et une fonction de \(\dot{\gamma}\), des propriétés matérielles du fluide et du temps.
+
+Menionnons que \Textcite{herman2022granular} divise sont tenseur du taux de déformation en
+\begin{equation}
+   \dot{\boldsymbol{\varepsilon}} = \begin{bmatrix}
+     \dot{\varepsilon}_{11} & \dot{\varepsilon}_{12}\\
+     \dot{\varepsilon}_{21} & \dot{\varepsilon}_{22} \\
+   \end{bmatrix} =\begin{bmatrix}
+     \dot{\varepsilon}_1 & \dot{\gamma} \\
+     \dot{\gamma} & \dot{\varepsilon}_2 \\
+   \end{bmatrix}
+\end{equation}
+
+Les fluides dont la viscosité ne dépend pas du temps peuvent être visqueux (\(\tau^c(\dot{\gamma} = 0) = 0\)  : Les contraintes internes dépendent directement du taux de déformation) ou viscoplastique (\(\tau^c(\dot{\gamma} = 0) > 0\) : Il y a des contraintes, même si le taux de déformation à l'interne est nul).
+Le premier n'offre aucun contrainte lorsqu'il n'y a pas de déformation, tandis que le second offre une contrainte s'il y a une déformation. 
+
+\printbibliography
+\end{document}

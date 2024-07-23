@@ -1,33 +1,23 @@
-% Created 2024-06-16 Sun 00:13
+% Created 2024-07-23 Tue 11:42
 % Intended LaTeX compiler: pdflatex
-ocumentclass[10pt]{article}% =================================BASE====================================%
-\documentclass[10pt]{report}
+\documentclass[10pt]{article}
+% =================================BASE====================================%
 \usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry} % Marges
 \usepackage[T1]{fontenc} % Nécessaire avec FrenchBabel
 \usepackage[utf8]{inputenc} % Important pour symboles Francophones, é,à,etc
 \usepackage{csquotes} % Recommandé par PDFLatex lors de la compilation. 
 
-
-% Calligraphie
-%\usepackage{lmodern} % Ça, ça set latin modern
-%\usepackage{mathrsfs} %Permet la command \mathscr (Lettres attachées genre) \mathscr(B)
-
 % Calligraphie
 %\usepackage{pxfonts} % Met le texte ET les maths en Palatino + donne accès à des symboles math
 \usepackage{palatino} % Cette commande met seulement le texte en police palatino
-\usepackage{lmodern} % Pour les maths?
+\usepackage{lmodern} % Pour les maths? Lmodern pour les maths
 % Use lmodern for sans-serif
 \usepackage{mathrsfs} % Permet la command \mathscr (Lettres attachées genre) \mathscr(B)
 
-
-
-
-
 % Bibliographie
 %\usepackage[backend=bibtex,style=phys,sorting=ynt]{biblatex}
-\usepackage[backend=biber,sorting=ynt,style=ieee]{biblatex}
-\addbibresource{/home/charlesedouard/Desktop/Travail/Documentation/master-bibliography.bib}
-
+\usepackage[backend=biber,sorting=ynt,style=authoryear]{biblatex} % N'est pas utilisé par le compilateur org-mode, mais NÉCESSAIRE. Voir le fichier init.el pour changer le style. 
+\addbibresource{/home/charlesedouard/Desktop/Travail/Documentation/2023/master-bibliography.bib}
 
 
 \usepackage{amsmath, amssymb, amsthm} % Symb. math. (Mathmode+Textmode) + Beaux théorèmes.
@@ -37,58 +27,22 @@
 \usepackage{color} % Permettre l'utilisation des couleurs.
 \usepackage{colortbl} % Color tables
 \usepackage[dvipsnames]{xcolor} % Couleurs avancées.
-\usepackage{titling} % Donne accès à \theauthor, \thetitle, \thedate
 
 % Physique
 \usepackage{physics} % Meilleur package pour physicien. 
 
-
 % Style
 \usepackage{lipsum} % For fun
 \usepackage{tikz} % Realisation de figures TIKZ.
+\usetikzlibrary{arrows.meta,bending} % Arrow heads 
 \usepackage{empheq} % Boite autour de MULTIPLE équations
 \usepackage{bbding}
 
 % Français
 \usepackage[french]{babel} % Environnements en Français.
-% ==============================BASE-(END)=================================%
-
-
-
-% ================================SETTINGS=================================%
-% Pas d'indentation en début de paragraphe :
-\setlength\parindent{0pt}
-\setlength{\parskip}{0.15cm}
-
-% Tableaux/tabular
-% Espace vertical dans les tabular/tableaux
-\renewcommand{\arraystretch}{1.2}
-% Couleur des tableaux/tabular
-\rowcolors{2}{violet!5}{}
-
-% Couleurs de hyperliens :
-\definecolor{mypink}{RGB}{147, 0, 255}
-\hypersetup{colorlinks, 
-             filecolor=mypink,
-             urlcolor=mypink, 
-             citecolor=mypink, 
-             linkcolor=mypink, 
-             anchorcolor=mypink}
-
 
 \usepackage{titling} % Donne accès à \theauthor, \thetitle, \thedate
 
-% Physique
-\usepackage{physics} % Meilleur package pour physicien. 
-
-
-% Style
-\usepackage{lipsum} % For fun
-\usepackage{tikz} % Realisation de figures TIKZ.
-\usepackage{empheq} % Boite autour de MULTIPLE équations
-
-% Français
-\usepackage[french]{babel} % Environnements en Français.
 % ==============================BASE-(END)=================================%
 
 
@@ -104,13 +58,13 @@
 % Espace vertical dans les tabular/tableaux
 \renewcommand{\arraystretch}{1.2}
 % Couleur des tableaux/tabular
-\rowcolors{2}{violet!5}{}
+% \rowcolors{3}{violet!5}{}
 
 % Couleurs de hyperliens :
 \definecolor{mypink}{RGB}{147, 0, 255}
 \hypersetup{colorlinks, 
              filecolor=mypink,
-             urlcolor=mypink, 
+             urlcolor=Violet, 
              citecolor=mypink, 
              linkcolor=mypink, 
              anchorcolor=mypink}
@@ -139,9 +93,12 @@
 
 
 % ==============================NEWCOMMANDS================================%
+% CQFD symbol
+\renewcommand{\qedsymbol}{$\hfill\blacksquare$}
 
 % Vecteurs de base :
 \newcommand{\nvf}{\vb{\hat{n}}}
+\newcommand{\evf}{\vb{\hat{e}}}
 \newcommand{\ivf}{\vb{\hat{i}}}
 \newcommand{\jvf}{\vb{\hat{j}}}
 \newcommand{\kvf}{\vb{\hat{k}}}
@@ -150,8 +107,8 @@
 \newcommand{\ust}{\vb{u}_{\ast}}
 
 % Physics empty spaces 
-\newcommand{\typical}{\vphantom{A}}
-\newcommand{\tall}{\vphantom{A^{x^x}_p}}
+\newcommand{\short}{\vphantom{pA}}
+\newcommand{\tall}{\vphantom{pA^{x^x}_p}}
 \newcommand{\grande}{\vphantom{\frac{1}{xx}}}
 \newcommand{\venti}{\vphantom{\sum_x^x}}
 \newcommand{\pt}{\hspace{1pt}} % One horizontal pt space
@@ -170,6 +127,14 @@
 %\newcommand{\nb}{$\boxed{\text{\footnotesize\EightStarConvex}\pt \mathfrak{N. B.}}$\hspace{4pt}}
 \newcommand{\nb}{\underline{{\footnotesize\EightStarConvex}\pt $\mathfrak{N.B.}$\vphantom{p}}\hspace{3pt}}
 
+\newcommand{\exemple}{
+\parbox[center]{2.2cm}{\begin{tcolorbox}[sharp corners, rounded corners=northeast, rounded corners=southeast,
+colback=Violet!5, colframe=black,
+size=small, width=2cm, left=-0.25pt, bottom=-0.5pt,
+arc is angular, arc=2.5mm, boxrule=0.35pt, leftrule=4pt, %bottomrule=1pt,
+after={\enskip}] Exemple \end{tcolorbox}}}
+
+\newcommand{\cqfd}{\hfill$\blacktriangleleft$}
 
 % Define the nota bene environment
 \usepackage{tcolorbox}
@@ -196,7 +161,7 @@
 \newcommand{\mytitlepage}{
 \begin{titlepage}
 \begin{center}
-{\Huge Contrat Été 2023 \par}
+{\Huge \thesubtitle \par}
 \vspace{2cm}
 {\Huge \MakeUppercase{\thetitle} \par}
 \vspace{2cm}
@@ -233,6 +198,7 @@ Police d'écriture : \textbf{CMU Serif Roman}
 \author{Charles-Édouard Lizotte}
 \date{29/09/2023}
 \title{Carnet de bord, Université McGill}
+\newcommand{\thesubtitle}{Contrat Été 2023}
 \hypersetup{
  pdfauthor={Charles-Édouard Lizotte},
  pdftitle={Carnet de bord, Université McGill},
@@ -246,7 +212,7 @@ Police d'écriture : \textbf{CMU Serif Roman}
 \tableofcontents\newpage
 
 \section{{\bfseries\sffamily TODO} Résoudre le problème de densité [83\%] -- \textit{<2023-09-25 Mon>}}
-\label{sec:orgc182ea7}
+\label{sec:org7354551}
 \begin{wrapfigure}[12]{r}{0.4\textwidth}
 \vspace{-\baselineskip}
 \begin{center}
@@ -284,7 +250,7 @@ Police d'écriture : \textbf{CMU Serif Roman}
    \draw[scale=1,domain=0:4,smooth,variable=\x,blue] plot ({\x},{1.1*exp(2*\x/4)/2.718+1.0});
 \end{tikzpicture}
 \end{center}
-\caption{\label{org281d19c}Discrétisation des épaisseurs de couches pour un cas linéaire et exponentiel.}
+\caption{\label{org3738298}Discrétisation des épaisseurs de couches pour un cas linéaire et exponentiel.}
 \end{wrapfigure}
 
 
@@ -312,15 +278,15 @@ Entre autres, les codes à remetter à jour étaient
 
 On se souvient que le \emph{decay scale} devrait donner une stratification telle que
 \begin{align}
-\label{eq:org62603f1}
+\label{eq:org7b7ce6f}
   && \rho(z) = \rho_0 - \tilde{\rho}\exp{\ z/\chi\tall\ } && \text{où} && \chi = 1000\ [m]. &&
 \end{align}
-Après un peu de \emph{fuck around and find out}, j'ai \emph{fine tunné} les paramètres de l'équation \ref{eq:org62603f1} pour obtenir une estimation réaliste de la densité de l'océan.
-Ces paramètes se retrouvent dans le tableau \ref{tab:org8686eb4}.\bigskip
+Après un peu de \emph{fuck around and find out}, j'ai \emph{fine tunné} les paramètres de l'équation \ref{eq:org7b7ce6f} pour obtenir une estimation réaliste de la densité de l'océan.
+Ces paramètes se retrouvent dans le tableau \ref{tab:orgd5f9352}.\bigskip
 \end{itemize}
 
 \begin{table}[htbp]
-\caption{\label{tab:org8686eb4}Résumé des paramètres utilisés dans notre configuration pour la densité (eq. \ref{eq:org62603f1}).}
+\caption{\label{tab:orgd5f9352}Résumé des paramètres utilisés dans notre configuration pour la densité (eq. \ref{eq:org7b7ce6f}).}
 \centering
 \begin{tabular}{lccc}
 \hline
@@ -338,7 +304,7 @@ profondeur & z & --- & m\\[0pt]
 \begin{itemize}
 \item[{$\boxtimes$}] \textbf{Créer un mécanisme qui détermine l'épaisseur des couches ;}
 
-Techniquement, on veut des épaisseurs qui croîent exponentiellement en fonction de la profondeur, comme illustré à la figure \ref{org281d19c}.
+Techniquement, on veut des épaisseurs qui croîent exponentiellement en fonction de la profondeur, comme illustré à la figure \ref{org3738298}.
 \end{itemize}
 
 
@@ -365,13 +331,13 @@ Une fois ces quatre étapes accomplies, le \emph{set-up} de référence sera ass
 On espère seulement qu'il n'y aura pas trop d'erreur numérique et/ou de couches qui arrivent à zéro.
 
 \subsection{Premier test -- \textit{<2023-09-26 Tue>}}
-\label{sec:orge31fb11}
+\label{sec:org6f67f33}
 
 Toutes les tests ont eu des couches qui ont atteinte des épaisseurs nulles.
-La stratification était définie selon l'équation \ref{eq:org62603f1}.
+La stratification était définie selon l'équation \ref{eq:org7b7ce6f}.
 
 \begin{table}[htbp]
-\caption{\label{tab:orge0439a8}Résumé des paramètres utilisés dans notre configuration pour la densité (eq. \ref{eq:org62603f1}).}
+\caption{\label{tab:orga7181ef}Résumé des paramètres utilisés dans notre configuration pour la densité (eq. \ref{eq:org7b7ce6f}).}
 \centering
 \begin{tabular}{lccc}
 \hline
@@ -386,10 +352,10 @@ profondeur & z & --- & m\\[0pt]
 \end{tabular}
 \end{table}
 
-Ce qui nous donnait des paramètres de tourbillons énoncés dans le tableau \ref{tab:org5a36f29}. 
+Ce qui nous donnait des paramètres de tourbillons énoncés dans le tableau \ref{tab:orgd234a41}. 
 
 \begin{table}[htbp]
-\caption{\label{tab:org5a36f29}Portrait des ondes barocliniques retrouvées dans nos test  associées à la stratification énoncée au tableau \ref{tab:orge0439a8}.}
+\caption{\label{tab:orgd234a41}Portrait des ondes barocliniques retrouvées dans nos test  associées à la stratification énoncée au tableau \ref{tab:orga7181ef}.}
 \centering
 \begin{tabular}{cccccc}
 \hline
@@ -413,12 +379,12 @@ Bref, les trosi dernières expériences ont des niveaux qui ont atteint une épa
 On se lance donc dans le prochain test.
 
 \subsection{Tests subséquents -- \textit{<2023-09-27 Wed>}}
-\label{sec:orga17ea7f}
+\label{sec:org4ffb7e8}
 
 On augmente de nouveau la stratification en espérant que ça permette de retenir un peu l'épaisseur des couches.
 je ne crois pas qu'on soit rendu au point critique où l'instabilité numérique apparaisse. 
 \begin{table}[htbp]
-\caption{\label{tab:org28ec2e3}Résumé des paramètres utilisés dans notre configuration pour la densité (eq. \ref{eq:org62603f1}).}
+\caption{\label{tab:org2c138ec}Résumé des paramètres utilisés dans notre configuration pour la densité (eq. \ref{eq:org7b7ce6f}).}
 \centering
 \begin{tabular}{lccc}
 \hline
@@ -433,12 +399,12 @@ profondeur & z & --- & m\\[0pt]
 \end{tabular}
 \end{table}
 
-On a aussi fait des test pour \(\tilde{\rho}\) de 6.00 et 7.00, mais sans succès (Voir tableau \ref{tab:org41df7e9}).
+On a aussi fait des test pour \(\tilde{\rho}\) de 6.00 et 7.00, mais sans succès (Voir tableau \ref{tab:org9e7d420}).
 \textbf{Toutes les runs} ont atteint des épaisseurs nulles à un point où un autre.
 Il semble qu'on atteint des courants de surface de 4.5 m/s, ce qui est \textbf{très curieux}.
 
 \begin{table}[htbp]
-\caption{\label{tab:org41df7e9}Nombre d'outputs avant que l'épaisseur de la première couche devienne nulle.}
+\caption{\label{tab:org9e7d420}Nombre d'outputs avant que l'épaisseur de la première couche devienne nulle.}
 \centering
 \begin{tabular}{cccccc}
 \hline
@@ -455,10 +421,10 @@ Paramètre \(\tilde{\rho}\) & 2 couches & 4 couches & 6 couches & 8 couches & 10
 Au devant de ces échecs, j'ai relancé 9 runs à \emph{nz} = (2 6 8) et un multiplicateur du coefficient de friction de \(r_{drag}\) = (2 4 6).
 
 \section{Travail sur les runs couplées [0\%] -- \textit{<2023-09-28 Thu>}}
-\label{sec:org66b4707}
+\label{sec:org80046ed}
 
 \subsection{Installation de Wavewatch III sur Oxygen [33\%]}
-\label{sec:orgb1b5009}
+\label{sec:org3c5c98e}
 \begin{itemize}
 \item[{$\boxtimes$}] \textbf{Extraction du modèle depuis le site web de la NOAA ;}
 Comme mentionné dans le \href{rapport-2023-09-22.pdf}{rapport précédent}, on peut trouver le modèle sur le site \url{https://polar.ncep.noaa.gov/waves/wavewatch/distribution/}.
@@ -477,7 +443,7 @@ Il faudrait juste s'assurer que la config que j'ai créée sur mon portable fonc
 Une fois ces tâches accomplies, on peut se lancer à 100$\backslash$% sur les runs couplées. 
 
 \subsection{Lancement des runs couplées sur Oxygen}
-\label{sec:orgf675202}
+\label{sec:org484c59e}
 Avant de lancer le couplage, il faut juste s'assurer que
 \begin{itemize}
 \item[{$\square$}] La sous-routine \emph{ww3 shel} a les bonnes dates;

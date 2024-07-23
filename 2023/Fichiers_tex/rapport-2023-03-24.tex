@@ -1,33 +1,23 @@
-% Created 2024-06-16 Sun 00:13
+% Created 2024-07-23 Tue 11:40
 % Intended LaTeX compiler: pdflatex
-ocumentclass[10pt]{article}% =================================BASE====================================%
-\documentclass[10pt]{report}
+\documentclass[10pt]{article}
+% =================================BASE====================================%
 \usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry} % Marges
 \usepackage[T1]{fontenc} % Nécessaire avec FrenchBabel
 \usepackage[utf8]{inputenc} % Important pour symboles Francophones, é,à,etc
 \usepackage{csquotes} % Recommandé par PDFLatex lors de la compilation. 
 
-
-% Calligraphie
-%\usepackage{lmodern} % Ça, ça set latin modern
-%\usepackage{mathrsfs} %Permet la command \mathscr (Lettres attachées genre) \mathscr(B)
-
 % Calligraphie
 %\usepackage{pxfonts} % Met le texte ET les maths en Palatino + donne accès à des symboles math
 \usepackage{palatino} % Cette commande met seulement le texte en police palatino
-\usepackage{lmodern} % Pour les maths?
+\usepackage{lmodern} % Pour les maths? Lmodern pour les maths
 % Use lmodern for sans-serif
 \usepackage{mathrsfs} % Permet la command \mathscr (Lettres attachées genre) \mathscr(B)
 
-
-
-
-
 % Bibliographie
 %\usepackage[backend=bibtex,style=phys,sorting=ynt]{biblatex}
-\usepackage[backend=biber,sorting=ynt,style=ieee]{biblatex}
-\addbibresource{/home/charlesedouard/Desktop/Travail/Documentation/master-bibliography.bib}
-
+\usepackage[backend=biber,sorting=ynt,style=authoryear]{biblatex} % N'est pas utilisé par le compilateur org-mode, mais NÉCESSAIRE. Voir le fichier init.el pour changer le style. 
+\addbibresource{/home/charlesedouard/Desktop/Travail/Documentation/2023/master-bibliography.bib}
 
 
 \usepackage{amsmath, amssymb, amsthm} % Symb. math. (Mathmode+Textmode) + Beaux théorèmes.
@@ -37,58 +27,22 @@
 \usepackage{color} % Permettre l'utilisation des couleurs.
 \usepackage{colortbl} % Color tables
 \usepackage[dvipsnames]{xcolor} % Couleurs avancées.
-\usepackage{titling} % Donne accès à \theauthor, \thetitle, \thedate
 
 % Physique
 \usepackage{physics} % Meilleur package pour physicien. 
 
-
 % Style
 \usepackage{lipsum} % For fun
 \usepackage{tikz} % Realisation de figures TIKZ.
+\usetikzlibrary{arrows.meta,bending} % Arrow heads 
 \usepackage{empheq} % Boite autour de MULTIPLE équations
 \usepackage{bbding}
 
 % Français
 \usepackage[french]{babel} % Environnements en Français.
-% ==============================BASE-(END)=================================%
-
-
-
-% ================================SETTINGS=================================%
-% Pas d'indentation en début de paragraphe :
-\setlength\parindent{0pt}
-\setlength{\parskip}{0.15cm}
-
-% Tableaux/tabular
-% Espace vertical dans les tabular/tableaux
-\renewcommand{\arraystretch}{1.2}
-% Couleur des tableaux/tabular
-\rowcolors{2}{violet!5}{}
-
-% Couleurs de hyperliens :
-\definecolor{mypink}{RGB}{147, 0, 255}
-\hypersetup{colorlinks, 
-             filecolor=mypink,
-             urlcolor=mypink, 
-             citecolor=mypink, 
-             linkcolor=mypink, 
-             anchorcolor=mypink}
-
 
 \usepackage{titling} % Donne accès à \theauthor, \thetitle, \thedate
 
-% Physique
-\usepackage{physics} % Meilleur package pour physicien. 
-
-
-% Style
-\usepackage{lipsum} % For fun
-\usepackage{tikz} % Realisation de figures TIKZ.
-\usepackage{empheq} % Boite autour de MULTIPLE équations
-
-% Français
-\usepackage[french]{babel} % Environnements en Français.
 % ==============================BASE-(END)=================================%
 
 
@@ -104,13 +58,13 @@
 % Espace vertical dans les tabular/tableaux
 \renewcommand{\arraystretch}{1.2}
 % Couleur des tableaux/tabular
-\rowcolors{2}{violet!5}{}
+% \rowcolors{3}{violet!5}{}
 
 % Couleurs de hyperliens :
 \definecolor{mypink}{RGB}{147, 0, 255}
 \hypersetup{colorlinks, 
              filecolor=mypink,
-             urlcolor=mypink, 
+             urlcolor=Violet, 
              citecolor=mypink, 
              linkcolor=mypink, 
              anchorcolor=mypink}
@@ -139,9 +93,12 @@
 
 
 % ==============================NEWCOMMANDS================================%
+% CQFD symbol
+\renewcommand{\qedsymbol}{$\hfill\blacksquare$}
 
 % Vecteurs de base :
 \newcommand{\nvf}{\vb{\hat{n}}}
+\newcommand{\evf}{\vb{\hat{e}}}
 \newcommand{\ivf}{\vb{\hat{i}}}
 \newcommand{\jvf}{\vb{\hat{j}}}
 \newcommand{\kvf}{\vb{\hat{k}}}
@@ -150,8 +107,8 @@
 \newcommand{\ust}{\vb{u}_{\ast}}
 
 % Physics empty spaces 
-\newcommand{\typical}{\vphantom{A}}
-\newcommand{\tall}{\vphantom{A^{x^x}_p}}
+\newcommand{\short}{\vphantom{pA}}
+\newcommand{\tall}{\vphantom{pA^{x^x}_p}}
 \newcommand{\grande}{\vphantom{\frac{1}{xx}}}
 \newcommand{\venti}{\vphantom{\sum_x^x}}
 \newcommand{\pt}{\hspace{1pt}} % One horizontal pt space
@@ -170,6 +127,14 @@
 %\newcommand{\nb}{$\boxed{\text{\footnotesize\EightStarConvex}\pt \mathfrak{N. B.}}$\hspace{4pt}}
 \newcommand{\nb}{\underline{{\footnotesize\EightStarConvex}\pt $\mathfrak{N.B.}$\vphantom{p}}\hspace{3pt}}
 
+\newcommand{\exemple}{
+\parbox[center]{2.2cm}{\begin{tcolorbox}[sharp corners, rounded corners=northeast, rounded corners=southeast,
+colback=Violet!5, colframe=black,
+size=small, width=2cm, left=-0.25pt, bottom=-0.5pt,
+arc is angular, arc=2.5mm, boxrule=0.35pt, leftrule=4pt, %bottomrule=1pt,
+after={\enskip}] Exemple \end{tcolorbox}}}
+
+\newcommand{\cqfd}{\hfill$\blacktriangleleft$}
 
 % Define the nota bene environment
 \usepackage{tcolorbox}
@@ -196,7 +161,7 @@
 \newcommand{\mytitlepage}{
 \begin{titlepage}
 \begin{center}
-{\Huge Contrat Été 2023 \par}
+{\Huge \thesubtitle \par}
 \vspace{2cm}
 {\Huge \MakeUppercase{\thetitle} \par}
 \vspace{2cm}
@@ -232,8 +197,8 @@ Police d'écriture : \textbf{CMU Serif Roman}
 % =================================ENTÊTE==================================%
 \author{Charles-Édouard Lizotte}
 \date{24/03/2023}
-\title{Rapport hebdomadaire -- McGill\\\medskip
-\large Semaine du 20 mars 2023}
+\title{Rapport hebdomadaire -- McGill}
+\newcommand{\thesubtitle}{Semaine du 20 mars 2023}
 \hypersetup{
  pdfauthor={Charles-Édouard Lizotte},
  pdftitle={Rapport hebdomadaire -- McGill},
@@ -247,9 +212,9 @@ Police d'écriture : \textbf{CMU Serif Roman}
 \tableofcontents\newpage
 
 \section{{\bfseries\sffamily DONE} Transformer le \emph{slab model} en modèle \emph{shallow water} multicouches [3/3]}
-\label{sec:org9d5b7a3}
+\label{sec:org95a1470}
 \subsection{\textbf{Cadre théorique} : Retrouver les variations des interfaces eta(k)}
-\label{sec:org4c3c48f}
+\label{sec:orgda0501e}
 En premier lieu, en \emph{shallow water}, l'équation de masse pour chaque couche \(k\) est donnée par
 \begin{equation}
 \pdv{}{t} d_k = \divergence (d_k\vb{u}_k)
@@ -302,7 +267,7 @@ Après avoir calculé les \emph{RHS}, faut donc retouver les \(\eta_k\) à l'aid
 \draw[>=stealth, ->|] (H4) -- (4.3,-4);
 \end{tikzpicture}
 \end{center}
-\caption{\label{orge8214d2}Illustration d'un modèle \textit{shallow water} à quatre couches (\(n_k = 4\)).}
+\caption{\label{org4fd582d}Illustration d'un modèle \textit{shallow water} à quatre couches (\(n_k = 4\)).}
 \end{wrapfigure}
 
 En commençant depuis la fin, l'algorithme pour retrouver les \(\eta_k\) à partir des épaisseurs \(d_k\) est donné par
@@ -315,7 +280,7 @@ En commençant depuis la fin, l'algorithme pour retrouver les \(\eta_k\) à part
 
 Pour résumé, de manière générale, entre les couches 2 et \emph{nk-1},
 \begin{equation}
-\label{eq:org2e0ce94}
+\label{eq:org527124c}
 \eta_k = \eta_{k+1} + (d_k - H_k).
 \end{equation}
 On peut donc toujours prendre la dernières couches et reconstruire les autres \(\eta_{k+1}\).
@@ -324,7 +289,7 @@ Cette technique est employé par toutes les sous-routines qui font usage de la \
 
 
 Mentionnons qu'on regarde les \emph{RHS} des équations du mouvement, soit les dérivées temporelles des quantités \(h\) et \(\eta\).
-En ordre décroissant, il est donc possible de créer une méthode itérative qui appelle le \emph{RHS} du \emph{eta} couche inférieure (\(nk+1\)) à l'aide de la dérivée de l'équation \ref{eq:org2e0ce94}, soit
+En ordre décroissant, il est donc possible de créer une méthode itérative qui appelle le \emph{RHS} du \emph{eta} couche inférieure (\(nk+1\)) à l'aide de la dérivée de l'équation \ref{eq:org527124c}, soit
 \begin{align}
 (k=nz)\hspace{2cm}    &\Delta \eta_{nz} =\ \Delta h_{nz}\ ;\nonumber\\
 (k=k) \hspace{2cm} &\Delta \eta_{k}\ = \ \Delta h_k\ + \Delta \eta_{k+1}\ ;\\
@@ -337,9 +302,9 @@ En ordre décroissant, il est donc possible de créer une méthode itérative qu
 Pous solutionner ce problème, on utiliserait une méthode d'algèbre linéaire matricielle, mais ça ne devrait pas être très grave si on a peu de couches, selon David.
 
 \subsection{\textbf{Cadre théorique} : Vorticité quasi-géostrophique}
-\label{sec:orgcf90ffd}
+\label{sec:org6384dd4}
 \subsubsection{Retrouver la QGPV à partir de la vorticité relative}
-\label{sec:orgc47e51b}
+\label{sec:org1436438}
 
 Dans le système en eau peu profonde, la vorticité potentielle \(Q_k\) est une quantité conservée, de sorte que 
 
@@ -373,7 +338,7 @@ Q_k \approx \frac{1}{H_k}  \qty(f + \zeta_k -f_o\frac{h_k'}{H_k}).
 Cette nouvelle quantité \(q_k\) s'appelle la \textbf{vorticité potentielle quasi-géostrophique} (QGPV) et est conservée sur le domaine.
 Soit,
 \begin{equation}
-\label{eq:org9cdc7d3}
+\label{eq:orgfda14bf}
 \boxed{q_k \equiv \qty( \beta  y + \zeta_k - f_o \frac{h_k'}{H_k})
 \hspace{0.3cm} \text{où} \hspace{0.3cm}
 \zeta_k = \laplacian \psi_k.}
@@ -387,7 +352,7 @@ La variation de l'interface entre deux couches \(\eta_k'\) peut toujours être e
 \end{equation}
 
 \subsubsection{Généralisation de la QGPV à un modèle à plusieurs couches}
-\label{sec:org502af53}
+\label{sec:org5754399}
 
 Après quelque substitutions algébriques, on parviendra ainsi à une équation générique de la vorticité potentielle quasi-géostrophique en eau peu profonde pour un modèle à plusieurs couches,
 \begin{align}
@@ -404,12 +369,12 @@ g_k' = g \frac{\rho_k - \rho_{k-1}}{\rho_1}.}
 
 \textbf{N.B. 1)} Notre résultat est différent de celui exprimé dans le \autocite[, p.185]{vallis_2006} à ce qui attrait aux gravités réduites car nous définissons \(\eta_k\) comme la «plafond» d'une couche \(k\) et non son «plancher».\\[0pt]
 
-\textbf{N.B. 2)} La formulation \ref{eq:org9cdc7d3} est toujours valides, car c'est la définition de la QGPV à plusieurs couches.
+\textbf{N.B. 2)} La formulation \ref{eq:orgfda14bf} est toujours valides, car c'est la définition de la QGPV à plusieurs couches.
 Une version différente existe en milieu continu, mais nous y reviendrons dans les prochains rapports.
 Bref, restons avec cette formulation, ça nous empêchera de se tromper avec les gravités réduites.
 
 \subsubsection{Gravité réduite}
-\label{sec:orgdb7bf6e}
+\label{sec:org84a00f5}
 
 Pour donner un argument, toujours en se fiant au Vallis, notre formulation de la gravités réduites \(g_i'\) découle du fait que la pression s'additionne à chaque couche, de sorte que 
 \begin{equation}
@@ -421,7 +386,7 @@ lorsque \(\eta_k\) est définit comme le «plafond» d'une couche \(k\).
 Pour une surface fixe, \(\eta_1\) est tout simplement nulle et on rajoute un gradient de pression dans les équations du mouvement.
 
 \subsection{{\bfseries\sffamily DONE} Modifer le schéma numérique pour retrouver les eta(k)}
-\label{sec:org11d6603}
+\label{sec:org3c00385}
 Il existe un peu une incertitude entre \emph{eta} et \emph{thickness}, les deux variables s'interchangent lorsqu'on travaille à plus de deux couches et j'ai un peu de difficulté à comprendre ça.
 Il va donc falloir déméler toute cette information-là.
 En premier lieu, nous avons désormais un vecteur \(H(k)\) qui décrit les épaisseurs moyennes de chaque couches (On l'avait déjà, mais on va vraiment s'en servir)
@@ -431,7 +396,7 @@ Ensuite, en suivant le schéma décrit dans les sections précédentes, on va po
 \textbf{N.B.} Finalement, après inspection du code, j'ai abandonnée l'idée d'avoir un \emph{thickness} prédéfinit à la grandeur du code, on va rester avec \emph{eta-k} et calculer \emph{thickness} \emph{on the spot}. Faut juste changer le nom de la variable \emph{RHS-eta} qui définit plutôt \emph{RHS-thickness}. 
 
 \subsection{{\bfseries\sffamily DONE} Modifier les sous-routines de diagnostiques et d'\emph{output} [3/3]}
-\label{sec:org2203091}
+\label{sec:org97db235}
 Toutes les routines de diagnostiques ont été créées pour 2 couches uniquement, il faudrait donc modifier les \textbf{do loop} qui contiennent des \emph{k} et \emph{nz}.
 Pour l'essentiel, il faut modifer les fichiers : 
 
@@ -453,7 +418,7 @@ En attendant, la \emph{do loop} des \emph{nz} s'arrête à nz = 2, de sorte que 
 \end{itemize}
 
 \subsection{{\bfseries\sffamily DONE} Gestion des paramètres initiaux}
-\label{sec:orgea66414}
+\label{sec:org7ef9159}
 Faut gosser un peu dans la fonction \emph{initialisation.f90} pour avoir un H(k) et un gprime(k) qui fonctionnent.
 Maintenant, gprime(k) est définit en fonction d'un vecteur rho(k). 
 Tout va être relié dans le fichier de paramètres.

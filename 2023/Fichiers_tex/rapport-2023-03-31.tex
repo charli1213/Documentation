@@ -1,33 +1,23 @@
-% Created 2024-06-16 Sun 00:13
+% Created 2024-07-23 Tue 11:42
 % Intended LaTeX compiler: pdflatex
-ocumentclass[10pt]{article}% =================================BASE====================================%
-\documentclass[10pt]{report}
+\documentclass[10pt]{article}
+% =================================BASE====================================%
 \usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry} % Marges
 \usepackage[T1]{fontenc} % Nécessaire avec FrenchBabel
 \usepackage[utf8]{inputenc} % Important pour symboles Francophones, é,à,etc
 \usepackage{csquotes} % Recommandé par PDFLatex lors de la compilation. 
 
-
-% Calligraphie
-%\usepackage{lmodern} % Ça, ça set latin modern
-%\usepackage{mathrsfs} %Permet la command \mathscr (Lettres attachées genre) \mathscr(B)
-
 % Calligraphie
 %\usepackage{pxfonts} % Met le texte ET les maths en Palatino + donne accès à des symboles math
 \usepackage{palatino} % Cette commande met seulement le texte en police palatino
-\usepackage{lmodern} % Pour les maths?
+\usepackage{lmodern} % Pour les maths? Lmodern pour les maths
 % Use lmodern for sans-serif
 \usepackage{mathrsfs} % Permet la command \mathscr (Lettres attachées genre) \mathscr(B)
 
-
-
-
-
 % Bibliographie
 %\usepackage[backend=bibtex,style=phys,sorting=ynt]{biblatex}
-\usepackage[backend=biber,sorting=ynt,style=ieee]{biblatex}
-\addbibresource{/home/charlesedouard/Desktop/Travail/Documentation/master-bibliography.bib}
-
+\usepackage[backend=biber,sorting=ynt,style=authoryear]{biblatex} % N'est pas utilisé par le compilateur org-mode, mais NÉCESSAIRE. Voir le fichier init.el pour changer le style. 
+\addbibresource{/home/charlesedouard/Desktop/Travail/Documentation/2023/master-bibliography.bib}
 
 
 \usepackage{amsmath, amssymb, amsthm} % Symb. math. (Mathmode+Textmode) + Beaux théorèmes.
@@ -37,58 +27,22 @@
 \usepackage{color} % Permettre l'utilisation des couleurs.
 \usepackage{colortbl} % Color tables
 \usepackage[dvipsnames]{xcolor} % Couleurs avancées.
-\usepackage{titling} % Donne accès à \theauthor, \thetitle, \thedate
 
 % Physique
 \usepackage{physics} % Meilleur package pour physicien. 
 
-
 % Style
 \usepackage{lipsum} % For fun
 \usepackage{tikz} % Realisation de figures TIKZ.
+\usetikzlibrary{arrows.meta,bending} % Arrow heads 
 \usepackage{empheq} % Boite autour de MULTIPLE équations
 \usepackage{bbding}
 
 % Français
 \usepackage[french]{babel} % Environnements en Français.
-% ==============================BASE-(END)=================================%
-
-
-
-% ================================SETTINGS=================================%
-% Pas d'indentation en début de paragraphe :
-\setlength\parindent{0pt}
-\setlength{\parskip}{0.15cm}
-
-% Tableaux/tabular
-% Espace vertical dans les tabular/tableaux
-\renewcommand{\arraystretch}{1.2}
-% Couleur des tableaux/tabular
-\rowcolors{2}{violet!5}{}
-
-% Couleurs de hyperliens :
-\definecolor{mypink}{RGB}{147, 0, 255}
-\hypersetup{colorlinks, 
-             filecolor=mypink,
-             urlcolor=mypink, 
-             citecolor=mypink, 
-             linkcolor=mypink, 
-             anchorcolor=mypink}
-
 
 \usepackage{titling} % Donne accès à \theauthor, \thetitle, \thedate
 
-% Physique
-\usepackage{physics} % Meilleur package pour physicien. 
-
-
-% Style
-\usepackage{lipsum} % For fun
-\usepackage{tikz} % Realisation de figures TIKZ.
-\usepackage{empheq} % Boite autour de MULTIPLE équations
-
-% Français
-\usepackage[french]{babel} % Environnements en Français.
 % ==============================BASE-(END)=================================%
 
 
@@ -104,13 +58,13 @@
 % Espace vertical dans les tabular/tableaux
 \renewcommand{\arraystretch}{1.2}
 % Couleur des tableaux/tabular
-\rowcolors{2}{violet!5}{}
+% \rowcolors{3}{violet!5}{}
 
 % Couleurs de hyperliens :
 \definecolor{mypink}{RGB}{147, 0, 255}
 \hypersetup{colorlinks, 
              filecolor=mypink,
-             urlcolor=mypink, 
+             urlcolor=Violet, 
              citecolor=mypink, 
              linkcolor=mypink, 
              anchorcolor=mypink}
@@ -139,9 +93,12 @@
 
 
 % ==============================NEWCOMMANDS================================%
+% CQFD symbol
+\renewcommand{\qedsymbol}{$\hfill\blacksquare$}
 
 % Vecteurs de base :
 \newcommand{\nvf}{\vb{\hat{n}}}
+\newcommand{\evf}{\vb{\hat{e}}}
 \newcommand{\ivf}{\vb{\hat{i}}}
 \newcommand{\jvf}{\vb{\hat{j}}}
 \newcommand{\kvf}{\vb{\hat{k}}}
@@ -150,8 +107,8 @@
 \newcommand{\ust}{\vb{u}_{\ast}}
 
 % Physics empty spaces 
-\newcommand{\typical}{\vphantom{A}}
-\newcommand{\tall}{\vphantom{A^{x^x}_p}}
+\newcommand{\short}{\vphantom{pA}}
+\newcommand{\tall}{\vphantom{pA^{x^x}_p}}
 \newcommand{\grande}{\vphantom{\frac{1}{xx}}}
 \newcommand{\venti}{\vphantom{\sum_x^x}}
 \newcommand{\pt}{\hspace{1pt}} % One horizontal pt space
@@ -170,6 +127,14 @@
 %\newcommand{\nb}{$\boxed{\text{\footnotesize\EightStarConvex}\pt \mathfrak{N. B.}}$\hspace{4pt}}
 \newcommand{\nb}{\underline{{\footnotesize\EightStarConvex}\pt $\mathfrak{N.B.}$\vphantom{p}}\hspace{3pt}}
 
+\newcommand{\exemple}{
+\parbox[center]{2.2cm}{\begin{tcolorbox}[sharp corners, rounded corners=northeast, rounded corners=southeast,
+colback=Violet!5, colframe=black,
+size=small, width=2cm, left=-0.25pt, bottom=-0.5pt,
+arc is angular, arc=2.5mm, boxrule=0.35pt, leftrule=4pt, %bottomrule=1pt,
+after={\enskip}] Exemple \end{tcolorbox}}}
+
+\newcommand{\cqfd}{\hfill$\blacktriangleleft$}
 
 % Define the nota bene environment
 \usepackage{tcolorbox}
@@ -196,7 +161,7 @@
 \newcommand{\mytitlepage}{
 \begin{titlepage}
 \begin{center}
-{\Huge Contrat Été 2023 \par}
+{\Huge \thesubtitle \par}
 \vspace{2cm}
 {\Huge \MakeUppercase{\thetitle} \par}
 \vspace{2cm}
@@ -233,6 +198,7 @@ Police d'écriture : \textbf{CMU Serif Roman}
 \author{Charles-Édouard Lizotte}
 \date{31/03/2023}
 \title{Rapport hebdomadaire -- McGill}
+\newcommand{\thesubtitle}{Contrat Été 2023}
 \hypersetup{
  pdfauthor={Charles-Édouard Lizotte},
  pdftitle={Rapport hebdomadaire -- McGill},
@@ -246,14 +212,14 @@ Police d'écriture : \textbf{CMU Serif Roman}
 \tableofcontents\newpage
 
 \section{{\bfseries\sffamily DONE} Run du modèle multicouches}
-\label{sec:orge168c7f}
+\label{sec:orgcef19a3}
 \subsection{Mise en contexte et paramètres}
-\label{sec:org00db628}
+\label{sec:orgee519b6}
 Au cours de la fin de semaine du 25 au 26, j'ai testé le modèle à 3 couches pour une période de 5 ans.
-Le modèle a terminé sa course sans accrochage avec les paramètres du tableau \ref{tab:orgc535067}.
+Le modèle a terminé sa course sans accrochage avec les paramètres du tableau \ref{tab:org044ed9b}.
 
 \begin{table}[htbp]
-\caption{\label{tab:orgc535067}Valeur des différents paramètres de l'expérience de \notecite{chen_2021}, mais à 3 couches.}
+\caption{\label{tab:org044ed9b}Valeur des différents paramètres de l'expérience de \notecite{chen_2021}, mais à 3 couches.}
 \centering
 \begin{tabular}{lll}
 \hline
@@ -282,12 +248,12 @@ Gravité réduite (troisième couche) & g\textsubscript{3}' & 6 \texttimes{} 10\
 \end{table}
 
 \subsection{Quelques résultats encourageants}
-\label{sec:org088846f}
+\label{sec:org3e2f45c}
 Avant tout, j'avais modifié les sous-routine de \emph{output} pour qu'on puisse avoir quelque chose à observer.
 En fin de semaine le modèle semblait de bien fonctionner, mais en observant les output, j'ai remarqué qu'il n'y avait aucune production barocline.
 Je croyais que mon vent n'était pas assez fort, mais c'était plutôt une erreur de \emph{timestep}.
 Le deuxième \emph{RHS} mettait à jours eta(2) et non eta(3), \emph{rookie mistake}.
-Après avoir détecté l'erreur avec David, j'ai donc relancé l'expérience ce mercredi en soirée avec les paramètres cités dans le tableau \ref{tab:orgc535067}.
+Après avoir détecté l'erreur avec David, j'ai donc relancé l'expérience ce mercredi en soirée avec les paramètres cités dans le tableau \ref{tab:org044ed9b}.
 Après quelques essais et erreurs, les valeurs de densité \(\rho_k\) ont été choisies dans le but de mimiquer les gravité réduites trouvées à partir de la vitesse des ondes baroclines \(c_{bc}\), soit
 \begin{equation}
 g_k' = \qty(\frac{H}{H_k\cdot H_{k-1}}) \ c_{bc}^2.
@@ -295,32 +261,32 @@ g_k' = \qty(\frac{H}{H_k\cdot H_{k-1}}) \ c_{bc}^2.
 Des diagrames de Hovmoller pour les résultats de la \emph{run} de mercredi devraient se retrouver en annexe.
 
 \section{{\bfseries\sffamily DONE} Retrouver les vorticités barotropes et baroclines}
-\label{sec:org5241477}
+\label{sec:org726ff87}
 \subsection{\textbf{Rappel théorique} :  La mécanique des ondes de Rossby dans une couche}
-\label{sec:org116bfea}
+\label{sec:org849eccc}
 Dans cette sous-section, nous allons développer les équations de vorticité quasi-géostrophique de sorte à retrouver la relation de dispersion des ondes de Rossby.
 Comme le développement mathématique des ondes de Rossby est intrinsèquement relié aux modes barotrope et baroclines, nous allons revisiter le concept en quelques lignes.\bigskip
 
 Comme nous l'avons vu dans le dernier \href{rapport-2023-03-24.org}{rapport}, la vorticité potentielle QG est donnée par l'expression
 \begin{equation}
-\label{eq:org96f7597}
+\label{eq:orgd209eda}
 q = \zeta + \beta - \frac{f_0}{H} \eta' = \laplacian \psi + \beta y - \frac{1}{L_d^2} \psi,
 \hspace{0.5cm}\text{où}\hspace{0.5cm}
 \dv{q}{t} = \pdv{q}{t} + \vb{u} \cdot \gradient q = \pdv{q}{t} + J(\psi,q) =  0.
 \end{equation}
 On recherche un type d'onde à méso-échelle, donc posons que la circulation à l'étude est vraiment plus petite que le rayon de déformation, de sorte que \(L_d \rightarrow \infty\) et \(q \rightarrow \zeta + \beta y\).
-Appliquons cette nouvelle définition dans l'équation d'évolution de \(q\) (eq. \ref{eq:org96f7597}) pour retrouver
+Appliquons cette nouvelle définition dans l'équation d'évolution de \(q\) (eq. \ref{eq:orgd209eda}) pour retrouver
 \begin{equation}
-\label{eq:orgfdee6fc}
+\label{eq:org5606889}
 \pdv{\zeta}{t} + \underbrace{\pdv{(\beta y)}{t}}_{=0} + \vb{u}\cdot \gradient \zeta + \underbrace{\vb{u} \cdot \gradient(\beta y)\bigno}_{ =\beta v}
 = \boxed{
 \pdv{\zeta}{t} + \vb{u}\cdot\gradient\zeta  + \beta v = 0
 }
 \end{equation}
 
-À partir d'ici, il est souhaitable de \textbf{linéariser} l'équation d'évolution de la QGPV (\ref{eq:orgfdee6fc}) en posant un courant moyen  en \emph{x} en arrière plan, (\emph{background flow}), de sorte que \(\psi = \bar{\psi}(y) + \psi'(x,y,t)\) où \(\bar{\psi}(y)=-\bar{u}y\).
+À partir d'ici, il est souhaitable de \textbf{linéariser} l'équation d'évolution de la QGPV (\ref{eq:org5606889}) en posant un courant moyen  en \emph{x} en arrière plan, (\emph{background flow}), de sorte que \(\psi = \bar{\psi}(y) + \psi'(x,y,t)\) où \(\bar{\psi}(y)=-\bar{u}y\).
 \begin{align}
-\label{eq:org329c5db}
+\label{eq:org0cdeaa1}
 &\pdv{t} \laplacian \psi' + \underbrace{\bar{u}\cdot \gradient (\laplacian \bar{\psi}) }_{=0}
 + \bar{u}\cdot \gradient (\laplacian \psi')
 + \underbrace{u'\cdot \gradient (\laplacian \bar{\psi}) }_{=0}
@@ -334,7 +300,7 @@ Par coutume, il est de mise de poser des solutions ondulantes de la forme
 \begin{equation}
 \psi' = \exp{i(kx + ly -\omega t)},
 \end{equation}
-dans (\ref{eq:org329c5db}) ce qui nous amènera à l'équation de dispersion pour les ondes des Rossby à une couche, soit
+dans (\ref{eq:org0cdeaa1}) ce qui nous amènera à l'équation de dispersion pour les ondes des Rossby à une couche, soit
 \begin{equation}
 (i)^2 K^2(-i\omega) + (i)^3\bar{u} k K^2 + i \beta k = 0
 \hspace{0.8cm}\Longrightarrow\hspace{0.8cm}
@@ -349,20 +315,20 @@ Finalement, les \textbf{vitesse de groupe} et \textbf{de phase} sont respectivem
 \end{align}
 
 \subsection{Interprétation physique des ondes de Rossy}
-\label{sec:org710a071}
+\label{sec:org09656dc}
 Le livre de \textcite{vallis_2006} offre une interprétation physique élégante du méchanisme de rappel des ondes de Rossby.
 En subissant des perturbations zonales, les parcelles de fluides vont vouloir conserver leur vorticité.
 Ce faisant, elle transforment de la vorticité planétaire en vorticité relative et se mettent en rotation.
-Ceci aura tendance à advecter la parcelle vers l'ouest, comme décrit dans l'image \ref{fig:org747ce6c}.
+Ceci aura tendance à advecter la parcelle vers l'ouest, comme décrit dans l'image \ref{fig:org73d37e0}.
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figures/vallis/vallis_rossby_simplification.png}
-\caption{\label{fig:org747ce6c}Figure tirée du Vallis décrivant le comportement des parcelles de fluide à l'équateur.}
+\caption{\label{fig:org73d37e0}Figure tirée du Vallis décrivant le comportement des parcelles de fluide à l'équateur.}
 \end{figure}
 
 \subsection{Description du système QG à \textbf{deux niveaux}}
-\label{sec:org40ef561}
+\label{sec:orge137857}
 
 Toujours en partant des équation QG en milieu continu, il est possible de définir l'équation de vorticité quasi-géostrophique à \textbf{deux ou plusieurs niveaux}.
 Nous utiliserons ici la technique des différences finies pour discrétiser les équations continues et trouver un modèle à deux couches, un cas spécial aussi appelé modèle de Philips (\autocite{vallis_2006}).\bigskip
@@ -372,7 +338,7 @@ Premièrement, la QGPV en milieu continu est donnée par
 q = \zeta + f + \pdv{z} \qty(\frac{f_0 b'}{N^2}).
 \end{equation}
 
-La \textbf{flottabilité} peut être décrite comme une dérivée verticale de la fonction de courant entre les deux niveaux (Voir figure \ref{orge371391}).
+La \textbf{flottabilité} peut être décrite comme une dérivée verticale de la fonction de courant entre les deux niveaux (Voir figure \ref{orga3057a8}).
 Nous approximerons cette dérivée par une différence finie, de sorte que
 \begin{equation}
 b' = f_0\pdv{\psi}{z} \sim f_0 \qty(\frac{\Delta \psi}{\Delta z}) = \frac{f_0 (\psi_1 - \psi_2)}{H/2}.
@@ -414,12 +380,12 @@ b' = f_0\pdv{\psi}{z} \sim f_0 \qty(\frac{\Delta \psi}{\Delta z}) = \frac{f_0 (\
 \draw[>=stealth, ->|] (b) -- (3.25, 3.25);
 %
 \end{tikzpicture}
-\caption{\label{orge371391}Schéma conceptuel du modèle QG à deux \textbf{niveaux}. Les fonctions de courant et les vorticité potentielles}
+\caption{\label{orga3057a8}Schéma conceptuel du modèle QG à deux \textbf{niveaux}. Les fonctions de courant et les vorticité potentielles}
 \end{wrapfigure}
 
 Les vorticités potentielles des deux niveaux sont ainsi exprimées par
 \begin{subequations}
-\label{eq:org2794643}
+\label{eq:org1355f80}
 \begin{equation}
 q_1 = \zeta_1 + f + \frac{2 f_0^2}{N^2 H_1 H} (\psi_2 - \psi_1);
 \end{equation}
@@ -437,7 +403,7 @@ i \in \qty{1,2}.
 \vspace{2cm}
 
 \subsection{Connection entre les système à \textbf{deux niveaux} celui à \textbf{deux couches}}
-\label{sec:org340630e}
+\label{sec:org520dda6}
 On se doute bien qu'il existe un lien entre les équations à deux couches et les équations à deux niveaux, en effet
 \begin{equation}  
 N^2 = \pdv{\hat{b}}{z}; \hspace{1.5cm} b = \frac{-g\delta \rho}{\rho_0},
@@ -447,7 +413,7 @@ donc si l'on approxime l'écart de densité et d'échelle verticale comme étant
 N^2 = \frac{g}{f_0} \frac{\rho_1 - \rho_2}{H_2} = \frac{g_2'}{H/2}.
 \end{equation}
 
-Par conséquent, les équations \ref{eq:org2794643} deviennent
+Par conséquent, les équations \ref{eq:org1355f80} deviennent
 \begin{align}
 &q_1 = \zeta_1 + f + \frac{f_0^2}{g_2' H_1} (\psi_2 - \psi_1);
 &q_2 = \zeta_2 + f + \frac{f_0^2}{g_2' H_2} (\psi_1 - \psi_2),
@@ -460,7 +426,7 @@ Pour citer \autocite[p.195]{vallis_2006} :
 
 Donc à \(nz\) couches, on peut généraliser \(\Delta z_k = (H_k + H_{k-1})/2\), de sorte que
 \begin{equation}
-\label{eq:org7bf87b9}
+\label{eq:orge5961d9}
 q_k = \zeta_k + f_k + \frac{f_0^2}{g_k' H_k}(\psi_{k-1} - \psi_k) - \frac{f_0^2}{g_{k+1}' H_k}(\psi_k - \psi_{k+1}).
 \end{equation}
 En conclusion, on peut dicrétiser les équations en milieu continu à l'aide de la méthode des différences finies (sinon, ça serait difficile de faire de la numérique), tout en se permettant d'avoir une résolution horizontale de seulement deux couches.
@@ -468,10 +434,10 @@ Le but de cet exercice était prinipalement de se convaincre qu'on peut passer d
 Dans la section suivante, nous développerons l'équation d'évolution de la QGPV linéarisée, mais pour \(L_d \not = \infty\).
 
 \subsection{Description des modes barotrope et baroclines}
-\label{sec:orgd85e79d}
+\label{sec:orgc312dd3}
 Précédemment, nous avons utilisé l'équation d'évolution de la QGPV pour trouver la relation de dispersion des ondes de Rossby, cette équation était donnée par
 \begin{equation}
-\label{eq:orgecc592b}
+\label{eq:org9472d55}
 \pdv{t} \Bigg[ \laplacian \psi' + \frac{1}{\tilde{\rho}(z)}\pdv{z}\qty(\frac{f_0}{N^2}\pdv{\psi'}{z}) \Bigg] + \beta \pdv{\psi'}{x} = 0.
 \end{equation}
 
@@ -480,11 +446,11 @@ Ici, nous allons exactement réaliser l'inverse en posant une solution oscillant
 \begin{equation}
 \psi'(x,,y,z,t) = \Re \tpsi(z) \exp{ i(kx + ky - \omega t)},
 \end{equation}
-dans l'équation \ref{eq:orgecc592b}.\bigskip
+dans l'équation \ref{eq:org9472d55}.\bigskip
 
 On arrive à
 \begin{equation}
-\label{eq:org951a1c5}
+\label{eq:org5687b53}
 \omega\ \Bigg[ - K^2 \cdot \tpsi(z) + \underbrace{\frac{1}{\tilde{\rho}(z)}\pdv{z}\qty(\frac{f_0^2}{N^2} \pdv{z}\tpsi(z))}_{\mathscr{L}\tpsi} \Bigg] + \beta k\cdot \tpsi(z) = 0,
 \end{equation}
 
@@ -495,7 +461,7 @@ Ce dernier satisfait ainsi l'équation aux valeurs propres
 \end{equation}
 
 En milieu continu, l'opérateur \(\mathscr{L}\) produit donc un nombre infini de modes verticaux discrétisés à l'aide des conditions limites \autocite[p.468]{vallis_2006}.
-En revanche, dans un système quasi-géostrophique à plusieurs couches, la QGPV est donnée par l'équation \ref{eq:org7bf87b9}, de sorte que cet opérateur linéaire \(\mathscr{L}\) est dépendant des fonctions de courant \(\psi\) des couches adjacentes,
+En revanche, dans un système quasi-géostrophique à plusieurs couches, la QGPV est donnée par l'équation \ref{eq:orge5961d9}, de sorte que cet opérateur linéaire \(\mathscr{L}\) est dépendant des fonctions de courant \(\psi\) des couches adjacentes,
 \begin{equation}
 \mathscr{L}\tpsi_k = \frac{f_0^2}{g_k' H_k} (\tpsi_{k-1} - \tpsi_k) - \frac{f_0^2}{g_{k+1}'H_k} (\tpsi_k - \tpsi_{k+1}).
 \end{equation}
@@ -540,7 +506,7 @@ On voit que l'opérateur linéaire \(\mathscr{L}\) peut être exprimé sous form
 \]
 
 Les \textbf{vecteurs propres} seront les \textbf{modes baroclines orthogonaux} de notre système à \emph{nk} couches.
-Rappellons que les modes propres peuvent être interprétés d'un côté comme une combinaison de nos fonctions (\(\tpsi_k\)) qui permettent de découpler les équations \ref{eq:org951a1c5}.
+Rappellons que les modes propres peuvent être interprétés d'un côté comme une combinaison de nos fonctions (\(\tpsi_k\)) qui permettent de découpler les équations \ref{eq:org5687b53}.
 De l'autres, ce sont aussi les modes fondamentaux orthogonaux.
 On peut donc créer une combinaison de ces modes pour retrouver n'importe quelle fonction (\(\tpsi_k\)).
 De leur côté, les \textbf{valeurs propres} représenterons les rayons de déformation réels entre chaque couche.\bigskip
@@ -560,21 +526,21 @@ De plus, cette formulation est consistante avec l'architecture du modèle \emph{
 
 
 \section{Annexe}
-\label{sec:org5ad7930}
+\label{sec:orgdd7e470}
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figures/tests/test1_2023-03-31.png}
-\caption{\label{fig:orgc1ef6ce}Diagrames de Hovmoler pour les trois couches, période de 10 ans.}
+\caption{\label{fig:org10f5cb5}Diagrames de Hovmoler pour les trois couches, période de 10 ans.}
 \end{figure}
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figures/tests/test2_2023-03-31.png}
-\caption{\label{fig:orgc1ef6ce}Diagrames de Hovmoler pour les trois couches, période de 10 ans.}
+\caption{\label{fig:org10f5cb5}Diagrames de Hovmoler pour les trois couches, période de 10 ans.}
 \end{figure}
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figures/tests/test3_2023-03-31.png}
-\caption{\label{fig:orgc1ef6ce}Diagrames de Hovmoler pour les trois couches, période de 10 ans.}
+\caption{\label{fig:org10f5cb5}Diagrames de Hovmoler pour les trois couches, période de 10 ans.}
 \end{figure}
 \end{document}

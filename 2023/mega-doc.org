@@ -1,4 +1,5 @@
 #+title: Résumé formel de la recherche
+#+subtitle: Contrat Été 2023
 #+author: Charles-Édouard Lizotte
 #+date:28/11/2023
 #+LANGUAGE: fr
@@ -507,7 +508,7 @@ C'est mentionné explicitement dans la sous-routine du modèle /w3src3md.ftn/, m
 \begin{wrapfigure}[41]{r}{0.45\textwidth}
 \vspace{-5\baselineskip}
 \begin{center}
-\begin{tikzpicture}[scale = 0.9]
+\begin{tikzpicture}[scale = 0.75]
 \draw (-0.5,6.3) node {a)};
 \draw (6.5,0) node {};
 % Big grid

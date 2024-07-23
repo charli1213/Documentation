@@ -1,3 +1,6 @@
+%%% ----- Livres importants ----- %%%
+
+
 @book{vallis_2006,
   author    = {K. Vallis, Goeffrey}, 
   title     = {Atmospheric and Oceanic Fluid Dynamic : Fundamentals and Large-scale Circulation},
@@ -28,10 +31,11 @@ year       = {2006},
 }
 
 
+%%% ----- Articles importants ----- %%%
 
 
-
-% Stress radiatif des vagues 
+% Stress radiatif des vagues
+% Cité par Wadhams (1983)
 @inproceedings{longuet1964radiation,
   title={Radiation stresses in water waves; a physical discussion, with applications},
   author={Longuet-Higgins, Michael S and Stewart, RW},
@@ -40,7 +44,8 @@ year       = {2006},
   number={4},
   pages={529--562},
   year={1964},
-  organization={Elsevier}
+  organization={Elsevier},
+  doi={10.1016/0011-7471(64)90001-4}
 }
 
 
@@ -55,6 +60,49 @@ year       = {2006},
   year={1974}
 }
 
+% Cité par Dany Dumont en 2022.
+% C'est dans cet article qu'on introduit la distribution statistique de l'épaisseur des glaces.
+@article{thorndike1975thickness,
+  title={The thickness distribution of sea ice},
+  author={Thorndike, Alan S and Rothrock, Drew A and Maykut, Gary A and Colony, Roger},
+  journal={Journal of Geophysical Research},
+  volume={80},
+  number={33},
+  pages={4501--4513},
+  year={1975},
+  publisher={Wiley Online Library},
+  doi={10.1029/JC080i033p04501}
+}
+
+% Cité par Wadham (1983). 
+% Citent leur article précédent (1964) sur la force incidente des vagues sur un corps.
+% Ensuite, ils ont testé ça dans un canal.
+% $F_r = \frac{\rho_w}{4}g\qty(a^2 + {a'}^2 - b^2)$
+@article{longuet1977mean,
+  title={The mean forces exerted by waves on floating or submerged bodies with applications to sand bars and wave power machines},
+  author={Longuet-Higgins, Michael Selwyn},
+  journal={Proceedings of the Royal Society of London. A. Mathematical and Physical Sciences},
+  volume={352},
+  number={1671},
+  pages={463--480},
+  year={1977},
+  publisher={The Royal Society London},
+  DOI={10.1098/rspa.1977.0011}
+}
+
+% Cité par Dumont (2022)
+% Ice jumble model
+@article{uzuner1976theoretical,
+  title={Theoretical model of river ice jams},
+  author={Uzuner, Mehmet S. and Kennedy, John F.},
+  journal={Journal of the Hydraulics Division},
+  volume={102},
+  number={9},
+  pages={1365--1383},
+  year={1976},
+  publisher={American Society of Civil Engineers},
+  doi={10.1061/JYCEAJ.0004618}
+}
 
 
 % Cité par Elizabeth Hunke en 1997.
@@ -66,21 +114,31 @@ year       = {2006},
   volume={9},
   number={4},
   pages={815--846},
-  year={1979}
+  year={1979},
+  doi={10.1175/1520-0485(1979)009%3C0815:ADTSIM%3E2.0.CO;2}
 }
 
 
-% Ice jumble model
-@article{uzuner1976theoretical,
-  title={Theoretical model of river ice jams},
-  author={Uzuner, Mehmet S. and Kennedy, John F.},
-  journal={Journal of the Hydraulics Division},
-  volume={102},
-  number={9},
-  pages={1365--1383},
-  year={1976},
-  publisher={American Society of Civil Engineers}
+
+
+% Cité dans la maîtrise d'Eliot
+% Ils ont essayé de créer un framework théorique qui explique la formation de bandes de glace
+% sous l'effet des vagues, dans la mer.
+% Cité par Eliot
+% La présence de glace vient modifier le fetch des vagues.
+@article{wadhams1983mechanism,
+  title={A mechanism for the formation of ice edge bands},
+  author={Wadhams, Peter},
+  journal={Journal of Geophysical Research: Oceans},
+  volume={88},
+  number={C5},
+  pages={2813--2818},
+  year={1983},
+  publisher={Wiley Online Library},
+  DOI={10.1029/JC088iC05p02813}
 }
+
+
 
 
 % Premier article important pour Elizabeth Hunke. 
@@ -92,7 +150,8 @@ year       = {2006},
   number={9},
   pages={1849--1867},
   year={1997},
-  publisher={American Meteorological Society}
+  publisher={American Meteorological Society},
+  doi={10.1175/1520-0485(1997)027%3C1849:AEVPMF%3E2.0.CO;2}
 }
 
 % Ice jumble model 
@@ -104,7 +163,8 @@ year       = {2006},
   number={C7},
   pages={15815--15825},
   year={1999},
-  publisher={Wiley Online Library}
+  publisher={Wiley Online Library},
+  doi={10.1029/1999JC900127}
 }
 
 
@@ -117,10 +177,12 @@ year       = {2006},
   number={1},
   pages={18--38},
   year={2001},
-  publisher={Elsevier}
+  publisher={Elsevier},
+  doi={10.1006/jcph.2001.6710}
 }
 
 
+% Cité dans la présentation de Dany à l'Institut Isaac Newton 
 @article{dai2004wave,
   title={Wave rafting and the equilibrium pancake ice cover thickness},
   author={Dai, Mingrui and Shen, Hayley H. and Hopkins, Mark A. and Ackley, Stephen F.},
@@ -128,6 +190,88 @@ year       = {2006},
   volume={109},
   number={C7},
   year={2004},
-  publisher={Wiley Online Library}
+  publisher={Wiley Online Library},
+  doi={10.1029/2003JC002192}
 }
+
+
+% Article cité par Dumont 2022 :
+% Gnéralisation de la distribution de la taille des floes \pdv{J}{t}
+qui@article{horvat2015prognostic,
+  title={A prognostic model of the sea-ice floe size and thickness distribution},
+  author={Horvat, Christopher and Tziperman, Eli},
+  journal={The Cryosphere},
+  volume={9},
+  number={6},
+  pages={2119--2134},
+  year={2015},
+  publisher={Copernicus GmbH G{\"o}ttingen, Germany},
+  DOI = {10.5194/tc-9-2119-2015}
+}
+
+@article{zhang2015sea,
+  title={Sea ice floe size distribution in the marginal ice zone: T heory and numerical experiments},
+  author={Zhang, Jinlun and Schweiger, Axel and Steele, Michael and Stern, Harry},
+  journal={Journal of Geophysical Research: Oceans},
+  volume={120},
+  number={5},
+  pages={3484--3498},
+  year={2015},
+  publisher={Wiley Online Library},
+  doi={10.1002/2015JC010770}
+}
+
+
+% Article de Dany [x]
+@article{sutherland2018marginal,
+  title={Marginal ice zone thickness and extent due to wave radiation stress},
+  author={Sutherland, Peter and Dumont, Dany},
+  journal={Journal of Physical Oceanography},
+  volume={48},
+  number={8},
+  pages={1885--1901},
+  year={2018},
+  doi={10.1175/JPO-D-17-0167.1}
+}
+
+% Article de Dany [x]
+% Édition 2022 de la Royal Society
+@article{auclair2022model,
+  title={A model study of convergent dynamics in the marginal ice zone},
+  author={Auclair, Jean-Pierre and Dumont, Dany and Lemieux, Jean-Fran{\c{c}}ois and Ritchie, Hal},
+  journal={Philosophical Transactions of the Royal Society A},
+  volume={380},
+  number={20210261},
+  year={2022},
+  publisher={The Royal Society},
+  doi={10.1098/rsta.2021.0261}
+}
+
+
+% Article qui m'a été partagé par Dany :
+% Édition 2022 de la Royal Society
+@article{dumont2022marginal,
+  title={Marginal ice zone dynamics: history, definitions and research perspectives},
+  author={Dumont, Dany},
+  journal={Philosophical Transactions of the Royal Society A},
+  volume={380},
+  number={20210253},
+  year={2022},
+  publisher={The Royal Society},
+  doi={10.1098/rsta.2021.0253}
+}
+
+% Article qui m'a été partagé par Dany :
+% Édition 2022 de la Royal Society
+@article{herman2022granular,
+  title={Granular effects in sea ice rheology in the marginal ice zone},
+  author={Herman, Agnieszka},
+  journal={Philosophical Transactions of the Royal Society A},
+  volume={380},
+  number={20210260},
+  year={2022},
+  publisher={The Royal Society},
+  doi={10.1098/rsta.2021.0260}
+}
+
 

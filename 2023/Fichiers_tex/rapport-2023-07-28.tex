@@ -1,33 +1,23 @@
-% Created 2024-06-16 Sun 00:13
+% Created 2024-07-23 Tue 11:41
 % Intended LaTeX compiler: pdflatex
-ocumentclass[10pt]{article}% =================================BASE====================================%
-\documentclass[10pt]{report}
+\documentclass[10pt]{article}
+% =================================BASE====================================%
 \usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry} % Marges
 \usepackage[T1]{fontenc} % Nécessaire avec FrenchBabel
 \usepackage[utf8]{inputenc} % Important pour symboles Francophones, é,à,etc
 \usepackage{csquotes} % Recommandé par PDFLatex lors de la compilation. 
 
-
-% Calligraphie
-%\usepackage{lmodern} % Ça, ça set latin modern
-%\usepackage{mathrsfs} %Permet la command \mathscr (Lettres attachées genre) \mathscr(B)
-
 % Calligraphie
 %\usepackage{pxfonts} % Met le texte ET les maths en Palatino + donne accès à des symboles math
 \usepackage{palatino} % Cette commande met seulement le texte en police palatino
-\usepackage{lmodern} % Pour les maths?
+\usepackage{lmodern} % Pour les maths? Lmodern pour les maths
 % Use lmodern for sans-serif
 \usepackage{mathrsfs} % Permet la command \mathscr (Lettres attachées genre) \mathscr(B)
 
-
-
-
-
 % Bibliographie
 %\usepackage[backend=bibtex,style=phys,sorting=ynt]{biblatex}
-\usepackage[backend=biber,sorting=ynt,style=ieee]{biblatex}
-\addbibresource{/home/charlesedouard/Desktop/Travail/Documentation/master-bibliography.bib}
-
+\usepackage[backend=biber,sorting=ynt,style=authoryear]{biblatex} % N'est pas utilisé par le compilateur org-mode, mais NÉCESSAIRE. Voir le fichier init.el pour changer le style. 
+\addbibresource{/home/charlesedouard/Desktop/Travail/Documentation/2023/master-bibliography.bib}
 
 
 \usepackage{amsmath, amssymb, amsthm} % Symb. math. (Mathmode+Textmode) + Beaux théorèmes.
@@ -37,58 +27,22 @@
 \usepackage{color} % Permettre l'utilisation des couleurs.
 \usepackage{colortbl} % Color tables
 \usepackage[dvipsnames]{xcolor} % Couleurs avancées.
-\usepackage{titling} % Donne accès à \theauthor, \thetitle, \thedate
 
 % Physique
 \usepackage{physics} % Meilleur package pour physicien. 
 
-
 % Style
 \usepackage{lipsum} % For fun
 \usepackage{tikz} % Realisation de figures TIKZ.
+\usetikzlibrary{arrows.meta,bending} % Arrow heads 
 \usepackage{empheq} % Boite autour de MULTIPLE équations
 \usepackage{bbding}
 
 % Français
 \usepackage[french]{babel} % Environnements en Français.
-% ==============================BASE-(END)=================================%
-
-
-
-% ================================SETTINGS=================================%
-% Pas d'indentation en début de paragraphe :
-\setlength\parindent{0pt}
-\setlength{\parskip}{0.15cm}
-
-% Tableaux/tabular
-% Espace vertical dans les tabular/tableaux
-\renewcommand{\arraystretch}{1.2}
-% Couleur des tableaux/tabular
-\rowcolors{2}{violet!5}{}
-
-% Couleurs de hyperliens :
-\definecolor{mypink}{RGB}{147, 0, 255}
-\hypersetup{colorlinks, 
-             filecolor=mypink,
-             urlcolor=mypink, 
-             citecolor=mypink, 
-             linkcolor=mypink, 
-             anchorcolor=mypink}
-
 
 \usepackage{titling} % Donne accès à \theauthor, \thetitle, \thedate
 
-% Physique
-\usepackage{physics} % Meilleur package pour physicien. 
-
-
-% Style
-\usepackage{lipsum} % For fun
-\usepackage{tikz} % Realisation de figures TIKZ.
-\usepackage{empheq} % Boite autour de MULTIPLE équations
-
-% Français
-\usepackage[french]{babel} % Environnements en Français.
 % ==============================BASE-(END)=================================%
 
 
@@ -104,13 +58,13 @@
 % Espace vertical dans les tabular/tableaux
 \renewcommand{\arraystretch}{1.2}
 % Couleur des tableaux/tabular
-\rowcolors{2}{violet!5}{}
+% \rowcolors{3}{violet!5}{}
 
 % Couleurs de hyperliens :
 \definecolor{mypink}{RGB}{147, 0, 255}
 \hypersetup{colorlinks, 
              filecolor=mypink,
-             urlcolor=mypink, 
+             urlcolor=Violet, 
              citecolor=mypink, 
              linkcolor=mypink, 
              anchorcolor=mypink}
@@ -139,9 +93,12 @@
 
 
 % ==============================NEWCOMMANDS================================%
+% CQFD symbol
+\renewcommand{\qedsymbol}{$\hfill\blacksquare$}
 
 % Vecteurs de base :
 \newcommand{\nvf}{\vb{\hat{n}}}
+\newcommand{\evf}{\vb{\hat{e}}}
 \newcommand{\ivf}{\vb{\hat{i}}}
 \newcommand{\jvf}{\vb{\hat{j}}}
 \newcommand{\kvf}{\vb{\hat{k}}}
@@ -150,8 +107,8 @@
 \newcommand{\ust}{\vb{u}_{\ast}}
 
 % Physics empty spaces 
-\newcommand{\typical}{\vphantom{A}}
-\newcommand{\tall}{\vphantom{A^{x^x}_p}}
+\newcommand{\short}{\vphantom{pA}}
+\newcommand{\tall}{\vphantom{pA^{x^x}_p}}
 \newcommand{\grande}{\vphantom{\frac{1}{xx}}}
 \newcommand{\venti}{\vphantom{\sum_x^x}}
 \newcommand{\pt}{\hspace{1pt}} % One horizontal pt space
@@ -170,6 +127,14 @@
 %\newcommand{\nb}{$\boxed{\text{\footnotesize\EightStarConvex}\pt \mathfrak{N. B.}}$\hspace{4pt}}
 \newcommand{\nb}{\underline{{\footnotesize\EightStarConvex}\pt $\mathfrak{N.B.}$\vphantom{p}}\hspace{3pt}}
 
+\newcommand{\exemple}{
+\parbox[center]{2.2cm}{\begin{tcolorbox}[sharp corners, rounded corners=northeast, rounded corners=southeast,
+colback=Violet!5, colframe=black,
+size=small, width=2cm, left=-0.25pt, bottom=-0.5pt,
+arc is angular, arc=2.5mm, boxrule=0.35pt, leftrule=4pt, %bottomrule=1pt,
+after={\enskip}] Exemple \end{tcolorbox}}}
+
+\newcommand{\cqfd}{\hfill$\blacktriangleleft$}
 
 % Define the nota bene environment
 \usepackage{tcolorbox}
@@ -196,7 +161,7 @@
 \newcommand{\mytitlepage}{
 \begin{titlepage}
 \begin{center}
-{\Huge Contrat Été 2023 \par}
+{\Huge \thesubtitle \par}
 \vspace{2cm}
 {\Huge \MakeUppercase{\thetitle} \par}
 \vspace{2cm}
@@ -233,6 +198,7 @@ Police d'écriture : \textbf{CMU Serif Roman}
 \author{Charles-Édouard Lizotte}
 \date{28/07/2023}
 \title{Carnet de bord, Université McGill}
+\newcommand{\thesubtitle}{Contrat Été 2023}
 \hypersetup{
  pdfauthor={Charles-Édouard Lizotte},
  pdftitle={Carnet de bord, Université McGill},
@@ -248,7 +214,7 @@ Police d'écriture : \textbf{CMU Serif Roman}
 
 
 \section{Mettre à jour portable pour travail à distance  \textit{<2023-07-24 Mon>}}
-\label{sec:org86b2952}
+\label{sec:org516ec73}
 
 De manière générale, j'utilise l'ordinateur de bureau fourni par l'université McGill pour travailler.
 Tout ça me permet d'avoir un meilleurs service sur l'installation des module (\emph{packages}).
@@ -265,7 +231,7 @@ Aujourd'hui est donc une bonne occasion de le faire.
 
 
 \section{Retour sur les conditions frontières \textit{<2023-07-26 Wed>}}
-\label{sec:orge5c65a2}
+\label{sec:org16bb5cf}
 
 \begin{wrapfigure}[20]{r}{0.45\textwidth}
 \vspace{-\baselineskip}
@@ -325,7 +291,7 @@ Aujourd'hui est donc une bonne occasion de le faire.
 \draw (-1.15,-0.5) node [gray,rotate=90] {\tiny$u\pt(0,0)$};
 \end{tikzpicture}
 \end{center}
-\caption{\label{orge219fd0}Exemple de grille avec frontières fixes (nx\pt=\pt ny\pt=\pt4). Pointillé central définit les frontière «\pt réelles\pt» du modèle tandis que tous les points aux alentours sont des points fantômes.}
+\caption{\label{orgf47195f}Exemple de grille avec frontières fixes (nx\pt=\pt ny\pt=\pt4). Pointillé central définit les frontière «\pt réelles\pt» du modèle tandis que tous les points aux alentours sont des points fantômes.}
 \end{wrapfigure}
 
 Au \href{rapport-2023-07-07.org}{dernier rapport}, nous avons posé les bases d'un modèle emboîté par de frontières de conditions \emph{no normal flow} et \emph{free slip}.
@@ -347,7 +313,7 @@ Un bref résumé des sous-routines à modifier en terme de mailles :
 
 
 \subsection{Tailles des quantités}
-\label{sec:orgd0dc480}
+\label{sec:org7f68463}
 Principalement, on peut diviser nos quantités physiques en trois catégories, soient les \textbf{mailles} (\(\rightarrow\)), les \textbf{noeuds} (\(\blacksquare\)) et les \textbf{centres} (\(\bullet\)).
 Chacune des quantités physique devra avoir une taille préférentielle.
 Bien qu'on me l'aille déconseillé, je tiens à quand même « tenir mon bout » pour qu'on change les tailles de domaine un peu partout.
@@ -355,16 +321,16 @@ La raison me motivant est extrêmement simple : nous verrons bien plus facilemen
 On essaie tout ça aujourd'hui, si ça marche pas, on passe définitivement à autre chose.
 
 \subsubsection{Les mailles (\(\rightarrow\))}
-\label{sec:org8ad8803}
+\label{sec:org390065d}
 Les mailles font référence aux vitesses et au \emph{RHS} de ces dernières. 
-Dans la figure \ref{orge219fd0}, ces quantités sont illustrées à l'aide des couleurs bleu et rouge.
+Dans la figure \ref{orgf47195f}, ces quantités sont illustrées à l'aide des couleurs bleu et rouge.
 \begin{verbatim}
   real :: u(0:nx+1,0:ny), v(0:nx,0:ny+1)
 \end{verbatim}
 Ces quantités ont des tailles non-homogènes, car elles n'ont pas les mêmes orientations.
 
 \subsubsection{Les centres (\(\bullet\))}
-\label{sec:org318765d}
+\label{sec:orgf7cebfb}
 Les centre font référence aux quantités physiques qui se retrouvent au milieu des carrés dans une grille Arakawa-C.
 On fait donc référence à la variation de l'interface \(\eta\), à la divergence, etc.
 \begin{verbatim}
@@ -374,7 +340,7 @@ On fait donc référence à la variation de l'interface \(\eta\), à la divergen
 
 
 \subsubsection{Les noeuds (\(\blacksquare\))}
-\label{sec:org503ee51}
+\label{sec:org2213cab}
 Les noeuds font déférence à quantités physiques aux jonctions entre les courants, donc les coins de nos carrés.
 Ces quantités sont généralement reliées à un rotationnel, tel que la fonction de courant \(\psi\), la vorticité \(\zeta\) et la fréquence de Coriolis \(f\).
 \begin{verbatim}
@@ -383,7 +349,7 @@ Ces quantités sont généralement reliées à un rotationnel, tel que la foncti
 \end{verbatim}
 
 \subsection{Mention spéciale pour les boucles (do loop)}
-\label{sec:orgc5817c6}
+\label{sec:org4b22267}
 
 Puisque les conditions frontières \emph{no normal flow} et \emph{free slip} contraignent le système à avoir des courants nuls ou répétitifs, on se permet d'itérer entre \(i=2,\pt nx-1\).
 Par la suite, on applique ces mêmes conditions frontière pour pallier les points qui n'ont pas été itérés.
@@ -398,7 +364,7 @@ C'est nécessaire si l'on veut veut faire nos applications sur tous les courants
 \end{itemize}
 
 \subsection{Expansion en série de Taylor pour le Laplacien}
-\label{sec:org39972b4}
+\label{sec:org59c48a1}
 Précédemment, nous avions développé l'expression de la dérivée seconde pour les murs.
 Nous allons réaliser un petit rappel, car ça «\pt fait un boutte\pt» que je l'ai réalisé.
 Sans oublier que j'ai besoin d'une référence accessible juste ici.\bigskip
@@ -420,10 +386,10 @@ Au final,
 Très simple.
 
 \section{Gros ménage du modèle numérique \textit{<2023-07-28 Fri>}}
-\label{sec:org12d2211}
+\label{sec:orgf88e9ff}
 
 \subsection{Purge des modules et sous-routines FFT dans la branche «\pt walls\pt»}
-\label{sec:org8dbea41}
+\label{sec:org87d1455}
 Étant donné que notre modèle ne fonctionnera uniquement qu'avec la suite MUDPACK, on se permet de purger tout ce qui est relié aux transformées de Fourier.
 Deux raisons motivent cette actions  : 
 \begin{enumerate}
@@ -435,7 +401,7 @@ Au fond, La branche \emph{main} représente le modèle multicouches fonctionnant
 
 
 \subsection{Ménage et nouvelle organisation du GitHub}
-\label{sec:org444b25c}
+\label{sec:org79e5438}
 Enfin, la conjonction de ces deux motifs me donneront une raison de séparer le modèle numérique initial en deux parties, dites \emph{clean}.
 La branche \emph{main} servira pour le modèle \emph{shallow water} multicouche périodique par FFT et la branche \emph{walls} servira pour le modèle avec murs.
 Je vais réaliser beaucoup de travail pour que ces deux versions restent propres et facilement accessibles pour tous les membres du laboratoire qui en aurait besoin \footnote{Comme Xavier, par exemple}.
@@ -445,6 +411,6 @@ Dans les prochaines semaines -- et surtout pour mon plaisir personnel -- la docu
 
 \begin{center}
 \includegraphics[width=.9\linewidth]{figures/github/Screenshot from 2023-07-28 12-06-35.png}
-\label{orgf8bba45}
+\label{org7f8e645}
 \end{center}
 \end{document}
