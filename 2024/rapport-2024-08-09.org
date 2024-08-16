@@ -132,3 +132,6 @@ Dany a amené un argument intéressant :\smallskip
 #+begin_quote
 /C'est jamais du tout ou rien, s'il y a de la glace, ça ne veut pas dire que les vagues peuvent ne pas croître dans une certaine mesure. Justement, dans la maîtrise d'Eliot Bismuth, c'est ce qu'on a tenté de faire. La relation entre la concentration et le couvert de glace ne devrait pas du tout être linéaire./
 #+end_quote
+Donc, on va trouver un moyen de définir un coefficient (ou une matrice) qui prend en compte :
++ La distribution spatiale de nos glaces;
++ La concentration et l'épaisseur de glace.
