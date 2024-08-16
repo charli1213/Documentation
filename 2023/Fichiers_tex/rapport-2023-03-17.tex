@@ -1,4 +1,4 @@
-% Created 2024-07-23 Tue 11:42
+% Created 2024-08-03 Sat 16:23
 % Intended LaTeX compiler: pdflatex
 \documentclass[10pt]{article}
 % =================================BASE====================================%
@@ -9,8 +9,9 @@
 
 % Calligraphie
 %\usepackage{pxfonts} % Met le texte ET les maths en Palatino + donne accès à des symboles math
-\usepackage{palatino} % Cette commande met seulement le texte en police palatino
+%\usepackage{palatino} % Cette commande met seulement le texte en police palatino
 \usepackage{lmodern} % Pour les maths? Lmodern pour les maths
+\usepackage{cfr-lm}
 % Use lmodern for sans-serif
 \usepackage{mathrsfs} % Permet la command \mathscr (Lettres attachées genre) \mathscr(B)
 
@@ -64,7 +65,7 @@
 \definecolor{mypink}{RGB}{147, 0, 255}
 \hypersetup{colorlinks, 
              filecolor=mypink,
-             urlcolor=Violet, 
+             urlcolor=mypink, 
              citecolor=mypink, 
              linkcolor=mypink, 
              anchorcolor=mypink}
@@ -129,10 +130,13 @@
 
 \newcommand{\exemple}{
 \parbox[center]{2.2cm}{\begin{tcolorbox}[sharp corners, rounded corners=northeast, rounded corners=southeast,
-colback=Violet!5, colframe=black,
+colback=Violet!2, colframe=black,
 size=small, width=2cm, left=-0.25pt, bottom=-0.5pt,
 arc is angular, arc=2.5mm, boxrule=0.35pt, leftrule=4pt, %bottomrule=1pt,
 after={\enskip}] Exemple \end{tcolorbox}}}
+
+\newcommand{\rad}{\text{Rad}}
+
 
 \newcommand{\cqfd}{\hfill$\blacktriangleleft$}
 
@@ -204,17 +208,16 @@ Police d'écriture : \textbf{CMU Serif Roman}
  pdftitle={Rapport hebdomadaire -- McGill},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 27.1 (Org mode 9.6.7)}, 
+ pdfcreator={Emacs 29.4 (Org mode 9.7.8)}, 
  pdflang={French}}
 \begin{document}
 
 \mytitlepage
 \tableofcontents\newpage
-
 \section{Le modèle est en état de fonctionner [2/2]}
-\label{sec:org484b2e7}
+\label{sec:org7d6a018}
 \subsection{Mise en contexte}
-\label{sec:org1c2f64a}
+\label{sec:org89c8df5}
 Avant de débuter les changements au modèle \emph{shallow water}, assurons nous 
 \begin{enumerate}
 \item qu'il est compilable;
@@ -222,28 +225,26 @@ Avant de débuter les changements au modèle \emph{shallow water}, assurons nous
 \end{enumerate}
 Au cours de ma maîtrise, quelques petits problèmes conceptuels et techniques s'étaient déjà accumulés au fil du code.
 Nous allons donc régler ces problèmes-là et s'assurer que tout marche, avant tout. 
-
 \subsection{{\bfseries\sffamily DONE} Régler le problème des \emph{oldfile}}
-\label{sec:orga859928}
+\label{sec:orgb974324}
 Comme on avait couplé le modèle \emph{shallow water} avec Wavewatch III dans le passé, les \emph{restart files} devaient avoir une forme légèrement différente que dans la version de Tianze.
 Principalement, il fallait ajouter la dérive de Stokes du dernier pas de temps \textbf{à l'intérieur du restart file}.
 À l'époque, la solution que j'avais trouvé était de rajouter une \emph{switch} nommée \textbf{oldfile} dans le fichier de paramètres, \emph{parameter.f90}.
 Ceci avait comme problématique la coexistence de deux types de \emph{restart files} un peu partout. 
 Ça augmentait malheureusement le risque d'erreurs à chaque fois qu'on relançait des expériences, mais ça m'évitait de devoir relancer mes plus longues expériences -- qui contenaient souvent des résultats importants.
 C'était une solution temporaire qui s'est malheureusement éternisée jusqu'à la fin de la maîtrise. 
-\textbf{Je me met une note} qu'on devrait toujours avoir les mêmes type de \emph{restart files} pour éviter d'avoir \textbf{beaucoup trop} de \emph{switches}.\\[0pt]
+\textbf{Je me met une note} qu'on devrait toujours avoir les mêmes type de \emph{restart files} pour éviter d'avoir \textbf{beaucoup trop} de \emph{switches}.\\
 
 Comme solution, couplé ou non, les \emph{restart files} vont maintenant contenir la dérive de Stokes et le dernier \(\tau\) à la surface de l'eau.
 Et puis, la \emph{switch} \textbf{oldfile} a tout simplement été retirée, maintenant qu'on a supprimé ces vieilles données-là.
-
 \subsection{{\bfseries\sffamily DONE} Régler le bordel des \emph{compile model} et recompiler efficacement}
-\label{sec:orgabb3adf}
+\label{sec:orgf6e103b}
 Un lecteur avisé de mon mémoire aurait remarqué la présence de 3 modèles différents.
 Le tout avec de nombreux fichiers de paramètres associés à chacun.
 C'est pourquoi, lors de ma maîtrise, j'ai du codé plusieurs compilateurs avec plusieurs dossiers et plusieurs listes différentes de paramètres.
 Avec le temps, le nombre de compilateurs a grandit de manière exponentielle dans mes dossiers, il a donc fallu faire un gros ménage juste pour faire  fonctionner le modèle \emph{shallow water} sur mon portable.
 Comme  les différentes librairies Fortran ne sont pas les même sur mon ordinateur, il a fallut reconstruire un compilateur.
-Mais ça fonctionne maintenant à la perfection!\\[0pt]
+Mais ça fonctionne maintenant à la perfection!\\
 
 
 Par précision, il a fallu installer les librairies à l'aide des commandes
@@ -259,7 +260,7 @@ ce qui nous permet d'ajouter
 fftw_path=/usr/share/doc/libfftw3-bin/
 \end{verbatim}
 à motre \emph{makefile} (\emph{compile model} dans notre cas). 
-Pour l'instant, la compilation fonctionne; j'ai lancé un test pour la nuit ce \textit{<2023-03-14 Tue>}.\\[0pt]
+Pour l'instant, la compilation fonctionne; j'ai lancé un test pour la nuit ce \textit{<2023-03-14 Tue>}.\\
 
 \textbf{Pour que le modèle roule bien}, mentionnons qu'il a besoin de certains dossiers et fichiers, soit 
 \begin{itemize}
@@ -268,27 +269,22 @@ Pour l'instant, la compilation fonctionne; j'ai lancé un test pour la nuit ce \
 \item un dossier \emph{rst} vide pour les \emph{restart files}.
 \end{itemize}
 J'ai donc créé un fichier vide prêt à partir.
-
-
-
-
-
 \section{Modifications à apporter au modèle \emph{shallow water} cette semaine [1/1]}
-\label{sec:org3a85299}
+\label{sec:org104ccb4}
 \subsection{{\bfseries\sffamily DONE} Retirer la \emph{slab layer}}
-\label{sec:org8ecfb1a}
+\label{sec:org87283a5}
 Comme on veut un modèle à plusieurs couches, la \emph{slab layer} ne sert plus vraiment à rien.
 Aussi, comme on veut nettoyer le code, retirer la \emph{slab layer} est probablement la première chose à faire. 
-Déjà, Ça va nous débarrasser de quelques sous-routines superflues et beaucoup de variables maintenant inutiles.\\[0pt]
+Déjà, Ça va nous débarrasser de quelques sous-routines superflues et beaucoup de variables maintenant inutiles.\\
 
 J'ai ajouté la quantité \textbf{UStokes} et \textbf{VStokes} dans les sous-routines \emph{p corrections.f90} et \emph{rhs.f90} (avec un top(k)), de sorte que ça apparaisse dans le \emph{RHS} de la conservation de la masse et pour le gradient de pression à la surface. 
 Bref, cette quantité couplée a simplement remplacé \emph{Uek} et \emph{Vek} dans les deux même sous-routines.
-\textbf{UStokes} et \textbf{VStokes} sont définis comme nulles dans la sous-routine \emph{initialize.f90} et ne sont pas mises à jour sans l'activation de \emph{switch} (COU .eq. .true.), qui permet le couplage avec le modèle de vagues.\\[0pt]
+\textbf{UStokes} et \textbf{VStokes} sont définis comme nulles dans la sous-routine \emph{initialize.f90} et ne sont pas mises à jour sans l'activation de \emph{switch} (COU .eq. .true.), qui permet le couplage avec le modèle de vagues.\\
 
 J'ai aussi profité de cette occasion pour alléger les lignes de codes liées au \(\tau_o\) à la surface. 
 Avant, j'avais deux \emph{switches} pour choisir si le transfert de momentum de l'atmosphère devait être sur la première couche, la couche d'Ekman ou couplée avec Wavewatch III.
 Bref, c'était un bordel et j'en ai profité pour faire un un gros ménage dans tous ces \emph{switches} là.
-Ça pourrait expliquer pourquoi tout ça me prend un peu plus de temps que prévu, disons\ldots{}\\[0pt]
+Ça pourrait expliquer pourquoi tout ça me prend un peu plus de temps que prévu, disons\ldots{}\\
 
 Finalement, toutes les sous-routines \emph{dump etc.f90} -- que Tianze avait rajoutées -- ont pris beaucoup de temps à réorganiser.
 Dans chacune d'elles, il y avait un \emph{Uek} qui était couplé avec d'autres quantités qui servaient de diagnostique, etc.
@@ -298,7 +294,7 @@ Maintenant, ce sera \emph{u\textsubscript{1}}, \emph{u\textsubscript{2}}, \emph{
 De cette manière, ma fonction Python (\textbf{readata.py}) qui ouvre les \emph{output} du modèle \emph{shallow water} pour les transformer en fichier \textbf{NetCDF} va seulement ouvrir des fichiers de même taille.
 C'est quelque chose que je n'avais pas entrepris pendant ma maîtrise, car je n'ai simplement pas eu le temps pendant ma rédaction.
 Je suis bien heureux que ça soit enfin fait.
-Essentiellement, le modèle commence à être bien plus \emph{clean}, pour reprendre les mots de David.\\[0pt]
+Essentiellement, le modèle commence à être bien plus \emph{clean}, pour reprendre les mots de David.\\
 
 Toujours vers la fin de la semaine, le modèle semble encore \emph{exploser}, comme la fameuse ligne \emph{thickness too small} aime si bien nous le rappeler. 
 Ce vendredi, j'ai investigué et il semble que ce soit parce que le transfert de momentum depuis l'atmosphère est définit comme 
@@ -314,28 +310,28 @@ Pour information, on lance la même expérience que (Chen et al, 2021), mais ave
 \begin{tabular}{lll}
 \hline
 \hline
-Paramètres & Symbole & Valeur\\[0pt]
+Paramètres & Symbole & Valeur\\
 \hline
-Taille du domaine & L\textsubscript{x} = L\textsubscript{y} & 2000 km\\[0pt]
-Pas de temps & \(\Delta\) t & 300 s\\[0pt]
-Paramètre de Coriolis & f & 7\texttimes{}10\textsuperscript{-5} s\textsuperscript{-1}\\[0pt]
-Amplitude du vent & \(\tau\)\textsubscript{atm} & 0.1 N m\textsuperscript{-2}\\[0pt]
-Coefficient de viscosité biharmonique & A\textsubscript{bh} & dx\textsuperscript{4} \texttimes{}10\textsuperscript{-5} s\textsuperscript{-1}\\[0pt]
-Coefficient de frottement au fond & r\textsubscript{drag} & 10\textsuperscript{-7} s\textsuperscript{-1}\\[0pt]
-Coefficient dissipation du Laplacien inverse & r\textsubscript{InvLap} & (2\(\pi\)/L\textsubscript{y})\textsuperscript{2} \texttimes{} 10\textsuperscript{-6} s\textsuperscript{-1}\\[0pt]
-Épaisseur de la couche supérieure & H\textsubscript{1} & 1000 m\\[0pt]
-Épaisseur de la couche de fond & H\textsubscript{2} & 3000 m\\[0pt]
-Vitesse des ondes internes de gravité & c\textsubscript{bc} & 2 ms\textsuperscript{-1}\\[0pt]
-\emph{Switch} d'activation d'Ekman & \(\delta\)\textsubscript{BF} & 1\\[0pt]
+Taille du domaine & L\textsubscript{x} = L\textsubscript{y} & 2000 km\\
+Pas de temps & \(\Delta\) t & 300 s\\
+Paramètre de Coriolis & f & 7\texttimes{}10\textsuperscript{-5} s\textsuperscript{-1}\\
+Amplitude du vent & \(\tau\)\textsubscript{atm} & 0.1 N m\textsuperscript{-2}\\
+Coefficient de viscosité biharmonique & A\textsubscript{bh} & dx\textsuperscript{4} \texttimes{}10\textsuperscript{-5} s\textsuperscript{-1}\\
+Coefficient de frottement au fond & r\textsubscript{drag} & 10\textsuperscript{-7} s\textsuperscript{-1}\\
+Coefficient dissipation du Laplacien inverse & r\textsubscript{InvLap} & (2\(\pi\)/L\textsubscript{y})\textsuperscript{2} \texttimes{} 10\textsuperscript{-6} s\textsuperscript{-1}\\
+Épaisseur de la couche supérieure & H\textsubscript{1} & 1000 m\\
+Épaisseur de la couche de fond & H\textsubscript{2} & 3000 m\\
+Vitesse des ondes internes de gravité & c\textsubscript{bc} & 2 ms\textsuperscript{-1}\\
+\emph{Switch} d'activation d'Ekman & \(\delta\)\textsubscript{BF} & 1\\
 \hline
 \end{tabular}
 \end{table}
 
-Le test lancé pendant la fin de semaine devrait nous encourager (Voir figure \ref{fig:orga229b05}).
+Le test lancé pendant la fin de semaine devrait nous encourager (Voir figure \ref{fig:org769c48b}).
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figures/tests/test_SW_2023-03-18.png}
-\caption{\label{fig:orga229b05}Résultat du test de qualité du modèle. En ordre, diagramme de Hovmoller de la divergence, du rotationnel et du courant dans la première couche.}
+\caption{\label{fig:org769c48b}Résultat du test de qualité du modèle. En ordre, diagramme de Hovmoller de la divergence, du rotationnel et du courant dans la première couche.}
 \end{figure}
 \end{document}

@@ -1,4 +1,4 @@
-% Created 2024-07-23 Tue 11:41
+% Created 2024-08-03 Sat 16:24
 % Intended LaTeX compiler: pdflatex
 \documentclass[10pt]{article}
 % =================================BASE====================================%
@@ -9,15 +9,16 @@
 
 % Calligraphie
 %\usepackage{pxfonts} % Met le texte ET les maths en Palatino + donne accès à des symboles math
-\usepackage{palatino} % Cette commande met seulement le texte en police palatino
+%\usepackage{palatino} % Cette commande met seulement le texte en police palatino
 \usepackage{lmodern} % Pour les maths? Lmodern pour les maths
+\usepackage{cfr-lm}
 % Use lmodern for sans-serif
 \usepackage{mathrsfs} % Permet la command \mathscr (Lettres attachées genre) \mathscr(B)
 
 % Bibliographie
 %\usepackage[backend=bibtex,style=phys,sorting=ynt]{biblatex}
 \usepackage[backend=biber,sorting=ynt,style=authoryear]{biblatex} % N'est pas utilisé par le compilateur org-mode, mais NÉCESSAIRE. Voir le fichier init.el pour changer le style. 
-\addbibresource{/home/charlesedouard/Desktop/Travail/Documentation/2023/master-bibliography.bib}
+\addbibresource{master-bibliography.bib}
 
 
 \usepackage{amsmath, amssymb, amsthm} % Symb. math. (Mathmode+Textmode) + Beaux théorèmes.
@@ -64,7 +65,7 @@
 \definecolor{mypink}{RGB}{147, 0, 255}
 \hypersetup{colorlinks, 
              filecolor=mypink,
-             urlcolor=Violet, 
+             urlcolor=mypink, 
              citecolor=mypink, 
              linkcolor=mypink, 
              anchorcolor=mypink}
@@ -129,10 +130,13 @@
 
 \newcommand{\exemple}{
 \parbox[center]{2.2cm}{\begin{tcolorbox}[sharp corners, rounded corners=northeast, rounded corners=southeast,
-colback=Violet!5, colframe=black,
+colback=Violet!2, colframe=black,
 size=small, width=2cm, left=-0.25pt, bottom=-0.5pt,
 arc is angular, arc=2.5mm, boxrule=0.35pt, leftrule=4pt, %bottomrule=1pt,
 after={\enskip}] Exemple \end{tcolorbox}}}
+
+\newcommand{\rad}{\text{Rad}}
+
 
 \newcommand{\cqfd}{\hfill$\blacktriangleleft$}
 
@@ -204,18 +208,16 @@ Police d'écriture : \textbf{CMU Serif Roman}
  pdftitle={Rapport hebdomadaire -- McGill},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 27.1 (Org mode 9.6.7)}, 
+ pdfcreator={Emacs 29.4 (Org mode 9.7.8)}, 
  pdflang={French}}
 \begin{document}
 
 \mytitlepage
 \tableofcontents\newpage
-
-
 \section{{\bfseries\sffamily DONE} Débugger le modèle \emph{shallow water} à 2 et 3 couches [1/1]}
-\label{sec:org4a876ea}
+\label{sec:org643444a}
 \subsection{Workflow}
-\label{sec:orgdfe19e8}
+\label{sec:org91e4734}
 Commençons par relancer le modèle pour 5 ans à seulement deux couches.
 De la manière que j'ai tout recodé, il ne suffit qu'à redéfinir le nombre de couches \emph{nz} à 2 et \emph{H2} à 3000 mètres.
 Les gravités réduites ont été formulées de sorte à retrouver la même vitesse pour les ondes barocliniques \(c_{bc}\).
@@ -229,9 +231,8 @@ Donc il est assez simple d'imposer un différentiel de \(\rho\) entre les couche
 En gros, la \emph{thickness} était calculée entre deux pas de temps différents.
 Faudrait en glisser un mot à Tianze sur son \emph{git}.
 C'est fait, mais David m'a mentionné que Tianze ne risque malheureusement pas de répondre.
-
 \subsection{{\bfseries\sffamily DONE} Rencontre avec David}
-\label{sec:orgccdb9bb}
+\label{sec:org30812bf}
 J'ai rencontré david pour lui parler du problème, j'ai quelques indices personnels qui pourraient expliquer la convergence dans la zonne anti-cyclonique. 
 Selon lui, c'est normal en \emph{shallow water} ce genre de truc.
 Comme j'avais remarqué, en \emph{SW}, il y a une \emph{feedback loop} entre l'épaisseur de la couche supérieure et la valeur du forçage.
@@ -243,56 +244,54 @@ Comme j'avais remarqué, en \emph{SW}, il y a une \emph{feedback loop} entre l'�
 \end{equation}
 
 Aussi, faut pas oublier que la vorticité et le courant se font advecter.
-C'est probablemet de l'auto-advection et je capotais probablement pour rien, ça reste à voir ça.\\[0pt]
+C'est probablemet de l'auto-advection et je capotais probablement pour rien, ça reste à voir ça.\\
 
 En gros, David a remarqué que j'avais initialement du bruit dans mes premières simulations mais pas dans les simulations subséquentes à 2 et trois couches.
 Personnellement, je ne croyais pas que c'était un enjeu, considérant qu'il y a souvent du bruit numérique et que les instabilités barocliniques finissent toujours par arriver de toute manière.
 Bref, David m'a convaincu du contraire : ça prend beaucoup de temps pour que ces instabilités finissent par émerger.
 J'ai donc reparti les simulations numériques avec le même bruit qu'avant (de l'ordre de \(\mathcal{O}(0.1)\)).
 Les résultats étaient identiques, j'en déduis donc qu'il faut absolument \textbf{toujours} un peu de bruits.
-
 \subsection{Test à trois couches}
-\label{sec:org417ff39}
+\label{sec:org4414735}
 Comme David l'a conseillé, on peut fait un simple test où les trois couches ont la même épaisseur et le même \(\Delta \rho_{k,k-1}\).
 Ainsi les rayons de déformation sont données par des multiples du rayon de déformation du premier mode.
 Les paramètres de l'expérience sont affichés dans le tableau suivant.
 Les diagrammes de Hovmoler et les snapshot sont affichés en annexe de ce rapport.
 
 \begin{table}[htbp]
-\caption{\label{tab:org3b16ce0}Valeur des différents paramètres de l'expérience de \notecite{chen_2021}, mais à 3 couches.}
+\caption{\label{tab:orgb788b2c}Valeur des différents paramètres de l'expérience de \notecite{chen_2021}, mais à 3 couches.}
 \centering
 \begin{tabular}{lll}
 \hline
 \hline
-Paramètres & Symbole & Valeur\\[0pt]
+Paramètres & Symbole & Valeur\\
 \hline
-Taille du domaine & L\textsubscript{x} = L\textsubscript{y} & 2000 km\\[0pt]
-Pas de temps & \(\Delta\) t & 360 s\\[0pt]
-Paramètre de Coriolis & f & 7\texttimes{}10\textsuperscript{-5} s\textsuperscript{-1}\\[0pt]
-Amplitude du vent & \(\tau\)\textsubscript{atm} & 0.1 N m\textsuperscript{-2}\\[0pt]
-Coefficient de viscosité biharmonique & A\textsubscript{bh} & dx\textsuperscript{4} \texttimes{}10\textsuperscript{-5} s\textsuperscript{-1}\\[0pt]
-Coefficient de frottement au fond & r\textsubscript{drag} & 10\textsuperscript{-7} s\textsuperscript{-1}\\[0pt]
-Coefficient dissipation du Laplacien inverse & r\textsubscript{InvLap} & (2\(\pi\)/L\textsubscript{y})\textsuperscript{2} \texttimes{} 10\textsuperscript{-6} s\textsuperscript{-1}\\[0pt]
-Épaisseur de la couche en surface & H\textsubscript{1} & 1000 m\\[0pt]
-Épaisseur de la seconde couche & H\textsubscript{2} & 1000 m\\[0pt]
-Épaisseur de la couche au fond & H\textsubscript{3} & 1000 m\\[0pt]
-Densité de l'eau (première couche) & \(\rho\)\textsubscript{1} & 1.0000 kg/m\textsuperscript{3}\\[0pt]
-Différence de densité entre les couches & \(\Delta \rho\) & \(\frac{\rho_1c_{bc}^2}{g}\qty(\frac{H_1+H_2}{H_1H_2})\)\\[0pt]
-Vitesse des ondes internes (semi-obsolète) & c\textsubscript{bc} & 2 ms\textsuperscript{-1}\\[0pt]
-Gravité réduite (seconde couche) & g\textsubscript{2}' & 8 \texttimes{} 10\textsuperscript{-2} m/s\textsuperscript{2}\\[0pt]
-Gravité réduite (troisième couche) & g\textsubscript{3}' & 6 \texttimes{} 10\textsuperscript{-3} m/s\textsuperscript{2}\\[0pt]
+Taille du domaine & L\textsubscript{x} = L\textsubscript{y} & 2000 km\\
+Pas de temps & \(\Delta\) t & 360 s\\
+Paramètre de Coriolis & f & 7\texttimes{}10\textsuperscript{-5} s\textsuperscript{-1}\\
+Amplitude du vent & \(\tau\)\textsubscript{atm} & 0.1 N m\textsuperscript{-2}\\
+Coefficient de viscosité biharmonique & A\textsubscript{bh} & dx\textsuperscript{4} \texttimes{}10\textsuperscript{-5} s\textsuperscript{-1}\\
+Coefficient de frottement au fond & r\textsubscript{drag} & 10\textsuperscript{-7} s\textsuperscript{-1}\\
+Coefficient dissipation du Laplacien inverse & r\textsubscript{InvLap} & (2\(\pi\)/L\textsubscript{y})\textsuperscript{2} \texttimes{} 10\textsuperscript{-6} s\textsuperscript{-1}\\
+Épaisseur de la couche en surface & H\textsubscript{1} & 1000 m\\
+Épaisseur de la seconde couche & H\textsubscript{2} & 1000 m\\
+Épaisseur de la couche au fond & H\textsubscript{3} & 1000 m\\
+Densité de l'eau (première couche) & \(\rho\)\textsubscript{1} & 1.0000 kg/m\textsuperscript{3}\\
+Différence de densité entre les couches & \(\Delta \rho\) & \(\frac{\rho_1c_{bc}^2}{g}\qty(\frac{H_1+H_2}{H_1H_2})\)\\
+Vitesse des ondes internes (semi-obsolète) & c\textsubscript{bc} & 2 ms\textsuperscript{-1}\\
+Gravité réduite (seconde couche) & g\textsubscript{2}' & 8 \texttimes{} 10\textsuperscript{-2} m/s\textsuperscript{2}\\
+Gravité réduite (troisième couche) & g\textsubscript{3}' & 6 \texttimes{} 10\textsuperscript{-3} m/s\textsuperscript{2}\\
 \hline
 \hline
 \end{tabular}
 \end{table}
-
 \section{{\bfseries\sffamily DONE} Installer et gérer le compte Oxygen fournit pas McGill}
-\label{sec:org13c97e1}
+\label{sec:org239ea2b}
 L'administration m'a crée un compte, il faudrait vérifier tout ça.
 
 This is done using a ssh client (present on mac, linux and windows by default), please ssh to your assigned computer. Your computer name is the name on the sticker on the computer tower. (jet)
 On m'a créé un compte AOS (\emph{Atmospheric and Oceanic Sciences}), donc à partir de maintenant, je peux me connecter partout, tant que je suis sur le réseau de l'université McGill.
-Le VPN ne marchera pas tant que les problèmes bureaucratiques ne seront pas réglé.\\[0pt]
+Le VPN ne marchera pas tant que les problèmes bureaucratiques ne seront pas réglé.\\
 
 Essentiellement, mon nom d'utilisateur est \emph{celizotte}, je peux me connecter au service \emph{Jump} en \emph{bash} à l'aide de la commande
 \begin{verbatim}
@@ -308,28 +307,27 @@ On m'a aussi fourni un ordinateur dénommé \emph{Jet}. Pour se connecter à Jet
 ssh jet
 \end{verbatim}
 une fois connecté sur Jump. Il faudrait d'ailleurs que je demande à David où est l'ordinateur\ldots{} parce que je confirme qu'il n'est pas dans mon bureau.
-
 \section{{\bfseries\sffamily DONE} Coder les mode barotropes et baroclines [3/3]}
-\label{sec:org1f13b32}
+\label{sec:org6c090ae}
 \subsection{Rappel théorique : cas analytique du test à trois couches}
-\label{sec:org5542d8d}
+\label{sec:org76b0ba5}
 Étudions un cas facile pour se permettre de tester notre modèle numérique.
-Assumons trois couches homogènes de 1000 mètres d'épaisseurs avec un différentiel de densité constant (Voir tableau \ref{tab:orgfcd4a9f}).
+Assumons trois couches homogènes de 1000 mètres d'épaisseurs avec un différentiel de densité constant (Voir tableau \ref{tab:org41fdd96}).
 
 \begin{table}[htbp]
-\caption{\label{tab:orgfcd4a9f}Tableau regroupant les paramètres de notre cas trivial.}
+\caption{\label{tab:org41fdd96}Tableau regroupant les paramètres de notre cas trivial.}
 \centering
 \begin{tabular}{lll}
 \hline
 \hline
-Paramètre & Variable & Valeur\\[0pt]
+Paramètre & Variable & Valeur\\
 \hline
-Épaisseur 1ère couche & H\textsubscript{1} & H\textsubscript{tot}/3 = H\\[0pt]
-Épaisseur 2ème couche & H\textsubscript{2} & H\textsubscript{tot}/3 = H\\[0pt]
-Épaisseur 3ème couche & H\textsubscript{3} & H\textsubscript{tot}/3 = H\\[0pt]
-Densité première couche & \(\rho\)\textsubscript{1} & \(\rho\)\textsubscript{1}\\[0pt]
-Densité secondec couche & \(\rho\)\textsubscript{2} & \(\rho\)\textsubscript{1} + \(\Delta\) \(\rho\)\\[0pt]
-Densité troisième couche & \(\rho\)\textsubscript{3} & \(\rho\)\textsubscript{1} + 2 \(\Delta\) \(\rho\)\\[0pt]
+Épaisseur 1ère couche & H\textsubscript{1} & H\textsubscript{tot}/3 = H\\
+Épaisseur 2ème couche & H\textsubscript{2} & H\textsubscript{tot}/3 = H\\
+Épaisseur 3ème couche & H\textsubscript{3} & H\textsubscript{tot}/3 = H\\
+Densité première couche & \(\rho\)\textsubscript{1} & \(\rho\)\textsubscript{1}\\
+Densité secondec couche & \(\rho\)\textsubscript{2} & \(\rho\)\textsubscript{1} + \(\Delta\) \(\rho\)\\
+Densité troisième couche & \(\rho\)\textsubscript{3} & \(\rho\)\textsubscript{1} + 2 \(\Delta\) \(\rho\)\\
 \hline
 \hline
 \end{tabular}
@@ -340,9 +338,9 @@ Rappellons que la surface fixe et le fond plat ajoutent des contraintes sur les 
 
 \[
 \mathcal{L}-\Lambda=\begin{pmatrix}
- F_{(1,2)} -\lambda_i & -F_{(1,2)} & 0 \\[0pt]
- -F_{(2,2)} & F_{(2,3)} + F_{(2,2)} - \lambda_i & -F_{(2,3)} \\[0pt]
- 0 & -F_{(3,3)} & F_{(3,3)} -\lambda_i \\[0pt]
+ F_{(1,2)} -\lambda_i & -F_{(1,2)} & 0 \\
+ -F_{(2,2)} & F_{(2,3)} + F_{(2,2)} - \lambda_i & -F_{(2,3)} \\
+ 0 & -F_{(3,3)} & F_{(3,3)} -\lambda_i \\
 \end{pmatrix}
 \]
 
@@ -354,11 +352,11 @@ F_{(i,j)} = \mathrm{F}\hspace{0.5cm} \forall\hspace{0.5cm} (i,j) : i,j \in \qty{
 
 On résoud le problème aux valeurs propres en trouvant le déterminant de cette matrice,
 \begin{equation}
-\label{eq:orgccb00b0}
+\label{eq:org2d549a4}
 0 = (F-\lambda_i)\qty[(2F - \lambda_i)(F-\lambda_i) - F^2] - F^2(F-\lambda_i).
 \end{equation}
 
-L'équation \ref{eq:orgccb00b0} se factorise, on retrouve donc
+L'équation \ref{eq:org2d549a4} se factorise, on retrouve donc
 \begin{align}
 &0 = (F-\lambda_i)\qty[(2F - \lambda_i)(F-\lambda_i) - 2F^2],\nonumber\\
 &0 = (F-\lambda_i)\qty[(\lambda^2_i + 2F^2 - 3 F \lambda_i) - 2F^2],\nonumber\\
@@ -370,9 +368,8 @@ Pour finir, nos valeurs propres sont données par
 \hspace{0.8cm} \lambda_2 = \frac{f_0^2}{g' H}, 
 \hspace{0.8cm} \lambda_3 = \frac{3 f_0^2}{g'H}. \hspace{0.4cm}}   
 \end{align}
-
 \subsection{{\bfseries\sffamily DONE} Installer LAPACK}
-\label{sec:orgba9c52a}
+\label{sec:orga2b46bb}
 Une fois internet revenu chez moi (grosse tempête de verglas), j'ai pu installer LAPACK,
 \begin{verbatim}
 sudo apt-get install libblas-dev liblapack-dev
@@ -389,34 +386,27 @@ et de linker notre application Fortran avec
 \begin{verbatim}
 -lblas -L$lapack_path -llapack
 \end{verbatim}
-
 \subsection{{\bfseries\sffamily DONE} Implémenter l'algorithme pour trouver les valeurs propres}
-\label{sec:org91aeb42}
+\label{sec:org76e4ecf}
 Consiste concrétement à recopier la matrice de l'opérateur linéaire du modèle QG de Louis-Philippe.
 Il fallait juste faire très attention, parce qu'on définissait les gprime au plafond des couches et non au plancher.
 Les fonctions \emph{F(i,j)} n'étaient donc pas les mêmes.
 Une foit la matrice \emph{A} créée, on mettait tout ça dans la fonction SEEVG et le tour est joué.
-
 \subsection{{\bfseries\sffamily DONE} Calculer les vorticités quasi-géostrophiques baroclines et barotropes}
-\label{sec:org600dc61}
+\label{sec:org107ef53}
 À partir des fonctions de courant baroclines \(\psi_{BC}\), il est possible de retrouver des vorticité quasi-géostrophiques à l'aide de l'équation
 \begin{equation}
 q_{BT}^i = \laplacian \psi_{BT}^i + \Gamma^i \psi_{BT}^i,
 \end{equation}
 cité dans le code de Louis-Philippe.
 Il faudrait donc implémenter ça, mais pour l'instant c'est en \emph{stand by} parce que les deux ont confirmé que ce n'était pas tant nécessaire.
-
-
-
-
-
 \section{Annexe}
-\label{sec:org16a3388}
+\label{sec:org8e736f0}
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figures/tests/2023-04-08_test1.png}
-\caption{\label{fig:org1cfb6ae}Résultats du test à trois couches (Première couches)}
+\caption{\label{fig:org0cc1d60}Résultats du test à trois couches (Première couches)}
 \end{figure}
 
 \begin{figure}[htbp]

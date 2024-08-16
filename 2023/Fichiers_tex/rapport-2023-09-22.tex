@@ -1,4 +1,4 @@
-% Created 2024-07-23 Tue 11:42
+% Created 2024-08-03 Sat 16:24
 % Intended LaTeX compiler: pdflatex
 \documentclass[10pt]{article}
 % =================================BASE====================================%
@@ -9,15 +9,16 @@
 
 % Calligraphie
 %\usepackage{pxfonts} % Met le texte ET les maths en Palatino + donne accès à des symboles math
-\usepackage{palatino} % Cette commande met seulement le texte en police palatino
+%\usepackage{palatino} % Cette commande met seulement le texte en police palatino
 \usepackage{lmodern} % Pour les maths? Lmodern pour les maths
+\usepackage{cfr-lm}
 % Use lmodern for sans-serif
 \usepackage{mathrsfs} % Permet la command \mathscr (Lettres attachées genre) \mathscr(B)
 
 % Bibliographie
 %\usepackage[backend=bibtex,style=phys,sorting=ynt]{biblatex}
 \usepackage[backend=biber,sorting=ynt,style=authoryear]{biblatex} % N'est pas utilisé par le compilateur org-mode, mais NÉCESSAIRE. Voir le fichier init.el pour changer le style. 
-\addbibresource{/home/charlesedouard/Desktop/Travail/Documentation/2023/master-bibliography.bib}
+\addbibresource{master-bibliography.bib}
 
 
 \usepackage{amsmath, amssymb, amsthm} % Symb. math. (Mathmode+Textmode) + Beaux théorèmes.
@@ -64,7 +65,7 @@
 \definecolor{mypink}{RGB}{147, 0, 255}
 \hypersetup{colorlinks, 
              filecolor=mypink,
-             urlcolor=Violet, 
+             urlcolor=mypink, 
              citecolor=mypink, 
              linkcolor=mypink, 
              anchorcolor=mypink}
@@ -129,10 +130,13 @@
 
 \newcommand{\exemple}{
 \parbox[center]{2.2cm}{\begin{tcolorbox}[sharp corners, rounded corners=northeast, rounded corners=southeast,
-colback=Violet!5, colframe=black,
+colback=Violet!2, colframe=black,
 size=small, width=2cm, left=-0.25pt, bottom=-0.5pt,
 arc is angular, arc=2.5mm, boxrule=0.35pt, leftrule=4pt, %bottomrule=1pt,
 after={\enskip}] Exemple \end{tcolorbox}}}
+
+\newcommand{\rad}{\text{Rad}}
+
 
 \newcommand{\cqfd}{\hfill$\blacktriangleleft$}
 
@@ -204,17 +208,16 @@ Police d'écriture : \textbf{CMU Serif Roman}
  pdftitle={Carnet de bord, Université McGill},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 27.1 (Org mode 9.6.7)}, 
+ pdfcreator={Emacs 29.4 (Org mode 9.7.8)}, 
  pdflang={French}}
 \begin{document}
 
 \mytitlepage
 \tableofcontents\newpage
-
 \section{{\bfseries\sffamily TODO} Téléchargement de Wavewatch III -- \textit{<2023-09-18 Mon>}}
-\label{sec:org48787d8}
+\label{sec:org3ee69b4}
 \subsection{Télécharger et construire le modèle}
-\label{sec:orgd872474}
+\label{sec:org4c92139}
 Avant tout, un courriel m'avait été envoyé avec un lien pour télécharger le modèle à l'adresse \url{https://polar.ncep.noaa.gov/waves/wavewatch/distribution/} en 2019.
 Une fois téléchargée, on peut développer l'archive \textbf{tar} dans un nouveau dossier (ww3 dans notre cas),
 \begin{verbatim}
@@ -286,9 +289,8 @@ La commande \emph{w3-make} s'applique aussi sur les sous-routines individuelles 
   w3_make ww3_grid ww3_shell <...>
 \end{verbatim}
 Et tout devrait bien compiler!
-
 \subsection{Débuggage NetCDF et OpenMPI}
-\label{sec:orga41f65c}
+\label{sec:org575c68b}
 À ce point, il est possible que la compilation n'ait pas lieu car bien des librairies NetCDF ne sont toujours pas installées.
 Si c'est le cas, on peut sudo-installer la commande \textbf{nc-config} à l'aide de la première commande et NetCDF-fortran à l'aide de la seconde, comme proposé dans une réponse produite sur \href{https://stackoverflow.com/questions/73249935/how-to-install-netcdf-fortran-on-ubuntu}{Stack Overlow}.
 \begin{verbatim}
@@ -309,20 +311,16 @@ La \href{https://github.com/pytorch/pytorch/issues/33521}{solution} proposée pa
   # sudo apt-get install mpich
   sudo apt-get install libopenmpi-dev
 \end{verbatim}
-
-
 \section{{\bfseries\sffamily DONE} Faire fonctionner le modèle standard -- \textit{<2023-09-19 Tue>}}
-\label{sec:orgf7643f2}
+\label{sec:org9812475}
 \begin{wrapfigure}[15]{r}{0.45\textwidth}\vspace{-\baselineskip} \centering \hspace{0.5cm}
 \centering
 \includegraphics[width=0.35\textwidth]{figures/tests/2023_09_20_east_wind_from_ww3.png}
-\caption{\label{fig:org9fea55d}Output du vent sorti d'une rapide run de Wavewatch. Les axes sont bien ordonnés donc les input sont réglementaires.}
+\caption{\label{fig:orgc27df70}Output du vent sorti d'une rapide run de Wavewatch. Les axes sont bien ordonnés donc les input sont réglementaires.}
 \end{wrapfigure}
-
-
 \subsection{Re-Construire la grille, la mapsta et les forçages -- \textit{<2023-09-19 Tue>}}
-\label{sec:orga98077b}
-\label{orgc343f50}
+\label{sec:org997ed8f}
+\label{orgb34209f}
 Heureusement, j'avais sauvegardé beaucoup de matériel avant l'annihilation de Mingan, dont quelques fonctions Python qui construisent les champs, soient
 \begin{itemize}
 \item \emph{build-grids.py};
@@ -344,11 +342,10 @@ Ce mardi le modèle était finalement bien installé avec toutes les librairies 
 Il ne reste donc qu'à vérifier si le modèle prend tout et après on peut se lancer dans le couplage.\bigskip
 
 Ce mercredi midi, le modèle fonctionne à merveille.
-
 \section{{\bfseries\sffamily DONE} Faire fonctionner le modèle en MPI -- \textit{<2023-09-21 Thu>}}
-\label{sec:org73fdc0c}
+\label{sec:org8d58842}
 \subsection{Déterminer les bonnes switches pour la compilation MPI -- \textit{<2023-09-20 Wed>}}
-\label{sec:org6b7743e}
+\label{sec:org50c9218}
 Maintenant que le modèle \emph{standalone} fonctionne efficacement, on doit le lancer en MPI.
 Il faudra d'abord changer les \emph{switches}.
 Essentiellement, les \emph{switches} permettent au script \textbf{w3 make} de prendre les fichiers \emph{ftn} et et des retirer des lignes de code inutiles.
@@ -356,7 +353,7 @@ Ce faisant, le script les transforment en fichiers compilable de type \emph{.o} 
 Par la suite, le script de compilation choisi (initialement \emph{comp.gfortran}) transforme ces objets en exécutables qu'on peut retrouver dans le dossier \emph{exe}.
 Les \emph{switches} contrôlent donc tout, au final. \bigskip
 
-Ainsi, lors de la compilation standard de Wavewatch 3 (voir section \ref{orgc343f50}), nous avions actionné les \emph{switches} suivantes : 
+Ainsi, lors de la compilation standard de Wavewatch 3 (voir section \ref{orgb34209f}), nous avions actionné les \emph{switches} suivantes : 
 \begin{verbatim}
    F90 NOGRB NOPA LRB4 NC4 *SHRD* PR3 UQ FLX2 LN1 ST2 NL1 BT0 DB0 TR0 BS0 IC0 IS0 REF1 XX0 WNT1
    WNX0 CRT0 CRX0 TRKNC O0 O1 O2
@@ -368,9 +365,8 @@ Notre fichier de \emph{switches} devrait donc ressembler à
    F90 NOGRB NOPA LRB4 NC4 *DIST MPI* PR3 UQ FLX2 LN1 ST2 NL1 BT0 DB0 TR0 BS0 IC0 IS0 REF1 XX0
    WNT1 WNX0 CRT0 CRX0 TRKNC O0 O1 O2
 \end{verbatim}
-
 \subsection{Compiler le modèle en MPI -- \textit{<2023-09-21 Thu>}}
-\label{sec:org43c2774}
+\label{sec:org6a60584}
 Ensuite, il faut le compiler.
 Normalement, pour utiliser MPI, on change \textbf{gfortran} par \textbf{mpif90} lors de la compilation.
 Par contre, ça ne semble pas marcher du tout.
@@ -389,10 +385,8 @@ Mentionnons que la ligne problématique était
 \end{verbatim}
 et que la plupart des compilateurs \emph{mpifort} et \emph{gfortran} peuvent avoir de la misère avec ça.
 On a donc du se tourner vers un autre compilateur, soit \emph{ifort}. 
-
-
 \subsection{Installer les compilateurs ifort et mpiifort -- \textit{<2023-09-21 Thu>}}
-\label{sec:orgaf5b074}
+\label{sec:orgaed8e8f}
 
 Avant tout, faire ça pour purger les détritus liés à une précédente suite Intel,
 \begin{verbatim}
@@ -426,11 +420,10 @@ Et tout fonctionne! Le problème venait effectivement du compilateur.
 Plusieurs utilisateurs mentionnaient que \emph{mpif90} a souvent des difficultés à jouer avec plusieurs versions de Fortran et de MPI.
 Ça devait être ce qui faisait dérailler la compilation du modèle avec \emph{gfortran}.
 Par conséquent, nous ferons tout les compilations nécessaires à l'aide de \emph{ifort} et \emph{mpiifort} dès maintenant.
-
 \section{{\bfseries\sffamily DONE} Codage et test du couplage MPI -- \textit{<2023-09-21 Thu>}}
-\label{sec:org0a77a7e}
+\label{sec:orgc99ffd5}
 \subsection{Reconstruire la fonction de couplage du modèle shallow water -- \textit{<2023-09-21 Thu>}}
-\label{sec:org83a4c0b}
+\label{sec:org5db5d28}
 Heureusement, la reconstruction des sous-routines de couplage ne m'a demandé que peu d'effort. 
 Comme les frontières du modèle n'étaient plus périodique, il a été possible de retirer bien des sous-routines et variables superflues.
 Entre autres,
@@ -441,10 +434,8 @@ Je suis assez heureux que ça soit parti, ça encombrait de beaucoup la sous-rou
 \end{enumerate}
 La sous-routine de couplage est extrêmement plus propre et moins encombrée.
 C'est un ménage du printemps réussi.
-
-
 \subsection{Remettre à jour les sous-routines de Wavewatch III -- \textit{<2023-09-22 Fri>}}
-\label{sec:orgc5fab67}
+\label{sec:org0266972}
 Maintenant, il faut que les deux modèles se parlent, donc il faut
 \begin{itemize}
 \item[{$\boxtimes$}] Modifier la fonction de couplage du modèle /shallow water/l pour qu'il communique pleinement avec Wavewatch III;
@@ -452,13 +443,11 @@ Maintenant, il faut que les deux modèles se parlent, donc il faut
 \item[{$\square$}] Remettre à jour le \emph{ww3 shel} pour que les dates soient bonnes;
 \item[{$\square$}] Recréer un \emph{launcher}.
 \end{itemize}
-
-
 \section{{\bfseries\sffamily DONE} Rencontre avec Louis-Philippe et David -- \textit{<2023-09-22 Fri>}}
-\label{sec:org177c807}
+\label{sec:org5eb9a9f}
 
 \subsection{Création d'un « set-up » de référence du modèle « shallow water »}
-\label{sec:org0b31225}
+\label{sec:org2d7c510}
 La rencontre a portée sur de nombreux points pertinents, mais avant tout il faudrait créer une expérience qui serait comparable dans tous les cas à \emph{n} couches.
 Pour l'essentiel, on veut coupler le modèle Wavewatch avec un modèle \emph{shallow water} à \emph{n} couches, mais il faudrait que les modèles soient semblables pour pouvoir comparer l'effet des ondes sur chacun des \emph{set-up}.
 Ce \emph{set-up} de référence serait caractérisé par une fonction de courant barotrope (moyennée dans le temps) similaire pour tout nombre \emph{n} de couches.
@@ -475,26 +464,22 @@ Set up de référence avec Shallow water.
 \item 2 à 10 couches : et il faudrait avoir la même fonction de courant barotrope moyennée dans le temps, pour conserver l'énergie.
 Comment ajuser le bottom drag? Ça devrait être linéaire selon LP. du/dt = -ru
 \end{itemize}
-
 \subsection{Retour sur la stratification}
-\label{sec:orgaa9999a}
+\label{sec:org3b9b43d}
 Pour ce qui est de la stratification, Louis-Philippe propose d'appliquer une exponentielle décroissante pour la densité avec un \emph{decay scale} (\(\pt\chi\)) de 1000 m. 
 Bref une stratification qui aurait la forme,
 \begin{align}
    && \rho(z) = \exp{z/\chi} && \text{où} && \chi = 1000\ [m]. &&
 \end{align}
-
-
 \subsection{Type de grille du modèle Wavewatch III}
-\label{sec:org10989bc}
+\label{sec:orgd5c24e0}
 Cette semaine j'ai passé un peu de temps pour m'assurer que le modèle Wavewatch III est construit sur une grille Arakawa-A.
 Lors de la rencontre, nous avons tous vérifié et n'avons pas vu rien qui contredisait cette affirmation.
 L'indice principal qui me convainc en ce qui attrait à la grille de Wavewatch, ce sont les \emph{output}.
 En effet, les \emph{output} sont de type NetCDF et ils sont bien cordées sur une grille Arakawa-A avec les mêmes positions en \emph{x} et \emph{y}.
 Nous avons statué que c'était le cas et qu'il faudrait donc réaliser une interpolation linéaire ou une moyenne, ce qui a déjà été codé ce jeudi.
-
 \subsection{Varia et compute Canada}
-\label{sec:org387940a}
+\label{sec:orgf618c41}
 
 En paralèlle, s'assurer que le modèle roule bien.
 

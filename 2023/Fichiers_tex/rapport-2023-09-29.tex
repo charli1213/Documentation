@@ -1,4 +1,4 @@
-% Created 2024-07-23 Tue 11:42
+% Created 2024-08-03 Sat 16:23
 % Intended LaTeX compiler: pdflatex
 \documentclass[10pt]{article}
 % =================================BASE====================================%
@@ -9,15 +9,16 @@
 
 % Calligraphie
 %\usepackage{pxfonts} % Met le texte ET les maths en Palatino + donne accès à des symboles math
-\usepackage{palatino} % Cette commande met seulement le texte en police palatino
+%\usepackage{palatino} % Cette commande met seulement le texte en police palatino
 \usepackage{lmodern} % Pour les maths? Lmodern pour les maths
+\usepackage{cfr-lm}
 % Use lmodern for sans-serif
 \usepackage{mathrsfs} % Permet la command \mathscr (Lettres attachées genre) \mathscr(B)
 
 % Bibliographie
 %\usepackage[backend=bibtex,style=phys,sorting=ynt]{biblatex}
 \usepackage[backend=biber,sorting=ynt,style=authoryear]{biblatex} % N'est pas utilisé par le compilateur org-mode, mais NÉCESSAIRE. Voir le fichier init.el pour changer le style. 
-\addbibresource{/home/charlesedouard/Desktop/Travail/Documentation/2023/master-bibliography.bib}
+\addbibresource{master-bibliography.bib}
 
 
 \usepackage{amsmath, amssymb, amsthm} % Symb. math. (Mathmode+Textmode) + Beaux théorèmes.
@@ -64,7 +65,7 @@
 \definecolor{mypink}{RGB}{147, 0, 255}
 \hypersetup{colorlinks, 
              filecolor=mypink,
-             urlcolor=Violet, 
+             urlcolor=mypink, 
              citecolor=mypink, 
              linkcolor=mypink, 
              anchorcolor=mypink}
@@ -129,10 +130,13 @@
 
 \newcommand{\exemple}{
 \parbox[center]{2.2cm}{\begin{tcolorbox}[sharp corners, rounded corners=northeast, rounded corners=southeast,
-colback=Violet!5, colframe=black,
+colback=Violet!2, colframe=black,
 size=small, width=2cm, left=-0.25pt, bottom=-0.5pt,
 arc is angular, arc=2.5mm, boxrule=0.35pt, leftrule=4pt, %bottomrule=1pt,
 after={\enskip}] Exemple \end{tcolorbox}}}
+
+\newcommand{\rad}{\text{Rad}}
+
 
 \newcommand{\cqfd}{\hfill$\blacktriangleleft$}
 
@@ -204,15 +208,14 @@ Police d'écriture : \textbf{CMU Serif Roman}
  pdftitle={Carnet de bord, Université McGill},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 27.1 (Org mode 9.6.7)}, 
+ pdfcreator={Emacs 29.4 (Org mode 9.7.8)}, 
  pdflang={French}}
 \begin{document}
 
 \mytitlepage
 \tableofcontents\newpage
-
 \section{{\bfseries\sffamily TODO} Résoudre le problème de densité [83\%] -- \textit{<2023-09-25 Mon>}}
-\label{sec:org7354551}
+\label{sec:org47b066b}
 \begin{wrapfigure}[12]{r}{0.4\textwidth}
 \vspace{-\baselineskip}
 \begin{center}
@@ -250,7 +253,7 @@ Police d'écriture : \textbf{CMU Serif Roman}
    \draw[scale=1,domain=0:4,smooth,variable=\x,blue] plot ({\x},{1.1*exp(2*\x/4)/2.718+1.0});
 \end{tikzpicture}
 \end{center}
-\caption{\label{org3738298}Discrétisation des épaisseurs de couches pour un cas linéaire et exponentiel.}
+\caption{\label{org1f5a413}Discrétisation des épaisseurs de couches pour un cas linéaire et exponentiel.}
 \end{wrapfigure}
 
 
@@ -278,25 +281,25 @@ Entre autres, les codes à remetter à jour étaient
 
 On se souvient que le \emph{decay scale} devrait donner une stratification telle que
 \begin{align}
-\label{eq:org7b7ce6f}
+\label{eq:org1a059fe}
   && \rho(z) = \rho_0 - \tilde{\rho}\exp{\ z/\chi\tall\ } && \text{où} && \chi = 1000\ [m]. &&
 \end{align}
-Après un peu de \emph{fuck around and find out}, j'ai \emph{fine tunné} les paramètres de l'équation \ref{eq:org7b7ce6f} pour obtenir une estimation réaliste de la densité de l'océan.
-Ces paramètes se retrouvent dans le tableau \ref{tab:orgd5f9352}.\bigskip
+Après un peu de \emph{fuck around and find out}, j'ai \emph{fine tunné} les paramètres de l'équation \ref{eq:org1a059fe} pour obtenir une estimation réaliste de la densité de l'océan.
+Ces paramètes se retrouvent dans le tableau \ref{tab:orge472e58}.\bigskip
 \end{itemize}
 
 \begin{table}[htbp]
-\caption{\label{tab:orgd5f9352}Résumé des paramètres utilisés dans notre configuration pour la densité (eq. \ref{eq:org7b7ce6f}).}
+\caption{\label{tab:orge472e58}Résumé des paramètres utilisés dans notre configuration pour la densité (eq. \ref{eq:org1a059fe}).}
 \centering
 \begin{tabular}{lccc}
 \hline
 \hline
-Description & Symbole & Valeur & Unitées\\[0pt]
+Description & Symbole & Valeur & Unitées\\
 \hline
-Amplitude de l'exponentielle & \(\tilde{\rho}\) & 3.00 & kg\(\cdot\) m\textsuperscript{-3}\\[0pt]
-Densité maximale & \(\rho\)\textsubscript{0} & 1028 & kg\(\cdot\) m\textsuperscript{-3}\\[0pt]
-Longueur de décroissance (\emph{decay scale}) & \(\chi\) & 1000 & m\\[0pt]
-profondeur & z & --- & m\\[0pt]
+Amplitude de l'exponentielle & \(\tilde{\rho}\) & 3.00 & kg\(\cdot\) m\textsuperscript{-3}\\
+Densité maximale & \(\rho\)\textsubscript{0} & 1028 & kg\(\cdot\) m\textsuperscript{-3}\\
+Longueur de décroissance (\emph{decay scale}) & \(\chi\) & 1000 & m\\
+profondeur & z & --- & m\\
 \hline
 \end{tabular}
 \end{table}
@@ -304,7 +307,7 @@ profondeur & z & --- & m\\[0pt]
 \begin{itemize}
 \item[{$\boxtimes$}] \textbf{Créer un mécanisme qui détermine l'épaisseur des couches ;}
 
-Techniquement, on veut des épaisseurs qui croîent exponentiellement en fonction de la profondeur, comme illustré à la figure \ref{org3738298}.
+Techniquement, on veut des épaisseurs qui croîent exponentiellement en fonction de la profondeur, comme illustré à la figure \ref{org1f5a413}.
 \end{itemize}
 
 
@@ -329,102 +332,99 @@ Plus la couche est épaisse, plus on retire du courant, donc il faudrait que ce 
 
 Une fois ces quatre étapes accomplies, le \emph{set-up} de référence sera assez solide.
 On espère seulement qu'il n'y aura pas trop d'erreur numérique et/ou de couches qui arrivent à zéro.
-
 \subsection{Premier test -- \textit{<2023-09-26 Tue>}}
-\label{sec:org6f67f33}
+\label{sec:org741c693}
 
 Toutes les tests ont eu des couches qui ont atteinte des épaisseurs nulles.
-La stratification était définie selon l'équation \ref{eq:org7b7ce6f}.
+La stratification était définie selon l'équation \ref{eq:org1a059fe}.
 
 \begin{table}[htbp]
-\caption{\label{tab:orga7181ef}Résumé des paramètres utilisés dans notre configuration pour la densité (eq. \ref{eq:org7b7ce6f}).}
+\caption{\label{tab:org3e7480a}Résumé des paramètres utilisés dans notre configuration pour la densité (eq. \ref{eq:org1a059fe}).}
 \centering
 \begin{tabular}{lccc}
 \hline
 \hline
-Description & Symbole & Valeur & Unitées\\[0pt]
+Description & Symbole & Valeur & Unitées\\
 \hline
-Amplitude de l'exponentielle & \(\tilde{\rho}\) & 4.00 & kg\(\cdot\) m\textsuperscript{-3}\\[0pt]
-Densité maximale & \(\rho\)\textsubscript{0} & 1028 & kg\(\cdot\) m\textsuperscript{-3}\\[0pt]
-Longueur de décroissance (\emph{decay scale}) & \(\chi\) & 1000 & m\\[0pt]
-profondeur & z & --- & m\\[0pt]
+Amplitude de l'exponentielle & \(\tilde{\rho}\) & 4.00 & kg\(\cdot\) m\textsuperscript{-3}\\
+Densité maximale & \(\rho\)\textsubscript{0} & 1028 & kg\(\cdot\) m\textsuperscript{-3}\\
+Longueur de décroissance (\emph{decay scale}) & \(\chi\) & 1000 & m\\
+profondeur & z & --- & m\\
 \hline
 \end{tabular}
 \end{table}
 
-Ce qui nous donnait des paramètres de tourbillons énoncés dans le tableau \ref{tab:orgd234a41}. 
+Ce qui nous donnait des paramètres de tourbillons énoncés dans le tableau \ref{tab:org39436f6}. 
 
 \begin{table}[htbp]
-\caption{\label{tab:orgd234a41}Portrait des ondes barocliniques retrouvées dans nos test  associées à la stratification énoncée au tableau \ref{tab:orga7181ef}.}
+\caption{\label{tab:org39436f6}Portrait des ondes barocliniques retrouvées dans nos test  associées à la stratification énoncée au tableau \ref{tab:org3e7480a}.}
 \centering
 \begin{tabular}{cccccc}
 \hline
 \hline
-Nombre de couches & 2 & 4 & 6 & 8 & 10\\[0pt]
+Nombre de couches & 2 & 4 & 6 & 8 & 10\\
 \hline
- & \(\infty\) & \(\infty\) & \(\infty\) & \(\infty\) & \(\infty\)\\[0pt]
-c\textsubscript{cb} & 3.4 & 3.1 & 3.1 & 3.1 & 3.1\\[0pt]
-[m\(\cdot\) s\textsuperscript{-1}] &  & 1.7 & à & à & à\\[0pt]
- &  & 1.2 & 1.1 & 0.4 & 0.4\\[0pt]
+ & \(\infty\) & \(\infty\) & \(\infty\) & \(\infty\) & \(\infty\)\\
+c\textsubscript{cb} & 3.4 & 3.1 & 3.1 & 3.1 & 3.1\\
+{[}m\(\cdot\) s\textsuperscript{-1}] &  & 1.7 & à & à & à\\
+ &  & 1.2 & 1.1 & 0.4 & 0.4\\
 \hline
- & \(\infty\) & \(\infty\) & \(\infty\) & \(\infty\) & \(\infty\)\\[0pt]
-L\textsubscript{d} & 48.0 & 16.7 & 8.9 & 5.7 & 4.2\\[0pt]
-[km] &  & à & à & à & à\\[0pt]
- &  & 44.6 & 44.2 & 44.2 & 44.1\\[0pt]
+ & \(\infty\) & \(\infty\) & \(\infty\) & \(\infty\) & \(\infty\)\\
+L\textsubscript{d} & 48.0 & 16.7 & 8.9 & 5.7 & 4.2\\
+{[}km] &  & à & à & à & à\\
+ &  & 44.6 & 44.2 & 44.2 & 44.1\\
 \hline
 \end{tabular}
 \end{table}
 
 Bref, les trosi dernières expériences ont des niveaux qui ont atteint une épaisseur nulle.
 On se lance donc dans le prochain test.
-
 \subsection{Tests subséquents -- \textit{<2023-09-27 Wed>}}
-\label{sec:org4ffb7e8}
+\label{sec:org29d203d}
 
 On augmente de nouveau la stratification en espérant que ça permette de retenir un peu l'épaisseur des couches.
 je ne crois pas qu'on soit rendu au point critique où l'instabilité numérique apparaisse. 
 \begin{table}[htbp]
-\caption{\label{tab:org2c138ec}Résumé des paramètres utilisés dans notre configuration pour la densité (eq. \ref{eq:org7b7ce6f}).}
+\caption{\label{tab:org05a85ea}Résumé des paramètres utilisés dans notre configuration pour la densité (eq. \ref{eq:org1a059fe}).}
 \centering
 \begin{tabular}{lccc}
 \hline
 \hline
-Description & Symbole & Valeur & Unitées\\[0pt]
+Description & Symbole & Valeur & Unitées\\
 \hline
-Amplitude de l'exponentielle & \(\tilde{\rho}\) & 5.00 & kg\(\cdot\) m\textsuperscript{-3}\\[0pt]
-Densité maximale & \(\rho\)\textsubscript{0} & 1028 & kg\(\cdot\) m\textsuperscript{-3}\\[0pt]
-Longueur de décroissance (\emph{decay scale}) & \(\chi\) & 1000 & m\\[0pt]
-profondeur & z & --- & m\\[0pt]
+Amplitude de l'exponentielle & \(\tilde{\rho}\) & 5.00 & kg\(\cdot\) m\textsuperscript{-3}\\
+Densité maximale & \(\rho\)\textsubscript{0} & 1028 & kg\(\cdot\) m\textsuperscript{-3}\\
+Longueur de décroissance (\emph{decay scale}) & \(\chi\) & 1000 & m\\
+profondeur & z & --- & m\\
 \hline
 \end{tabular}
 \end{table}
 
-On a aussi fait des test pour \(\tilde{\rho}\) de 6.00 et 7.00, mais sans succès (Voir tableau \ref{tab:org9e7d420}).
+On a aussi fait des test pour \(\tilde{\rho}\) de 6.00 et 7.00, mais sans succès (Voir tableau \ref{tab:orge962328}).
 \textbf{Toutes les runs} ont atteint des épaisseurs nulles à un point où un autre.
 Il semble qu'on atteint des courants de surface de 4.5 m/s, ce qui est \textbf{très curieux}.
 
 \begin{table}[htbp]
-\caption{\label{tab:org9e7d420}Nombre d'outputs avant que l'épaisseur de la première couche devienne nulle.}
+\caption{\label{tab:orge962328}Nombre d'outputs avant que l'épaisseur de la première couche devienne nulle.}
 \centering
 \begin{tabular}{cccccc}
 \hline
 \hline
-Paramètre \(\tilde{\rho}\) & 2 couches & 4 couches & 6 couches & 8 couches & 10 couches\\[0pt]
+Paramètre \(\tilde{\rho}\) & 2 couches & 4 couches & 6 couches & 8 couches & 10 couches\\
 \hline
-5 & 11114 & 4660 & 607 & 376 & 297\\[0pt]
-6 & 11069 & 4451 & 771 & 387 & 304\\[0pt]
-7 & 11632 & 4188 & 980 & 399 & 311\\[0pt]
+5 & 11114 & 4660 & 607 & 376 & 297\\
+6 & 11069 & 4451 & 771 & 387 & 304\\
+7 & 11632 & 4188 & 980 & 399 & 311\\
 \hline
 \end{tabular}
 \end{table}
 
 Au devant de ces échecs, j'ai relancé 9 runs à \emph{nz} = (2 6 8) et un multiplicateur du coefficient de friction de \(r_{drag}\) = (2 4 6).
-
 \section{Travail sur les runs couplées [0\%] -- \textit{<2023-09-28 Thu>}}
-\label{sec:org80046ed}
+\label{sec:orgd948936}
 
 \subsection{Installation de Wavewatch III sur Oxygen [33\%]}
-\label{sec:org3c5c98e}
+\label{sec:org35dc6ed}
 \begin{itemize}
 \item[{$\boxtimes$}] \textbf{Extraction du modèle depuis le site web de la NOAA ;}
 Comme mentionné dans le \href{rapport-2023-09-22.pdf}{rapport précédent}, on peut trouver le modèle sur le site \url{https://polar.ncep.noaa.gov/waves/wavewatch/distribution/}.
@@ -441,9 +441,8 @@ Il faudrait juste s'assurer que la config que j'ai créée sur mon portable fonc
 \end{itemize}
 
 Une fois ces tâches accomplies, on peut se lancer à 100$\backslash$% sur les runs couplées. 
-
 \subsection{Lancement des runs couplées sur Oxygen}
-\label{sec:org484c59e}
+\label{sec:org5a626e8}
 Avant de lancer le couplage, il faut juste s'assurer que
 \begin{itemize}
 \item[{$\square$}] La sous-routine \emph{ww3 shel} a les bonnes dates;

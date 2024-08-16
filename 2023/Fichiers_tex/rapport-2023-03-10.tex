@@ -1,4 +1,4 @@
-% Created 2024-07-23 Tue 11:42
+% Created 2024-08-03 Sat 16:24
 % Intended LaTeX compiler: pdflatex
 \documentclass[10pt]{article}
 % =================================BASE====================================%
@@ -9,8 +9,9 @@
 
 % Calligraphie
 %\usepackage{pxfonts} % Met le texte ET les maths en Palatino + donne accès à des symboles math
-\usepackage{palatino} % Cette commande met seulement le texte en police palatino
+%\usepackage{palatino} % Cette commande met seulement le texte en police palatino
 \usepackage{lmodern} % Pour les maths? Lmodern pour les maths
+\usepackage{cfr-lm}
 % Use lmodern for sans-serif
 \usepackage{mathrsfs} % Permet la command \mathscr (Lettres attachées genre) \mathscr(B)
 
@@ -64,7 +65,7 @@
 \definecolor{mypink}{RGB}{147, 0, 255}
 \hypersetup{colorlinks, 
              filecolor=mypink,
-             urlcolor=Violet, 
+             urlcolor=mypink, 
              citecolor=mypink, 
              linkcolor=mypink, 
              anchorcolor=mypink}
@@ -129,10 +130,13 @@
 
 \newcommand{\exemple}{
 \parbox[center]{2.2cm}{\begin{tcolorbox}[sharp corners, rounded corners=northeast, rounded corners=southeast,
-colback=Violet!5, colframe=black,
+colback=Violet!2, colframe=black,
 size=small, width=2cm, left=-0.25pt, bottom=-0.5pt,
 arc is angular, arc=2.5mm, boxrule=0.35pt, leftrule=4pt, %bottomrule=1pt,
 after={\enskip}] Exemple \end{tcolorbox}}}
+
+\newcommand{\rad}{\text{Rad}}
+
 
 \newcommand{\cqfd}{\hfill$\blacktriangleleft$}
 
@@ -204,21 +208,19 @@ Police d'écriture : \textbf{CMU Serif Roman}
  pdftitle={Rapport hebdomadaire -- McGill},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 27.1 (Org mode 9.6.7)}, 
+ pdfcreator={Emacs 29.4 (Org mode 9.7.8)}, 
  pdflang={French}}
 \begin{document}
 
 \mytitlepage
 \tableofcontents\newpage
-
-
 \section{{\bfseries\sffamily DONE} Organisation du travail [3/3]}
-\label{sec:orgb6d5416}
+\label{sec:org3199635}
 Lors de ma maîtrise -- de 2019 à 2022 --, j'ai constaté que mon organisation du travail était extrêmement maladroite.
 Entre-autres, j'avais une grande difficulté à recenser les tâches accomplies ou incomplètes. 
 C'est pourquoi j'ai créé ce \emph{template} en \textbf{org-mode}, un language d'écriture \textbf{Emacs} exportable en \LaTeX{}.
 Ces petits résumés agissent principalement comme un cahier de laboratoire. 
-Ils me permettront donc d'écrire ce que j'ai retenu de nos rencontres, les idées à développer et les tâches à accomplir.\\[0pt]
+Ils me permettront donc d'écrire ce que j'ai retenu de nos rencontres, les idées à développer et les tâches à accomplir.\\
 
 Tâches : 
 \begin{itemize}
@@ -226,11 +228,10 @@ Tâches :
 \item[{$\boxtimes$}] Commencer à utiliser le \textbf{org-agenda}.
 \item[{$\boxtimes$}] Créer ce \emph{template} en \LaTeX{} et commencer les rapports hebdomadaires.
 \end{itemize}
-
 \section{Retour sur le modèle \emph{shallow water} [3/3]}
-\label{sec:org709389e}
+\label{sec:orgd071aa4}
 \subsection{{\bfseries\sffamily DONE} Télécharger le modèle \emph{shallow water} et créer un \emph{git} [2/2]}
-\label{sec:orgd8f2775}
+\label{sec:org34025bd}
 Avant tout, il faut se reconnecter sur la grappe de calcul \textbf{mingan} pour aller chercher le modèle \emph{shallow-water}. 
 Pour des raisons obscures, mon compte mingan ne fonctionnait plus.
 J'ai du contacter le gestionnaire du soutient technique de l'UQAR, Dany Lemay, pour créer un nouvel identifiant. 
@@ -245,7 +246,7 @@ Une fois connecté sur le noeud \emph{Calculs}, on peut entrer sur \emph{mingan}
    >>> ssh -Y celiz2@mingan.uqar.ca
    >>> <mot-de-passe>
 \end{verbatim}
-À noter \emph{git} ne fonctionne plus sur \emph{mingan}, donc il a fallut tout transférer sur le noeud \emph{calculs} avant de mettre quelque chose sur le \emph{git}.\\[0pt]
+À noter \emph{git} ne fonctionne plus sur \emph{mingan}, donc il a fallut tout transférer sur le noeud \emph{calculs} avant de mettre quelque chose sur le \emph{git}.\\
 
 Étapes : 
 \begin{itemize}
@@ -256,12 +257,11 @@ Une fois connecté sur le noeud \emph{Calculs}, on peut entrer sur \emph{mingan}
 \item[{$\boxtimes$}] Télécharger les routines modifiées de Wavewatch III sur le \emph{Github}.
 \end{itemize}
 \end{itemize}
-
 \subsection{{\bfseries\sffamily DONE} Ménage \emph{mingan} et transfert vers \emph{pelerin} [2/2]}
-\label{sec:org133fb12}
+\label{sec:orgd1385ad}
 Comme la grappe de calculs \emph{mingan} en est à ses derniers heures de vie, je vais devoir transférer tous mes codes vers \emph{pelerin}.
 Dany Lemay propose avant tout de créer un \emph{git} pour que ça aille plus rapidement.
-À mentionner que ça fait un bout que j'ai laissé ça tarder, j'aurais peut-être du faire ça vers la fin de ma maîtrise..\\[0pt]
+À mentionner que ça fait un bout que j'ai laissé ça tarder, j'aurais peut-être du faire ça vers la fin de ma maîtrise..\\
 
 Étapes : 
 \begin{itemize}
@@ -277,13 +277,12 @@ Dany Lemay propose avant tout de créer un \emph{git} pour que ça aille plus ra
 \item[{$\boxtimes$}] Filtrer les expériences WW3 à garder et transférer sur le noeud \emph{calculs}.
 \end{itemize}
 \end{itemize}
-
 \subsection{{\bfseries\sffamily DONE} Rencontre avec David Straub}
-\label{sec:orgd287e9e}
+\label{sec:orgdfdd143}
 La tâche consiste principalement à modifier le modèle \emph{shallow-water} que David et Yanxu Chen avaient codés, soit celui que j'ai utilisé au cours de ma maîtrise.
 Le modèle fonctionne uniquement à 2 couches, car il n'a pas été codé pour en avoir plus, pour l'instant.
 Considérant que les \emph{near-inertial waves} s'accumulaient dans la première couche, David et Louis-Philippe ont émis l'hypothèse que l'ajout de plusieurs couches pourrait \emph{damper} la force des ondes quasi-inertielles. 
-L'énergie serait graduellement transmise depuis le haut vers le bas en perdant de l'intensité à chaque \emph{étage} sous l'effet de la viscosité.\\[0pt]
+L'énergie serait graduellement transmise depuis le haut vers le bas en perdant de l'intensité à chaque \emph{étage} sous l'effet de la viscosité.\\
 
 \begin{enumerate}
 \item Le modèle prévois avoir \emph{n} couches, mais comme la surface est fixe \(\eta_1(i,j)=0\), on peut affirmer qu'on utilise tout simplement pas \(\eta_1\) ou plutôt que \(\eta_1 = 0\) (L390 : \emph{main.f90}). 

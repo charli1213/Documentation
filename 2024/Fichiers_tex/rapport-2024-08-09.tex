@@ -1,0 +1,338 @@
+% Created 2024-08-16 Fri 12:50
+% Intended LaTeX compiler: pdflatex
+\documentclass[10pt]{article}
+% =================================BASE====================================%
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry} % Marges
+\usepackage[T1]{fontenc} % Nécessaire avec FrenchBabel
+\usepackage[utf8]{inputenc} % Important pour symboles Francophones, é,à,etc
+\usepackage{csquotes} % Recommandé par PDFLatex lors de la compilation. 
+
+% Calligraphie
+%\usepackage{pxfonts} % Met le texte ET les maths en Palatino + donne accès à des symboles math
+%\usepackage{palatino} % Cette commande met seulement le texte en police palatino
+\usepackage{lmodern} % Pour les maths? Lmodern pour les maths
+\usepackage{cfr-lm}
+% Use lmodern for sans-serif
+\usepackage{mathrsfs} % Permet la command \mathscr (Lettres attachées genre) \mathscr(B)
+
+% Bibliographie
+%\usepackage[backend=bibtex,style=phys,sorting=ynt]{biblatex}
+\usepackage[backend=biber,sorting=ynt,style=authoryear]{biblatex} % N'est pas utilisé par le compilateur org-mode, mais NÉCESSAIRE. Voir le fichier init.el pour changer le style. 
+\addbibresource{master-bibliography.bib}
+
+
+\usepackage{amsmath, amssymb, amsthm} % Symb. math. (Mathmode+Textmode) + Beaux théorèmes.
+\usepackage{mathtools,cancel,xfrac} % Utilisation de boîtes \boxed{} + \cancelto{}{}, xfrac
+\usepackage{graphicx, wrapfig} % Géstion des figures.
+\usepackage{hyperref} % Permettre l'utilisation d'hyperliens.
+\usepackage{color} % Permettre l'utilisation des couleurs.
+\usepackage{colortbl} % Color tables
+\usepackage[dvipsnames]{xcolor} % Couleurs avancées.
+
+% Physique
+\usepackage{physics} % Meilleur package pour physicien. 
+
+% Style
+\usepackage{lipsum} % For fun
+\usepackage{tikz} % Realisation de figures TIKZ.
+\usetikzlibrary{arrows.meta,bending} % Arrow heads 
+\usepackage{empheq} % Boite autour de MULTIPLE équations
+\usepackage{bbding}
+
+% Français
+\usepackage[french]{babel} % Environnements en Français.
+
+\usepackage{titling} % Donne accès à \theauthor, \thetitle, \thedate
+
+% ==============================BASE-(END)=================================%
+
+
+
+
+
+% ================================SETTINGS=================================%
+% Pas d'indentation en début de paragraphe :
+\setlength\parindent{0pt}
+\setlength{\parskip}{0.15cm}
+
+% Tableaux/tabular
+% Espace vertical dans les tabular/tableaux
+\renewcommand{\arraystretch}{1.2}
+% Couleur des tableaux/tabular
+% \rowcolors{3}{violet!5}{}
+
+% Couleurs de hyperliens :
+\definecolor{mypink}{RGB}{147, 0, 255}
+\hypersetup{colorlinks, 
+             filecolor=mypink,
+             urlcolor=mypink, 
+             citecolor=mypink, 
+             linkcolor=mypink, 
+             anchorcolor=mypink}
+
+
+% Numéros d'équations suivent les sections :
+\numberwithin{equation}{section} 
+
+% Les « captions » sont en italique et largeur limitée
+\usepackage[textfont = it]{caption} 
+\captionsetup[wrapfigure]{margin=0.5cm}
+
+% Retirer l'écriture en gras dans la table des matières
+\usepackage{tocloft}
+\renewcommand{\cftsecfont}{\normalfont}
+\renewcommand{\cftsecpagefont}{\normalfont}
+
+% Change bullet style
+\usepackage{pifont}
+\usepackage{enumitem}
+%\setlist[itemize,1]{label=\ding{224}}
+\setlist[itemize,1]{label=\ding{239}}
+\renewcommand{\boxtimes}{\blacksquare}
+% ================================SETTINGS=================================%
+
+
+
+% ==============================NEWCOMMANDS================================%
+% CQFD symbol
+\renewcommand{\qedsymbol}{$\hfill\blacksquare$}
+
+% Vecteurs de base :
+\newcommand{\nvf}{\vb{\hat{n}}}
+\newcommand{\evf}{\vb{\hat{e}}}
+\newcommand{\ivf}{\vb{\hat{i}}}
+\newcommand{\jvf}{\vb{\hat{j}}}
+\newcommand{\kvf}{\vb{\hat{k}}}
+\newcommand{\uu}{\vb{u}}
+\newcommand{\vv}{\vb{v}}
+\newcommand{\ust}{\vb{u}_{\ast}}
+
+% Physics empty spaces 
+\newcommand{\short}{\vphantom{pA}}
+\newcommand{\tall}{\vphantom{pA^{x^x}_p}}
+\newcommand{\grande}{\vphantom{\frac{1}{xx}}}
+\newcommand{\venti}{\vphantom{\sum_x^x}}
+\newcommand{\pt}{\hspace{1pt}} % One horizontal pt space
+
+% Moyenne numérique entre deux points de grilles. 
+\newcommand{\xmean}[1]{\overline{#1}^x}
+\newcommand{\ymean}[1]{\overline{#1}^y}
+\newcommand{\zmean}[1]{\overline{#1}^z}
+\newcommand{\xymean}[1]{\overline{#1}^{xy}}
+
+% Tilde over psi
+\newcommand{\tpsi}{\tilde{\psi}}
+\newcommand{\tphi}{\tilde{\phi}}
+
+% Nota Bene env : (\ding{89})
+%\newcommand{\nb}{$\boxed{\text{\footnotesize\EightStarConvex}\pt \mathfrak{N. B.}}$\hspace{4pt}}
+\newcommand{\nb}{\underline{{\footnotesize\EightStarConvex}\pt $\mathfrak{N.B.}$\vphantom{p}}\hspace{3pt}}
+
+\newcommand{\exemple}{
+\parbox[center]{2.2cm}{\begin{tcolorbox}[sharp corners, rounded corners=northeast, rounded corners=southeast,
+colback=Violet!2, colframe=black,
+size=small, width=2cm, left=-0.25pt, bottom=-0.5pt,
+arc is angular, arc=2.5mm, boxrule=0.35pt, leftrule=4pt, %bottomrule=1pt,
+after={\enskip}] Exemple \end{tcolorbox}}}
+
+\newcommand{\rad}{\text{Rad}}
+
+
+\newcommand{\cqfd}{\hfill$\blacktriangleleft$}
+
+% Define the nota bene environment
+\usepackage{tcolorbox}
+\newtcolorbox{notabene}{
+     colback=blue!5,
+     colframe=black,
+     boxrule=0.5pt,
+     arc=2pt,
+     left=5pt,
+     right=5pt,
+     top=5pt,
+     bottom=5pt,
+}
+
+
+\newcommand{\cmark}{\ding{52}}
+\newcommand{\xmark}{\ding{55}}
+% ==============================NEWCOMMANDS================================%
+
+
+
+% ==============================PAGE-TITRE=================================%
+% Titlepage 
+\newcommand{\mytitlepage}{
+\begin{titlepage}
+\begin{center}
+{\Huge \thesubtitle \par}
+\vspace{2cm}
+{\Huge \MakeUppercase{\thetitle} \par}
+\vspace{2cm}
+RÉALISÉ DANS LE CADRE\\ D'UN PROJET POUR \par
+\vspace{2cm}
+{\Huge ISMER--UQAR \par}
+\vspace{2cm}
+{\thedate}
+\end{center}
+\vfill
+Rédaction \\
+{\theauthor}\\
+\url{charles-edouard.lizotte@uqar.ca}\\
+ISMER-UQAR\\
+Police d'écriture : \textbf{CMU Serif Roman}
+\end{titlepage}
+}
+% ==============================PAGE-TITRE=================================%
+
+
+
+% =================================ENTÊTE==================================%
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\setlength{\headheight}{13pt}
+\renewcommand{\headrulewidth}{0.025pt} % Ligne horizontale en haut
+
+\fancyhead[R]{\textit{\thetitle}}
+\fancyhead[L]{\ \thepage}
+\fancyfoot[R]{\textit{\theauthor}}
+\fancyfoot[L]{}
+\fancyfoot[C]{} 
+% =================================ENTÊTE==================================%
+\author{Charles-Édouard Lizotte}
+\date{09/08/2024}
+\title{Rapport hebdomadaire}
+\newcommand{\thesubtitle}{Contrat Été 2024}
+\hypersetup{
+ pdfauthor={Charles-Édouard Lizotte},
+ pdftitle={Rapport hebdomadaire},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.4 (Org mode 9.7.8)}, 
+ pdflang={French}}
+\begin{document}
+
+\mytitlepage
+\tableofcontents\newpage
+\section{Notes sur la programmation du modèle WIM en Julia}
+\label{sec:org23d8782}
+
+\subsection{Opérateur linéaire de Lax-Wendroff}
+\label{sec:org9ca8214}
+La méthode de Lax-Wendroff peut aussi être exprimée selon le formalisme d'un opérateur linéaire, de telle sorte que
+\begin{equation}
+   \underset{nx\times nx}{\mathbf{A}}\cdot\underset{nx\times nf}{\vb{E}} = \begin{pmatrix}
+       a_{11} & a_{12} & \cdots & a_{1,nx} \\
+       a_{21} & a_{22} & \cdots & a_{2,nx} \\
+       \vdots & \ddots &  & \vdots \\
+       a_{nx,1} & a_{nx,2} & \cdots & a_{nx,nx} \\
+   \end{pmatrix}\begin{pmatrix}
+       E_{1,1} & E_{1,2} & \cdots & E_{1,nf}\\ 
+       E_{2,1} & E_{1,2} & \cdots & E_{2,nf}\\
+       \vdots & \ddots &  & \vdots\\
+       E_{nx,1} & E_{1,2} & \cdots & E_{2,nf}\\
+   \end{pmatrix}
+\end{equation}
+L'advection avec Lax-Wendroff est définit comme
+\begin{equation}
+   E_i^{n+1} = E_i^{n} - \qty(\frac{\Delta t}{2 \Delta x}) c_g (E_{i+1}^n - E_{i-1}^n) + \qty(\frac{\Delta t^2}{2 \Delta x^2}) c_g^2 (E_{i+1}^n -2E_i^n + E_{i-1}^n).
+\end{equation}
+On isole les variables,
+\begin{align}
+   \Delta E_i(\omega) = \underbrace{\venti-\lambda^2 c_g(\omega)}_{\boxed{A}} E_i^n + \underbrace{\venti\frac{\lambda c_g(\omega)}{2} \qty(1 + \lambda c_g(\omega))}_{\boxed{B}}E_{i-1} + \underbrace{\venti\frac{\lambda c_g(\omega)}{2} \qty(\lambda c_g(\omega) -1)}_{\boxed{C}} E_{i+1}.
+\end{align}
+Puis finalement,
+\begin{equation}
+   \Delta \mathbf{E}(\omega) = \mathbf{A}(\omega)\cdot\vb{E} = \begin{pmatrix}
+       A & C & 0 & \cdots & 0 \\
+       B & A & C & \cdots & 0 \\
+       \vdots & & & \ddots & \vdots\\
+       0 & \cdots & 0 & B & A \\
+     \end{pmatrix}\begin{pmatrix}
+       E(\omega,x_1) \\
+       E(\omega,x_2) \\
+       \vdots\\
+       E(\omega,x_{nf}) \\
+     \end{pmatrix},
+\end{equation}
+et comme la matrice \textbf{A} est différente pour chaque fréquence, il faut donc recalculer \textbf{A} pour chaque fréquence.
+Notons que dans la maîtrise de Bismuth, on assumait une vitesse de groupe identique pour tous les fréquences, ce que je trouve très ordinaire, personellement.
+\subsection{La vitesse d'une onde}
+\label{sec:org5caa36b}
+Quelques rappels techniques rapides, 
+\begin{align}
+   \omega = 2\pi \cdot f && k = 2\pi / \lambda && \omega = \sigma + \mathbf{k}\cdot \uu 
+\end{align}
+
+La relation de dispersion des ondes de surfaces est aussi exprimée par
+\begin{equation}
+   \sigma = \qty(gk\cdot \tanh(kd))^{\sfrac{1}{2}}
+\end{equation}
+
+Selon Wiki, la vitesse de phase est donnée par
+\begin{equation}
+   v_p = \frac{\omega}{\mathbb{R} \qty{k}},
+\end{equation}
+donc
+\begin{equation}
+   \boxed{\quad c_p(\omega) = \sqrt{\frac{g}{k}} = \frac{g}{\omega}\quad}.
+\end{equation}
+\subsection{Lien entre la vitesse de groupe et la vitesse de phase}
+\label{sec:org167c655}
+
+Toujours selon Wiki, on définit la vitesse de groupe à l'aide de
+\begin{equation}
+   v_g = \dv{\omega}{k}
+\end{equation}
+Donc, à l'aide de la relation de dispersion et sachant que \(\uu = 0\), on obtient
+\begin{align}
+   \dv{\omega}{k} &= \sqrt{g} \cdot \frac{1}{2} k^{-\sfrac{1}{2}},\nonumber\\
+     &= \frac{1}{2}\sqrt{\frac{g}{k}},\nonumber\\
+\end{align}
+ainsi on peut mettre en relation la vitesse de groupe et de phase, soit
+\begin{equation}
+   \boxed{\quad c_p = \venti\frac{g}{\omega}\hspace{0.5cm};\hspace{0.5cm} c_g = \frac{c_p}{2}.\quad}
+\end{equation}
+Mentionnons aussi que le vecteur \(\mathbf{c}_g(\omega)\) est fixe dans le temps, il n'y a pas de dispersion temporelle. 
+\subsection{Lax-Wendroff aux murs}
+\label{sec:orgf7fc3df}
+À la case initiale, on assume une condition frontière, donc pas besoin de Lax-Wendroff là.
+Puis à la case finale, on assume une frontière ouverte de sorte que
+\begin{equation}
+   \eval{\qty(\pdv{E}{x} = 0)}_{x = x_f + \Delta x/2}
+\end{equation}
+\section{Débriefing réunion Dany (16 aout 2024)}
+\label{sec:org5140feb}
+
+\subsection{Théorie linéaire des vagues dans la glace?}
+\label{sec:org8e7544a}
+Actuellement, il n'existe pas vraiment de théorie linéaire des vagues ou de formalisme des vagues à l'intérieur de la glace comme dans \Textcite{miles1957generation}.
+Mentionnons qu'il y a un article de \Textcite{miles1996surface} décrivant les vagues dans un milieu visco-élastique, mais je n'ai pas encore eu le temps de le lire.\bigskip
+
+Peut-être qu'il y a un moyen simple de faire ça, mais considérant les mathématiques assez avancées de \Textcite{miles1957generation}, j'en doute.
+Faudrait peut-être revisiter de manière plus claire ces trucs-là.
+\subsection{Modélisation des vagues en 1 dimension}
+\label{sec:org0a0dfe4}
+Très difficile de représenter les interactions  entre les vagues dans un «set-up» en 1 dimension : 
+\begin{itemize}
+\item Le \emph{spreading} dans les fréquences est mal définit.
+Quand on fait références aux interactions vagues-vagues, c'est à ça qu'on fait référence (triplète et quadruplètes, aussi).
+Il devrait statistiquement y avoir un transfert d'énergie des hautes vers les basses fréquences.
+\item Dany mentionnait que dans le modèle Wavewatch III, c'était précisément la \emph{switch} NL4 que Sébastien Dugas avait réussi dans une version de WIM subséquente à intégrer les interactions en 1 dimension, mais les termes de son expansion polynomiale étaient très obscurs.
+Selon Dany, c'est basé sur les travaux de Hasselmann, mais je pense qu'on parle plus de NL2, dans ce cas.
+\item Le \emph{spreading} dans les directions est inexistant en 1 dimension.
+Par contre, Dany avait amené l'argument aux reviewers que l'on peut voir une front d'onde comme la propagation de multiples cercles, précisément comme dans l'explication des fentes de Young.
+\end{itemize}
+\subsection{Planification}
+\label{sec:org8cc02ab}
+Grossièrement, comment ferions nous pour définir un coefficient d'hétérogénéité associé à l a glace.
+Au premier ordre, la glace n'est qu'un filtre et on a tout intérêt à la considérer comme telle.
+S'il y a de la glace, on filtre des ondes.
+Déjà, on peut comparer l'effet de mettre de la glace à haute résolution (50\% de glace par exemple, avec des concentrations de glace de 1) et de voir si l'on peut comparer ça avec un modèle à basse résolution (Concentration de glace de 0.5). \bigskip
+
+Le motif principal est qu'on ne connait pas dutout les paramètrisations qui ont été faites avec les autres termes sources pour la glace, si c'étaient des \emph{patch} de glace ou de grandes étendues, par exemple.
+Dany a amené un argument intéressant :\smallskip
+\begin{quote}
+\emph{C'est jamais du tout ou rien, s'il y a de la glace, ça ne veut pas dire que les vagues peuvent ne pas croître dans une certaine mesure. Justement, dans la maîtrise d'Eliot Bismuth, c'est ce qu'on a tenté de faire. La relation entre la concentration et le couvert de glace ne devrait pas du tout être linéaire.}
+\end{quote}
+\end{document}

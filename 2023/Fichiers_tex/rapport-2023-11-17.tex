@@ -1,4 +1,4 @@
-% Created 2024-07-23 Tue 11:42
+% Created 2024-08-03 Sat 16:24
 % Intended LaTeX compiler: pdflatex
 \documentclass[10pt]{article}
 % =================================BASE====================================%
@@ -9,15 +9,16 @@
 
 % Calligraphie
 %\usepackage{pxfonts} % Met le texte ET les maths en Palatino + donne accès à des symboles math
-\usepackage{palatino} % Cette commande met seulement le texte en police palatino
+%\usepackage{palatino} % Cette commande met seulement le texte en police palatino
 \usepackage{lmodern} % Pour les maths? Lmodern pour les maths
+\usepackage{cfr-lm}
 % Use lmodern for sans-serif
 \usepackage{mathrsfs} % Permet la command \mathscr (Lettres attachées genre) \mathscr(B)
 
 % Bibliographie
 %\usepackage[backend=bibtex,style=phys,sorting=ynt]{biblatex}
 \usepackage[backend=biber,sorting=ynt,style=authoryear]{biblatex} % N'est pas utilisé par le compilateur org-mode, mais NÉCESSAIRE. Voir le fichier init.el pour changer le style. 
-\addbibresource{/home/charlesedouard/Desktop/Travail/Documentation/2023/master-bibliography.bib}
+\addbibresource{master-bibliography.bib}
 
 
 \usepackage{amsmath, amssymb, amsthm} % Symb. math. (Mathmode+Textmode) + Beaux théorèmes.
@@ -64,7 +65,7 @@
 \definecolor{mypink}{RGB}{147, 0, 255}
 \hypersetup{colorlinks, 
              filecolor=mypink,
-             urlcolor=Violet, 
+             urlcolor=mypink, 
              citecolor=mypink, 
              linkcolor=mypink, 
              anchorcolor=mypink}
@@ -129,10 +130,13 @@
 
 \newcommand{\exemple}{
 \parbox[center]{2.2cm}{\begin{tcolorbox}[sharp corners, rounded corners=northeast, rounded corners=southeast,
-colback=Violet!5, colframe=black,
+colback=Violet!2, colframe=black,
 size=small, width=2cm, left=-0.25pt, bottom=-0.5pt,
 arc is angular, arc=2.5mm, boxrule=0.35pt, leftrule=4pt, %bottomrule=1pt,
 after={\enskip}] Exemple \end{tcolorbox}}}
+
+\newcommand{\rad}{\text{Rad}}
+
 
 \newcommand{\cqfd}{\hfill$\blacktriangleleft$}
 
@@ -204,15 +208,14 @@ Police d'écriture : \textbf{CMU Serif Roman}
  pdftitle={Carnet de bord, Université McGill},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 27.1 (Org mode 9.6.7)}, 
+ pdfcreator={Emacs 29.4 (Org mode 9.7.8)}, 
  pdflang={French}}
 \begin{document}
 
 \mytitlepage
 \tableofcontents\newpage
-
 \section{Gestion de l'épaisseur et transfert de momentum du vent -- \textit{<2023-11-14 Tue>}}
-\label{sec:org2b3ccea}
+\label{sec:org4583c86}
 
 Traditionnellement, la contrainte de cisaillement ou les stress associé au vent est exprimé en différence finit comme suit,
 \begin{align}
@@ -229,10 +232,8 @@ Donc, on ajoute effectivement plus de vitesse dans notre \(\pdv{u}{t}\), comme l
 Par contre, au total, le momentum général est respecté, car il prend effectivement plus d'énergie pour déplacer une plus grosse couche.\bigskip
 
 \nb Ça serait pertinent de parler de ça à Jean-Michel au MIT. 
-
-
 \section{Re-structuration des fonctions d'output -- \textit{<2023-11-14 Tue>}}
-\label{sec:orga61c443}
+\label{sec:org1d0de67}
 
 Dès maintenant, il est important de changer la manière qu'on lit les fichiers dans les codes Python.
 Bref, je laisse cette section ici pour m'assurer que je me souvienne de ce changement.
@@ -247,10 +248,8 @@ Avant, on réunissait tout avant dans un xarray dataset.
    \filldraw [BurntOrange!50] (0.5,0.5) rectangle (7.5,3);
    \draw (1.5,2.5) node [orange,align left] {tls.bintoda};
 \end{tikzpicture}
-
-
 \section{Expériences lancées -- \textit{<2023-11-15 Wed>}}
-\label{sec:org2d4e2bf}
+\label{sec:orga81c08e}
 
 Comme lors de la maîtrise, il faudrait des comparatifs entre les \emph{runs} couplées et non-couplées.
 
@@ -258,20 +257,18 @@ Comme lors de la maîtrise, il faudrait des comparatifs entre les \emph{runs} co
 \begin{tabular}{clccl}
 \hline
 \hline
-Symbole & Dénominateur & Couplage & Valeur Step & Description\\[0pt]
-[ -- ] & [ -- ] & \cmark/\xmark & [ \% ] & [ -- ]\\[0pt]
+Symbole & Dénominateur & Couplage & Valeur Step & Description\\
+{[} -- ] & {[} -- ] & \cmark/\xmark & {[} \% ] & {[} -- ]\\
 \hline
-A & SW-step0.0 & \xmark & 0.00 & Échantillon SW\\[0pt]
-B & SW-step5.0 & \xmark & 5.00 & Échantillon SW\\[0pt]
-C & COU-step0.0 & \cmark & 0.00 & Échantillon test\\[0pt]
-D & COU-step5.0 & \cmark & 5.00 & Échantillon test\\[0pt]
+A & SW-step0.0 & \xmark & 0.00 & Échantillon SW\\
+B & SW-step5.0 & \xmark & 5.00 & Échantillon SW\\
+C & COU-step0.0 & \cmark & 0.00 & Échantillon test\\
+D & COU-step5.0 & \cmark & 5.00 & Échantillon test\\
 \hline
 \end{tabular}
 \end{center}
-
-
 \subsection{Énergie cinétique}
-\label{sec:org484782c}
+\label{sec:org59333f5}
 
 
 

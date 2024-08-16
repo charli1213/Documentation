@@ -502,46 +502,14 @@ C'est mentionné explicitement dans la sous-routine du modèle /w3src3md.ftn/, m
 
 * Techniques numériques en lien avec le couplage
 
-** Interpolation géométrique
 #+NAME: fig:interp
-#+caption: En a), mise en relation de la grille du modèle «shallow water» (haute résolution, indicateurs bleus) par rapport à la grille de Wavewatch III (basse résolution, indicateurs noirs). En b) et c) « Stencil » utilisé pour réaliser l'interpolation géométrique à ratio $R$ impair.
-\begin{wrapfigure}[41]{r}{0.45\textwidth}
-\vspace{-5\baselineskip}
+#+caption: Mise en relation des grilles du modèle «shallow water» (haute résolution, indicateurs bleus) et Wavewatch III (basse résolution, indicateurs noirs). En a) et b) « Stencil » utilisé pour réaliser l'interpolation géométrique à ratio $R$ impair.
+\begin{wrapfigure}[28]{r}{0.45\textwidth}
+\vspace{-2\baselineskip}
 \begin{center}
-\begin{tikzpicture}[scale = 0.75]
-\draw (-0.5,6.3) node {a)};
-\draw (6.5,0) node {};
-% Big grid
-\fill [blue!5] (0,0) rectangle (3,3);
-\fill [blue!5] (3,3) rectangle (6,6);
-% Grid
-\draw (0,0) rectangle (6,6) ;
-\draw [dotted] (0,0) grid (6,6) ;
-\draw [step=3.0] (0,0) grid (6,6) ;
-% Coordinates 
-\foreach \x in {1,2,3}
-\foreach \y in {1,2,3}
-{\draw (\x-0.5,\y-0.5) node [] {1,1};}
 %
-\foreach \x in {4,5,6}
-\foreach \y in {1,2,3}
-{\draw (\x-0.5,\y-0.5) node [] {2,1};}
-%
-\foreach \x in {1,2,3}
-\foreach \y in {4,5,6}
-{\draw (\x-0.5,\y-0.5) node [] {1,2};}
-%
-\foreach \x in {4,5,6}
-\foreach \y in {4,5,6}
-{\draw (\x-0.5,\y-0.5) node [] {2,2};}
-% Axis:
-\foreach \y in {1,2,3,4,5,6} {\draw (-0.5,\y-0.5) node [cyan] {\y};}
-\foreach \x in {1,2,3,4,5,6} {\draw (\x-0.5,-0.5) node [cyan] {\x};}
-%
-\end{tikzpicture}
-%
-\begin{tikzpicture}[scale = 0.9]
-\draw (-0.5,6.3) node {b)};
+\begin{tikzpicture}[scale = 0.8]
+\draw (-0.8,6.0) node {a)};
 \draw (6.5,0) node {};
 % Big grid
 \fill [blue!5] (0,0) rectangle (3,3);
@@ -576,8 +544,8 @@ C'est mentionné explicitement dans la sous-routine du modèle /w3src3md.ftn/, m
 %
 \end{tikzpicture}
 %
-\begin{tikzpicture}[scale = 0.9]
-\draw (-0.5,6.3) node {c)};
+\begin{tikzpicture}[scale = 0.8]
+\draw (-0.8,6.0) node {b)};
 \draw (6.5,0) node {};
 % Big grid
 \fill [blue!5] (0,0) rectangle (3,3);
@@ -606,7 +574,7 @@ C'est mentionné explicitement dans la sous-routine du modèle /w3src3md.ftn/, m
 \foreach \x in {4,5,6}
 \foreach \y in {4,5,6}
 {\draw (\x-0.5,\y-0.5) node [] {2,2};}
-pn% Axis:
+% Axis:
 \foreach \y in {1,2,3,4,5,6} {\draw (-0.5,\y-0.5) node [cyan] {\y};}
 \foreach \x in {1,2,3,4,5,6} {\draw (\x-0.5,-0.5) node [cyan] {\x};}
 %
@@ -614,6 +582,8 @@ pn% Axis:
 %
 \end{center}
 \end{wrapfigure}
+
+** Interpolation géométrique
 
 *** Du modèle « shallow water » au modèle Wavewatch
 
@@ -635,21 +605,21 @@ mais ça revient juste à faire la moyenne dans un carré de R^2 = 3\times 3, co
 
 *** De Wavewatch au modèle « shallow water »
 
-À l'inverse, lorsqu'on reçoit les champs de Wavewatch III,  on utilise un /stencil/ de taille $R^2$ qui fait la moyenne géométrique des points adjacents (comme illustré à la figure [[fig:interp]]b).
+À l'inverse, lorsqu'on reçoit les champs de Wavewatch III,  on utilise un /stencil/ de taille $R^2$ qui fait la moyenne géométrique des points adjacents (comme illustré à la figure [[fig:interp]]a).
 Par exemple, pour le modèle /shallow water/, la quantité au point (4,4) $Q^{\pt4,4}$ est calculée à l'aide d'une moyenne pondérée des points de Wavewatch, soit
 \begin{equation}
    {\color{MidnightBlue} Q_{\pt4,4}} = \qty[\ 1\times Q^{\pt1,1}+ 2\times Q^{\pt1,2}+ 2\times Q^{\pt2,1}+ 4\times Q^{\pt2,2}\ ]\pt/\pt9
 \end{equation}
 
-où le tout est divisé par $R^2 = 9$ (voir figure [[fig:interp]]b).\bigskip
+où le tout est divisé par $R^2 = 9$ (voir figure [[fig:interp]]a).\bigskip
 
-À la frontière, on réduit la taille du /stencil/ de sorte à s'adapter à la forme du mur (voir figure [[fig:interp]]c).
+À la frontière, on réduit la taille du /stencil/ de sorte à s'adapter à la forme du mur (voir figure [[fig:interp]]b).
 Par exemple, pour le modèle /shallow water/, le point (1,3) est calculé à l'aide de la moyenne pondéré des points de Wavewatch, soit
 #+NAME: eq:geom1
 \begin{equation}
    {\color{MidnightBlue} Q_{\pt1,3}} = \qty[\ 2\times Q^{\pt1,2} + 4\times Q^{\pt1,1}\ ]\pt/\pt6
 \end{equation}
-où le tout divisé par 2\times3 = 6, soit la taille du /stencil/ (voir figure [[fig:interp]]c).
+où le tout divisé par 2\times3 = 6, soit la taille du /stencil/ (voir figure [[fig:interp]]b).
 
 *** Interpolation grille C et grille A
 
@@ -775,9 +745,9 @@ Si l'on assume la valeur de la contrainte de cisaillement (0.1 N m^{-2} dans not
 On commence par obtenir la valeur de $c_D$ à l'aide de la relation de Charnok [cite:@charnock1955wind] aussi tirée de [cite/t/c:@gill-atmosphere-ocean p.30],
 #+name:cd
 \begin{align}
-   &&c_D = \qty[\frac{\kappa}{\ln(z/z_{\pt0})}]_{\ z=10\pt m}
+   &&c_D = \qty[\frac{\kappa}{\ln(z/z_{\pt0})}]^2_{\ z=10\pt m}
    && \text{où} &&
-   z_0 = \frac{\gamma_{Ch}\tau_a}{g}. &&
+   z_0 = \frac{\alpha_{Ch}\tau_a}{\rho_a g} = \frac{\alpha_{Ch} c_D |u_{10}|^2}{g}. &&
 \end{align}
 Puis enfin, on retrouve $\vb{u}_{10}$ à l'aide de \rho_a et c_D,
 \begin{equation}
@@ -785,17 +755,17 @@ Puis enfin, on retrouve $\vb{u}_{10}$ à l'aide de \rho_a et c_D,
 \end{equation}
 
 \nb Toutes ces équations se retrouvent dans la fonction python /build winds.py/ qui construit un fichier de type NetCDF déchiffrable par /Wavewatch III/.
-|    <c>    | <l>          | <l>       | <l>                                            |
-| Variable  | Valeur       | Unités    | Description                                    |
-|-----------+--------------+-----------+------------------------------------------------|
-|    c_D    | À déterminer | --        | Coefficient de traînée                         |
-|  \kappa   | 0.41         | --        | Constante de Von Karman                        |
-|     z     | 10           | m         | Hauteur de la mesure du vent (Typiquement 10m) |
-|    z_0    | À déterminer | m         | Rugosité de l'interface (/roughness lenght/)     |
-| \gamma_Ch | 0.0185       | --        | Valeur minimale du paramètre de Charnock       |
-|  \tau_a   | [0, 0.1]     | N m^{-2}  | Stress atmosphérique                           |
-|     g     | 9.81         | m s^{-2}  | Accélération gravitationnelle                  |
-|  \rho_a   | 1.225        | Kg m^{-3} | Densité atmosphérique                          |
+|     <c>     | <l>          | <l>       | <l>                                            |
+|  Variable   | Valeur       | Unités    | Description                                    |
+|-------------+--------------+-----------+------------------------------------------------|
+|     c_D     | À déterminer | --        | Coefficient de traînée                         |
+|   \kappa    | 0.41         | --        | Constante de Von Karman                        |
+|      z      | 10           | m         | Hauteur de la mesure du vent (Typiquement 10m) |
+|     z_0     | À déterminer | m         | Rugosité de l'interface (/roughness lenght/)     |
+| \alpha_{Ch} | 0.0185       | --        | Valeur minimale du paramètre de Charnock       |
+|   \tau_a    | [0, 0.1]     | N m^{-2}  | Stress atmosphérique                           |
+|      g      | 9.81         | m s^{-2}  | Accélération gravitationnelle                  |
+|   \rho_a    | 1.225        | Kg m^{-3} | Densité atmosphérique                          |
 
 **  Le paramètre de Charnock (désambiguation)
 Comme illustré dans le tableau précédent, nous avons utilisé 0.0185 comme valeur du paramètre de Charnock.
@@ -840,7 +810,7 @@ Plus précisément,
    \begin{equation}
       z_0 = 10 \exp \qty(-\kappa \sqrt{c_D});
    \end{equation}
-5. Il trouve le *paramètre de Charnok* $/alpha_{ch}$ và l'aide de 
+5. Il trouve le *paramètre de Charnok* $\alpha_{ch}$ và l'aide de 
    \begin{equation}
       \alpha_{ch} = \frac{z_0 g}{u_*^2}.
    \end{equation}
@@ -888,7 +858,7 @@ J'ai réunis dans le tableau suivant tous les paramètres physiques intéressant
 |                  | Écart de variation (/Step/)         | S                                   |                0.05 | --               |
 |                  | Accélération gravitationnelle       | g                                   |                9.81 | m s^{-2}         |
 |                  | Constante de Von Karmann            | \kappa                              |                 0.41 | --               |
-|                  | Coefficient de Charnok              | \gamma_{Ch}                         |              0.0185 | --               |
+|                  | Coefficient de Charnok              | \alpha_{Ch}                         |              0.0185 | --               |
 |                  | Densité de l'air                    | \rho_a                              |               1.225 | kg m^{-3}        |
 |------------------+-------------------------------------+-------------------------------------+---------------------+------------------|
 

@@ -1,4 +1,4 @@
-% Created 2024-07-23 Tue 11:41
+% Created 2024-08-03 Sat 16:24
 % Intended LaTeX compiler: pdflatex
 \documentclass[10pt]{article}
 % =================================BASE====================================%
@@ -9,15 +9,16 @@
 
 % Calligraphie
 %\usepackage{pxfonts} % Met le texte ET les maths en Palatino + donne accès à des symboles math
-\usepackage{palatino} % Cette commande met seulement le texte en police palatino
+%\usepackage{palatino} % Cette commande met seulement le texte en police palatino
 \usepackage{lmodern} % Pour les maths? Lmodern pour les maths
+\usepackage{cfr-lm}
 % Use lmodern for sans-serif
 \usepackage{mathrsfs} % Permet la command \mathscr (Lettres attachées genre) \mathscr(B)
 
 % Bibliographie
 %\usepackage[backend=bibtex,style=phys,sorting=ynt]{biblatex}
 \usepackage[backend=biber,sorting=ynt,style=authoryear]{biblatex} % N'est pas utilisé par le compilateur org-mode, mais NÉCESSAIRE. Voir le fichier init.el pour changer le style. 
-\addbibresource{/home/charlesedouard/Desktop/Travail/Documentation/2023/master-bibliography.bib}
+\addbibresource{master-bibliography.bib}
 
 
 \usepackage{amsmath, amssymb, amsthm} % Symb. math. (Mathmode+Textmode) + Beaux théorèmes.
@@ -64,7 +65,7 @@
 \definecolor{mypink}{RGB}{147, 0, 255}
 \hypersetup{colorlinks, 
              filecolor=mypink,
-             urlcolor=Violet, 
+             urlcolor=mypink, 
              citecolor=mypink, 
              linkcolor=mypink, 
              anchorcolor=mypink}
@@ -129,10 +130,13 @@
 
 \newcommand{\exemple}{
 \parbox[center]{2.2cm}{\begin{tcolorbox}[sharp corners, rounded corners=northeast, rounded corners=southeast,
-colback=Violet!5, colframe=black,
+colback=Violet!2, colframe=black,
 size=small, width=2cm, left=-0.25pt, bottom=-0.5pt,
 arc is angular, arc=2.5mm, boxrule=0.35pt, leftrule=4pt, %bottomrule=1pt,
 after={\enskip}] Exemple \end{tcolorbox}}}
+
+\newcommand{\rad}{\text{Rad}}
+
 
 \newcommand{\cqfd}{\hfill$\blacktriangleleft$}
 
@@ -204,21 +208,20 @@ Police d'écriture : \textbf{CMU Serif Roman}
  pdftitle={Carnet de bord, Université McGill},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 27.1 (Org mode 9.6.7)}, 
+ pdfcreator={Emacs 29.4 (Org mode 9.7.8)}, 
  pdflang={French}}
 \begin{document}
 
 \mytitlepage
 \tableofcontents\newpage
-
 \section{Erreurs rencontrées}
-\label{sec:org8336a2a}
+\label{sec:orgbbe5cec}
 
 \subsection{Ancienne méthode : Calculer la fonction de courant barotrope directement}
-\label{sec:orge251cd8}
+\label{sec:orgcfffd93}
 Concrétement, l'ancienne méthode (voir \href{rapport-2023-04-28.org}{rapport précédent}) consistait à trouver le rotationnel de \(\uu_{BT}\), soit \(\zeta_{BT} = \curl(\uu_{BT})\) pour solutionner l'équation de Poisson,
 \begin{equation}
-\label{eq:org9792dab}
+\label{eq:org220625b}
    \laplacian(\psi_{BT}) =  \norm{\pt\curl{\uu_{BT}}\pt}.
 \end{equation}
 Une foit \(\psi_{BT}\) en main, il est trivial (on s'en rapelle) de retrouver \(\uu_{BT}\) à l'aide de la relation
@@ -227,19 +230,18 @@ Une foit \(\psi_{BT}\) en main, il est trivial (on s'en rapelle) de retrouver \(
 \end{equation}
 
 Malheureusement, certains problèmes émergeaient de l'application de cette méthode.
-
 \subsection{Fluctuation relative de la fonction de courant barotrope}
-\label{sec:orga89f4aa}
+\label{sec:org3a1e4c3}
 On définit la fluctuation relative de la fonction de courant barotrope \(\delta \psi_{BT}\) de sorte que cette quantité satisfait la relation
 \begin{equation}
    \psi_{BT}^{t+\delta t} = \psi_{BT}^t + \delta \psi_{BT} + Er\pt(\psi_{BT}),
 \end{equation}
 où \(Er\pt(\psi_{BT})\) est une fonction pseudo-aléatoirement linéaire qui représente l'erreur numérique associée à une solution.
-Cette dernière est proportionnelle à la solution de l'équation \ref{eq:org42662d8}, de sorte que
+Cette dernière est proportionnelle à la solution de l'équation \ref{eq:orgd00402e}, de sorte que
 \begin{equation}
     Er\pt(\psi_{BT}) \propto \psi_{BT}.
 \end{equation}
-Alors, si l'on solve l'équation \ref{eq:org42662d8} avec une précision de 5 chiffres par exemple, l'erreur par rapport à la fluctuation relative de la fonction de courant barotrope va se faire sentir sur les résultats.
+Alors, si l'on solve l'équation \ref{eq:orgd00402e} avec une précision de 5 chiffres par exemple, l'erreur par rapport à la fluctuation relative de la fonction de courant barotrope va se faire sentir sur les résultats.
 Essentiellement, l'erreur numérique donne naissance à l'inégalité suivante
 \begin{align}
    &&\text{Erreur relative} = \abs{\frac{Er\pt(\psi_{BT})}{\psi_{BT}}} \le \abs{ \frac{Er\pt(\psi_{BT})}{\delta \psi_{BT}} } &&\text{car (généralement)} && \abs{\psi_{BT}} \ge \abs{\delta \psi_{BT}}. &&
@@ -253,14 +255,13 @@ Si l'on faisait ça, nous aurions plutôt
    \underbrace{\qty{\ \abs{\frac{Er\pt(\psi_{BT})}{\psi_{BT}}} \le \abs{ \frac{Er\pt(\psi_{BT})}{\delta \psi_{BT}} }\ }.}_\text{Solution $\psi_{BT}$}
 \end{align}
 Nous aurions donc bien des avantages à changer de méthode (on va le faire).
-
 \subsection{Pas de temps}
-\label{sec:orgd64b6cb}
+\label{sec:orgae3fc03}
 
 Techniquement, on peut argumenter que nous calculions 2 fois le pas de temps, accidentellement.
 En différences finies, les équations du mouvement ont la forme
 \begin{equation}
-\label{eq:org5179a13}
+\label{eq:orgd8c632a}
    \uu^{t+\delta t} =
    \underbrace{\uu^t + RHS\cdot \Delta t\tall}_{\tilde{u}}
    \underbrace{- \gradient{\phi}\cdot \Delta t.\tall}_\text{Correction P}
@@ -277,7 +278,7 @@ et on décompose en partie barotrope et barocline, de sorte que
    && \text{et}
    && \laplacian{\psi^{t+\delta t}}_{BC} = \zeta^{t+\delta t}_{BC}.&&
 \end{align}
-Comme présenté à l'équation \ref{eq:org5179a13}, on peut décomposer le RHS de la dernière équation selon
+Comme présenté à l'équation \ref{eq:orgd8c632a}, on peut décomposer le RHS de la dernière équation selon
 \begin{align}
    \laplacian{\psi^{t+\delta t}}_{BT} = \tilde{\zeta}_{BT} - \cancelto{0}{\curl(\Delta t\cdot\gradient{\phi})}.
 \end{align}
@@ -287,17 +288,17 @@ On solutionne l'équation de Poisson, on trouve \(\psi^{t+\delta t}\), puis on r
 \end{equation}
 Finalement, on additionne les parties barocliniques et barotropes pour obtenir
 \begin{equation}
-\label{eq:orga0baec3}
+\label{eq:orge7ee223}
    \uu^{t+\delta t} = \uu_{BT}^{t+\delta t} + \uu_{BC}^{t+\delta t}.
 \end{equation}
-Donc au final, s'il y a une erreur, elle est à l'équation \ref{eq:orga0baec3}.
+Donc au final, s'il y a une erreur, elle est à l'équation \ref{eq:orge7ee223}.
 Concrétement, on additionne deux parties qui constituent une même chose.
 Par contre, on obtient ces quantités depuis une quantités qui est entre deux pas de temps, à un temps peu définit.
 Par exemple, on assume que
 \begin{equation}
    \uu^{t+\delta t} = \tilde{\uu} - \gradient{\phi} \cdot \Delta t.
 \end{equation}
-Puis, on décompose en deux parties à l'aide de \ref{eq:orga0baec3}, soit barotrope et baroclines,
+Puis, on décompose en deux parties à l'aide de \ref{eq:orge7ee223}, soit barotrope et baroclines,
 \begin{subequations}
 \begin{align}
    & \uu^{t+\delta t}_{BT} = \zmean{\tilde{\uu} - \gradient{\phi} \cdot \Delta t}  = \tilde{\uu}_{BT} - \gradient{\phi} \cdot \Delta t,\\
@@ -317,9 +318,8 @@ Cette dernière quantité est la définition de \(\tilde{\uu}_{BC}\), donc on de
    \boxed{\hspace{0.4cm}\uu^{t+\delta t}_{BC}
    = \tilde{\uu} - \tilde{\uu}_{BT} = \tilde{\uu}_{BC}.\hspace{0.3cm}}
 \end{equation}
-
 \section{Nouvelle méthode proposée par David}
-\label{sec:orgeee9965}
+\label{sec:org56df370}
 Comme mentionné précédemment, il est possible de seulement calculer la correction à \(\psi_{BT}\) plutôt que \(\psi_{BT}\) pour minimiser l'erreur relative sur la solution.
 On divise notre \emph{RHS} en deux parties, soit barotropes et baroclines,
 \begin{equation}
@@ -328,7 +328,7 @@ On divise notre \emph{RHS} en deux parties, soit barotropes et baroclines,
 
 Nous savons que les équations
 \begin{align}
-\label{eq:org42662d8}
+\label{eq:orgd00402e}
    &&\laplacian{\psi^{t+\delta t}} = \curl{\uu^{t+\delta t}}
    &&\text{et}
    &&\laplacian{\psi^{t}} = \curl{\uu^{t}}&&
@@ -348,9 +348,9 @@ Les parties barocline et barotrope sont respectivement exprimées par
 \end{align}
 \end{subequations}
 étant donné que le gradient de pression est un phénomène barotrope.
-Pour cette même raison, on peut justement affirmer hors de tout doute que l'équation \ref{eq:org42662d8} est séparable en partie barotrope et barcocline, soit
+Pour cette même raison, on peut justement affirmer hors de tout doute que l'équation \ref{eq:orgd00402e} est séparable en partie barotrope et barcocline, soit
 \begin{subequations}
-\label{eq:org9bfd028}
+\label{eq:org563bce5}
 \begin{align}
    &\grande\laplacian{\psi_{BT}^{t}}\ \pt = \curl{\uu_{BT}^{t}}
    \hspace{0.5cm}\text{et}\hspace{0.5cm}
@@ -361,10 +361,10 @@ Pour cette même raison, on peut justement affirmer hors de tout doute que l'éq
 car \(\tilde{\uu}_{BC} = \uu^{t+\delta t}_{BC}\).
 Donc, en développant la partie barotrope, on obtient
 \begin{equation}
-\label{eq:orgad9e74c}
+\label{eq:org2b4984c}
    \laplacian(\psi_{BT}^t+\delta \psi \cdot \Delta t) = \curl(\uu^t_{BT} + \vec{RHS}_{BT}\cdot\Delta t - \cancelto{0}{\gradient{\phi}}\cdot \Delta t),
 \end{equation}
-puis en soustrayant la relation \ref{eq:org9bfd028}a à la dernière équation (\ref{eq:orgad9e74c}), on arrive à
+puis en soustrayant la relation \ref{eq:org563bce5}a à la dernière équation (\ref{eq:org2b4984c}), on arrive à
 \begin{equation}
    \laplacian(\delta \psi) = \curl(\vec{RHS}_{BT}).
 \end{equation}

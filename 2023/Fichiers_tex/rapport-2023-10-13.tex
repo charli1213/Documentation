@@ -1,4 +1,4 @@
-% Created 2024-07-23 Tue 11:41
+% Created 2024-08-03 Sat 16:24
 % Intended LaTeX compiler: pdflatex
 \documentclass[10pt]{article}
 % =================================BASE====================================%
@@ -9,15 +9,16 @@
 
 % Calligraphie
 %\usepackage{pxfonts} % Met le texte ET les maths en Palatino + donne accès à des symboles math
-\usepackage{palatino} % Cette commande met seulement le texte en police palatino
+%\usepackage{palatino} % Cette commande met seulement le texte en police palatino
 \usepackage{lmodern} % Pour les maths? Lmodern pour les maths
+\usepackage{cfr-lm}
 % Use lmodern for sans-serif
 \usepackage{mathrsfs} % Permet la command \mathscr (Lettres attachées genre) \mathscr(B)
 
 % Bibliographie
 %\usepackage[backend=bibtex,style=phys,sorting=ynt]{biblatex}
 \usepackage[backend=biber,sorting=ynt,style=authoryear]{biblatex} % N'est pas utilisé par le compilateur org-mode, mais NÉCESSAIRE. Voir le fichier init.el pour changer le style. 
-\addbibresource{/home/charlesedouard/Desktop/Travail/Documentation/2023/master-bibliography.bib}
+\addbibresource{master-bibliography.bib}
 
 
 \usepackage{amsmath, amssymb, amsthm} % Symb. math. (Mathmode+Textmode) + Beaux théorèmes.
@@ -64,7 +65,7 @@
 \definecolor{mypink}{RGB}{147, 0, 255}
 \hypersetup{colorlinks, 
              filecolor=mypink,
-             urlcolor=Violet, 
+             urlcolor=mypink, 
              citecolor=mypink, 
              linkcolor=mypink, 
              anchorcolor=mypink}
@@ -129,10 +130,13 @@
 
 \newcommand{\exemple}{
 \parbox[center]{2.2cm}{\begin{tcolorbox}[sharp corners, rounded corners=northeast, rounded corners=southeast,
-colback=Violet!5, colframe=black,
+colback=Violet!2, colframe=black,
 size=small, width=2cm, left=-0.25pt, bottom=-0.5pt,
 arc is angular, arc=2.5mm, boxrule=0.35pt, leftrule=4pt, %bottomrule=1pt,
 after={\enskip}] Exemple \end{tcolorbox}}}
+
+\newcommand{\rad}{\text{Rad}}
+
 
 \newcommand{\cqfd}{\hfill$\blacktriangleleft$}
 
@@ -204,33 +208,32 @@ Police d'écriture : \textbf{CMU Serif Roman}
  pdftitle={Carnet de bord, Université McGill},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 27.1 (Org mode 9.6.7)}, 
+ pdfcreator={Emacs 29.4 (Org mode 9.7.8)}, 
  pdflang={French}}
 \begin{document}
 
 \mytitlepage
 \tableofcontents\newpage
-
 \section{Épaisseur nulle pour le modèle non-couplée -- \textit{<2023-10-12 Thu>}}
-\label{sec:orga8e9fd5}
+\label{sec:orgb54329a}
 
 \begin{wrapfigure}[18]{l}{0.45\textwidth}\vspace{-\baselineskip} \centering
 \centering
 \includegraphics[width=0.45\textwidth]{figures/debuggage/2023_10_08_thickness1_histo.png}
-\caption{\label{fig:orge3bbad2}Histograme de l'épaisseur de la première couche du dernier output avant que l'épaisseur atteingne zéro.}
+\caption{\label{fig:org63e7290}Histograme de l'épaisseur de la première couche du dernier output avant que l'épaisseur atteingne zéro.}
 \end{wrapfigure}
 
 
 Comme ajouté dans le dernier rapport, le modèle \emph{shallow water} dit maintenant à quel point spatial l'épaisseur a atteint une valeur nulle.
-Pour diagnostiquer l'erreur, on a maintenant un moyen d'observer ce qui se passe, comme illustré à la figure \ref{fig:org89a681c}.
+Pour diagnostiquer l'erreur, on a maintenant un moyen d'observer ce qui se passe, comme illustré à la figure \ref{fig:org204dee2}.
 Dans ce cas précis, le modèles \emph{shallow water} non couplé semble encore montrer des signes d'instabilités assez aléatoires.
 En somme, nous étions parti d'une \emph{run} précédente qui avait (elle aussi) atteint une épaisseur nulle pour voir ce qui se passait.
 Par contre, la \emph{run} n'a pas explosée immédiatement, ce qui vient confirmer que c'est probablement de l'erreur numérique.
-À la figure \ref{fig:org89a681c}, c'est pas mal ce qu'on peut voir.
+À la figure \ref{fig:org204dee2}, c'est pas mal ce qu'on peut voir.
 Un point bleu apparait très rapidement en haut à droite des quatres quadrants (1 \emph{output} aux deux heures). \bigskip
 
-Malheureusement, l'histograme n'est pas très évocateur, comme il manque définitivement des pas de temps (voir fig. \ref{fig:orge3bbad2}).
-Malgré tout, aux vue de l'animation de la figure \ref{fig:org89a681c}, je pense que c'est une erreur de type numérique.\bigskip
+Malheureusement, l'histograme n'est pas très évocateur, comme il manque définitivement des pas de temps (voir fig. \ref{fig:org63e7290}).
+Malgré tout, aux vue de l'animation de la figure \ref{fig:org204dee2}, je pense que c'est une erreur de type numérique.\bigskip
 
 Principalement pour ces trois raisons : 
 \begin{enumerate}
@@ -243,30 +246,29 @@ Principalement pour ces trois raisons :
 \begin{figure}[!htpb]
 \centering
 \includegraphics[width=0.7\textwidth]{figures/debuggage/2023_10_08_thickness1_last4steps.png}
-\caption{\label{fig:org89a681c}Diagnostique de l'épaisseur d'une run précise du modèle \emph{shallow water}. On peut voir sur ce zoom que l'instabilité dans l'épaisseur apparait dans le haut à droite de tous les quadrant avant que le modèle s'arrête. De gauche à droite les temps -4, -3 et en bas : -2, -1.}
+\caption{\label{fig:org204dee2}Diagnostique de l'épaisseur d'une run précise du modèle \emph{shallow water}. On peut voir sur ce zoom que l'instabilité dans l'épaisseur apparait dans le haut à droite de tous les quadrant avant que le modèle s'arrête. De gauche à droite les temps -4, -3 et en bas : -2, -1.}
 \end{figure}
-
 \subsection{Solutions : Filtre de Robert plus fort? -- \textit{<2023-10-12 Thu>}}
-\label{sec:org86c4a73}
+\label{sec:org099173d}
 On peut diminuer les pas de temps ou augmenter la puissance du filtre de Robert?
 Il faudrait voir avec David pour ça.
 pour l'instant, j'ai testé plusieurs amplitudes pour le filtre de Robert.
-Les valeurs utilisées sont illustrées dans le tableau \ref{tab:orgc0ac769} et l'on y retrouve aussi le nombre de pas de temps que le modèle s'est rendu avant de lâcher à cause d'une instabilité numérique causant une épaisseur nulle. 
+Les valeurs utilisées sont illustrées dans le tableau \ref{tab:orgb554ef6} et l'on y retrouve aussi le nombre de pas de temps que le modèle s'est rendu avant de lâcher à cause d'une instabilité numérique causant une épaisseur nulle. 
 
 \begin{table}[htbp]
-\caption{\label{tab:orgc0ac769}Résumé des valeurs utilisées comme filtre de Robert, dans le but de « smoother » les instabilités numériques.}
+\caption{\label{tab:orgb554ef6}Résumé des valeurs utilisées comme filtre de Robert, dans le but de « smoother » les instabilités numériques.}
 \centering
 \begin{tabular}{ccccc}
 \hline
-Robert & \(\sfrac{L_d}{dx}\) & max(c\textsubscript{bc}) & \(\abs{\vb{\tau}}\) & Temps\\[0pt]
-[ -- ] & [ -- ] & [ \(\sfrac{m}{s}\) ] & [ \(\sfrac{N}{m^2}\) ] & [ -- ]\\[0pt]
+Robert & \(\sfrac{L_d}{dx}\) & max(c\textsubscript{bc}) & \(\abs{\vb{\tau}}\) & Temps\\
+{[} -- ] & {[} -- ] & {[} \(\sfrac{m}{s}\) ] & {[} \(\sfrac{N}{m^2}\) ] & {[} -- ]\\
 \hline
 \hline
-0.001 & 5.363 & 2.6 & 0.1 & 362 712 et 362 664\\[0pt]
-0.005 & 5.363 & 2.6 & 0.1 & 613 656\\[0pt]
-0.010 & 5.363 & 2.6 & 0.1 & 445 904\\[0pt]
-0.050 & 5.363 & 2.6 & 0.1 & 633 240\\[0pt]
-0.100 & 5.363 & 2.6 & 0.1 & 746 663\\[0pt]
+0.001 & 5.363 & 2.6 & 0.1 & 362 712 et 362 664\\
+0.005 & 5.363 & 2.6 & 0.1 & 613 656\\
+0.010 & 5.363 & 2.6 & 0.1 & 445 904\\
+0.050 & 5.363 & 2.6 & 0.1 & 633 240\\
+0.100 & 5.363 & 2.6 & 0.1 & 746 663\\
 \hline
 \hline
 \end{tabular}
@@ -274,9 +276,8 @@ Robert & \(\sfrac{L_d}{dx}\) & max(c\textsubscript{bc}) & \(\abs{\vb{\tau}}\) & 
 
 Donc, je pourrais dire que ça n'a pas vraiment marché.
 On va passer à une autre solution.
-
 \subsection{Solution : pas de temps plus faible? -- \textit{<2023-10-13 Fri>}}
-\label{sec:org88173b1}
+\label{sec:org8df59a4}
 
 Une autres solution proposée par David.
 Si notre diagnostique d'erreur numérique est bon, ça devrait régler le problème.
@@ -285,20 +286,20 @@ Tous ces tests sont réalisés avec un pas de temps de 200 secondes au lieu du 3
 
 Après avoir tenté l'expérience, j'ai vu que le pas de temps ne change arbitrairement rien.
 Au fond, il semble qu'il y ait des incursions lorsque deux « blobs » se séparent et il faudrait trouve un moyen de gérer ces incursions.
-Un résumé des expériences se retrouve dans le tableau \ref{tab:orgf92c710}.
+Un résumé des expériences se retrouve dans le tableau \ref{tab:org3a1bbb1}.
 
 \begin{table}[htbp]
-\caption{\label{tab:orgf92c710}Résumé des expériences lancées avec un pas de temps de 200 secondes au lieu de 300.}
+\caption{\label{tab:org3a1bbb1}Résumé des expériences lancées avec un pas de temps de 200 secondes au lieu de 300.}
 \centering
 \begin{tabular}{cccc}
 \hline
-Nombre de couches & min(\(\sfrac{L_d}{dx}\)) & max(c\textsubscript{bc}) & Dernier pas de temps\\[0pt]
+Nombre de couches & min(\(\sfrac{L_d}{dx}\)) & max(c\textsubscript{bc}) & Dernier pas de temps\\
 \hline
 \hline
-3 & 5.363 & 2.6 & 583 092\\[0pt]
-4 & 3.488 & 2.5 & 391 284\\[0pt]
-5 & 2.459 & 2.5 & 226 584\\[0pt]
-6 & 1.852 & 2.5 & 133 056\\[0pt]
+3 & 5.363 & 2.6 & 583 092\\
+4 & 3.488 & 2.5 & 391 284\\
+5 & 2.459 & 2.5 & 226 584\\
+6 & 1.852 & 2.5 & 133 056\\
 \hline
 \end{tabular}
 \end{table}
@@ -322,12 +323,10 @@ Tandis qu'on observe une incusrion à la frontière pour l'expérience à 4 couc
 \caption{ « Snapshot » de l'épaisseur de la couche supérieure en zoom sur la zone où cette dernière devient nulle. Et histograme de l'épaisseur de la première couche au même moment. Tirée de l'expérience à 3 couches.}
 \label{fig:thickness-close2}
 \end{figure}
-
 \subsection{Le besoin d'un transfert de masse et/ou d'un Laplacien sur l'épaisseur des couches?}
-\label{sec:orgb59f1b0}
-
+\label{sec:org6d6eaa6}
 \section{Retour rapide sur la « partial slip » -- \textit{<2023-10-13 Fri>}}
-\label{sec:orgf9f9ab6}
+\label{sec:orgccf7cf6}
 La \emph{partial} et la \emph{free slip} est maintenant controlée par la même sous-routine \emph{partial free slip.f90}.
 Tout passe maintenant par le paramètre « \(\alpha\) » qui décrit la proportion de la dérivée qui doit passer dans l'équation
 \begin{equation}
@@ -335,11 +334,8 @@ Tout passe maintenant par le paramètre « \(\alpha\) » qui décrit la proporti
 \end{equation}
 Donc, si l'on fixe une valeur nulle à « \(\alpha\) », on obtient une condition \emph{free slip}.
 Simple comme ça. 
-
-
-
 \section{« Spin up » de la dérive de Stokes -- \textit{<2023-10-12 Thu>}}
-\label{sec:org73a7cbc}
+\label{sec:org50089a6}
 
 \begin{wrapfigure}[14]{r}{0.65\textwidth}
 \vspace{-\baselineskip}
@@ -366,39 +362,37 @@ Simple comme ça.
    \draw (6,0) node [below] {Temps};
 \end{tikzpicture}
 \end{center}
-\caption{\label{org1c00ecc}Illustration conceptuelle de la rampe pour éviter le \emph{spin up} du modèle de vagues.}
+\caption{\label{org2e222ae}Illustration conceptuelle de la rampe pour éviter le \emph{spin up} du modèle de vagues.}
 \end{wrapfigure}
 
 En somme, le modèle de vagues a un \emph{spin up} extrême, pas en terme d'amplitude, mais en terme de vitesse et ça fait tout sauter -- l'épaisseur de la première couche atteint 0 en moins de 90 pas de temps.
 Donc, ce qu'on va faire, c'est une rampe différente que \emph{saute par dessus} le \emph{spin up} du modèle de vagues.
-Quelque chose qui ressemble à la figure \ref{org1c00ecc}. \bigskip
+Quelque chose qui ressemble à la figure \ref{org2e222ae}. \bigskip
 
 Bien que je croyais que cette solution serait suffisante, il semble que la dérive de Stokes soit encore trop forte.
 Nous allons donc essayer d'autres avenues dans les sections suivantes. 
-
 \section{Problème de dérive de Stokes}
-\label{sec:org37e223c}
+\label{sec:org1dd1adb}
 Après avoir tenté la solution proposée dans la section précédente, on voit qu'il faudra bien plus qu'une rampe pour satisfaire le modèle \emph{shallow water}.
-Sommairement, le modèle \emph{shallow water} ne tient pas le coups car la dérive de Stokes induit un gradient extrême dans la partie droite du domaine (Voir figure \ref{fig:org89022a1}).
+Sommairement, le modèle \emph{shallow water} ne tient pas le coups car la dérive de Stokes induit un gradient extrême dans la partie droite du domaine (Voir figure \ref{fig:org11a1dd7}).
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figures/debuggage/2023_10_13_UStokes.png}
-\caption{\label{fig:org89022a1}Figure instantanée du profil associé au transport de Stokes après trois jours.}
+\caption{\label{fig:org11a1dd7}Figure instantanée du profil associé au transport de Stokes après trois jours.}
 \end{figure}
 
-Lors de ma maîtrise, nous n'avions pas ce problème, car les zones primaires de productions de vagues (ZPPV) étaient à l'extérieur du domaine périodique, de sorte qu'on évitait le gradient élevé dans cette zonne (Voir figure \ref{fig:org03485a3})
+Lors de ma maîtrise, nous n'avions pas ce problème, car les zones primaires de productions de vagues (ZPPV) étaient à l'extérieur du domaine périodique, de sorte qu'on évitait le gradient élevé dans cette zonne (Voir figure \ref{fig:org664f63b})
 
 \begin{figure}[!htpb]
 \centering
 \includegraphics[width=0.5\textwidth]{figures/debuggage/2023_10_13_Stokes_coupe.png}
-\caption{\label{fig:org03485a3}Coupe horizontale du transport de Stokes après 4 jours.}
+\caption{\label{fig:org664f63b}Coupe horizontale du transport de Stokes après 4 jours.}
 \end{figure}
 
 Le même délire arrive aussi avec le \(\tau_{wave}\) et \(\tau_{dissipation}\), mais à moindre échelle.
-
 \section{Solutions à l'étude -- \textit{<2023-10-13 Fri>}}
-\label{sec:orga4278b1}
+\label{sec:org8de21de}
 
 \begin{itemize}
 \item \textbf{Ramener le coefficient de réflection aux murs dans le modèle de vagues.}
@@ -452,18 +446,17 @@ Il faudrait seulement avoir un genre de stencil qui moyenne chaque partie, mais 
 \fill [red, opacity=0.3] (3,3) rectangle (4,4);
 \end{tikzpicture}
 \end{center}
-\caption{\label{org120c59e}« Stencil » utilisé pour obtenir le champs aux plus grandes échelles.}
+\caption{\label{org0fa041e}« Stencil » utilisé pour obtenir le champs aux plus grandes échelles.}
 \end{figure}
 
 
 
 \newpage
-
 \subsection{Résultats -- \textit{<2023-10-16 Mon>}}
-\label{sec:org6953624}
+\label{sec:org04deaab}
 
 \subsubsection{Enlever la dérive de Stokes}
-\label{sec:orgdd08825}
+\label{sec:orgd57bc15}
 Ce test nous a permis de voir qu'au fond ce sont les variations dans la zone primaire de production de vagues qui viennent mettre à mal la circulation.
 Même si la dérive de Stokes est abscente, on a toujours le même problème avec la variation de l'interface.
 On se souvient que
@@ -475,9 +468,8 @@ Mentionnons que \(c_d(x,y)\) est dépendant du champ de vagues.
 \begin{center}
 \includegraphics[width=.9\linewidth]{figures/debuggage/2023_10_16_nostokes_tauoc.png}
 \end{center}
-
 \subsubsection{Changer le type de vent}
-\label{sec:org4ee77e1}
+\label{sec:org64dcd81}
 J'ai implémenté le nouveau schéma pour le vent, mais sans succès
 
 \begin{center}

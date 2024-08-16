@@ -1,4 +1,4 @@
-% Created 2024-07-23 Tue 11:42
+% Created 2024-08-03 Sat 16:24
 % Intended LaTeX compiler: pdflatex
 \documentclass[10pt]{article}
 % =================================BASE====================================%
@@ -9,15 +9,16 @@
 
 % Calligraphie
 %\usepackage{pxfonts} % Met le texte ET les maths en Palatino + donne accès à des symboles math
-\usepackage{palatino} % Cette commande met seulement le texte en police palatino
+%\usepackage{palatino} % Cette commande met seulement le texte en police palatino
 \usepackage{lmodern} % Pour les maths? Lmodern pour les maths
+\usepackage{cfr-lm}
 % Use lmodern for sans-serif
 \usepackage{mathrsfs} % Permet la command \mathscr (Lettres attachées genre) \mathscr(B)
 
 % Bibliographie
 %\usepackage[backend=bibtex,style=phys,sorting=ynt]{biblatex}
 \usepackage[backend=biber,sorting=ynt,style=authoryear]{biblatex} % N'est pas utilisé par le compilateur org-mode, mais NÉCESSAIRE. Voir le fichier init.el pour changer le style. 
-\addbibresource{/home/charlesedouard/Desktop/Travail/Documentation/2023/master-bibliography.bib}
+\addbibresource{master-bibliography.bib}
 
 
 \usepackage{amsmath, amssymb, amsthm} % Symb. math. (Mathmode+Textmode) + Beaux théorèmes.
@@ -64,7 +65,7 @@
 \definecolor{mypink}{RGB}{147, 0, 255}
 \hypersetup{colorlinks, 
              filecolor=mypink,
-             urlcolor=Violet, 
+             urlcolor=mypink, 
              citecolor=mypink, 
              linkcolor=mypink, 
              anchorcolor=mypink}
@@ -129,10 +130,13 @@
 
 \newcommand{\exemple}{
 \parbox[center]{2.2cm}{\begin{tcolorbox}[sharp corners, rounded corners=northeast, rounded corners=southeast,
-colback=Violet!5, colframe=black,
+colback=Violet!2, colframe=black,
 size=small, width=2cm, left=-0.25pt, bottom=-0.5pt,
 arc is angular, arc=2.5mm, boxrule=0.35pt, leftrule=4pt, %bottomrule=1pt,
 after={\enskip}] Exemple \end{tcolorbox}}}
+
+\newcommand{\rad}{\text{Rad}}
+
 
 \newcommand{\cqfd}{\hfill$\blacktriangleleft$}
 
@@ -204,17 +208,14 @@ Police d'écriture : \textbf{CMU Serif Roman}
  pdftitle={Carnet de bord, Université McGill},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 27.1 (Org mode 9.6.7)}, 
+ pdfcreator={Emacs 29.4 (Org mode 9.7.8)}, 
  pdflang={French}}
 \begin{document}
 
 \mytitlepage
 \tableofcontents\newpage
-
-
-
 \section{{\bfseries\sffamily DONE} Présentation des résultats de maîtrise}
-\label{sec:org99db7f0}
+\label{sec:org2b633c3}
 Ce mercredi 5 juillet, le groupe à David m'avait proposé de réaliser une présentation sur mon projet de maîtrise (de 2019 à 2022).
 Personnellement, je trouvais que c'était une bonne occasion de me remettre à niveau sur ce qui avait été réalisé, tout en revisitant certains résultats intéressants datant du début du projet.
 Aussi, ça m'a permis de faire une présentation en Anglais, ce qui n'avait pas vraiment été pertinent jusqu'à maintenant.
@@ -228,36 +229,33 @@ Je pense que ça sera une objectif pour une autre présentation.\bigskip
 Entre autres, un article de Charnok des années 50 sur le profil logarithmique, les découvertes de Miles et Philipps sur le décalage entre la pression et la crète de vagues, soit le méchanisme d'évolution des vagues.
 Aussi, ça me permettrait de revisiter certains concepts, comme le calcul menant à la dérive de Stokes et le fameux \emph{Garden-Sprinkler effect}.
 Bref, je met ça ici pour m'en souvenir.
-
 \section{Toujours des problèmes dans la divergence du courant barotrope}
-\label{sec:orgb3bda97}
+\label{sec:org3230894}
 
 \subsection{Diagnostique}
-\label{sec:org784fe1d}
+\label{sec:orgfba4a65}
 Encore et toujours, nous avons des problèmes avec la divergence du courant barotrope, comme démontré dans le dernier rapport.
 Certaines informations pertinentes :
 \begin{itemize}
-\item La divergence barotrope n'est pas nulle : Des «points» apparaissent dans la divergence et croient de manière linéaire avec le temps. C'est un problème car ça va créer de l'erreur numérique à long terme. L'erreur est de l'ordre de 1e-11 quand la divergence de chaque couche est autour de 1e-9 (voir figure \ref{fig:org49a7948}).
+\item La divergence barotrope n'est pas nulle : Des «points» apparaissent dans la divergence et croient de manière linéaire avec le temps. C'est un problème car ça va créer de l'erreur numérique à long terme. L'erreur est de l'ordre de 1e-11 quand la divergence de chaque couche est autour de 1e-9 (voir figure \ref{fig:org6308a2e}).
 \item La divergence du RHS barotrope, soit la quantité qui sort directement de MUDPACK est de 1e-19. C'est donc énormément plus petit. On pourrait pas mal dire que c'est de l'ordre de l'erreur numérique.
 \end{itemize}
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figures/debuggage/2023_07_010_3div1.png}
-\caption{\label{fig:org49a7948}Figure illustrant trois quantités reliées à la divergence au dernier pas de temps -- autour de 1450 jours. En ordre : la divergence de la première couche; la divergence barotrope du courant pour toutes les couches; la divergence du RHS du modèle.}
+\caption{\label{fig:org6308a2e}Figure illustrant trois quantités reliées à la divergence au dernier pas de temps -- autour de 1450 jours. En ordre : la divergence de la première couche; la divergence barotrope du courant pour toutes les couches; la divergence du RHS du modèle.}
 \end{figure}
 
-Avant le \emph{spin up}, les erreurs ont une forme légèrement différentes, mais le résultat est le même (voir figure \ref{fig:org0b97e83}).
+Avant le \emph{spin up}, les erreurs ont une forme légèrement différentes, mais le résultat est le même (voir figure \ref{fig:orgcc94bfe}).
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figures/debuggage/2023_07_010_3div1_t250.png}
-\caption{\label{fig:org0b97e83}Figure illustrant trois quantités reliées à la divergence au jour 250. En ordre : la divergence de la première couche; la divergence barotrope du courant pour toutes les couches; la divergence du RHS du modèle.}
+\caption{\label{fig:orgcc94bfe}Figure illustrant trois quantités reliées à la divergence au jour 250. En ordre : la divergence de la première couche; la divergence barotrope du courant pour toutes les couches; la divergence du RHS du modèle.}
 \end{figure}
-
-
 \subsection{Hypothèse}
-\label{sec:org4e432b2}
+\label{sec:org6b49099}
 Donc mon hypothèse est que ça se cache dans la partie barocline et non de MUDPACK.
 Voici l'argument que je fais :
 \begin{itemize}
@@ -269,30 +267,29 @@ Donc, il peut y avoir une partie divergente qui se cache dans cette dernière et
 Donc, au final on n'a pas de méchanisme de rappel qui vient tuer la partie divergente du flow, contrairement au modèle solutionné par FFTW.
 Il faudrait trouver une solution.
 Après une rencontre ce vendredi avec David et LP, on propose cordialement de retirer la partie divergente à tous les dix pas de temps, ce qui devrait demander une autre run de MUDPACK, mais le coût numérique est très faible.
-
 \subsection{Solution}
-\label{sec:org5e50a5f}
+\label{sec:org4daf603}
 
 À tous les 100 pas de temps, on pourrait retirer la partie non-divergente de notre écoulement.
 Dans ce cas, on appliquerait donc une correction à notre écoulement barotrope.
 En premier lieu, il est extrêmement simple à prouver la moyenne barotrope des vorticités et égale au rotationnel du courant barotrope, soit
 \begin{equation}
-\label{eq:org0b36af5}
+\label{eq:orgeb925b9}
    \zeta_{BT} = \qty(\frac{1}{H})\sum_k^n h_k\zeta_k = \qty(\frac{1}{H})\sum_k^n h_k\pt \kvf \cdot \curl{\uu_k} = \qty(\frac{ \kvf}{H})\cdot\sum_k^n\curl(h_k\uu_k) = \kvf\cdot\curl(\frac{1}{H}\sum_k^n h_k\uu_k) = \kvf\cdot\curl{\uu_{BT}},
 \end{equation}
-car le produit vectoriel est un opérateur linéaire (\ref{eq:org0b36af5}).
+car le produit vectoriel est un opérateur linéaire (\ref{eq:orgeb925b9}).
 Il existe donc deux méthodes pour trouver la vorticités barotrope.\bigskip
 
 Le processus pour corriger notre écoulement est simple, on sait que
 \begin{equation}
-\label{eq:org02c5a47}
+\label{eq:org8c15c2b}
    \laplacian(\psi_{BT}) = \zeta_{BT}.
 \end{equation}
-Comme à l'habitude, notre écoulement est divisé en deux parties, soit barotropes (voir \ref{eq:org0b36af5}) et baroclines ,
+Comme à l'habitude, notre écoulement est divisé en deux parties, soit barotropes (voir \ref{eq:orgeb925b9}) et baroclines ,
 \begin{equation}
    \uu = \uu_{BT} + \uu_{BC}.
 \end{equation}
-Une fois \ref{eq:org02c5a47} solvé, on retrouve notre courant barotrope corrigé (\(\uu_{BT}'\)) à l'aide de
+Une fois \ref{eq:org8c15c2b} solvé, on retrouve notre courant barotrope corrigé (\(\uu_{BT}'\)) à l'aide de
 \begin{equation}
    \uu_{BT}' = \curl(k\psi_{BT}),
 \end{equation}
@@ -300,10 +297,8 @@ et l'on retroue le courant à l'aide de
 \begin{equation}
    \uu = \uu_{BT}' + \uu_{BC}.
 \end{equation}
-
-
 \subsection{Résultats}
-\label{sec:orgc065ab9}
+\label{sec:orgfa6675a}
 Ça ne parche pas vu qu'on est en périodique.
 Voici la nature du problème : les frontières sont périodiques, \emph{MUDPACK} essaie donc de relier les dérivées aux frontières sans considération de la constante d'intégration.
 Finalement, la solution relative par rapport à la constante d'intégration devient minuscule et on perd de plus en plus de précision.
@@ -315,13 +310,11 @@ Pour résumer, voici un passage de la documentation de MUDPACK :
 \end{quote}
 
 Donc, on embarque sur les murs au plus vite.
-
 \section{{\bfseries\sffamily TODO} Les murs}
-\label{sec:org505859b}
+\label{sec:orgb543960}
 Ok, il faut absolument embarquer sur les murs avant que je parte en vacance.
-
 \subsection{{\bfseries\sffamily TODO} Nombre de points}
-\label{sec:orgea1176a}
+\label{sec:org84ad660}
 
 \begin{wrapfigure}{r}{0.4\textwidth}
 \vspace{-\baselineskip}
@@ -354,7 +347,7 @@ Ok, il faut absolument embarquer sur les murs avant que je parte en vacance.
 {{\filldraw [black!85] (\i,\j) circle (0.8pt);}}
 \end{tikzpicture}
 \end{center}
-\caption{\label{org28a2d20}Grille  avec frontières fixes.}
+\caption{\label{org39311c1}Grille  avec frontières fixes.}
 \end{wrapfigure}
 
 
@@ -377,17 +370,14 @@ Pour être plus précis les dimensions seront données par
 \item eta(0:nx+1,0:ny+1)
 \item zeta(nx,ny)
 \end{itemize}
-
 \subsection{Condition no-normal flow}
-\label{sec:org3f836ea}
+\label{sec:org9cf94ae}
 La condition \emph{no-normal flow} est tout simplement donnée par
 \begin{align}
    && u\pt(\pt:\pt,1) = u\pt(:\pt,ny) = 0, && v\pt(1,:\pt) = v\pt(nx,:\pt) = 0. &&
 \end{align}
-
-
 \subsection{Condition free slip}
-\label{sec:org02cde21}
+\label{sec:orgc3cb011}
 Avec notre nouvelle définition de grille, la condition \emph{free slip} est tout simplement donnée par
 \begin{align}
     && u\pt(\pt0,:) = u\pt(1,:); && u\pt(nx+1,:) = u\pt(nx,:) && \\

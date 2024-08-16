@@ -1,4 +1,4 @@
-% Created 2024-07-23 Tue 11:42
+% Created 2024-08-03 Sat 16:24
 % Intended LaTeX compiler: pdflatex
 \documentclass[10pt]{article}
 % =================================BASE====================================%
@@ -9,15 +9,16 @@
 
 % Calligraphie
 %\usepackage{pxfonts} % Met le texte ET les maths en Palatino + donne accès à des symboles math
-\usepackage{palatino} % Cette commande met seulement le texte en police palatino
+%\usepackage{palatino} % Cette commande met seulement le texte en police palatino
 \usepackage{lmodern} % Pour les maths? Lmodern pour les maths
+\usepackage{cfr-lm}
 % Use lmodern for sans-serif
 \usepackage{mathrsfs} % Permet la command \mathscr (Lettres attachées genre) \mathscr(B)
 
 % Bibliographie
 %\usepackage[backend=bibtex,style=phys,sorting=ynt]{biblatex}
 \usepackage[backend=biber,sorting=ynt,style=authoryear]{biblatex} % N'est pas utilisé par le compilateur org-mode, mais NÉCESSAIRE. Voir le fichier init.el pour changer le style. 
-\addbibresource{/home/charlesedouard/Desktop/Travail/Documentation/2023/master-bibliography.bib}
+\addbibresource{master-bibliography.bib}
 
 
 \usepackage{amsmath, amssymb, amsthm} % Symb. math. (Mathmode+Textmode) + Beaux théorèmes.
@@ -64,7 +65,7 @@
 \definecolor{mypink}{RGB}{147, 0, 255}
 \hypersetup{colorlinks, 
              filecolor=mypink,
-             urlcolor=Violet, 
+             urlcolor=mypink, 
              citecolor=mypink, 
              linkcolor=mypink, 
              anchorcolor=mypink}
@@ -129,10 +130,13 @@
 
 \newcommand{\exemple}{
 \parbox[center]{2.2cm}{\begin{tcolorbox}[sharp corners, rounded corners=northeast, rounded corners=southeast,
-colback=Violet!5, colframe=black,
+colback=Violet!2, colframe=black,
 size=small, width=2cm, left=-0.25pt, bottom=-0.5pt,
 arc is angular, arc=2.5mm, boxrule=0.35pt, leftrule=4pt, %bottomrule=1pt,
 after={\enskip}] Exemple \end{tcolorbox}}}
+
+\newcommand{\rad}{\text{Rad}}
+
 
 \newcommand{\cqfd}{\hfill$\blacktriangleleft$}
 
@@ -204,24 +208,22 @@ Police d'écriture : \textbf{CMU Serif Roman}
  pdftitle={Carnet de bord, Université McGill},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 27.1 (Org mode 9.6.7)}, 
+ pdfcreator={Emacs 29.4 (Org mode 9.7.8)}, 
  pdflang={French}}
 \begin{document}
 
 \mytitlepage
 \tableofcontents\newpage
-
-
 \section{MUDPACK}
-\label{sec:org5c7b6dc}
+\label{sec:orgf6fc0fd}
 \subsection{Mise en contexte}
-\label{sec:org46cf6ab}
+\label{sec:org214ac73}
 
 
 \begin{wrapfigure}[17]{r}{0.41\textwidth} \vspace{-\baselineskip}
 \centering
 \includegraphics[width=0.38\textwidth]{figures/logos/SPHERE.png}
-\caption{\label{fig:org17336ba}Logo MUDPACK}
+\caption{\label{fig:org1135eba}Logo MUDPACK}
 \end{wrapfigure}
 
 \textbf{N.B.} Nous sommes jeudi le 13 avril et je commence enfin à \emph{jouer} avec la suite MUDPACK   \autocite{adams1989mudpack}.
@@ -237,9 +239,8 @@ L'accronyme NCAR fait référence à \emph{National Center For Atmospheric Resea
 Toutes ces suites FORTRAN sont disponibles sur le \href{https://github.com/NCAR/NCAR-Classic-Libraries-for-Geophysics}{GitHub de NCAR} et on remarque qu'en date de la l'écriture de ce carnet, ces sous-routines ont été mises à jour il y a moins de deux ans.
 Je trouve ça exceptionnel pour un langage de programmation que beaucoup de gens trouvent « vieux jeux » et même désuet.
 Bref, contre toutes attentes, les « excursions » numériques de David et Louis-Philippe commencent à me plaire.
-
 \subsection{Téléchargement de la suite MUDPACK}
-\label{sec:org96610f2}
+\label{sec:orgfc44450}
 Avant de débuter, on se doute qu'il faut -- au même titre que la suite LAPACK -- installer le module Fortran et lui assigner un \emph{PATH}, car il n'est probablement pas déjà installé sur les versions usuelles de Ubuntu.
 À première vue, la suite MUDPACK est introuvable sur la toile et il existe très peu de documentation, mis à part quelques pages GitHub personnelles.
 Comme pour l'installation de LAPACK, je me demandais s'il y avait un moyen d'installer une archive avec une commande Debian du type
@@ -268,9 +269,8 @@ Une fois téléchargé, on peut ouvrir le \emph{tar} à l'aide des commandes
   >>> cd mudpack5.0.1
 \end{verbatim}
 comme il est conseillé de faire dans le README en ligne.
-
 \subsection{Installation et compilation de la suite MUDPACK}
-\label{sec:orgf936c36}
+\label{sec:orgedcd51c}
 Il sera nécessaire de constuire et compiler la suite à l'aide d'un \emph{Makefile}.
 Nous allons donc modifer le fichier \emph{bash} \emph{make.inc} qui construira un \emph{Makefile} à l'aide des bons compilateurs.
 \begin{enumerate}
@@ -342,11 +342,10 @@ Cette commande nous fait essentiellement mention de toutes les librairies utilis
   libgcc_s.so.1 => /lib/x86_64-linux-gnu/libgcc_s.so.1 (0x00007fa3eda64000)
   /lib64/ld-linux-x86-64.so.2 (0x00007fa3ee0fc000)
 \end{verbatim}
-
 \section{Conditions frontières et schéma numérique}
-\label{sec:org56fffa7}
+\label{sec:org3c788e2}
 \subsection{Mise en contexte}
-\label{sec:org26855ac}
+\label{sec:org29ef407}
 \begin{wrapfigure}[20]{r}{0.45\textwidth}
 \vspace{-\baselineskip}
 \centering
@@ -388,7 +387,7 @@ Cette commande nous fait essentiellement mention de toutes les librairies utilis
 \draw [-{latex}|] (dy1) -- (0.70,1);
 \draw [-{latex}|] (dy1) -- (0.70,2);
 \end{tikzpicture}
-\caption{\label{orgdb17e08}Représentation de la grille numérique utilisée pour le modèle en eau peu profonde (type \href{https://en.wikipedia.org/wiki/Arakawa\_grids}{Arakawa-C} )}
+\caption{\label{orgc70a8d3}Représentation de la grille numérique utilisée pour le modèle en eau peu profonde (type \href{https://en.wikipedia.org/wiki/Arakawa\_grids}{Arakawa-C} )}
 \end{wrapfigure}
 
 Pour débuter, nous voulons rajouter des murs aux frontières de notre expérience numérique.
@@ -404,9 +403,8 @@ Ce solveur utilise plutôt des fonctions de Green ou une technique de relaxation
 Par contre, il faudra ajuster les conditions limites de sorte à ce que le courant, sa dérivée première et sa dérivée seconde soient définit aux frontières.\bigskip
 
 \textbf{N.B.} Mentionnons que le nombre de conditions frontières nécessaires augmente directement avec l'ordre de l'équation différentielle que nous tentons de résoudre.
-
 \subsection{Conditions frontière sur les courants (No normal flow)}
-\label{sec:org4fa8708}
+\label{sec:orga8a1932}
 Pour les courants qui traversent les murs, on applique la condition \emph{no normal flow}.
 La condition \emph{no normal flow} est une condition de type Dirichlet qui est caractérisée par un courant normal nul aux frontières, bref comme si le fluide \emph{adhérait} aux murs.
 C'est donc une condition d'imperméabilité.
@@ -430,9 +428,8 @@ Numériquement, on peut énoncer que sur une grille cartésienne la condition \e
 (\text{Courant }v) &&  v\pt[0,\pt:\pt] = v\pt[1,\pt:\pt] && \text{et} && v\pt[nx+1,\pt:\pt] &= v\pt[nx,\pt:\pt].&&
 \end{align}
 \end{subequations}
-
 \subsection{Conditions frontières sur la dérivée première (Free slip condition)}
-\label{sec:org9362732}
+\label{sec:org62eaa4e}
 Avant tout, mentionnons qu'on fait régulièreement référence à un concept appelé la \emph{no slip condition}.
 Cette condition se caractérise par l'absence de courant tangeant au mur.
 Comme le courant normal aux frontières est généralement nul dans les cas à l'étude (\emph{no normal flow}), la \emph{no slip condition} réfère généralement au fait qu'aucun fluide ne bouge au mur.\bigskip
@@ -441,19 +438,17 @@ Par contre, on s'intéresse aujourd'hui à la \emph{free slip condition}.
 La \emph{free slip condition} tient à l'hypothèse que la couche limite est si petite qu'on peut essentiellement l'ignorer, ce qui est souvent le cas pour l'étude des fluides à grande échelle.
 Concrétement, il n'y a \href{https://physics.stackexchange.com/questions/383096/understanding-free-slip-boundary-condition\#:\~:text=On\%20the\%20other\%20hand\%2C\%20the,the\%20tangential\%20component\%20is\%20unrestricted.}{pas de contrainte de cisaillement au mur}, de sorte que
 \begin{align}
-\label{eq:org39d524e}
+\label{eq:org33222fe}
 &&\eval{\qty(\boldsymbol{\tau}_x = \mu \pdv{u}{y})\pt }_{\pt\{xi,xf\}} = 0\pt, && \text{et} &&
   \eval{\qty(\boldsymbol{\tau}_x = \mu \pdv{u}{y})\pt }_{\pt\{yi,yf\}} = 0\pt. &&
 \end{align}
 où \(\mu\) est la viscosité \autocite{tan2018applying}.
-Ainsi, l'expression \ref{eq:org39d524e} force la condition frontière sur la dérivée première à satisfaire 
+Ainsi, l'expression \ref{eq:org33222fe} force la condition frontière sur la dérivée première à satisfaire 
 \begin{equation}
 \boxed{\hspace{0.7cm}\eval{\pdv{v}{x}\pt }_{\pt\{xa,xf\}} = 0\pt\ \forall\ y,\hspace{1.3cm} \text{et} \hspace{1.3cm} \eval{\pdv{u}{y}\pt }_{\pt \{yi,yf\}} = 0\pt\ \forall\ x.\hspace{0.7cm}\bigno}
 \end{equation}
-
-
 \subsection{Calcul de la dérivée seconde en présence de murs}
-\label{sec:org797a919}
+\label{sec:org4804bf5}
 Pour calculer la dérivée seconde, on a besoin de trois points, de sorte que la courbure de notre champ est donnée par
 \begin{equation}
 \pdv[2]{u}{x} [i,:\pt] = \frac{u\pt[i-1,:\pt] + u\pt[i+1,:\pt] -2u\pt[i,:\pt]}{\Delta x^2}.
@@ -482,9 +477,8 @@ u''[1,:] = \frac{2}{3\Delta x} \big(\vphantom{()}\pt u'[2,:] - u'[1,:]\pt \big).
 \hspace{0.3cm}}
 \end{equation}
 Le même principe est applicable à chaque frontière et dans chaque direction.\newpage
-
 \subsection{Étude des conditions frontières et lien avec MUDPACK}
-\label{sec:orgeee1ce5}
+\label{sec:orgb5cf47e}
 \begin{wrapfigure}[14]{r}{0.5\textwidth}
 \centering
 \begin{tikzpicture}[scale=0.8]
@@ -503,7 +497,7 @@ Le même principe est applicable à chaque frontière et dans chaque direction.\
    \draw (0.6,-1.2) node {\large$\phi|_{C_1} = \phi_0$};
    \draw (-1.1,2.1) node {\large $\eval{\pdv{\phi}{n}}_{C_2}\hspace{-0.3cm}= f$};
 \end{tikzpicture}
-\caption{\label{org33e6c77}Condition frontière mixte autour d'une région \(\Omega\) borné par la courbe \(C = C_1\cup C_2\).}
+\caption{\label{org87e6d05}Condition frontière mixte autour d'une région \(\Omega\) borné par la courbe \(C = C_1\cup C_2\).}
 \end{wrapfigure}
 
 Pour chaque frontière, il est possible d'appliquer une condition différente sur la fonction \(\phi\).

@@ -1,4 +1,4 @@
-% Created 2024-07-23 Tue 11:41
+% Created 2024-08-03 Sat 16:23
 % Intended LaTeX compiler: pdflatex
 \documentclass[10pt]{article}
 % =================================BASE====================================%
@@ -9,15 +9,16 @@
 
 % Calligraphie
 %\usepackage{pxfonts} % Met le texte ET les maths en Palatino + donne accès à des symboles math
-\usepackage{palatino} % Cette commande met seulement le texte en police palatino
+%\usepackage{palatino} % Cette commande met seulement le texte en police palatino
 \usepackage{lmodern} % Pour les maths? Lmodern pour les maths
+\usepackage{cfr-lm}
 % Use lmodern for sans-serif
 \usepackage{mathrsfs} % Permet la command \mathscr (Lettres attachées genre) \mathscr(B)
 
 % Bibliographie
 %\usepackage[backend=bibtex,style=phys,sorting=ynt]{biblatex}
 \usepackage[backend=biber,sorting=ynt,style=authoryear]{biblatex} % N'est pas utilisé par le compilateur org-mode, mais NÉCESSAIRE. Voir le fichier init.el pour changer le style. 
-\addbibresource{/home/charlesedouard/Desktop/Travail/Documentation/2023/master-bibliography.bib}
+\addbibresource{master-bibliography.bib}
 
 
 \usepackage{amsmath, amssymb, amsthm} % Symb. math. (Mathmode+Textmode) + Beaux théorèmes.
@@ -64,7 +65,7 @@
 \definecolor{mypink}{RGB}{147, 0, 255}
 \hypersetup{colorlinks, 
              filecolor=mypink,
-             urlcolor=Violet, 
+             urlcolor=mypink, 
              citecolor=mypink, 
              linkcolor=mypink, 
              anchorcolor=mypink}
@@ -129,10 +130,13 @@
 
 \newcommand{\exemple}{
 \parbox[center]{2.2cm}{\begin{tcolorbox}[sharp corners, rounded corners=northeast, rounded corners=southeast,
-colback=Violet!5, colframe=black,
+colback=Violet!2, colframe=black,
 size=small, width=2cm, left=-0.25pt, bottom=-0.5pt,
 arc is angular, arc=2.5mm, boxrule=0.35pt, leftrule=4pt, %bottomrule=1pt,
 after={\enskip}] Exemple \end{tcolorbox}}}
+
+\newcommand{\rad}{\text{Rad}}
+
 
 \newcommand{\cqfd}{\hfill$\blacktriangleleft$}
 
@@ -204,21 +208,19 @@ Police d'écriture : \textbf{CMU Serif Roman}
  pdftitle={Carnet de bord, Université McGill},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 27.1 (Org mode 9.6.7)}, 
+ pdfcreator={Emacs 29.4 (Org mode 9.7.8)}, 
  pdflang={French}}
 \begin{document}
 
 \mytitlepage
 \tableofcontents\newpage
-
 \section{{\bfseries\sffamily DONE} Le problème des ondes de Kelvin au bord -- \textit{<2023-10-03 Tue>}}
-\label{sec:org85322dc}
+\label{sec:orgfa84690}
 Depuis quelques temps, toutes les simulations numériques non-couplées plantaient.
 Lorsque nous analysions les \emph{output}, il était évident que quelque chose se passait aux bords.
 L'épaisseur de la couche de surface atteingnait son minimum au côtes nord et sud, come si une onde de Kelvin beaucoup trop forte s'y était développée.
-
 \subsection{Partial slip condition}
-\label{sec:org63582f5}
+\label{sec:org57b14b7}
 David eu la brillante idée de vouloir « ralentir » l'onde -- et donc diminuer son amplitude -- en changeant sa vitesse aux frontières.
 Pour se faire, nous avions choisi de modifier la \emph{free slip condition} pour quelque chose qui retirerait du momentum aux frontières, donc une \emph{partial slip condition}.
 Aux frontières, la dérivée serait plutôt exprimée selon
@@ -238,9 +240,8 @@ Mais malgré tout, ça n'a pas sembler fonctionner.
 En effet, avec le temps, le courant et sa dérivée se stabilisent et l'effet devient quasiment similaire à un \emph{free slip} selon David.
 De plus, notre longueur caractéristique \(L_c\) ne peut pas être si grande que ça, ce qui fait en sorte que quelques points plus loin que la frontière et on est revenu à une condition quasi \emph{free slip}.
 Donc, malgré que la \emph{switch} est présente dans le fichier de paramètres, nous avons abandonné ce chemin.
-
 \subsection{Changer l'hyperviscosité par une viscosité -- \textit{<2023-10-04 Wed>}}
-\label{sec:orgf51df31}
+\label{sec:orgb878a2d}
 David soupçonnait qu'il y avait un problème relié à l'hyperviscosité dans le modèle.
 Il aurait été possible que la manière qu'on avait implémenté l'hyperviscosité ne fonctionne pas bien avec les bords -- étant donné que ça met en jeu un Laplacien double, etc. 
 C'est pourquoi David m'a proposé de la changer pour une viscosité qui dépend du Laplacien directement.
@@ -251,9 +252,8 @@ La viscosité peut en fait être exprimée mathématiquement par
 \end{equation}
 Bien que nous ayons implémenté une viscosité au lieu d'une hyperviscosité, le résultat était toujours le même.
 Les couches du modèle atteingnaient des épaisseurs nulles après quelques pas de temps aux frontières nord et sud.
-
 \subsection{Changer le profil de vent -- \textit{<2023-10-04 Wed>}}
-\label{sec:org55223ab}
+\label{sec:org3722db6}
 Après avoir fait pas mal de recherche sur les ondes de Kelvin dans le \autocite{vallis_2006}, David est arrivé à la conclusion que ce n'étaient pas des ondes de Kelvin, mais plutôt de l'\emph{upwelling} induit par le courant de bord.
 Ce courant était trop fort à cause du vent, donc on est passé d'un vent
 \begin{equation}
@@ -265,20 +265,18 @@ Ce courant était trop fort à cause du vent, donc on est passé d'un vent
 \end{equation}
 On a aussi diminué la valeur de \(\tau_0\) de moitié et tout fonctionne mieux.
 Le modèle produit maintenant des instabilités barocliniques sans problème.
-
 \section{{\bfseries\sffamily DONE} Compute Canada -- \textit{<2023-10-05 Thu>}}
-\label{sec:org2a59004}
+\label{sec:orge0f667c}
 \subsection{Introduction}
-\label{sec:org8903d9a}
+\label{sec:org394b470}
 Pour se connecter,
 \begin{verbatim}
   ssh -Y celiz2@beluga.computecanada.ca
 \end{verbatim}
 Le mot de passe est laissé à la discrétion du lecteur de ce rapport.
 En résumé, nous travaillons sur la grappe de calcul de l'ETS, soit Beluga en l'honneur de la baleine qui est en train de crever dans le Saint-Laurent.
-
 \subsection{Importation des modules sur Compute Canada}
-\label{sec:org0183fa2}
+\label{sec:org37d2255}
 Pour faire fonctionner nos modèles, on a besoin d'une couple de modules.
 Au même titre que sur la grappe de calcul Mingan, il est toujours possible de voir les modules listés à l'aide de la commande
 \begin{verbatim}
@@ -313,15 +311,12 @@ Tandis que pour Wavewatch III, il faut absolument ajouter ces commandes à notre
   PATH=$PATH:$HOME/projects/def-lpnadeau/celiz2/wavewatch3/exe
   export PATH
 \end{verbatim}
-
-
 \subsection{Script bash de type SLURM -- \textit{<2023-10-10 Tue>}}
-\label{sec:org15d111e}
+\label{sec:org9b78093}
 
 Pour faire fonctionner les module MPI sur compute Canada, il faut utiliser \emph{srun}, mais la commande \emph{mpirun} fonctionne aussi.\bigskip
-
 \subsection{Compilation des modèles numériques en MPI -- \textit{<2023-10-10 Tue>}}
-\label{sec:orgc0811a7}
+\label{sec:orga049dae}
 Un résumé rapide du travail effectué pour que ça \emph{marche} entre vendredi et mardi : \bigskip
 \begin{enumerate}
 \item Le modèle \emph{shallow water} doit \textbf{absolument} être compilé avec \emph{gfortran}, \emph{fishpack} n'a malheureusement pas été programé pour fonctionner avec \emph{ifort};\bigskip
@@ -337,13 +332,11 @@ C'est malheureusement le seul moyen que j'ai trouvé.\bigskip
 
 Dans le meilleur des mondes, j'aurais aimé que tout se compile soit avec \emph{gfortran} ou avec \emph{ifort}, mais il semble que ça doit en être autrement.
 Je voulais mettre ça ici, parce que ça m'a pris beaucoup de temps pour \emph{fuck around and find out} tout ça.
-
-
 \section{{\bfseries\sffamily DONE} Nouveau schéma pour l'introduction de la dérive de Stokes dans les équations du mouvement -- \textit{<2023-10-06 Fri>}}
-\label{sec:org92b92c6}
+\label{sec:orgb929266}
 Initialement, les équations du mouvement d'un système Boussinesq sont exprimées selon l'expression
 \begin{equation}
-\label{eq:orgc319734}
+\label{eq:org76d371e}
    \pdv{\uu}{t} = \qty(f+\zeta)\pt \kvf\times\uu = -\gradient{B} + \boldsymbol{D} + \frac{\boldsymbol{\tau_a}}{\rho_o H},
 \end{equation}
 où la fonction de Bernouilli (\(B\)) est exprimée par \(B = p/\rho_o + \uu^2/2\).\bigskip
@@ -358,7 +351,7 @@ En somme,
 \item Les termes de Stokes-Coriolis, Craik-Leibovic et la nouvelle fonction de Bernouilli découlent donc directement cette au référentiel en mouvement. \bigskip
 \end{itemize}
 
-Lorsqu'on ajoute cette contribution lagrangienne à notre courant, l'expression \ref{eq:orgc319734} devient plutôt
+Lorsqu'on ajoute cette contribution lagrangienne à notre courant, l'expression \ref{eq:org76d371e} devient plutôt
 \begin{equation}
    \pdv{\uu}{t} = \qty(f+\zeta)\pt \kvf\ \times\underbrace{\grande\qty(\uu + \uu_S)}_{\substack{\text{Courant} \\ \text{Lagrangien}}} = \underbrace{\grande-\gradient{B_S}}_\text{B.-Stokes} + \ \boldsymbol{D} \underbrace{+ \frac{\tau_o}{\rho_o H}.}_{\substack{\text{Contr. des} \\ \text{Vagues}}}
 \end{equation}

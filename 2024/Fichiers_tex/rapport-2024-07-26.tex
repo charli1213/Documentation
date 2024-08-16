@@ -1,4 +1,4 @@
-% Created 2024-07-22 Mon 14:02
+% Created 2024-08-15 Thu 10:27
 % Intended LaTeX compiler: pdflatex
 \documentclass[10pt]{article}
 % =================================BASE====================================%
@@ -9,15 +9,16 @@
 
 % Calligraphie
 %\usepackage{pxfonts} % Met le texte ET les maths en Palatino + donne accès à des symboles math
-\usepackage{palatino} % Cette commande met seulement le texte en police palatino
+%\usepackage{palatino} % Cette commande met seulement le texte en police palatino
 \usepackage{lmodern} % Pour les maths? Lmodern pour les maths
+\usepackage{cfr-lm}
 % Use lmodern for sans-serif
 \usepackage{mathrsfs} % Permet la command \mathscr (Lettres attachées genre) \mathscr(B)
 
 % Bibliographie
 %\usepackage[backend=bibtex,style=phys,sorting=ynt]{biblatex}
 \usepackage[backend=biber,sorting=ynt,style=authoryear]{biblatex} % N'est pas utilisé par le compilateur org-mode, mais NÉCESSAIRE. Voir le fichier init.el pour changer le style. 
-\addbibresource{/home/charlesedouard/Desktop/Travail/Documentation/2024/master-bibliography.bib}
+\addbibresource{master-bibliography.bib}
 
 
 \usepackage{amsmath, amssymb, amsthm} % Symb. math. (Mathmode+Textmode) + Beaux théorèmes.
@@ -64,7 +65,7 @@
 \definecolor{mypink}{RGB}{147, 0, 255}
 \hypersetup{colorlinks, 
              filecolor=mypink,
-             urlcolor=Violet, 
+             urlcolor=mypink, 
              citecolor=mypink, 
              linkcolor=mypink, 
              anchorcolor=mypink}
@@ -129,10 +130,13 @@
 
 \newcommand{\exemple}{
 \parbox[center]{2.2cm}{\begin{tcolorbox}[sharp corners, rounded corners=northeast, rounded corners=southeast,
-colback=Violet!5, colframe=black,
+colback=Violet!2, colframe=black,
 size=small, width=2cm, left=-0.25pt, bottom=-0.5pt,
 arc is angular, arc=2.5mm, boxrule=0.35pt, leftrule=4pt, %bottomrule=1pt,
 after={\enskip}] Exemple \end{tcolorbox}}}
+
+\newcommand{\rad}{\text{Rad}}
+
 
 \newcommand{\cqfd}{\hfill$\blacktriangleleft$}
 
@@ -204,33 +208,295 @@ Police d'écriture : \textbf{CMU Serif Roman}
  pdftitle={Rapport hebdomadaire},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 27.1 (Org mode 9.6.7)}, 
+ pdfcreator={Emacs 29.4 (Org mode 9.7.8)}, 
  pdflang={French}}
 \begin{document}
 
 \mytitlepage
 \tableofcontents\newpage
+\section{Maîtrise de Eliot Bismuth}
+\label{sec:orgbd387cd}
 
-
-\section{Maitrise de Eliot Bismuth}
-\label{sec:org7ac5431}
-
-Équations de base,
+\subsection{Équations en jeu}
+\label{sec:org89b4ec7}
+Rapidement, les équations d'évolution de l'énergie associée à chaque fréquences est donnée par
 \begin{equation}
-   \frac{1}{c_g}\qty(\dv{E}{t}) = (1-f_i)\qty(S_{in} + S_{wc}) + f_i S_{ice}.
+\label{eq:org6ce8bb6}
+   \frac{1}{c_g}\dv{E}{t} = (1-f_i)\qty(S_{in} + S_{wc}) + f_i S_{ice}.
 \end{equation}
 
+S'il fallait isoler l'advection dans l'équation \ref{eq:org6ce8bb6}, nous aurions
+\begin{equation}
+\label{eq:orgea0c11e}
+   \pdv{E(\omega,x,t)}{t} + \dot{x}\pdv{E}{x} + \dot{\omega} \pdv{E}{\omega} = 0
+\end{equation}
+Mais nous n'avons pas vraiment accès à toutes ces quantités.
+Il faudra trouver un moyen d'observer le \emph{spreading} temporel des fréquences.\bigskip
+
+\nb On va résoudre cette question dans les sections suivantes.
+\subsection{Rappel rapide et conceptuelle d'une onde dans le contexte des vagues}
+\label{sec:orgbf6c09c}
+La solution à l'équation d'onde est illustrée par une somme des solutions qui satisfont aussi la même équation (combination linéaire de solutions).
+D'où la possibilité de représenter la vraie solution par une somme de Fourier.
+La hauteur de la surface est ainsi illustrée par
+\begin{equation}
+\label{eq:orga4ed0fb}
+   h(\vb{x},t) = \sum_{i,j,k} A_{i,j,k}\cdot\sin(k_{x,i} \cdot x + k_{y,i}\cdot y - \omega_j t + \phi_k)\quad
+    \mathrm{où}\quad\left\lbrace\begin{matrix}
+      k_{x,i} = k\cos(\theta_{i}), \\
+      k_{y,i} = k\sin(\theta_{i}).
+    \end{matrix}\right.
+\end{equation}
+Par contre, il existe une relation de dispersion (voir \ref{eq:org282f871} à la sous-section suivante), de sorte que \ref{eq:orga4ed0fb} devienne
+\begin{equation}
+   h(\vb{x},t) = \sum_{i,j} A_{i,j}\cdot\sin(\vb{k}(\theta_i)\cdot \vb{x} - \omega(\theta_i)\cdot t + \phi_j)
+\end{equation}
+On sait aussi qu'en moyenne, la phase est nulle, de sorte que \(\expval{\phi_j} = 0\), donc on peut de nouveau se débarrasser d'un indice \(j\).
+Mentionnons aussi que la constante de phase n'est vraiment pas une quantitée importante dans la représentation mathématique de nos vagues, car les vagues se propagente et on s'intéresse plutôt au spectre, donc
+\begin{equation}
+   h(\vb{x},t) = \sum_{i} A_{i} \cdot\sin(\vb{k}_i \cdot \vb{x} - \omega_i \cdot t)
+\end{equation}
+Conceptuellement, dans une modèle à différences finies, la fréquence \(\omega\) n'est qu'une variable comme une autre, de sorte que la hauteur de la surface pourrait aussi être illustrée par
+\begin{equation}
+\label{eq:org5c83a61}
+   \boxed{\quad h(\vb{x},t,k) = A(k) \cdot\sin(\vb{k} \cdot \vb{x} - \sqrt{gk}\cdot t).\quad}
+\end{equation}
+Ainsi, toutes les vagues se propageant à la surface de l'océan devraient avoir la composante \ref{eq:org5c83a61} précédente.
+Pour obtenir les coefficients de notre transformée de Fourier spatiale, on intégrerait justement par rapport aux \emph{vagues possibles mathématiquement} (la forme qu'on a trouvé précédemment), soit
+\begin{equation}
+   A(k,t) = \iint_0^{x_{max}} \tilde{h}(\vb{x},t,k) \cdot \sin(\vb{k} \cdot \vb{x} - \sqrt{gk}\cdot t) \dd x\dd y.
+\end{equation}
+où \(\tilde{h}\) fait justement référence au champ de vagues réel. 
+Heureusement, grace au théorême de Parseval, on sait qu'il existe une invariant qui nous permet de dire
+\begin{equation}
+   E(t) \propto \sum_i \qty[A(k_i,t)]^2 = \sum_i \qty[h(\vb{x}_i,t)]^2
+\end{equation}
+d'oû la possibilité d'évaluer l'énergie pour chaque nombre d'onde \(k_i\) et fréquences \(\omega_i\).
+\subsection{Lien avec la documentation de Wavewatch III}
+\label{sec:orge687b06}
+Selon \Textcite{william2013wave}, dans le cas où le courant est nul, on peut toujours considérer la vitesse associée à l'advection comme la vitesse de groupe \(c_g\).
+Pour s'en convaincre, reprenons la documentation de Wavewatch III \autocite[p.11 et 13]{wwiii2016user}.
+On y retrouve une définition plus concrète du courant d'advection,
+\begin{subequations}
+\begin{align}
+   & \dot{\vb{x}} = \vb{c}_g + \vb{U},\grande\\
+   & \omega = \sigma + \vb{k}\cdot \vb{U},
+\end{align}
+\end{subequations}
+où \(\sigma\) est la fréquence relative (\(2\pi f_r\)), \(\omega\) est la fréquence absolue (\(2\pi f_a\)) et \(\vb{U}\) est la vitesse du courant d'advection. 
+La relation de dispersion \autocite[voir][p.11]{wwiii2016user} est illustrée par
+\begin{subequations}
+\label{eq:org282f871}
+\begin{align}
+   &\sigma = \sqrt{ gk \tanh kd }, \\
+   &\lim_{d\rightarrow\infty} \sigma = \sqrt{gk},
+\end{align}
+\end{subequations}
+où la relation de dispersion pour les vagues océanique (\(d\rightarrow\infty\)) est illustrée en bas.
+Les auteurs optent aussi pour une représentation de \textbf{la spectre de densité d'action des vagues} (\emph{wave action density spectrum}) bien différente de \ref{eq:orgea0c11e} (que j'ai adapté à 1 dimension), soit
+\begin{equation}
+   \pdv{N}{t} + \pdv{}{x}\qty(\dot{x} N) + \pdv{}{k} \qty(\dot{k}N)  = 0.
+\end{equation}
+ça revient absolument au même, voir le développement à l'aide d'une quantité fictive \(\beta\).\bigskip
+
+\exemple Soit une quantité \(\beta(x,\omega,t)\).
+Alors la dérivée en chaîne de \(N\) par rapport à cette même quantité peut être exprimée par
+\begin{align}
+   \pdv{}{\beta}\qty(\dot{\beta} N) &= \pdv{}{\beta} \qty(\pdv{\beta}{t} N),\nonumber\\
+   &= N \qty(\pdv{}{\beta} \qty(\pdv{\beta}{t})) + \pdv{\beta}{t}\pdv{N}{\beta},\nonumber\\
+   &= N \qty(\pdv{}{t} \qty(\pdv{\beta}{\beta})) + \pdv{\beta}{t}\pdv{N}{\beta},\nonumber\\
+   &= N \qty(\pdv{}{t} \qty(1)) + \pdv{\beta}{t}\pdv{N}{\beta},\nonumber\\
+   &= \dot{\beta}\pdv{N}{\beta}.
+\end{align}
+Mentionnons aussi qu'on a plusieurs quantités ayant des noms similaires, soit le spectre d'énergie \(E\) ou de variance (C'est la même chose), mais on utilise plutôt le \textbf{spectre de densité d'action des vagues} (\emph{wave action density spectrum}) \(N\) en raison de la conservation (\(N = F/\sigma\)),
+\begin{equation}
+  \boxed{\quad \grande\dv{N}{t} = \frac{S}{\sigma}.\quad }
+\end{equation}
+\subsection{Retour à la maîtrise d'Eliot Bismuth}
+\label{sec:orgb921299}
+
+On retrouve donc la formulation utilisée par \Textcite{william2013wave} et dans la maîtrise de Bismuth.
 Grossièrement, le modèle de Bismuth fait un pas d'advection à l'aide de la \href{https://en.wikipedia.org/wiki/Lax\%E2\%80\%93Wendroff\_method}{méthode de Lax-Wendroff,} soit une méthode très efficace pour résoudre les équations différentielles hyperboliques de la forme
 \begin{equation}
+\label{eq:orgfa16c26}
    \pdv{u(x,t)}{t} = \pdv{}{x}\qty(f(u(x,t))).
 \end{equation}
+Selon l'article de \Textcite{william2013wave} (et comme précédemment), l'advection est définit par l'expression
+\begin{equation}
+   \dv{S}{t} = \pdv{S}{t} + c_g \pdv{S}{x} = 0,
+\end{equation}
+où \(S\) est la fonction de densité spectrale, généralement exprimé par \(N\) (comme partout précédemment) (À revérifier).
+De toute manière, dans la maîtrise de Bismuth, nous prenons la convention pour \(E(\omega,x,t)\), donc l'advection est exprimée par
+\begin{equation}
+\label{eq:org4215ad5}
+   \dv{E}{t} = \pdv{E}{t} + c_g \pdv{E}{x} = 0,
+\end{equation}
 
-Notre advection a plutôt la forme
+\nb Il n'y a pas d'étalement selon les fréquences.
+La raison est simple : l'étalement du aux fréquences est vu comme un terme source, car ça peut dépendre de plein de chose, dont principalement le \emph{whitecapping}.
+C'est pourquoi on ne tend pas vraiment à l'ajouter directement dans l'advection.\bigskip
+
+Donc, en suivant \ref{eq:orgfa16c26}, ont voit que le terme
 \begin{equation}
-   \pdv{E(x,t)}{t} + u(x,t)\cdot\pdv{E(x,t)}{x} = 0.
+   c_g \pdv{E}{x} = \pdv{}{x} \qty(c_g E) = \pdv{}{x} \qty(f(E(x,t))) \quad\quad \mathrm{où} \quad\quad f\qty(E(x,t)) = c_g E.
 \end{equation}
-Par contre, nous nous intéressons au cas sans courant (\(u=0\ \forall\ x\)), de sorte que le schéma peut être résolu comme \textbf{un cas linéaire} où \(f(u) = A\cdot u\), soit
+C'est \textbf{un cas linéaire} où \(f(u) = A\cdot u\), soit
 \begin{equation}
-   u_i^{n+1} = u_i^n - \qty(\frac{\Delta t}{2\Delta x}) A \qty[u^n_{i+1} - u^n_{i-1}] + \qty(\frac{\Delta t^2}{2 \Delta x^2})A^2 \qty[u^n_{i+1} -2u^n_{i} + u^n_{i-1}].
+   u_i^{n+1} = u_i^n - \qty(\frac{\Delta t}{2\Delta x}) A \qty[u^n_{i+1} - u^n_{i-1}] + \qty(\frac{\Delta t^2}{2 \Delta x^2})A^2 \qty[u^n_{i+1} -2u^n_{i} + u^n_{i-1}],
 \end{equation}
+Avec nos quantités, nous aurions plutôt le schéma de Lax-Wendroff suivant : 
+\begin{equation}
+   \boxed{\quad E_i^{n+1} = E_i^n - \qty(\frac{\Delta t}{2\Delta x}) c_g \qty[E^n_{i+1} - E^n_{i-1}] + \qty(\frac{\Delta t^2}{2 \Delta x^2})c_g^2 \qty[E^n_{i+1} -2E^n_{i} + E^n_{i-1}].\quad}
+\end{equation}
+\subsection{Termes sources}
+\label{sec:orgab02a21}
+
+\subsubsection{Génération par le vent}
+\label{sec:orga975db3}
+
+Dans la maîtrise de Bismuth (2014), on assume une croissance linéaire, soit
+\begin{equation}
+   S = a + bE,
+\end{equation}
+où \(a\) est la croissance initiale des vagues
+Un peu comme dans le célèbre article de Phillips, on pourrait dire que c'est du bruit ou de la perturbation au niveau statistique.
+La partie \(bE\) est tirée d'un autre célèbre article, celui de Komen et al (1984), de sorte que
+\begin{equation}
+   b = 0.25\qty(\frac{\rho_A}{\rho_W})\omega\qty(28\frac{u_*}{c_p} - 1).
+\end{equation}
+Rapidement, \(\omega\) est définit comme la fréquence radiale (\(\omega \equiv 2\pi f\quad\qty[\rad\cdot\mathrm{s}^{-1}]\)); \(c_p\) est la vitesse de phase et \(u_*\) est la \emph{friction velocity} (Vitesse de frottement).\bigskip
+
+Bismuth (2014) utilise schéma suivant pour la vitesse de friction
+\begin{equation}
+   u_* = \left\lbrace \begin{matrix}
+     &U_{10}\sqrt{1.2875\times10^{-3}} & \text{pour}\quad U_{10} < 7.5\ \mathrm{ms}^{-1}\\
+     &U_{10}\sqrt{\qty(0.8+0.065U_{10})\times10^{-3}} & \text{pour}\quad U_{10}\geq 7.5\ \mathrm{ms}^{-1}\\
+   \end{matrix}\right.
+\end{equation}
+
+
+
+
+Par contre, je suggère qu'on utilise plutôt le schéma dépendant du profil inverse logarithmique, comme exprimé dans ma maîtrise.
+En premier lieu, on retrouve \(u_*\) à l'aide de sa définition
+\begin{equation}
+   u_* = \sqrt{c_D} u_{10}.
+\end{equation}
+
+
+Pour trouver la valeur de \(c_D\), on travaille avec la relation de Charnok \autocite{charnock1955wind} aussi tirée de \Textcite[p.30]{gill-atmosphere-ocean}, de sorte que 
+\begin{align}
+\label{eq:orge7515bd}
+   &&c_D = \qty[\frac{\kappa}{\ln(z/z_{\pt0})}]_{\ z=10\pt m}^2
+   && \text{où} &&
+   z_0 = \frac{\alpha_{Ch}\tau_a}{\rho_a g} = \frac{\alpha_{Ch} c_D |u_{10}|^2}{g}. &&
+\end{align}
+
+\begin{center}
+\begin{tabular}{clll}
+Variable & Valeur & Unités & Description\\
+\hline
+c\textsubscript{D} & À déterminer & -- & Coefficient de traînée\\
+\(\kappa\) & 0.41 & -- & Constante de Von Karman\\
+z & 10 & m & Hauteur de la mesure du vent (Typiquement 10m)\\
+z\textsubscript{0} & À déterminer & m & Rugosité de l'interface (\emph{roughness lenght})\\
+\(\alpha\)\textsubscript{Ch} & 0.0185 & -- & Valeur minimale du \href{https://codes.ecmwf.int/grib/param-db/148}{paramètre de Charnock} (Voir ECWAM)\\
+\(\tau\)\textsubscript{a} & À déterminer & N m\textsuperscript{-2} & Stress atmosphérique\\
+g & 9.81 & m s\textsuperscript{-2} & Accélération gravitationnelle\\
+\(\rho\)\textsubscript{a} & 1.225 & Kg m\textsuperscript{-3} & Densité atmosphérique\\
+\end{tabular}
+\end{center}
+\subsubsection{\emph{White-capping} et étalement dans les fréquences}
+\label{sec:orgaece676}
+
+Le terme de \emph{white-capping} est exprimé \autocite{hasselmann1974spectral} comme
+\begin{equation}
+   S_{wc} = -\mu kE,
+\end{equation}
+où \(\mu\) est un coefficient du rapport entre notre spectre et celui de Pierson-Moscowitz.
+Ce dernier est exprimé par
+\begin{equation}
+   \mu - 2.36\times 10^{-5} \qty(\frac{\tilde{s}}{s_{PS}})^4 \frac{\tilde{\omega}}{\tilde{k}}.
+\end{equation}
+On utilise la lettre \(s\) pour représenter la \emph{steepness} (ou la pente de nos vagues), de sorte que
+\begin{itemize}
+\item \(\tilde{s}\) est la pente moyenne définit par \(\tilde{s} = \tilde{k} \sqrt{m_0}\) où \(m_0\) est le \(0^\text{ième}\) moment de notre spectre d'énergie -- autrement dit c'est l'énergie totale.
+\item \(s_{PM}\) est la même quantité mais pour le spectre de Pierson-Moscowitz (\(\sim \sqrt{3.02\times10^{-3}}\)).
+\end{itemize}
+On calcule \(\tilde{\omega}\) et \(\tilde{k}\) à l'aide des expressions
+\begin{subequations}
+\begin{align}
+   \tilde{\omega} =& \qty[m_0^{-1} \int_0^\infty \omega^{-1} E(\omega)\pt \dd \omega\ \ ]^{-1} \\
+   \tilde{k} =& \qty[m_0^{-1} \int_0^\infty k^{-1/2} E(\omega)\pt \dd \omega]^{-2}
+\end{align}
+\end{subequations}
+Bismuth résoud les intrégrales précédentes à l'aide de la méthode des trapèzes (audacieux).
+
+\begin{center}
+\begin{tabular}{clll}
+Variable & Valeur & Unités & Description\\
+\hline
+\(\mu\) & À déterminer & -- & Rapport d'échelle avec Pierson-Moskowitz\\
+\(\tilde{s}\) & À déterminer & ? & Pente ou \emph{steepness}\\
+s\textsubscript{PM} & \sqrt{3.02\times10^°-3} & ? & Pente pour Pierson-Moskowitz\\
+\(\tilde{\omega}\) & À déterminer & \rad\(\cdot\) s\textsuperscript{-1} & Fréquence moyenne\\
+\(\tilde{k}\) & À déterminer & \rad\(\cdot\) m\textsuperscript{-1} & Nombre d'onde moyen\\
+m\textsubscript{0} & À déterminer & J & Énergie totale (premier moment)\\
+\end{tabular}
+\end{center}
+\subsubsection{Atténuation par la glace}
+\label{sec:org3a57f89}
+
+L'atténuation par la glace prend une forme très simple, soit
+\begin{equation}
+   S_{ice} = -\alpha E
+\end{equation}
+où \(\alpha\) est définit comme
+\begin{equation}
+   \alpha = \frac{\bar{\alpha}}{\expval{D}}.
+\end{equation}
+Officiellement les quantités précédentes sont
+\begin{itemize}
+\item \(\bar{\alpha}\), soit un coefficient d'atténuation empirique,
+\item \(\expval{D}\), la taille moyenne des floes.
+\end{itemize}
+Il faut résoudre un polynôme pour obtenir la quantité \(\bar{\alpha}\), malheureusement.
+
+\begin{center}
+\begin{tabular}{clll}
+Variable & Valeur & Unités & Description\\
+\hline
+\(\alpha\) & À déterminer & m\textsuperscript{-1} & Coefficient d'atténuation\\
+\(\bar{\alpha}\) & À déterminer & ? & Autre coefficient qui dépend de tout.\\
+\(\expval{D}\) & À déterminer & m & Taille moyenne des floes\\
+\end{tabular}
+\end{center}
+\subsubsection{Limitation du changement de densité d'action}
+\label{sec:org5731ecf}
+
+\begin{equation}
+   \Delta S_{max} = \frac{8.1\times10^{-4}}{2\omega k^3 c_g}
+\end{equation}
+\section{Installation \LaTeX{} avec Archlinux}
+\label{sec:orgdd18d34}
+
+Comme à l'habitude, une installation complète de \href{https://wiki.archlinux.org/title/TeX\_Live}{TexLive} est toujours nécessaire lors d'un changement de distribution.
+À l'instar d'Ubuntu, l'action \emph{sudo apt-get install texlive-full} n'est pas disponible, car le concept de Archlinux est de tout compartimenter dans le but de minimiser les \emph{packages} actifs. 
+Grossièrement, voici comment installer tous les compartiments nécessaire au fonctionnement de mon préambule \LaTeX{} Org-Mode (en une seule commande) : 
+\begin{verbatim}
+ >>> sudo pacman -S texlive-basic texlive-latex texlive-latexrecommended
+                           texlive-fontsrecommended texlive-fontsextra texlive-bibtexextra
+                           texlive-mathscience texlive-binextra texlive-latexextra
+			   biber
+\end{verbatim}
+\begin{itemize}
+\item Le \emph{package} « biblatex » est installée à l'aide de la \textbf{texlive-bibtexextra}.
+\item La commande \emph{latexmk} est installée à l'aide de \href{https://bbs.archlinux.org/viewtopic.php?id=286621}{texlive-binextra}.
+\item Le \emph{package} « csquote » est installé à l'aide de \href{https://bbs.archlinux.org/viewtopic.php?id=63529}{texlive-latexextra}.
+\item Pour faire marche \LaTeX{} en Français, il faut installer \href{https://archlinux.org/packages/extra/any/texlive-langfrench/}{texlive-langfrench}.
+\item Besoin de Biber pour gérer le lien entre les citations et la bibliographie (voir \href{https://wiki.archlinux.org/title/TeX\_Live}{la page de Texlive}).
+\end{itemize}
+
+
+\printbibliography
 \end{document}

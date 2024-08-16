@@ -1,4 +1,4 @@
-% Created 2024-07-23 Tue 11:40
+% Created 2024-08-03 Sat 16:24
 % Intended LaTeX compiler: pdflatex
 \documentclass[10pt]{article}
 % =================================BASE====================================%
@@ -9,15 +9,16 @@
 
 % Calligraphie
 %\usepackage{pxfonts} % Met le texte ET les maths en Palatino + donne accès à des symboles math
-\usepackage{palatino} % Cette commande met seulement le texte en police palatino
+%\usepackage{palatino} % Cette commande met seulement le texte en police palatino
 \usepackage{lmodern} % Pour les maths? Lmodern pour les maths
+\usepackage{cfr-lm}
 % Use lmodern for sans-serif
 \usepackage{mathrsfs} % Permet la command \mathscr (Lettres attachées genre) \mathscr(B)
 
 % Bibliographie
 %\usepackage[backend=bibtex,style=phys,sorting=ynt]{biblatex}
 \usepackage[backend=biber,sorting=ynt,style=authoryear]{biblatex} % N'est pas utilisé par le compilateur org-mode, mais NÉCESSAIRE. Voir le fichier init.el pour changer le style. 
-\addbibresource{/home/charlesedouard/Desktop/Travail/Documentation/2023/master-bibliography.bib}
+\addbibresource{master-bibliography.bib}
 
 
 \usepackage{amsmath, amssymb, amsthm} % Symb. math. (Mathmode+Textmode) + Beaux théorèmes.
@@ -64,7 +65,7 @@
 \definecolor{mypink}{RGB}{147, 0, 255}
 \hypersetup{colorlinks, 
              filecolor=mypink,
-             urlcolor=Violet, 
+             urlcolor=mypink, 
              citecolor=mypink, 
              linkcolor=mypink, 
              anchorcolor=mypink}
@@ -129,10 +130,13 @@
 
 \newcommand{\exemple}{
 \parbox[center]{2.2cm}{\begin{tcolorbox}[sharp corners, rounded corners=northeast, rounded corners=southeast,
-colback=Violet!5, colframe=black,
+colback=Violet!2, colframe=black,
 size=small, width=2cm, left=-0.25pt, bottom=-0.5pt,
 arc is angular, arc=2.5mm, boxrule=0.35pt, leftrule=4pt, %bottomrule=1pt,
 after={\enskip}] Exemple \end{tcolorbox}}}
+
+\newcommand{\rad}{\text{Rad}}
+
 
 \newcommand{\cqfd}{\hfill$\blacktriangleleft$}
 
@@ -204,34 +208,30 @@ Police d'écriture : \textbf{CMU Serif Roman}
  pdftitle={Carnet de bord, Université McGill},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 27.1 (Org mode 9.6.7)}, 
+ pdfcreator={Emacs 29.4 (Org mode 9.7.8)}, 
  pdflang={French}}
 \begin{document}
 
 \mytitlepage
 \tableofcontents\newpage
-
 \section{Résumé des test réalisés -- \textit{<2023-11-02 Thu>}}
-\label{sec:org44215e1}
+\label{sec:org1d97bd3}
 \begin{center}
 \begin{tabular}{lcccccc}
-Nom & Refl. (WW3) & Spin up (SW) & Spin up (WW3) & Thick. Visc. & Numerical mixing & Timestep\\[0pt]
+Nom & Refl. (WW3) & Spin up (SW) & Spin up (WW3) & Thick. Visc. & Numerical mixing & Timestep\\
 \hline
 \hline
-Reflection & \cmark & \xmark & \cmark & \xmark & \cmark & 3565\\[0pt]
-linear tau & \xmark & \xmark & \xmark & \xmark & \cmark & 1945\\[0pt]
-spun up & \xmark & \cmark & \xmark & \xmark & \cmark & 3907\\[0pt]
-spin thickness visc & \xmark & \cmark & \xmark & \cmark & \xmark & 3853\\[0pt]
-thickness visc & \xmark & \xmark & \xmark & \cmark & \xmark & 3775\\[0pt]
-all spun up & \cmark & \cmark & \cmark & \xmark & \xmark & 3385\\[0pt]
+Reflection & \cmark & \xmark & \cmark & \xmark & \cmark & 3565\\
+linear tau & \xmark & \xmark & \xmark & \xmark & \cmark & 1945\\
+spun up & \xmark & \cmark & \xmark & \xmark & \cmark & 3907\\
+spin thickness visc & \xmark & \cmark & \xmark & \cmark & \xmark & 3853\\
+thickness visc & \xmark & \xmark & \xmark & \cmark & \xmark & 3775\\
+all spun up & \cmark & \cmark & \cmark & \xmark & \xmark & 3385\\
 \hline
 \end{tabular}
 \end{center}
-
-
-
 \section{D'autres tests pour la fin de semaine - \textit{<2023-11-03 Fri>}}
-\label{sec:orgee0feaa}
+\label{sec:orgf42d537}
 
 Cette rencontre avec David et LP a été productive.
 Le modèle se rend plus loin depuis qu'on a modifié
@@ -251,22 +251,22 @@ On obtient des épaisseurs nulles un peu partout sur le domaine.
 Dans ma maîtrise, on avait évité le problème en assumant que le courant réel était une forme de courant effectif qui combinait les deux.
 Mais, aux dires des dernières discussions, il semble que rien ne nous indique d'ajouter la dérive de Stokes dans l'équation de masse.
 L'article de \Textcite{suzuki2016understanding} ne semble pas expliquer rien en ce sens.
-Bref, nous l'avons enlevée et le résultat se retrouve dans le tableau \ref{tab:org231c57c}.
+Bref, nous l'avons enlevée et le résultat se retrouve dans le tableau \ref{tab:org4261665}.
 Louis-Philippe n'a toujours pas l'air d'un fan pour un bi-laplacien sur les épaisseurs.
 
 \begin{table}[htbp]
-\caption{\label{tab:org231c57c}Expériences réalisées sans la dérive de Stokes dans l'équation de masse. Divers épaisseurs de couches pour la dérive s de Stokes ont été testées dans la partie droite des équations du mouvement.}
+\caption{\label{tab:org4261665}Expériences réalisées sans la dérive de Stokes dans l'équation de masse. Divers épaisseurs de couches pour la dérive s de Stokes ont été testées dans la partie droite des équations du mouvement.}
 \centering
 \begin{tabular}{lccccc}
 \hline
 \hline
-Nom du fichier & Couche Stokes (HS) & Épaisseur & Couplage Stokes? & Last Timestep & Last ramp value\\[0pt]
-[ -- ] & [ -- ] & [ m ] & [ \cmark/\xmark ] & [ -- ] & [ \% ]\\[0pt]
+Nom du fichier & Couche Stokes (HS) & Épaisseur & Couplage Stokes? & Last Timestep & Last ramp value\\
+{[} -- ] & {[} -- ] & {[} m ] & {[} \cmark/\xmark ] & {[} -- ] & {[} \% ]\\
 \hline
-HS\textsubscript{Htot} & Htot & 3999 & \cmark & 3430 & 25.52\\[0pt]
-HS\textsubscript{H1} & H1 & 482 & \cmark & 3430 & 25.52\\[0pt]
-HS\textsubscript{thickness} & \emph{thickness} & Locale & \cmark & 3222 & 23.19\\[0pt]
-nostokes & \xmark & \xmark & \xmark & 3412 & 25.31\\[0pt]
+HS\textsubscript{Htot} & Htot & 3999 & \cmark & 3430 & 25.52\\
+HS\textsubscript{H1} & H1 & 482 & \cmark & 3430 & 25.52\\
+HS\textsubscript{thickness} & \emph{thickness} & Locale & \cmark & 3222 & 23.19\\
+nostokes & \xmark & \xmark & \xmark & 3412 & 25.31\\
 \hline
 \end{tabular}
 \end{table}
@@ -278,9 +278,8 @@ Rapellons que tous les \emph{spin up} avaient été utilisés. \bigskip
 Il se peut que ça ait une incidence sur les résultats.
 Par exemple, on voyait une inversion du courant, ce qui venait éliminer les structures à grandes échelles et faisait apparaître des \emph{ripples} géostrophiques sur toutes les couches.
 Je ne pense pas que ça change grand chose étant donné que l'on laisse le modèle de vagues se stabiliser avant de le coupler, mais nous n'avons rien à perdre. 
-
 \subsection{Rappel sur le modèle -- \textit{<2023-11-03 Fri>}}
-\label{sec:orgfa00620}
+\label{sec:org7de4020}
 
 Petit rappel sur la rampe.
 On change progressivement d'un régime à l'autre à l'aide d'une rampe.
@@ -315,15 +314,14 @@ Bref, ne prenons aucune chance, comme rien ne marche.
    \draw (5.7,2.3) node [BurntOrange!50!red!90] {$\boldsymbol{\tau_{oc}}$};
 \end{tikzpicture}
 \end{center}
-\caption{\label{org74a5b10}Illustration conceptuelle de la rampe pour éviter le \emph{spin up} du modèle de vagues.}
+\caption{\label{org14bfb3e}Illustration conceptuelle de la rampe pour éviter le \emph{spin up} du modèle de vagues.}
 \end{figure}
-
 \subsection{Rappel sur les équations -- \textit{<2023-11-03 Fri>}}
-\label{sec:org2433f86}
+\label{sec:orgf06fd4e}
 
 On rappel que dans le \href{rapport-2023-10-06.org}{rapport du 6 octobre}, nous avions les équations du mouvement pour un système Boussinesq
 \begin{equation}
-\label{eq:orgc07bc2a}
+\label{eq:org4785b03}
    \pdv{\uu}{t} = \qty(f+\zeta)\pt \kvf\times\uu = -\gradient{B} + \boldsymbol{D} + \frac{\boldsymbol{\tau_a}}{\rho_o H},
 \end{equation}
 où la fonction de Bernouilli (\(B\)) est exprimée par \(B = p/\rho_o + \uu^2/2\).\bigskip
@@ -339,7 +337,7 @@ En somme,
 \item Les termes de Stokes-Coriolis, Craik-Leibovic et la nouvelle fonction de Bernouilli découlent donc directement cette au référentiel en mouvement. \bigskip
 \end{itemize}
 
-Lorsqu'on ajoute cette contribution lagrangienne à notre courant, l'expression \ref{eq:orgc07bc2a} devient plutôt
+Lorsqu'on ajoute cette contribution lagrangienne à notre courant, l'expression \ref{eq:org4785b03} devient plutôt
 \begin{equation}
    \pdv{\uu}{t} = \qty(f+\zeta)\pt \kvf\ \times\underbrace{\grande\qty(\uu + \uu_S)}_{\substack{\text{Courant} \\ \text{Lagrangien}}} = \underbrace{\grande-\gradient{B_S}}_\text{B.-Stokes} + \ \boldsymbol{D} \underbrace{+ \frac{\tau_o}{\rho_o H}.}_{\substack{\text{Contr. des} \\ \text{Vagues}}}
 \end{equation}
@@ -349,59 +347,57 @@ où la nouvelle fonction de Bernouilli qui tient compte de la dérive de Stokes 
 \end{align}
 
 Par contre, il faudrait partir de ça pour obtenir les équations en \emph{shallow water} avec la contrainte sur l'épaisseur des couches.
-
 \section{Investigation sur la contrainte de cisaillement des vagues -- \textit{<2023-11-06 Mon>}}
-\label{sec:org0cc6de6}
+\label{sec:org9bd18e1}
 
 Après vérification des animations, l'hypothèse est que les hautes fréquences dans le champ de vagues viennent briser la circulation géostrophique.
 Par contre, il est difficile de le confirmer avec les animations réalisées.
 \begin{align}
-\label{eq:orgd4c02e5}
+\label{eq:org07c64c7}
    && \boldsymbol{\tau}_{O} = \underbrace{\tall\boldsymbol{\tau}_{fv}}_\text{Rugosité}  - \ \underbrace{(\tall\boldsymbol{\tau}_{in} - \boldsymbol{\tau}_{ds}).}_{\substack{\text{Injection} \\ \text{Dissipation}}}
    && \text{où}
    && \boldsymbol{\tau}_{fv} = \rho_{atm} \abs{\uu_*}\pt\uu_*. &&
 \end{align}
 
-Dans l'équation \ref{eq:orgd4c02e5}, on sait de prime abord que la partie \emph{friction velocity} est assez lisse, mais il faudrait caractériser la divergence et le rotationnel des contraintes de cisaillement reliées au champ de vagues.
+Dans l'équation \ref{eq:org07c64c7}, on sait de prime abord que la partie \emph{friction velocity} est assez lisse, mais il faudrait caractériser la divergence et le rotationnel des contraintes de cisaillement reliées au champ de vagues.
 Quelques étapes d'investigation : 
 \begin{itemize}
 \item[{$\boxtimes$}] Pour se faire, il faut modifier le code de Wavewatch, et donc rajouter un canal MPI de plus.
 \item[{$\boxtimes$}] Il faut aussi mettre à jour le code du modèle en \emph{shallow water}.
 \item[{$\square$}] recompiler et relancer les \emph{runs} précédentes.
 \end{itemize}
-
 \subsection{Retour sur les variables et quantités -- \textit{<2023-11-06 Mon>}}
-\label{sec:org862388c}
+\label{sec:org43ca883}
 
-Au tableau \ref{tab:orgf682837}, on retrouve un récapitulatif des quantités physiques extractable comme \emph{output}.
+Au tableau \ref{tab:orge81af88}, on retrouve un récapitulatif des quantités physiques extractable comme \emph{output}.
 Les descriptions proviennent du code source du modèle, de la documentation de Wavewatch III et de la litérature scientifique ( par exemple, voir \Textcite{ardhuin2010semiempirical}, \autocite{couvelard2020development} et \textcite{wu_breivik_2019}).
 
 \begin{table}[htbp]
-\caption{\label{tab:orgf682837}Tableau d'investigation récapitulatif des outputs de Wavewatch III.}
+\caption{\label{tab:orge81af88}Tableau d'investigation récapitulatif des outputs de Wavewatch III.}
 \centering
 \begin{tabular}{lcl|lc|c}
 \hline
 \hline
-\textbf{Documentation} &  &  & \textbf{Code} &  & \textbf{Litérature}\\[0pt]
-Nom de code & output tag & Description (ww3 shel.inp) & Variable & Unitées & Symbole\\[0pt]
+\textbf{Documentation} &  &  & \textbf{Code} &  & \textbf{Litérature}\\
+Nom de code & output tag & Description (ww3 shel.inp) & Variable & Unitées & Symbole\\
 \hline
-UST & UST & \emph{Friction velocity} & UST & ms\textsuperscript{-1} & \(\ust\)\\[0pt]
-CHARN & CHA & \emph{Charnok parameter} & CHARN & -- & \\[0pt]
-CGE & CGE & \emph{Energy flux} & CGE & Wm\textsuperscript{-2} & \\[0pt]
-PHIAW & FAW & \emph{Air-sea energy flux} & PHIAW & Wm\textsuperscript{-2} & \\[0pt]
-TAUWI[X,Y] & TAW & \emph{Net wave-supported stress} & TAUWIX/Y & m\textsuperscript{2}s\textsuperscript{-2} & \(\tau\)\textsubscript{w}\\[0pt]
-TAUWN[X,Y] & TWA & \emph{Negative part of the wave-supported stress} & TAUWNX/Y & m\textsuperscript{2}s\textsuperscript{-2} & \\[0pt]
+UST & UST & \emph{Friction velocity} & UST & ms\textsuperscript{-1} & \(\ust\)\\
+CHARN & CHA & \emph{Charnok parameter} & CHARN & -- & \\
+CGE & CGE & \emph{Energy flux} & CGE & Wm\textsuperscript{-2} & \\
+PHIAW & FAW & \emph{Air-sea energy flux} & PHIAW & Wm\textsuperscript{-2} & \\
+TAUWI[X,Y] & TAW & \emph{Net wave-supported stress} & TAUWIX/Y & m\textsuperscript{2}s\textsuperscript{-2} & \(\tau\)\textsubscript{w}\\
+TAUWN[X,Y] & TWA & \emph{Negative part of the wave-supported stress} & TAUWNX/Y & m\textsuperscript{2}s\textsuperscript{-2} & \\
 \hline
-TAUO[X,Y] & TWO & \emph{Wave to ocean momentum flux} & TAUOX/Y & m\textsuperscript{2}s\textsuperscript{-2} & \\[0pt]
-PHIOC & FOC & \emph{Wave to ocean energy flux} & PHIOC & Wm\textsuperscript{-2} & \\[0pt]
-TUS[X,Y] & TUS & \emph{Stokes transport} & TUSX/Y & m\textsuperscript{2}s\textsuperscript{-1} & \\[0pt]
-USS[X,Y] & USS & \emph{Surface Stokes drift} & USSX/Y & ms\textsuperscript{-1} & \\[0pt]
+TAUO[X,Y] & TWO & \emph{Wave to ocean momentum flux} & TAUOX/Y & m\textsuperscript{2}s\textsuperscript{-2} & \\
+PHIOC & FOC & \emph{Wave to ocean energy flux} & PHIOC & Wm\textsuperscript{-2} & \\
+TUS[X,Y] & TUS & \emph{Stokes transport} & TUSX/Y & m\textsuperscript{2}s\textsuperscript{-1} & \\
+USS[X,Y] & USS & \emph{Surface Stokes drift} & USSX/Y & ms\textsuperscript{-1} & \\
 \hline
 \end{tabular}
 \end{table}
 
 Dans la litérature, il est extrêmement clair que les quantités physiques nommées \emph{wave-supported stress} (\(\boldsymbol{\tau}_{IN}\)) et \emph{wave to ocean momentum flux} (\(\boldsymbol{\tau}_{DS}\)) représentent une contrainte de cisaillement ou un stress (voir \Textcite{breivik_al_2015}, \Textcite{ardhuin2010semiempirical} et \Textcite{couvelard2020development} en exemple).
-La figure \ref{fig:orgd2d9b57} montre justement quelques quantiés retenues dans la dernière citation.
+La figure \ref{fig:org12134f0} montre justement quelques quantiés retenues dans la dernière citation.
 Donc, si c'est bien le cas, on parle d'unités de pression par surface, et donc de \(\mathrm{N}/\mathrm{m}^2\).\bigskip
 
 Par contre, dans le code source de Wavewatch, il est mentionné à \textbf{plusieurs reprises} que ce sont des \(\mathrm{m}^2/\mathrm{s}^2\).
@@ -410,15 +406,13 @@ Dans la documentation de Wavewatch -- plus précisément dans la description de 
 \begin{figure}[ht]
 \centering
 \includegraphics[width=0.5\textwidth]{figures/articles/gmd-13-3067-2020-t01-web.png}
-\caption{\label{fig:orgd2d9b57}Tableau tiré de \textcite{couvelard2020development}.}
+\caption{\label{fig:org12134f0}Tableau tiré de \textcite{couvelard2020development}.}
 \end{figure}
-
-
 \subsection{Analyse dimensionnelle -- \textit{<2023-11-07 Tue>}}
-\label{sec:org4b812a5}
-\label{org28e3abc}
+\label{sec:org3419b5b}
+\label{org914db11}
 
-Avant tout, on n'oublie pas que la contrainte de cisaillement modifiée lorsqu'il y a des vagues est donnée par l'équation \ref{eq:orgd4c02e5}. 
+Avant tout, on n'oublie pas que la contrainte de cisaillement modifiée lorsqu'il y a des vagues est donnée par l'équation \ref{eq:org07c64c7}. 
 Normalement, lorsqu'on parle d'une contrainte de cisaillement ou d'un stress, les unités sont les même que pour la pression, soit des \(N\cdot m^{-2}\) ou des \(kg\cdot m^{-1}s^{-2}\).
 En somme, on les obtient facilement à l'aide de l'équation du frottement visqueux, soit
 \begin{align}
@@ -453,18 +447,17 @@ Je me souviens qu'on avait eu une discussion là-dessus au milieu de ma maîtris
 \begin{tabular}{l|cccc}
 \hline
 \hline
-Quantité à l'étude & \(\tau\)\textsubscript{A} & \(\tau_{fv} = \rho_A\abs{\uu_*}\uu\) & \(\rho_O(\tau_{IN} - \tau_{DS})\) & \(\rho_A(\tau_{IN} - \tau_{IN})\)\\[0pt]
-Échelle & \(\sim\) \(\mathscr{O}(0.1)\) & \(\sim\) \(\mathscr{O}(0.1)\) & \(\sim\) \(\mathscr{O}(0.15)\) & \(\sim\) \(\mathscr{O}(0.0002)\)\\[0pt]
+Quantité à l'étude & \(\tau\)\textsubscript{A} & \(\tau_{fv} = \rho_A\abs{\uu_*}\uu\) & \(\rho_O(\tau_{IN} - \tau_{DS})\) & \(\rho_A(\tau_{IN} - \tau_{IN})\)\\
+Échelle & \(\sim\) \(\mathscr{O}(0.1)\) & \(\sim\) \(\mathscr{O}(0.1)\) & \(\sim\) \(\mathscr{O}(0.15)\) & \(\sim\) \(\mathscr{O}(0.0002)\)\\
 \hline
 \hline
 \end{tabular}
 \end{center}
-
 \subsection{Retour sur le cadre théorique -- \textit{<2023-11-07 Tue>}}
-\label{sec:org7fcb1fc}
+\label{sec:orgb89aaa3}
 
 \subsubsection{Wu et al, 2019 et Breivik, 2015}
-\label{sec:orgc06d3e8}
+\label{sec:org4d2b7fd}
 
 Les articles de \textcite{wu_breivik_2019} et \textcite{breivik_al_2015} représentent explicitement le \emph{wave-supported stress} ( ou le transfert de momentum du vent vers les vagues) par
 \begin{equation}
@@ -476,9 +469,8 @@ Donc, les termes reliés au transfert de momentum pour le champ de vagues \(\tau
    \boldsymbol{\tau}_{O} = \boldsymbol{\tau}_A - \rho_O g \int_0^{2\pi} \int_0^{\pt\infty} \qty( \frac{\vb{k}}{\omega} \qty(S_{IN} + S_{DS}) )\pt\mathrm{d}\omega\pt \mathrm{d} \theta.
 \end{equation}
 Ces derniers s'appuient principalement sur \Textcite{bidlot2012present}, \citeauthor*[voir][]{janssen_1989} (\cite*{janssen_1989} et \cite*{janssen_1991}).
-
 \subsubsection{Janssen, 1989}
-\label{sec:org54efda6}
+\label{sec:org825ca14}
 
 Dans un premier temps, \textcite{janssen_1989} décrit le stress du vent avec des unitées de \(N\cdot m^{-2}\).
 C'est donc une représentation indépendante de la densité qui est proposée pour le stress du vent.
@@ -503,14 +495,12 @@ Hypothétiquement, il se peut que le \(\boldsymbol{\tau}^*\) de Wavewatch III es
    \boldsymbol{\tau}^* = \frac{\tau_w}{\rho_A} = \qty(\frac{\rho_O}{\rho_A}) \int_0^{\pt\infty} \qty(\omega \pdv{}{t} \phi) \pt\mathrm{d} k \hspace{0.5cm} \longrightarrow \hspace{0.5cm} \qty[\frac{m^2}{s^2}],
 \end{equation}
 et c'est ce que l'article de \Textcite{bidlot2012present} semble indiquer à l'aide d'un \emph{air-sea density ratio} (\(\varepsilon\)).
-
-
 \subsubsection{Janssen, 1991}
-\label{sec:org13ef288}
+\label{sec:orgcdecc6a}
 
 Dans un article subséquent (un article plutôt fondateur), \textcite[voir eq. 7 et 8 de l'article]{janssen_1991}  stipule qu'au repos, on doit respecter l'équation de balance du momentum pour les vagues avec
 \begin{equation}
-\label{eq:orgdf6c626}
+\label{eq:orgb89a56b}
    \boldsymbol{\tau}_w + \boldsymbol{\tau}_{turb} + \boldsymbol{\tau}_{visc}  = \boldsymbol{\tau},
 \end{equation}
 où \(\boldsymbol{\tau}\) est le stress total définit par \(\boldsymbol{\tau} = \uu_*^2\).
@@ -521,13 +511,11 @@ Mathématiquement, le transfert de momentum sur les vagues est exprimé par
 \end{equation}
 Ici, \(D_z\) est un « coefficient de diffusion des vagues ».
 Mentionnons aussi que Janssen se débarasser de \(\omega\) et \(k\) à l'aide d'une condition de résonnance, mais \(D_z\) pourrait s'apparenter à un terme source dans notre nomenclature.
-D'ici, il est possible de multiplier toute l'équation \ref{eq:orgdf6c626} par \(\rho_A\) et de se dire que le tour est joué.\bigskip
+D'ici, il est possible de multiplier toute l'équation \ref{eq:orgb89a56b} par \(\rho_A\) et de se dire que le tour est joué.\bigskip
 
 \nb Dans cet article, Janssen fait apparaitre le concept de \emph{air-sea density ratio}, avec la variable \(\varepsilon\).
-
-
 \subsubsection{Bidlot, 2012}
-\label{sec:org67b2b4d}
+\label{sec:orgf788357}
 
 \Textcite[voir eq. 6 de l'article]{bidlot2012present} décrit ce tansfert de momentum à l'aide de l'expression
 \begin{equation}
@@ -538,16 +526,15 @@ Et c'est ici qu'on voit finalement apparaître le \emph{air-sea density ratio} (
 Notamment, \(\tau_w\) est ici une quantité donnée en \(m^2\pt s^{-2}\) et c'est d'ailleurs la formulation qui est utilisée dans ECWAM.
 Donc, est-ce que le \(\tau_{IN}\) offert par Wavewatch III est ouvertement divisé par \(\rho_A\) avant d'être transmis en \emph{output}?
 \emph{The plot thickens\ldots{}}
-
 \subsubsection{Que dit le code de Wavewatch III? -- \textit{<2023-11-08 Wed>}}
-\label{sec:org7a059fd}
+\label{sec:org0be6864}
 
-Après un peu de recherche, le code ne peut pas être plus clair (voir figure \ref{fig:org5fbc04a}). 
+Après un peu de recherche, le code ne peut pas être plus clair (voir figure \ref{fig:org36d916f}). 
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figures/articles/Screenshot from 2023-11-08 15-59-22.png}
-\caption{\label{fig:org5fbc04a}«Screenshot» du code de Wavewatch où ils sont assez explicites sur la nature de \(\tau_{IN}\).}
+\caption{\label{fig:org36d916f}«Screenshot» du code de Wavewatch où ils sont assez explicites sur la nature de \(\tau_{IN}\).}
 \end{figure}
 
 
@@ -555,11 +542,8 @@ Après un peu de recherche, le code ne peut pas être plus clair (voir figure \r
 La vague pourrait être en roche ou en lave, le transfert de momentum de l'air sur la surface ondulée reste exactement le même.
 Ensuite, le momentum va faire réagir la surface ondulée ou le mur dépendement de la densité du matériau.
 Mais le momentum qu'on retire au vent ne dépend tout simplement pas de la densité de l'eau. \bigskip
-
-
-
 \section{Rencontre -- \textit{<2023-11-09 Thu>}}
-\label{sec:org7ae09b5}
+\label{sec:orga568d6b}
 
 On veut absolument comparer l'effet des vagues sur l'énergie, en tout cas.
 

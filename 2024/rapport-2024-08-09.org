@@ -1,0 +1,134 @@
+#+title: Rapport hebdomadaire
+#+subtitle: Contrat Été 2024
+#+author: Charles-Édouard Lizotte
+#+date:09/08/2024
+#+LANGUAGE: fr
+#+BIBLIOGRAPHY: master-bibliography.bib
+#+OPTIONS: toc:nil title:nil 
+#+LaTeX_class: org-report
+
+\mytitlepage
+\tableofcontents\newpage
+
+
+* Notes sur la programmation du modèle WIM en Julia
+
+** Opérateur linéaire de Lax-Wendroff
+La méthode de Lax-Wendroff peut aussi être exprimée selon le formalisme d'un opérateur linéaire, de telle sorte que
+\begin{equation}
+   \underset{nx\times nx}{\mathbf{A}}\cdot\underset{nx\times nf}{\vb{E}} = \begin{pmatrix}
+       a_{11} & a_{12} & \cdots & a_{1,nx} \\
+       a_{21} & a_{22} & \cdots & a_{2,nx} \\
+       \vdots & \ddots &  & \vdots \\
+       a_{nx,1} & a_{nx,2} & \cdots & a_{nx,nx} \\
+   \end{pmatrix}\begin{pmatrix}
+       E_{1,1} & E_{1,2} & \cdots & E_{1,nf}\\ 
+       E_{2,1} & E_{1,2} & \cdots & E_{2,nf}\\
+       \vdots & \ddots &  & \vdots\\
+       E_{nx,1} & E_{1,2} & \cdots & E_{2,nf}\\
+   \end{pmatrix}
+\end{equation}
+L'advection avec Lax-Wendroff est définit comme
+\begin{equation}
+   E_i^{n+1} = E_i^{n} - \qty(\frac{\Delta t}{2 \Delta x}) c_g (E_{i+1}^n - E_{i-1}^n) + \qty(\frac{\Delta t^2}{2 \Delta x^2}) c_g^2 (E_{i+1}^n -2E_i^n + E_{i-1}^n).
+\end{equation}
+On isole les variables,
+\begin{align}
+   \Delta E_i(\omega) = \underbrace{\venti-\lambda^2 c_g(\omega)}_{\boxed{A}} E_i^n + \underbrace{\venti\frac{\lambda c_g(\omega)}{2} \qty(1 + \lambda c_g(\omega))}_{\boxed{B}}E_{i-1} + \underbrace{\venti\frac{\lambda c_g(\omega)}{2} \qty(\lambda c_g(\omega) -1)}_{\boxed{C}} E_{i+1}.
+\end{align}
+Puis finalement,
+\begin{equation}
+   \Delta \mathbf{E}(\omega) = \mathbf{A}(\omega)\cdot\vb{E} = \begin{pmatrix}
+       A & C & 0 & \cdots & 0 \\
+       B & A & C & \cdots & 0 \\
+       \vdots & & & \ddots & \vdots\\
+       0 & \cdots & 0 & B & A \\
+     \end{pmatrix}\begin{pmatrix}
+       E(\omega,x_1) \\
+       E(\omega,x_2) \\
+       \vdots\\
+       E(\omega,x_{nf}) \\
+     \end{pmatrix},
+\end{equation}
+et comme la matrice *A* est différente pour chaque fréquence, il faut donc recalculer *A* pour chaque fréquence.
+Notons que dans la maîtrise de Bismuth, on assumait une vitesse de groupe identique pour tous les fréquences, ce que je trouve très ordinaire, personellement.
+
+** La vitesse d'une onde
+Quelques rappels techniques rapides, 
+\begin{align}
+   \omega = 2\pi \cdot f && k = 2\pi / \lambda && \omega = \sigma + \mathbf{k}\cdot \uu 
+\end{align}
+
+La relation de dispersion des ondes de surfaces est aussi exprimée par
+\begin{equation}
+   \sigma = \qty(gk\cdot \tanh(kd))^{\sfrac{1}{2}}
+\end{equation}
+
+Selon Wiki, la vitesse de phase est donnée par
+\begin{equation}
+   v_p = \frac{\omega}{\mathbb{R} \qty{k}},
+\end{equation}
+donc
+\begin{equation}
+   \boxed{\quad c_p(\omega) = \sqrt{\frac{g}{k}} = \frac{g}{\omega}\quad}.
+\end{equation}
+
+** Lien entre la vitesse de groupe et la vitesse de phase
+
+Toujours selon Wiki, on définit la vitesse de groupe à l'aide de
+\begin{equation}
+   v_g = \dv{\omega}{k}
+\end{equation}
+Donc, à l'aide de la relation de dispersion et sachant que $\uu = 0$, on obtient
+\begin{align}
+   \dv{\omega}{k} &= \sqrt{g} \cdot \frac{1}{2} k^{-\sfrac{1}{2}},\nonumber\\
+     &= \frac{1}{2}\sqrt{\frac{g}{k}},\nonumber\\
+\end{align}
+ainsi on peut mettre en relation la vitesse de groupe et de phase, soit
+\begin{equation}
+   \boxed{\quad c_p = \venti\frac{g}{\omega}\hspace{0.5cm};\hspace{0.5cm} c_g = \frac{c_p}{2}.\quad}
+\end{equation}
+Mentionnons aussi que le vecteur $\mathbf{c}_g(\omega)$ est fixe dans le temps, il n'y a pas de dispersion temporelle. 
+
+** Lax-Wendroff aux murs
+À la case initiale, on assume une condition frontière, donc pas besoin de Lax-Wendroff là.
+Puis à la case finale, on assume une frontière ouverte de sorte que
+\begin{equation}
+   \eval{\qty(\pdv{E}{x} = 0)}_{x = x_f + \Delta x/2}
+\end{equation}
+
+
+
+
+
+
+* Débriefing réunion Dany (16 aout 2024)
+
+** Théorie linéaire des vagues dans la glace?
+Actuellement, il n'existe pas vraiment de théorie linéaire des vagues ou de formalisme des vagues à l'intérieur de la glace comme dans [cite/t/c:@miles1957generation].
+Mentionnons qu'il y a un article de [cite/t/c:@miles1996surface] décrivant les vagues dans un milieu visco-élastique, mais je n'ai pas encore eu le temps de le lire.\bigskip
+
+Peut-être qu'il y a un moyen simple de faire ça, mais considérant les mathématiques assez avancées de [cite/t/c:@miles1957generation], j'en doute.
+Faudrait peut-être revisiter de manière plus claire ces trucs-là.
+
+** Modélisation des vagues en 1 dimension
+Très difficile de représenter les interactions  entre les vagues dans un «set-up» en 1 dimension : 
++ Le /spreading/ dans les fréquences est mal définit.
+  Quand on fait références aux interactions vagues-vagues, c'est à ça qu'on fait référence (triplète et quadruplètes, aussi).
+  Il devrait statistiquement y avoir un transfert d'énergie des hautes vers les basses fréquences.
++ Dany mentionnait que dans le modèle Wavewatch III, c'était précisément la /switch/ NL4 que Sébastien Dugas avait réussi dans une version de WIM subséquente à intégrer les interactions en 1 dimension, mais les termes de son expansion polynomiale étaient très obscurs.
+  Selon Dany, c'est basé sur les travaux de Hasselmann, mais je pense qu'on parle plus de NL2, dans ce cas.
++ Le /spreading/ dans les directions est inexistant en 1 dimension.
+  Par contre, Dany avait amené l'argument aux reviewers que l'on peut voir une front d'onde comme la propagation de multiples cercles, précisément comme dans l'explication des fentes de Young.
+
+** Planification
+Grossièrement, comment ferions nous pour définir un coefficient d'hétérogénéité associé à l a glace.
+Au premier ordre, la glace n'est qu'un filtre et on a tout intérêt à la considérer comme telle.
+S'il y a de la glace, on filtre des ondes.
+Déjà, on peut comparer l'effet de mettre de la glace à haute résolution (50% de glace par exemple, avec des concentrations de glace de 1) et de voir si l'on peut comparer ça avec un modèle à basse résolution (Concentration de glace de 0.5). \bigskip
+
+Le motif principal est qu'on ne connait pas dutout les paramètrisations qui ont été faites avec les autres termes sources pour la glace, si c'étaient des /patch/ de glace ou de grandes étendues, par exemple.
+Dany a amené un argument intéressant :\smallskip
+#+begin_quote
+/C'est jamais du tout ou rien, s'il y a de la glace, ça ne veut pas dire que les vagues peuvent ne pas croître dans une certaine mesure. Justement, dans la maîtrise d'Eliot Bismuth, c'est ce qu'on a tenté de faire. La relation entre la concentration et le couvert de glace ne devrait pas du tout être linéaire./
+#+end_quote

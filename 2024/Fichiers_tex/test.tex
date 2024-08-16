@@ -1,4 +1,4 @@
-% Created 2024-06-28 Fri 13:45
+% Created 2024-07-29 Mon 14:15
 % Intended LaTeX compiler: pdflatex
 \documentclass[10pt]{article}
 % =================================BASE====================================%
@@ -10,14 +10,14 @@
 % Calligraphie
 %\usepackage{pxfonts} % Met le texte ET les maths en Palatino + donne accès à des symboles math
 \usepackage{palatino} % Cette commande met seulement le texte en police palatino
-\usepackage{lmodern} % Pour les maths? Lmodern pour les maths
+%\usepackage{lmodern} % Pour les maths? Lmodern pour les maths
 % Use lmodern for sans-serif
 \usepackage{mathrsfs} % Permet la command \mathscr (Lettres attachées genre) \mathscr(B)
 
 % Bibliographie
 %\usepackage[backend=bibtex,style=phys,sorting=ynt]{biblatex}
 \usepackage[backend=biber,sorting=ynt,style=authoryear]{biblatex} % N'est pas utilisé par le compilateur org-mode, mais NÉCESSAIRE. Voir le fichier init.el pour changer le style. 
-\addbibresource{/home/charlesedouard/Desktop/Travail/Documentation/2024/master-bibliography.bib}
+\addbibresource{master-bibliography.bib}
 
 
 \usepackage{amsmath, amssymb, amsthm} % Symb. math. (Mathmode+Textmode) + Beaux théorèmes.
@@ -34,6 +34,7 @@
 % Style
 \usepackage{lipsum} % For fun
 \usepackage{tikz} % Realisation de figures TIKZ.
+\usetikzlibrary{arrows.meta,bending} % Arrow heads 
 \usepackage{empheq} % Boite autour de MULTIPLE équations
 \usepackage{bbding}
 
@@ -63,7 +64,7 @@
 \definecolor{mypink}{RGB}{147, 0, 255}
 \hypersetup{colorlinks, 
              filecolor=mypink,
-             urlcolor=mypink, 
+             urlcolor=Violet, 
              citecolor=mypink, 
              linkcolor=mypink, 
              anchorcolor=mypink}
@@ -92,6 +93,8 @@
 
 
 % ==============================NEWCOMMANDS================================%
+% CQFD symbol
+\renewcommand{\qedsymbol}{$\hfill\blacksquare$}
 
 % Vecteurs de base :
 \newcommand{\nvf}{\vb{\hat{n}}}
@@ -124,6 +127,14 @@
 %\newcommand{\nb}{$\boxed{\text{\footnotesize\EightStarConvex}\pt \mathfrak{N. B.}}$\hspace{4pt}}
 \newcommand{\nb}{\underline{{\footnotesize\EightStarConvex}\pt $\mathfrak{N.B.}$\vphantom{p}}\hspace{3pt}}
 
+\newcommand{\exemple}{
+\parbox[center]{2.2cm}{\begin{tcolorbox}[sharp corners, rounded corners=northeast, rounded corners=southeast,
+colback=Violet!5, colframe=black,
+size=small, width=2cm, left=-0.25pt, bottom=-0.5pt,
+arc is angular, arc=2.5mm, boxrule=0.35pt, leftrule=4pt, %bottomrule=1pt,
+after={\enskip}] Exemple \end{tcolorbox}}}
+
+\newcommand{\cqfd}{\hfill$\blacktriangleleft$}
 
 % Define the nota bene environment
 \usepackage{tcolorbox}
@@ -193,7 +204,7 @@ Police d'écriture : \textbf{CMU Serif Roman}
  pdftitle={Rapport test},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 27.1 (Org mode 9.6.7)}, 
+ pdfcreator={Emacs 29.4 (Org mode 9.7.8)}, 
  pdflang={French}}
 \begin{document}
 

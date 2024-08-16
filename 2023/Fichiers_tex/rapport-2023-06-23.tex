@@ -1,4 +1,4 @@
-% Created 2024-07-23 Tue 11:40
+% Created 2024-08-03 Sat 16:24
 % Intended LaTeX compiler: pdflatex
 \documentclass[10pt]{article}
 % =================================BASE====================================%
@@ -9,15 +9,16 @@
 
 % Calligraphie
 %\usepackage{pxfonts} % Met le texte ET les maths en Palatino + donne accès à des symboles math
-\usepackage{palatino} % Cette commande met seulement le texte en police palatino
+%\usepackage{palatino} % Cette commande met seulement le texte en police palatino
 \usepackage{lmodern} % Pour les maths? Lmodern pour les maths
+\usepackage{cfr-lm}
 % Use lmodern for sans-serif
 \usepackage{mathrsfs} % Permet la command \mathscr (Lettres attachées genre) \mathscr(B)
 
 % Bibliographie
 %\usepackage[backend=bibtex,style=phys,sorting=ynt]{biblatex}
 \usepackage[backend=biber,sorting=ynt,style=authoryear]{biblatex} % N'est pas utilisé par le compilateur org-mode, mais NÉCESSAIRE. Voir le fichier init.el pour changer le style. 
-\addbibresource{/home/charlesedouard/Desktop/Travail/Documentation/2023/master-bibliography.bib}
+\addbibresource{master-bibliography.bib}
 
 
 \usepackage{amsmath, amssymb, amsthm} % Symb. math. (Mathmode+Textmode) + Beaux théorèmes.
@@ -64,7 +65,7 @@
 \definecolor{mypink}{RGB}{147, 0, 255}
 \hypersetup{colorlinks, 
              filecolor=mypink,
-             urlcolor=Violet, 
+             urlcolor=mypink, 
              citecolor=mypink, 
              linkcolor=mypink, 
              anchorcolor=mypink}
@@ -129,10 +130,13 @@
 
 \newcommand{\exemple}{
 \parbox[center]{2.2cm}{\begin{tcolorbox}[sharp corners, rounded corners=northeast, rounded corners=southeast,
-colback=Violet!5, colframe=black,
+colback=Violet!2, colframe=black,
 size=small, width=2cm, left=-0.25pt, bottom=-0.5pt,
 arc is angular, arc=2.5mm, boxrule=0.35pt, leftrule=4pt, %bottomrule=1pt,
 after={\enskip}] Exemple \end{tcolorbox}}}
+
+\newcommand{\rad}{\text{Rad}}
+
 
 \newcommand{\cqfd}{\hfill$\blacktriangleleft$}
 
@@ -204,20 +208,17 @@ Police d'écriture : \textbf{CMU Serif Roman}
  pdftitle={Carnet de bord, Université McGill},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 27.1 (Org mode 9.6.7)}, 
+ pdfcreator={Emacs 29.4 (Org mode 9.7.8)}, 
  pdflang={French}}
 \begin{document}
 
 \mytitlepage
 \tableofcontents\newpage
-
-
-
 \section{{\bfseries\sffamily DONE} Diagnostiques utiles}
-\label{sec:org491877d}
+\label{sec:orgaff2e9b}
 
 Concrétement, on se souvient que les diagrammes de Hovmoller pour le modèle \emph{shallow water} résolu à l'aide du \emph{package} MUDPACK sont illustrés dans le \href{rapport-2023-06-16.org}{dernier rapport}.
-Pour en avoir un avant goût, la figure \ref{fig:orgd552e12} illustre l'état de la situation.
+Pour en avoir un avant goût, la figure \ref{fig:org21c378e} illustre l'état de la situation.
 Essentiellement, tout se passe bien, mais des lignes horizontales viennent remettre en doute nos résultats.
 Le \emph{spin up} du modèle arrive au bon moment (aux alentours de 800 jours, comme on l'observe dans le modèle résolu par transformées de Fourrier).
 Ces lignes verticales sont particulièrement visible dans le rotationnel du courant. 
@@ -225,51 +226,48 @@ Ces lignes verticales sont particulièrement visible dans le rotationnel du cour
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figures/tests/2023-06-21_hovmoller1_t=950days.png}
-\caption{\label{fig:orgd552e12}Diagrame de Hovmoller entre 0 et 950 jours pour le modèle shallow water résolu par MUDPACK. Du haut vers le bas, la vorticité, la divergence, la correction à la fonction de courant barotrope et la norme du courant. Le tout pour la première couche.}
+\caption{\label{fig:org21c378e}Diagrame de Hovmoller entre 0 et 950 jours pour le modèle shallow water résolu par MUDPACK. Du haut vers le bas, la vorticité, la divergence, la correction à la fonction de courant barotrope et la norme du courant. Le tout pour la première couche.}
 \end{figure}
-
-
-
 \subsection{{\bfseries\sffamily DONE} Divergence du transport barotrope (Problème réglé)}
-\label{sec:org6b0f934}
+\label{sec:orged41ac1}
 Notre première hypothèse : La solution obtenue avec MUDPACK ne se trouve pas en résolvant l'équation de la conservations de la masse, qui donnée par
 \begin{equation}
-\label{eq:org2e2c064}
+\label{eq:org961ae73}
    \div{\uu_{BT}} = 0,
 \end{equation}
 mais plutôt en solvant l'équation de fonction de courant géostrophique, donnée par
 \begin{equation}
    \laplacian{\psi_{BT}} = \kvf \cdot \boldsymbol{\zeta}_{BT}.
 \end{equation}
-Donc il faudrait vérifier que l'équation \ref{eq:org2e2c064} (la conservation de la masse) est bel et bien respectée.\bigskip
+Donc il faudrait vérifier que l'équation \ref{eq:org961ae73} (la conservation de la masse) est bel et bien respectée.\bigskip
 
 Pour se faire, j'ai du relancer quelques \emph{runs} car -- pour sauver de l'espace sur mon poste de travail -- je ne sortais que les \emph{output} de la première couche.
 Les résultats sont là :
-La divergence du transport barotrope est \emph{plutôt très} nulle, ce qui veut dire que la conservation de la masse (\ref{eq:org2e2c064}) est respectée.
+La divergence du transport barotrope est \emph{plutôt très} nulle, ce qui veut dire que la conservation de la masse (\ref{eq:org961ae73}) est respectée.
 
 \begin{figure}[!htpb]
 \centering
 \includegraphics[width=.9\linewidth]{figures/debuggage/2023_06_21divBT1_MUD.png}
-\caption{\label{fig:orgaadfbe1}Divergence du courant barotrope \(\qty(\div{\uu_{BT}} = \qty(1/H_{tot}) \div{\sum_i h_i \uu_i})\) à divers moments pour le modèle solvé par MUDPACK (Le temps est donnée en jours).}
+\caption{\label{fig:org1073ef8}Divergence du courant barotrope \(\qty(\div{\uu_{BT}} = \qty(1/H_{tot}) \div{\sum_i h_i \uu_i})\) à divers moments pour le modèle solvé par MUDPACK (Le temps est donnée en jours).}
 \end{figure}
 
-Lorsqu'on regarde le transport barotrope pour le modèle solvé par transformées de Fourrier, on obtient plutôt les résultats exprimés à la figure \ref{fig:org94092b5}. 
+Lorsqu'on regarde le transport barotrope pour le modèle solvé par transformées de Fourrier, on obtient plutôt les résultats exprimés à la figure \ref{fig:org0ee779c}. 
 
 \begin{figure}[!htpb]
 \centering
 \includegraphics[width=.9\linewidth]{figures/debuggage/2023_06_21divBT1_FFT.png}
-\caption{\label{fig:org94092b5}Divergence du courant barotrope  \(\qty(\div{\uu_{BT}} = \qty(1/H_{tot}) \div{\sum_i h_i \uu_i})\) à divers moments pour le modèle solvé par FFTW (Le temps est donnée en jours).}
+\caption{\label{fig:org0ee779c}Divergence du courant barotrope  \(\qty(\div{\uu_{BT}} = \qty(1/H_{tot}) \div{\sum_i h_i \uu_i})\) à divers moments pour le modèle solvé par FFTW (Le temps est donnée en jours).}
 \end{figure}
 
 Normalement, ça devrait être complétement nul, ce qui est quand même inquiétant.
 J'ai passé une bonne journée à tenter de débugger tout ça, mais sans succès, malheureusement.
 Je tient à metionner que les dérivées de chaque côté sont quand même très semblables.
-Par exemple, comme illustré à la figure \ref{fig:org1d9f291}, les dérivées sont pratiquement identiques, mais de petits écarts se sont creusée quand on les additionne pour obtenir la divergence. 
+Par exemple, comme illustré à la figure \ref{fig:org85b4a28}, les dérivées sont pratiquement identiques, mais de petits écarts se sont creusée quand on les additionne pour obtenir la divergence. 
 
 \begin{figure}[!htpb]
 \centering
 \includegraphics[width=.9\linewidth]{figures/debuggage/2023_06_27_comp_divBT.png}
-\caption{\label{fig:org1d9f291}Dérivées horizontales et verticales du courant barotrope et leur addition (la divergence), à droite.}
+\caption{\label{fig:org85b4a28}Dérivées horizontales et verticales du courant barotrope et leur addition (la divergence), à droite.}
 \end{figure}
 
 Il est difficile à dire d'où vient cette erreur.
@@ -277,13 +275,11 @@ Personellement, je pense que ça vient du fait qu'on fait rouler notre modèle e
 Lorsqu'il y a des changement abruptes et comme notre résolution n'est pas excelente, on pourrait voir des artefacts qui s'apparentent à ce genre d'erreurs.
 Comme on voyait aussi ça avec le modèle \emph{shallow water} FFTW, je ne m'inquiéterais pas trop, mais ça serait pertinent de le mentionner à David ou Louis-Philippe.
 En gros, ma théorie c'est que la résolution est pas suffisante pour qu'on ait un aperçu réel de ce que la vraie grille nous donne.
-
-
 \subsection{{\bfseries\sffamily DONE} C'est réglé! L'erreur est bel et bien dans mon code}
-\label{sec:orgf37d103}
+\label{sec:org6762674}
 OK. C'est confirmé, l'erreur vient de mon code.
 En effet, lorsqu'on fait des opérations sur les \emph{outputs} -- particulièrement lorsqu'on applique des dérivées -- il faut avoir une résolution exacte et non un sous-échantillon des résultats réels.
-Pour l'exprimer, voir l'illustration suivante (figure \ref{orge1e043a}). \bigskip
+Pour l'exprimer, voir l'illustration suivante (figure \ref{orgb12fd65}). \bigskip
 
 \begin{figure}[h!]
 \begin{center}
@@ -310,7 +306,7 @@ Pour l'exprimer, voir l'illustration suivante (figure \ref{orge1e043a}). \bigski
 \draw (7,1.5) node [rectangle, draw=black,fill=white] {\hspace{0.3cm}$\div{\uu} = \color{blue!70}\qty(\pdv{u}{x}) \color{black} + \color{red!70} \qty(\pdv{v}{y})\hspace{0.3cm}\venti$};
 \end{tikzpicture}
 \end{center}
-\caption{\label{orge1e043a}Illustration de l'erreur engendrée par le sous-échantillonnage des données réelles. Le résultat donne des lignes diagonales croissantes qui apparaissent un peu partout sur le domaine.}
+\caption{\label{orgb12fd65}Illustration de l'erreur engendrée par le sous-échantillonnage des données réelles. Le résultat donne des lignes diagonales croissantes qui apparaissent un peu partout sur le domaine.}
 \end{figure}
 
 Par conséquent, on doit oublier toute forme de dérivées dans nos calculs à partir de maintenant.
@@ -318,9 +314,8 @@ C'est d'ailleurs un problème que j'ai eu lors de ma maîtrise sans en être con
 Je suis quand même fier que ça soit réglé.
 Par contre, ça signifie que beaucoup de transformées de Fourrier ont des résultats douteux dans mon mémoire de maîtrise.
 Louis-Philippe, si tu lis ce texte, j'espère que tu vas empêcher tes prochains étudiant-es de faire ça et me pardonner d'avoir péché. \bigskip
-
 \subsection{Nouvelle run avec la divergence barotrope comme output dans le modèle}
-\label{sec:orga79331f}
+\label{sec:orgae90723}
 
 Comme je m'y attendais, le résultat est complétement différent lorsqu'on sort en \emph{output} la divergence du courant barotrope.
 Malheureusement, il semble toujours y avoir quelque chose qui cloche.
@@ -329,42 +324,37 @@ Les lignes horizontales persistent dans le modèle résolu par \emph{MUDPACK}.
 \begin{figure}[!htpb]
 \centering
 \includegraphics[width=.9\linewidth]{figures/debuggage/2023_07_03_comp_divBT.png}
-\caption{\label{fig:orgfc78313}Divergence du courant barotrope avec le dernier test de MUDPACK.}
+\caption{\label{fig:orga94d459}Divergence du courant barotrope avec le dernier test de MUDPACK.}
 \end{figure}
-
-
-
-
-
 \section{{\bfseries\sffamily DONE} Problème conceptuel avec MUDPACK (Vrai ou faux?)}
-\label{sec:org5e345cf}
+\label{sec:orge9c0f70}
 
 \subsection{Confirmation sur la périodicité de la frontière avec MUDPACK}
-\label{sec:orge08cf52}
+\label{sec:orgc18427e}
 
 \begin{figure}[!htpb]
 \centering
 \includegraphics[width=.9\linewidth]{figures/MUDPACK/test_sans_frontière.png}
-\caption{\label{fig:orge774e60}Test de MUDPACK où le dernier point n'est pas inclu comme un point périodique.}
+\caption{\label{fig:org78400a9}Test de MUDPACK où le dernier point n'est pas inclu comme un point périodique.}
 \end{figure}
 
 Je confirme à 100 \% qu'il faut inclure la frontière aux deux extrémités dans \emph{MUDPACK} lorsqu'on donne une frontière périodique.
 C'est relativement simple à tester, mais lorsqu'on le fait, on voit apparaître des erreurs significatives.
-Par exemple, si l'on regarde à la figure \ref{fig:orge774e60}, on note une erreur d'environ 0.6\% sur la solution, soit une erreur deux fois plus grande qu'avec l'autre test.
+Par exemple, si l'on regarde à la figure \ref{fig:org78400a9}, on note une erreur d'environ 0.6\% sur la solution, soit une erreur deux fois plus grande qu'avec l'autre test.
 Je pense qu'il est aussi intéressant de mentionner qu'on voit apparaître des lignes verticales dans la solution calculée par \emph{MUDPACK}, ce qui pourrait être analogue au problème que nous avons dans notre propre modèle numérique. 
-Tandis que lorsqu'on regarde la figure \ref{fig:orgf79f14e}, on note une erreur de 0.012\% sur la solution.
+Tandis que lorsqu'on regarde la figure \ref{fig:org58bb80d}, on note une erreur de 0.012\% sur la solution.
 L'erreur prend plus la forme d'une erreur numérique diffuse sur le domaine.
 Contrairement à l'autre figure, on note aussi que cette erreur est loin des bords. \bigskip
 
 \begin{figure}[!htpb]
 \centering
 \includegraphics[width=.9\linewidth]{figures/MUDPACK/test_avec_frontière.png}
-\caption{\label{fig:orgf79f14e}Test de MUDPACK où le dernier point est inclu comme un point périodique, de sorte que phi(1)=phi(nx).}
+\caption{\label{fig:org58bb80d}Test de MUDPACK où le dernier point est inclu comme un point périodique, de sorte que phi(1)=phi(nx).}
 \end{figure}
 
 Au regard de ces résultats, je confirme -- hors de tout doute -- qu'il faut inclure la frontière dans le cas périodique.
 Pour le tester, comme on trouve la solution entre les points 1 et 5, on change tout simplement la définition du paramètre \(dx\) pour obtenir une solution réelle qui représente bien les deux cas.
-Comme, le paramètre \(dx\) entre dans la définition de la solution réelle, on joue un tour à \emph{MUDPACK} pour inclure ou non la frontière, comme illustré dans la figure \ref{orgcabcd51}. \bigskip
+Comme, le paramètre \(dx\) entre dans la définition de la solution réelle, on joue un tour à \emph{MUDPACK} pour inclure ou non la frontière, comme illustré dans la figure \ref{org40573a3}. \bigskip
 
 \begin{figure}[!h]
 \begin{center}
@@ -415,21 +405,19 @@ Comme, le paramètre \(dx\) entre dans la définition de la solution réelle, on
 \draw [-|] (domain) -- (5,0.75);
 \end{tikzpicture}
 \end{center}
-\caption{\label{orgcabcd51}Illustration des shéma numériques pour le test avec MUDPACK. a) Solution plus grande que le domaine compilé -- les points 1 et 6 sont périodiques. b) Solution couvre le domaine --  les points 1 et 5 sont périodiques. Dans les deux cas, on compile un domaine contenant \(n_x\) points dans le solveur MUDPACK.}
+\caption{\label{org40573a3}Illustration des shéma numériques pour le test avec MUDPACK. a) Solution plus grande que le domaine compilé -- les points 1 et 6 sont périodiques. b) Solution couvre le domaine --  les points 1 et 5 sont périodiques. Dans les deux cas, on compile un domaine contenant \(n_x\) points dans le solveur MUDPACK.}
 \end{figure}
-
-
 \section{MUDPACK avec une grille de base plus large}
-\label{sec:org7255ecd}
+\label{sec:org4691dc1}
 J'ai relancé le modèle avec un \emph{nx} de 640 points, ce qui me permet de mettre la plus petite grille de \emph{MUDPACK} à 5 points de large.
 Considérant la nature périodique de la solution qu'on cherche, 5 points devraient être suffisants pour représenter la solution à la plus petite échelle -- en opposition à 2 points.
 Dans la documentation, il était suggéré de prendre 2, 3 ou 5 et de se retenir de prendre de plus grandes grilles.
-Malheureusement, le résultat sur les diagrammes de Hovmoler était le même, comme on peut le voir à la figure \ref{fig:org15423d4}.
+Malheureusement, le résultat sur les diagrammes de Hovmoler était le même, comme on peut le voir à la figure \ref{fig:org878235f}.
 
 
 \begin{figure}[!htpb]
 \centering
 \includegraphics[width=.9\linewidth]{figures/tests/2023-06-28_hovmoller1_nx640_t=750days.png}
-\caption{\label{fig:org15423d4}Diagramme de Hovmoller pour la première couche avec un nx de 640 points.}
+\caption{\label{fig:org878235f}Diagramme de Hovmoller pour la première couche avec un nx de 640 points.}
 \end{figure}
 \end{document}

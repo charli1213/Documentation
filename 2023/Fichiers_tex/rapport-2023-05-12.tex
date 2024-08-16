@@ -1,4 +1,4 @@
-% Created 2024-07-23 Tue 11:41
+% Created 2024-08-03 Sat 16:24
 % Intended LaTeX compiler: pdflatex
 \documentclass[10pt]{article}
 % =================================BASE====================================%
@@ -9,15 +9,16 @@
 
 % Calligraphie
 %\usepackage{pxfonts} % Met le texte ET les maths en Palatino + donne accès à des symboles math
-\usepackage{palatino} % Cette commande met seulement le texte en police palatino
+%\usepackage{palatino} % Cette commande met seulement le texte en police palatino
 \usepackage{lmodern} % Pour les maths? Lmodern pour les maths
+\usepackage{cfr-lm}
 % Use lmodern for sans-serif
 \usepackage{mathrsfs} % Permet la command \mathscr (Lettres attachées genre) \mathscr(B)
 
 % Bibliographie
 %\usepackage[backend=bibtex,style=phys,sorting=ynt]{biblatex}
 \usepackage[backend=biber,sorting=ynt,style=authoryear]{biblatex} % N'est pas utilisé par le compilateur org-mode, mais NÉCESSAIRE. Voir le fichier init.el pour changer le style. 
-\addbibresource{/home/charlesedouard/Desktop/Travail/Documentation/2023/master-bibliography.bib}
+\addbibresource{master-bibliography.bib}
 
 
 \usepackage{amsmath, amssymb, amsthm} % Symb. math. (Mathmode+Textmode) + Beaux théorèmes.
@@ -64,7 +65,7 @@
 \definecolor{mypink}{RGB}{147, 0, 255}
 \hypersetup{colorlinks, 
              filecolor=mypink,
-             urlcolor=Violet, 
+             urlcolor=mypink, 
              citecolor=mypink, 
              linkcolor=mypink, 
              anchorcolor=mypink}
@@ -129,10 +130,13 @@
 
 \newcommand{\exemple}{
 \parbox[center]{2.2cm}{\begin{tcolorbox}[sharp corners, rounded corners=northeast, rounded corners=southeast,
-colback=Violet!5, colframe=black,
+colback=Violet!2, colframe=black,
 size=small, width=2cm, left=-0.25pt, bottom=-0.5pt,
 arc is angular, arc=2.5mm, boxrule=0.35pt, leftrule=4pt, %bottomrule=1pt,
 after={\enskip}] Exemple \end{tcolorbox}}}
+
+\newcommand{\rad}{\text{Rad}}
+
 
 \newcommand{\cqfd}{\hfill$\blacktriangleleft$}
 
@@ -204,15 +208,14 @@ Police d'écriture : \textbf{CMU Serif Roman}
  pdftitle={Carnet de bord, Université McGill},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 27.1 (Org mode 9.6.7)}, 
+ pdfcreator={Emacs 29.4 (Org mode 9.7.8)}, 
  pdflang={French}}
 \begin{document}
 
 \mytitlepage
 \tableofcontents\newpage
-
 \section{Nouvelle formulation pour le gradient de pression}
-\label{sec:orgd09346c}
+\label{sec:org6f20907}
 
 David nous a éclairé de sa lumière mardi à 21h43 et nous est arrivé avec un solution super simple mais efficace.
 En premier lieu, on se souvient qu'on définit notre pas de temps \emph{leapfrog} de manière à ce que
@@ -260,29 +263,23 @@ Puis finalement, on retrouve
  \uu^{t+1} = \uu_{BT} + \uu_{BC} = \curl{\qty(\kvf\psi_{BT})} + \uu_{BC},
 \end{align}
 où \(\uu_{BC} = \tilde{\uu}_{BC}\) car \(\gradient{\phi}\) est une composante barotrope.
-
 \subsection{Avantages}
-\label{sec:orgc548afa}
+\label{sec:org641c07c}
 En premier lieu, cette méthode a l'avantage de ramener le problème directement aux frontières.
 Mentionnons qu'en raison de la condition \emph{free slip} et \emph{no normal flow}, les frontières doivent être sur les courants opur une grille Arakawa-C (notre cas). 
 En second, nous n'avons plus besoin de calculer le gradient de pression à l'aide des cette méthode.
 On remplace plutôt notre variable inconnue par une fonction de courant barotrope \(\psi_{BT}\).
-
 \subsection{Désavantages}
-\label{sec:org6dba9cd}
+\label{sec:orge28c92e}
 Mentionnons que cette méthode est un peu plus lente.
 À trois couches, on note au moins un temps de calcul deux fois plus lent.
 Comme notre objectif final est de coupler cette version du modèle avec Wavewatch III, le temps de calcul ne devrait pas être un obstable pour ce modèle-ci. 
-
-
-
 \section{Algorithme de solution à \(\psi_{BT}\)}
-\label{sec:org7f72991}
+\label{sec:org5604593}
 
 La documentation de MUDPACK signalait qu'il est possible d'utiliser deux techniques pour améliorer le temps de calcul et limiter l'erreur numérique.
-
 \subsection{Calculer la correction à la solution plutôt que la solution}
-\label{sec:org3698781}
+\label{sec:orgd8a9d4d}
 Nous avons en main une équation différentielle elliptique quelconque.
 Cette dernière peut être décrite par un opérateur \(\mathcal{L}\) linéaire qui satisfait,
 \begin{align}
@@ -304,25 +301,22 @@ Donc il est peu aviser d'utiliser \(f(t+\delta t) - f(t)\) comme RHS de notre é
 J'en parlerai à David, car ça pourrait légitimement réduire l'erreur numérique, même si ça ne semble pas être un problème pour l'instant.
 Entre temps, nous sommes revenus à la solution initiale.
 Les résultats comparatifs se retrouveront dans le prochain rapport. 
-
 \subsection{Calculer la correction à la solution plutôt que la solution (Revisité)}
-\label{sec:org8d3f290}
+\label{sec:orga5223ac}
 
-Comme ça induisait de drôles d'erreurs (voir figure \ref{fig:org310e12a}), j'ai décidé de revisiter le problème analytiquement.
+Comme ça induisait de drôles d'erreurs (voir figure \ref{fig:orge60970c}), j'ai décidé de revisiter le problème analytiquement.
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figures/tests/2023-05-23_hovmoller1.png}
-\caption{\label{fig:org310e12a}Application de la correction à la solution plutôt que la solution elle-même dans le solveur elliptique de MUDPACK. Les résultats ne sont pas très positifs.}
+\caption{\label{fig:orge60970c}Application de la correction à la solution plutôt que la solution elle-même dans le solveur elliptique de MUDPACK. Les résultats ne sont pas très positifs.}
 \end{figure}
-
 \subsection{Utiliser le dernier champ comme tentative initiale}
-\label{sec:org4f28c66}
+\label{sec:org4fb09d7}
 Il est conseillé d'utiliser \(\phi(t)\) comme tentative initiale pour solutionner \(\phi(t+\delta t)\) au lieu d'un champ vide comme une matrice nulle, par exemple.
 C'est ce que nous avons fait comme cette méthode prenait une seule ligne de code. 
-
 \section{Considérations d'échelle sur la correction à \(\psi_{BT}\)}
-\label{sec:orgd78b718}
+\label{sec:org1eb6ceb}
 
 Quelle est l'ordre de la correction appliquée à la fonction de courant barotrope \(\psi_{BT}\)?
 Au début, les maxima gravitent autours de 4 [\(s^{-1}\)].
@@ -335,7 +329,6 @@ Il n'est alors pas déraisonnable d'affirmer que
 
 Si l'on met cette valeur en perspective, les corrections maximum de \(\psi\) à l'aide de MUDPACK \((\sim 3 s^{-1})\), sont de l'ordre \(\order*{1}\).
 Donc nous sommes dans le royaume du pourcent, ce qui est rassurant car c'est ce que nous avions avec la correction du gradient de pression par \emph{fft}. 
-
 \section{Bibliographie}
-\label{sec:orgf519976}
+\label{sec:orgeabe721}
 \end{document}
