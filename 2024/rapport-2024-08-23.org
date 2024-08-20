@@ -1,0 +1,72 @@
+#+title: Rapport hebdomadaire
+#+subtitle: Contrat Été 2024
+#+author: Charles-Édouard Lizotte
+#+date:23/08/2024
+#+LANGUAGE: fr
+#+BIBLIOGRAPHY: master-bibliography.bib
+#+OPTIONS: toc:nil title:nil 
+#+LaTeX_class: org-report
+
+\mytitlepage
+\tableofcontents\newpage
+
+
+* Coefficient d'atténuation
+
+Dany mentionnait l'article de [cite/t/c:@auclair2022model] qui offre un coefficient d'atténuation qui avait été proposé par [cite/t/c:@sutherland2019two].
+
+** Article de [cite/t/c:@auclair2022model]
+
+
+*** Atténuation des vagues par la glace
+Grossièrement, on s'éloigne de la méthode de [cite/t/c:@Kohout2011wave], ce qui est une bonne nouvelle.
+L'article de [cite/t/c:@sutherland2019two] semble empiriquement meilleur pour obtenir un coefficient d'atténuation physique $\alpha\ [\mathrm{m}^{-1}]$.
+Dans l'article, on illustre le terme source de l'atténuation par la glace par
+\begin{equation}
+   S_{Ice} = - \beta(A,h,f)\pt E_{Waves}.
+\end{equation}
+Le coefficient d'atténuation temporel $\beta\ [\mathrm{s}^{-1}]$ est donné par 
+\begin{equation}
+   \beta = \frac{\nu \omega^2 \Delta_0}{2g\epsilon h},
+\end{equation}
+où
+\begin{equation}
+   \nu = \frac{1}{2} \epsilon^2 \omega h^2,
+\end{equation}
+est l'épaisseur relative d'une couche perméable de glace recouvrant notre eau et $\Delta_0$ est un paramètre relié à l'amplitude du mouvement des vagues à l'intérieur de cette même couche.
+Il est donc suggéré de mettre ensemble ces deux équations pour ovtenir,
+\begin{equation}
+   \beta = \frac{\epsilon \Delta_0 h \omega^3}{4g}.
+\end{equation}
+Les deux paramètres libres $\epsilon$ et $\Delta_0$ peuvent être combinés.
+Selon les données de [cite/t/c:@sutherland2019two], on devrait avoir une relation empirique du genre
+\begin{equation}
+   \epsilon \Delta_0 = 0.5.
+\end{equation}
+
+Mentionnons qu'on peut aussi obtenir le taux d'atténuation par floe $a$ -- comme utilisé par [cite/t/c:@Kohout2011wave] -- et le mettre en relation avec le taux d'atténuation physique par distance $\alpha$. 
+La relation est donnée par
+\begin{equation}
+   \alpha = \frac{A a}{D},
+\end{equation}
+où $D$ est le diamètre du floe et $A$ est la concentration de glace.
+
+
+* Recherche d'une métrique sur l'hétérogénéité des paquets de glace
+
+On pourrait commencer à regarder du côté de l'entropie.
+CLairement, il faudrait voir si on peut relier une /mesure du désordre/ avec l'atténuation d'énergie dans un domaine de glace.
+
+Mais comment représenter une mesure du désordre?
+
+
+
+
+
+
+
+
+
+
+
+#+print_bibliography:

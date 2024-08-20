@@ -1,4 +1,4 @@
-% Created 2024-08-20 Tue 13:01
+% Created 2024-08-20 Tue 16:12
 % Intended LaTeX compiler: pdflatex
 \documentclass[10pt]{article}
 % =================================BASE====================================%
@@ -16,8 +16,8 @@
 \usepackage{mathrsfs} % Permet la command \mathscr (Lettres attachées genre) \mathscr(B)
 
 % Bibliographie
-%\usepackage[backend=bibtex,style=phys,sorting=ynt]{biblatex}
-\usepackage[backend=biber,sorting=ynt,style=authoryear]{biblatex} % N'est pas utilisé par le compilateur org-mode, mais NÉCESSAIRE. Voir le fichier init.el pour changer le style. 
+\usepackage[backend=bibtex,style=apa,sorting=ynt]{biblatex}
+%\usepackage[backend=biber,sorting=ynt,style=authoryear-comp]{biblatex} % N'est pas utilisé par le compilateur org-mode, mais NÉCESSAIRE. Voir le fichier init.el pour changer le style. 
 \addbibresource{master-bibliography.bib}
 
 
@@ -345,6 +345,7 @@ Dans une \textbf{transformée de Fourier}, on a
    E(\vb{x},t; \vb{k},\omega) \propto h^2(\vb{x},t; \vb{k}, \omega).
 \end{equation}
 C'est pourquoi, on utilise souvent l'expression \emph{variance density spectrum} pour parler du spectre d'énergie.
+Bref, ces deux quantités sont similaires.
 \subsubsection{Retour sur les quantités}
 \label{sec:org1a303b5}
 Wavewatch utilise Pour citer la documentation des Wavewatch \autocite{wwiii2016user} :\medskip
@@ -360,9 +361,8 @@ et puis, on mentionne aussi \medskip
 \end{quote}
 \medskip
 
-Donc, on peut représenter l'élévation des vagues (\(h(\vb{x},t;\vb{k},\theta)\)) de manière statistique, comme toutes les vagues ont une hauteur caractéristique, une fréquence propre, etc.
-C'est pourquoi nous avons une relation de dispersion (\ref{eq:orgde57527}).
-Comme l'énergie potentielle est définit en fonction de la hauteur, on peut relier la hauteur de vagues à l'aide l'énergie.
+Sans courant, la variance ou l'énergie n'est pas conservé, c'est pourquoi on utilise le spectre de densité d'action, au final.
+
 
 \begin{center}
 \begin{tabular}{cllc}
