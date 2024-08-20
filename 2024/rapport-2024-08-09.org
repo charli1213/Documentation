@@ -53,6 +53,29 @@ Puis finalement,
 et comme la matrice *A* est différente pour chaque fréquence, il faut donc recalculer *A* pour chaque fréquence.
 Notons que dans la maîtrise de Bismuth, on assumait une vitesse de groupe identique pour tous les fréquences, ce que je trouve très ordinaire, personellement.
 
+** Lax-Wendroff aux murs
+À la case initiale, on assume une condition frontière, donc pas besoin de Lax-Wendroff là.
+Puis à la case finale, on assume une frontière ouverte de sorte que
+\begin{equation}
+   \eval{\qty(\pdv{E}{x} = 0)}_{x = x_f + \Delta x/2}
+\end{equation}
+
+
+* Rappel sur les propriétés des vagues
+
+** Équations principales
+
+La fréquence absolue ($\omega = 2\pi f_a$) est reliée à la fréquence relative ($\sigma = 2\pi f_r$) à l'aide de la relation [cite:@wwiii2016user;@Ardhuin2024ocean],
+\begin{equation}
+   \boxed{\grande\quad\omega = \sigma + \vb{k}\cdot\vb{u}.\quad}
+\end{equation}
+Tiré du /poster/ de Dany, la densité d'action des vagues $N(\omega, \theta; \vb{x}, t)$ (/Wave action density spectrum/) est reliée au spectre d'énergie $E(\omega, \theta; \vb{x}, t, x)$ (/Energy density spectrum/) à l'aide de la relation
+\begin{equation}
+   \boxed{\ \grande E = \omega N.\ }
+\end{equation}
+Grossièrement, on garde généralement la densité d'action des vagues parce que c'est une quantité conservée, si je me souviens bien. 
+
+
 ** La vitesse d'une onde
 Quelques rappels techniques rapides, 
 \begin{align}
@@ -60,6 +83,7 @@ Quelques rappels techniques rapides,
 \end{align}
 
 La relation de dispersion des ondes de surfaces est aussi exprimée par
+#+name:eq:relationdispersion
 \begin{equation}
    \sigma = \qty(gk\cdot \tanh(kd))^{\sfrac{1}{2}}
 \end{equation}
@@ -88,18 +112,62 @@ ainsi on peut mettre en relation la vitesse de groupe et de phase, soit
 \begin{equation}
    \boxed{\quad c_p = \venti\frac{g}{\omega}\hspace{0.5cm};\hspace{0.5cm} c_g = \frac{c_p}{2}.\quad}
 \end{equation}
-Mentionnons aussi que le vecteur $\mathbf{c}_g(\omega)$ est fixe dans le temps, il n'y a pas de dispersion temporelle. 
+Mentionnons aussi que le vecteur $\mathbf{c}_g(\omega)$ est fixe dans le temps, il n'y a pas de dispersion temporelle.
 
-** Lax-Wendroff aux murs
-À la case initiale, on assume une condition frontière, donc pas besoin de Lax-Wendroff là.
-Puis à la case finale, on assume une frontière ouverte de sorte que
+** Désambiguation des quantités utilisée dans le domaine d'étude des vagues
+
+*** Petit retour historique
+
+À la base -- ce qu'on a -- c'est la hauteur du niveau de l'eau (que nous appellerons $h(\vb{x},t)$).
+Il existe un niveau de l'eau moyen établi sur tout le domaine, mais ce n'est pas important, car c'est l'évolution des écarts à la moyenne qui nous intéresse.
+Donc, 
 \begin{equation}
-   \eval{\qty(\pdv{E}{x} = 0)}_{x = x_f + \Delta x/2}
+   h(\vb{x},t) = \overline{h}(t) + h'(\vb{x},t) \enskip\mid\enskip \overline{h}(t) = \expval{h(\vb{x},t)}
 \end{equation}
+Quand on parles des écarts à la moyenne, c'est l'écart-type ou la *variance* qui nous vient en tête. 
+La *variance* est donnée par la moyenne des carrés des écarts à la moyenne, soit
+\begin{align}
+   \mathrm{Variance} &= \expval{\qty(h - \expval{h})^2},\nonumber\\
+   &= \expval{\qty(h^2 -2h\expval{h} + \expval{h}^2)}\\
+   &= \expval{h^2 + \expval{h}^2} -2 \expval{h}\expval{h}\\
+   &= \expval{h^2} - \expval{h}^2.
+\end{align}
+
+D'ici, on peut faire la transformée de Fourier du spectre de variance $h^2(\vb{x},t)$ dans une case, de sorte à obtenir $h^2(\vb{k}, \omega; \vb{x},t)$.
+L'énergie d'une onde est proportionnelle au carré de l'amplitude de celle-ci, donc à l'aide du théorème de Parceval, on peut relier l'amplitude des coefficient de notre série de Fourier à l'énergie associée à chaque fréquence.
+Dans une *transformée de Fourier*, on a 
+\begin{equation}
+   E(\vb{x},t; \vb{k},\omega) \propto h^2(\vb{x},t; \vb{k}, \omega).
+\end{equation}
+C'est pourquoi, on utilise souvent l'expression /variance density spectrum/ pour parler du spectre d'énergie.
+Bref, ces deux quantités sont similaires.
+
+*** Retour sur les quantités
+Wavewatch utilise Pour citer la documentation des Wavewatch [cite:@wwiii2016user] :\medskip
+#+begin_quote
+/For monochromatic waves, the amplitude is described as the amplitude, the wave height, or the wave energy. For irregular wind waves, the (random) variance of the sea surface is described using variance density spectra (in the wave modeling community usually denoted as energy spectra). The variance spectrum F is a function of all independent phase parameters, i.e.,/ $F(\vb{k},\sigma,\omega)$, /and furthermore varies in space and time at scales larger than those of individual waves, e.g.,/ $F(\vb{k},\sigma,\omega; x, t)$. [...]
+/Within WAVEWATCH III the basic spectrum is the wavenumber-direction spectrum/ $F(k,\theta)$, /which has been selected because of its invariance characteristics with respect to physics of wave growth and decay for variable water depths. The output of WAVEWATCH III, however, consists of the more traditional frequency-direction spectrum/ $F(f_r,\theta)$.
+#+end_quote
+\medskip
+
+et puis, on mentionne aussi \medskip
+#+begin_quote
+/In a general sense, however, wave action/ $A\equiv E/\sigma$ /is conserved (e.g., Whitham, 1965; Bretherthon and Garrett, 1968). This makes the wave action density spectrum/ $N(k,\theta) = F(k,\theta)/\sigma$ /the spectrum of choice within the model./
+#+end_quote
+\medskip
+
+Sans courant, la variance ou l'énergie n'est pas conservé, c'est pourquoi on utilise le spectre de densité d'action, au final.
 
 
-
-
+|   <c>   | <l>                                    | <l>                          |      <c>       |
+|---------+----------------------------------------+------------------------------+----------------|
+| Symbole | Quantité                               | Anglais                      |    Relation    |
+|---------+----------------------------------------+------------------------------+----------------|
+|   $E$   | Spectre d'énergie des vagues           | /Energy spectrum/              |      ---       |
+|   $F$   | Spectre de variance des vagues         | /Variance spectrum/            |      ---       |
+|   $N$   | Spectre de densité d'action des vagues | /Wave Action density spectrum/ | $N = F/\sigma$ |
+|   $A$   | Densité d'action                       | /Action/                       | $A = E/\sigma$ |
+|---------+----------------------------------------+------------------------------+----------------|
 
 
 * Débriefing réunion Dany (16 aout 2024)

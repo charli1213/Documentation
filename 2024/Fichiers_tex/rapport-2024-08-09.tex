@@ -1,4 +1,4 @@
-% Created 2024-08-16 Fri 12:57
+% Created 2024-08-20 Tue 13:01
 % Intended LaTeX compiler: pdflatex
 \documentclass[10pt]{article}
 % =================================BASE====================================%
@@ -257,6 +257,28 @@ Puis finalement,
 \end{equation}
 et comme la matrice \textbf{A} est différente pour chaque fréquence, il faut donc recalculer \textbf{A} pour chaque fréquence.
 Notons que dans la maîtrise de Bismuth, on assumait une vitesse de groupe identique pour tous les fréquences, ce que je trouve très ordinaire, personellement.
+\subsection{Lax-Wendroff aux murs}
+\label{sec:orgf7fc3df}
+À la case initiale, on assume une condition frontière, donc pas besoin de Lax-Wendroff là.
+Puis à la case finale, on assume une frontière ouverte de sorte que
+\begin{equation}
+   \eval{\qty(\pdv{E}{x} = 0)}_{x = x_f + \Delta x/2}
+\end{equation}
+\section{Rappel sur les propriétés des vagues}
+\label{sec:org21f37da}
+
+\subsection{Équations principales}
+\label{sec:org2e7fb59}
+
+La fréquence absolue (\(\omega = 2\pi f_a\)) est reliée à la fréquence relative (\(\sigma = 2\pi f_r\)) à l'aide de la relation \autocite{wwiii2016user,Ardhuin2024ocean},
+\begin{equation}
+   \boxed{\grande\quad\omega = \sigma + \vb{k}\cdot\vb{u}.\quad}
+\end{equation}
+Tiré du \emph{poster} de Dany, la densité d'action des vagues \(N(\omega, \theta; \vb{x}, t)\) (\emph{Wave action density spectrum}) est reliée au spectre d'énergie \(E(\omega, \theta; \vb{x}, t, x)\) (\emph{Energy density spectrum}) à l'aide de la relation
+\begin{equation}
+   \boxed{\ \grande E = \omega N.\ }
+\end{equation}
+Grossièrement, on garde généralement la densité d'action des vagues parce que c'est une quantité conservée, si je me souviens bien. 
 \subsection{La vitesse d'une onde}
 \label{sec:org5caa36b}
 Quelques rappels techniques rapides, 
@@ -266,6 +288,7 @@ Quelques rappels techniques rapides,
 
 La relation de dispersion des ondes de surfaces est aussi exprimée par
 \begin{equation}
+\label{eq:orgde57527}
    \sigma = \qty(gk\cdot \tanh(kd))^{\sfrac{1}{2}}
 \end{equation}
 
@@ -293,14 +316,66 @@ ainsi on peut mettre en relation la vitesse de groupe et de phase, soit
 \begin{equation}
    \boxed{\quad c_p = \venti\frac{g}{\omega}\hspace{0.5cm};\hspace{0.5cm} c_g = \frac{c_p}{2}.\quad}
 \end{equation}
-Mentionnons aussi que le vecteur \(\mathbf{c}_g(\omega)\) est fixe dans le temps, il n'y a pas de dispersion temporelle. 
-\subsection{Lax-Wendroff aux murs}
-\label{sec:orgf7fc3df}
-À la case initiale, on assume une condition frontière, donc pas besoin de Lax-Wendroff là.
-Puis à la case finale, on assume une frontière ouverte de sorte que
+Mentionnons aussi que le vecteur \(\mathbf{c}_g(\omega)\) est fixe dans le temps, il n'y a pas de dispersion temporelle.
+\subsection{Désambiguation des quantités utilisée dans le domaine d'étude des vagues}
+\label{sec:org33b2bf0}
+
+\subsubsection{Petit retour historique}
+\label{sec:org4a6db0b}
+
+À la base -- ce qu'on a -- c'est la hauteur du niveau de l'eau (que nous appellerons \(h(\vb{x},t)\)).
+Il existe un niveau de l'eau moyen établi sur tout le domaine, mais ce n'est pas important, car c'est l'évolution des écarts à la moyenne qui nous intéresse.
+Donc, 
 \begin{equation}
-   \eval{\qty(\pdv{E}{x} = 0)}_{x = x_f + \Delta x/2}
+   h(\vb{x},t) = \overline{h}(t) + h'(\vb{x},t) \enskip\mid\enskip \overline{h}(t) = \expval{h(\vb{x},t)}
 \end{equation}
+Quand on parles des écarts à la moyenne, c'est l'écart-type ou la \textbf{variance} qui nous vient en tête. 
+La \textbf{variance} est donnée par la moyenne des carrés des écarts à la moyenne, soit
+\begin{align}
+   \mathrm{Variance} &= \expval{\qty(h - \expval{h})^2},\nonumber\\
+   &= \expval{\qty(h^2 -2h\expval{h} + \expval{h}^2)}\\
+   &= \expval{h^2 + \expval{h}^2} -2 \expval{h}\expval{h}\\
+   &= \expval{h^2} - \expval{h}^2.
+\end{align}
+
+D'ici, on peut faire la transformée de Fourier du spectre de variance \(h^2(\vb{x},t)\) dans une case, de sorte à obtenir \(h^2(\vb{k}, \omega; \vb{x},t)\).
+L'énergie d'une onde est proportionnelle au carré de l'amplitude de celle-ci, donc à l'aide du théorème de Parceval, on peut relier l'amplitude des coefficient de notre série de Fourier à l'énergie associée à chaque fréquence.
+Dans une \textbf{transformée de Fourier}, on a 
+\begin{equation}
+   E(\vb{x},t; \vb{k},\omega) \propto h^2(\vb{x},t; \vb{k}, \omega).
+\end{equation}
+C'est pourquoi, on utilise souvent l'expression \emph{variance density spectrum} pour parler du spectre d'énergie.
+\subsubsection{Retour sur les quantités}
+\label{sec:org1a303b5}
+Wavewatch utilise Pour citer la documentation des Wavewatch \autocite{wwiii2016user} :\medskip
+\begin{quote}
+\emph{For monochromatic waves, the amplitude is described as the amplitude, the wave height, or the wave energy. For irregular wind waves, the (random) variance of the sea surface is described using variance density spectra (in the wave modeling community usually denoted as energy spectra). The variance spectrum F is a function of all independent phase parameters, i.e.,} \(F(\vb{k},\sigma,\omega)\), \emph{and furthermore varies in space and time at scales larger than those of individual waves, e.g.,} \(F(\vb{k},\sigma,\omega; x, t)\). [\ldots{}]
+\emph{Within WAVEWATCH III the basic spectrum is the wavenumber-direction spectrum} \(F(k,\theta)\), \emph{which has been selected because of its invariance characteristics with respect to physics of wave growth and decay for variable water depths. The output of WAVEWATCH III, however, consists of the more traditional frequency-direction spectrum} \(F(f_r,\theta)\).
+\end{quote}
+\medskip
+
+et puis, on mentionne aussi \medskip
+\begin{quote}
+\emph{In a general sense, however, wave action} \(A\equiv E/\sigma\) \emph{is conserved (e.g., Whitham, 1965; Bretherthon and Garrett, 1968). This makes the wave action density spectrum} \(N(k,\theta) = F(k,\theta)/\sigma\) \emph{the spectrum of choice within the model.}
+\end{quote}
+\medskip
+
+Donc, on peut représenter l'élévation des vagues (\(h(\vb{x},t;\vb{k},\theta)\)) de manière statistique, comme toutes les vagues ont une hauteur caractéristique, une fréquence propre, etc.
+C'est pourquoi nous avons une relation de dispersion (\ref{eq:orgde57527}).
+Comme l'énergie potentielle est définit en fonction de la hauteur, on peut relier la hauteur de vagues à l'aide l'énergie.
+
+\begin{center}
+\begin{tabular}{cllc}
+\hline
+Symbole & Quantité & Anglais & Relation\\
+\hline
+\(E\) & Spectre d'énergie des vagues & \emph{Energy spectrum} & ---\\
+\(F\) & Spectre de variance des vagues & \emph{Variance spectrum} & ---\\
+\(N\) & Spectre de densité d'action des vagues & \emph{Wave Action density spectrum} & \(N = F/\sigma\)\\
+\(A\) & Densité d'action & \emph{Action} & \(A = E/\sigma\)\\
+\hline
+\end{tabular}
+\end{center}
 \section{Débriefing réunion Dany (16 aout 2024)}
 \label{sec:org5140feb}
 
