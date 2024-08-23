@@ -1,4 +1,4 @@
-% Created 2024-08-20 Tue 18:08
+% Created 2024-08-22 Thu 14:53
 % Intended LaTeX compiler: pdflatex
 \documentclass[10pt]{article}
 % =================================BASE====================================%
@@ -17,7 +17,7 @@
 
 % Bibliographie
 \usepackage[backend=bibtex,style=apa,sorting=ynt]{biblatex}
-%\usepackage[backend=biber,sorting=ynt,style=authoryear-comp]{biblatex} % N'est pas utilisé par le compilateur org-mode, mais NÉCESSAIRE. Voir le fichier init.el pour changer le style. 
+%\usepackage[backend=biber,sorting=ynt,style=authoryear-comp]{biblatex} % Ça semble tout changer.
 \addbibresource{master-bibliography.bib}
 
 
@@ -214,6 +214,25 @@ Police d'écriture : \textbf{CMU Serif Roman}
 
 \mytitlepage
 \tableofcontents\newpage
+\section{Retour sur le modèle de vagues}
+\label{sec:org19f8e3d}
+
+Le terme de croissance des vagues dans le modèle d'Eliot Bismuth est tiré des notes de Fabrice Ardhuin \autocite{Ardhuin2024ocean}, qui sont elle aussi tirées d'un article de \Textcite{snyder1981array}.
+Essentiellement, on assume que la croissance des vagues dans le terme source prend la forme
+\begin{equation}
+   S_{in}(f,\theta) = \sigma \beta E(f,\theta). 
+\end{equation}
+Dans l'équation précédente, le facteur \(\beta\) est un taux de croissance adimensionnel.
+Généralement, on utilise une fonction obtenue de manière empirique.
+Par contre, \Textcite{snyder1981array} ont réussi à la mettre en équation, soit
+\begin{equation}
+   \beta = \max \qty{0,\pt0.25\frac{\rho_a}{\rho_o} \qty[28\frac{u_\star}{C} \cos(\theta_\star - \theta) - 1]}.
+\end{equation}
+En 1 dimension, ça se traduirait par
+\begin{equation}
+   \boxed{\venti\quad\beta = \max \qty{0,\pt0.25\frac{\rho_a}{\rho_o} \qty[28\frac{u_\star}{C} - 1]},\quad}
+\end{equation}
+et c'est bien ce qu'on a! Par contre, je n'ai pas vu le \emph{max} dans le code de Bismuth\ldots{}
 \section{Coefficient d'atténuation}
 \label{sec:orge769e47}
 
@@ -228,7 +247,7 @@ Grossièrement, on s'éloigne de la méthode de \Textcite{Kohout2011wave}, ce qu
 L'article de \Textcite{sutherland2019two} semble empiriquement meilleur pour obtenir un coefficient d'atténuation physique \(\alpha\ [\mathrm{m}^{-1}]\).
 Dans l'article, on illustre le terme source de l'atténuation par la glace par
 \begin{equation}
-   S_{Ice} = - \beta(A,h,f)\pt E_{Waves}.
+   S_{ice} = - \beta(A,h,f)\pt E_{waves}.
 \end{equation}
 Le coefficient d'atténuation temporel \(\beta\ [\mathrm{s}^{-1}]\) est donné par 
 \begin{equation}
