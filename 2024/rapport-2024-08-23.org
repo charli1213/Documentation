@@ -10,6 +10,80 @@
 \mytitlepage
 \tableofcontents\newpage
 
+* Retour sur le modèle de vagues
+
+** Valeurs positives
+
+Un gros problème tout au long du modèle était l'existence de valeurs négatives pour le spectre de vague -- ce qui ne fait aucun sens.
+Pour pallier au problème, j'ai donc mis des filtres qui s'assurent d'avoir un minimum de 0 pour le spectre lorsque les termes source font descendre notre spectre trop bas.
++ Le premier est après l'advection;
++ Le second est juste après l'ajout des termes source. 
+
+** Introduction de l'énergie dans les vagues
+
+Le terme de croissance des vagues dans le modèle d'Eliot Bismuth est tiré des notes de Fabrice Ardhuin [cite:@Ardhuin2024ocean], qui sont elle aussi tirées d'un article de [cite/t/c:@snyder1981array].
+Essentiellement, on assume que la croissance des vagues dans le terme source prend la forme
+\begin{equation}
+   S_{in}(f,\theta) = \sigma \beta E(f,\theta). 
+\end{equation}
+Dans l'équation précédente, le facteur $\beta$ est un taux de croissance adimensionnel.
+Généralement, on utilise une fonction obtenue de manière empirique.
+Par contre, [cite/t/c:@snyder1981array] ont réussi à la mettre en équation, soit
+\begin{equation}
+   \beta = \max \qty{0,\pt0.25\frac{\rho_a}{\rho_o} \qty[28\frac{u_\star}{C} \cos(\theta_\star - \theta) - 1]}.
+\end{equation}
+En 1 dimension, ça se traduirait par
+\begin{equation}
+   \boxed{\venti\quad\beta = \max \qty{0,\pt0.25\frac{\rho_a}{\rho_o} \qty[28\frac{u_\star}{C} - 1]},\quad}
+\end{equation}
+et c'est bien ce qu'on a! Par contre, je n'ai pas vu le /max/ dans le code de Bismuth...
+
+** Whitecapping
+
+** Pierson-Moskowitz
+
+Y'a quelque chose de louche dans la maîtrise de Bismuth, c'est vraiment pas clair si les fréquences utilisées sont en $\mathrm{s}^{-1}$ ou en $\mathrm{Rad}\cdot\mathrm{s}^{-1}$.
+Particulièrement où il y a la ligne de Pierson-Moscowitz.
+C'est pourquoi je suis allé le chercher à la source, le /JONSWAP final report/ [cite:@hasselmann1973measurements].
+Donc Pierson-Moskowitz, c'est
+\begin{equation}
+   E_{PM}(f) = \alpha g^2 (2\pi)^4 f^{-5} \exp[- \frac{5}{4} \qty(\frac{f}{f_m})^{-4}],
+\end{equation}
+mais si on prend le spectre JONSWAP, on multiplie par une composante qu'on appelle le /peak enhancement factor/,
+\begin{equation}
+   E_{JONSWAP}(f) = E_{PM}(f)\times\gamma^{\huge\exp[ \frac{-(f-f_m)^2}{2\sigma^2f_m^2}]},
+\end{equation}
+ce qui nous laisse 5 paramètres flottant, soient $f_m, \alpha, \gamma, \sigma_a, \sigma_b$.
+Où l'on relit les derniers facteurs à l'aide de
+\begin{equation}
+   \sigma = \left\lbrace\begin{matrix}
+       \sigma_a & \mathrm{si} & f \leq f_m,\\
+       \sigma_b & \mathrm{si} & f > f_m.\\
+   \end{matrix}
+  \right.
+\end{equation}
+
+Par contre, Bismuth prend plutôt la formulation
+\begin{equation}
+   E_{JONSWAP}(\omega) = 0.2H_s^2 \qty(\frac{\omega_p^4}{\omega^5}) \exp{-\frac{5}{4}\qty(\frac{\omega_p}{\omega})^4} \times 3.3^{\exp{\frac{-(\omega-\omega_p)^2}{2\sigma^2 \omega_p^2}}}.
+\end{equation}
+
+Selon [cite/t/c:@hasselmann1973measurements], on devrait avoir les valeurs
+\begin{align}
+   &&\gamma = 3.3, && \sigma_a = 0.7, && \sigma_b = 0.9, &&
+\end{align}
+à l'équilibre -- c'est d'ailleur ce que Bismuth a mis.\bigskip
+
+Donc, l'erreur vient du fait que dans son manuscrit, tout est en $\mathrm{Rad}\cdot\mathrm{s}^{-1}$ quand tout devrait être en $\mathrm{s}^{-1}$, ce qui se traduit par
+\begin{equation}
+   E_{JONSWAP}(f) = 0.2\qty(\venti\frac{H_s^2}{2\pi}) \qty(\frac{f^4_p}{f^5}) \exp{-\frac{5}{4}\qty(\frac{f_p}{f})^4} \times 3.3^{\exp{\frac{-(\omega-\omega_p)^2}{2\sigma^2 \omega_p^2}}}.
+\end{equation}
+On en fait justement mention sur [[https://wikiwaves.org/Ocean-Wave_Spectra][l'article de Wikiwaves sur le JONSWAP]] en mentionnant que
+\begin{equation}
+   S(\omega) = S(2\pi f) = 2\pi\cdot S(f)
+\end{equation}
+
+
 
 * Coefficient d'atténuation
 
@@ -23,7 +97,7 @@ Grossièrement, on s'éloigne de la méthode de [cite/t/c:@Kohout2011wave], ce q
 L'article de [cite/t/c:@sutherland2019two] semble empiriquement meilleur pour obtenir un coefficient d'atténuation physique $\alpha\ [\mathrm{m}^{-1}]$.
 Dans l'article, on illustre le terme source de l'atténuation par la glace par
 \begin{equation}
-   S_{Ice} = - \beta(A,h,f)\pt E_{Waves}.
+   S_{ice} = - \beta(A,h,f)\pt E_{waves}.
 \end{equation}
 Le coefficient d'atténuation temporel $\beta\ [\mathrm{s}^{-1}]$ est donné par 
 \begin{equation}
