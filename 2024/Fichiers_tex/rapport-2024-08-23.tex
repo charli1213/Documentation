@@ -1,4 +1,4 @@
-% Created 2024-08-23 Fri 15:04
+% Created 2024-08-28 Wed 13:35
 % Intended LaTeX compiler: pdflatex
 \documentclass[10pt]{article}
 % =================================BASE====================================%
@@ -274,7 +274,7 @@ Où l'on relit les derniers facteurs à l'aide de
 
 Par contre, Bismuth prend plutôt la formulation
 \begin{equation}
-   E_{JONSWAP}(f) = 0.2H_s^2 \qty(\frac{\omega_p^4}{\omega^5}) \exp{-\frac{5}{4}\qty(\frac{\omega_p}{\omega})^4} \times 3.3^{\exp{\frac{-(\omega-\omega_p)^2}{2\sigma^2 \omega_p^2}}}.
+   E_{JONSWAP}(\omega) = 0.2H_s^2 \qty(\frac{\omega_p^4}{\omega^5}) \exp{-\frac{5}{4}\qty(\frac{\omega_p}{\omega})^4} \times 3.3^{\exp{\frac{-(\omega-\omega_p)^2}{2\sigma^2 \omega_p^2}}}.
 \end{equation}
 
 Selon \Textcite{hasselmann1973measurements}, on devrait avoir les valeurs
@@ -291,6 +291,47 @@ On en fait justement mention sur \href{https://wikiwaves.org/Ocean-Wave\_Spectra
 \begin{equation}
    S(\omega) = S(2\pi f) = 2\pi\cdot S(f)
 \end{equation}
+\subsection{Retour sur la méthode de Lax-Wendroff}
+\label{sec:org60cc8dc}
+
+Malheureusement, si l'on veut un \emph{Superbee flux limiter}, on doit recoder la méthode de Lax-Wendroff.
+En théorie, le limituer s'applique sur une quantité qu'on appelle le \emph{flux}.
+Cette quantité, c'est en fait ce qui sort d'un cube (ou d'un carré dans notre cas).\bigskip
+
+On n'oublie pas qu'il faut résoudre
+\begin{align}
+   &&\pdv{E}{t} + c_g \pdv{E}{x} = 0 && \Longrightarrow &&   \pdv{E}{t} + \pdv{F(E)}{x}  = 0 \quad\text{où}\quad F(E) = c_gE &&
+\end{align}
+
+Grossièrement, on peut solutionner cette équation en additionnant un \(\var{F}\), qui est en fait le \emph{flux} de notre fonction.
+C'est justement ce que nous allons limiter dans 
+\begin{equation}
+   E_i^{n+1} = E_i^n - \qty(\frac{\var{t}}{\var{x}})\qty[\tall\ F_{i+\sfrac{1}{2}} - F_{i-\sfrac{1}{2}}\ ],
+\end{equation}
+Dans le cas de Lax-Wendroff, on peut représenter les flux sur chaque bords comme
+\begin{subequations}
+\begin{align}
+   &F_{i-\sfrac{1}{2}} = \frac{1}{2}\qty(E_i^n - E_{i-1}^n) - \phi(E_{i-\sfrac{1}{2}}) \times\frac{1}{2}\fdv{t}{x}\qty(F(E_i^n) - F(E_{i-1}^n)),\\
+   &F_{i+\sfrac{1}{2}} = \underbrace{\venti\frac{1}{2}\qty(E_{i+1}^n - E_i^n)}_{\mathrm{Moyenne}} - \ \phi(E_{i+\sfrac{1}{2}}) \times\underbrace{\venti\frac{1}{2}\fdv{t}{x}\qty(F(E_{i+1}^n) - F(E_i^n)).}_{\mathrm{Variation}}
+\end{align}
+\end{subequations}
+où \(\phi\) est le limiteur.
+Dans le cas qui nous intéresse (\href{https://en.wikipedia.org/wiki/Flux\_limiter}{limiteur \emph{superbee}})  -- car il existe toutes sortes de limiteurs -- nous avons
+
+\begin{align}
+   && && &&r_{i+\sfrac{1}{2}} = \qty(\frac{E_i - E_{i-1}}{E_{i+1} - E_i}),    && r_{i-\sfrac{1}{2}} = \qty(\frac{E_{i-1} - E_{i-2}}{E_{i} - E_{i-1}}) && &&
+\end{align}
+où le limiteur est exprimé par
+\begin{equation}
+   &\phi = \mathrm{max} \qty{\begin{matrix}
+       \pt\mathrm{min}(1, 2r)\\
+       \mathrm{min}(2,\ r)\\
+   \end{matrix}
+   }.
+\end{equation}
+
+Voilà. Il faudra implémenter ça, plutôt que ma fonction d'algèbre linéaire, malheureusement.
+C'est fait, en tout cas!
 \section{Coefficient d'atténuation}
 \label{sec:orge769e47}
 

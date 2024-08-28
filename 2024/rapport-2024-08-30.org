@@ -1,0 +1,26 @@
+#+title: Rapport hebdomadaire
+#+subtitle: Contrat Été 2024
+#+author: Charles-Édouard Lizotte
+#+date:30/08/2024
+#+LANGUAGE: fr
+#+BIBLIOGRAPHY: master-bibliography.bib
+#+OPTIONS: toc:nil title:nil 
+#+LaTeX_class: org-report
+
+\mytitlepage
+\tableofcontents\newpage
+
+* Entropie
+
+** Ce que Bismuth avait fait
+
+#+CAPTION: Figure tirée de Bismuth (figure 13) représentant les termes sources actifs et la prédominance de chacun. 
+[[file:Figures/figures/Bismuth_fig13.png]]
+
+#+CAPTION: Distribution statistique représentant le nombre possible de distribution de glace associé à chaque "concentration" $f_i$ dans un domaine de 10 cases ($2^8$). 
+[[file:Figures/figures/Bismuth_fig10.png]]
+
+[cite:@sutherland2018marginal]
+
+#+print_bibliography:
+
