@@ -1,0 +1,148 @@
+#+title: Rapport hebdomadaire
+#+subtitle: Contrat Été 2024
+#+author: Charles-Édouard Lizotte
+#+date:20/09/2024
+#+LANGUAGE: fr
+#+BIBLIOGRAPHY: master-bibliography.bib
+#+OPTIONS: toc:nil title:nil 
+#+LaTeX_class: org-report
+
+\mytitlepage
+\tableofcontents\newpage
+
+* Objectifs principaux des prochaines semaines [0/0]
+
+** Développer une « config » préliminaire de Wavewatch [1/1]
+
++ [X] Il faut premièrement installer Wavewatch III sur mes machines (On teste sur la mienne en premier, comme ça je pourrai exporter mon environnement sur les machines du PolR ou de /Compute Canada/;
++ [0/4] Faut vérifier que Wavewatch III fonctionne bien.
+  - [ ] /grid input/ main genre une ligne; Si je me souviens bien, j'ai déjà une fonction Python qui réalise ce genre de fichiers d'entrée (Voir les codes de la maîtrise);
+  - [ ] /startfile/;
+  - [ ] /NetCDF input/ genre un courant et un vent;
+  - [ ] /Shell input/; 
+
+** Mettre le terme non-linéaire dans le code Julia  [2/3]
+
++ [X] Je doit impérativement contacter Sébastien Dugas
++ [X] Voir la preuve fournie dans le livre [cite:@kinsman1965their],
++ [ ] Trouver un équivalent en 1 dimension.
+
+
+** Caractérisation des distributions de floes
+
++ [ ] Il faut créer une fonction en Python qui crée des distributions de glaces avec les paramètres nécessaires;
+  - Concentration de glace $C_g$,
+  - Taille des /patches/,
+  - Orientation de la distribution
+
+
+
+* Config de Wavewatch III
+
+** Installation de Wavewatch
+
+J'ai déjà écrit tout ça dans un rapport avec Louis-Philippe, mais je trouve que c'est important de faire une petite mise à jour avant de se remettre dedans. De plus, ça pourrait être utile à tous les nouveaux employés qui me poseront une question là-dessus.
+
+Avant tout, il faut aller sur [[https://polar.ncep.noaa.gov/waves/wavewatch/distribution/]], c'est là qu'on peut télécharger le modèle sous forme de fichier /.tar/ avec les informations
+#+begin_src bash
+ >>> username: converter1091
+ >>> password: contractor8409
+#+end_src
+On s'assure d'avoir la version la plus à jour, dans mon cas, c'est la 5.16. Une fois que c'est téléchargé, on peut ouvrir le fichier compressé dans un dossier au choix,
+#+begin_src bash
+ >>> tar -xvf wwatch3.v5.16.tar.gz -C wavewatch3
+#+end_src
+On va dans le dossier, on rend l'installateur executable avec
+#+begin_src bash
+ >>> chmod +x install_ww3_tar 
+#+end_src
+On peut essayer, mais si nous n'avons pas de compilateur Fortran ou C, ça ne sert pas à grand chose. Pour Arch Linux, on peut tout simplement installer /Gfortran/ à l'aide de la commande
+#+begin_src bash
+ >>> sudo pacman -Syyu gcc-fortran
+#+end_src
+Mentionnons qu'on a besoin de NetCDF aussi, alors -- si l'on ne l'a pas déjà -- on peut l'installer à l'aide de
+#+begin_src bash
+ >>> sudo pacman -S netcdf-fortran 
+#+end_src
+et on peut vérifier l'installation à l'aide de
+#+begin_src bash
+ >>> nc-config --version
+ OUT /usr/bin/nc-config
+#+end_src
+puis trouver où il est installé à l'aide
+#+begin_src bash
+ >>> which nc-config
+ OUT /usr/bin/nc-config
+#+end_src
+Finalement, il faut ajouter quelques lignes à notre fichier bash. Grossièrement, on ajoute le dossier /bin/ et le dossier /exe/ à notre /$PATH/, ainsi que les configurations pour utiliser NetCDF. Donc, on met
+#+begin_src bash
+ >>> export WWATCH3_NETCDF=NC4
+ >>> export NETCDF_CONFIG=/usr/bin/nc-config
+ >>> PATH=$PATH:/home/charlesedouard/Desktop/Travail/ww3/bin
+ >>> PATH=$PATH:/home/charlesedouard/Desktop/Travail/ww3/exe
+ >>> export PATH
+#+end_src
+Et tout devrait être dans la poche, même s'il y aura certainnement quelques ajustement à faire.
+
+** Création de la configuration à l'aide des switches désirées
+
+Dans le dossier /bin/, on peut faire
+#+begin_src bash
+ >>> ./w3_setup /home/charlesedouardl/Desktop/Travail/wavewatch3 -c gfortran -s lizotte
+#+end_src
+pour s'assurer qu'on utilise les switches désirées. Ensuite, on peut faire le fameux
+#+begin_src bash
+ >>> ./w3_make
+#+end_src
+Finalement, il faut souvent repartir le terminal parce que le /.bashrc/ n'a pas été mis à jour.\bigskip
+
+Alors maintenant, il faut les bonnes /switches/.
+
+
+
+\newpage
+
+** Input du modèle
+
+On se souvient de la maîtrise de Eliot Bismuth, on doit donc garder en mémoire le tableau 4 qui contient toutes les infos
+
+#+attr_latex: :placement [!h]
+#+caption: Tableau tiré de la maîtrise d'Éliot Bimuth.
+|----------------------------------+--------------+--------+-------------------|
+|----------------------------------+--------------+--------+-------------------|
+| <l>                              |     <c>      |    <r> |        <c>        |
+| Description de la variable       |   Symbole    | Valeur |      Unités       |
+|----------------------------------+--------------+--------+-------------------|
+| Taille de la grille              |    $L_x$     |      5 |        km         |
+| Taille des points de grille      |  $\Delta x$  |    500 |         m         |
+| Nombre de points de grille       |    $n_x$     |     10 |        --         |
+| Épaisseur des floes              |     $h$      |    0.5 |         m         |
+| Diamètre moyen des floes         | $\expval{D}$ |    200 |         m         |
+| Période du maximum spectral      |    $T_p$     |      6 |         s         |
+| Fréquence du maximum spectral    |    $f_p$     |    1/6 | $\mathrm{s}^{-1}$ |
+| Hauteur significative des vagues |    $H_s$     |      1 |         m         |
+| Minimum de fréquence du modèle   |  $f_{min}$   |   1/20 | $\mathrm{s}^{-1}$ |
+| Maximum de fréquence du modèle   |  $f_{max}$   |  1/2.5 | $\mathrm{s}^{-1}$ |
+| Nombre de fréquences du modèle   |     $n_f$    |     61 |        --         |
+|----------------------------------+--------------+--------+-------------------|
+
+
+Mentionnons aussi que d'autres quantités sont importantes lorsqu'on crée la configuration du modèle.
+C'est pourquoi le tableau suivant est important.
+
+#+attr_latex: :placement [!h]
+#+caption: D'autres quantités qui seraient importante lors de la modélisation avec Wavewatch III.
+|----------------------+------------+-------------+--------------------+---------------------------|
+|----------------------+------------+-------------+--------------------+---------------------------|
+| <l>                  |    <c>     |         <r> |        <c>         | <l>                       |
+| Description          |  Symbole   |      Valeur |       Unités       | Note                      |
+|----------------------+------------+-------------+--------------------+---------------------------|
+| Champ gravitationnel |    $g$     |        9.81 | $\mathrm{ms}^{-2}$ | --                        |
+| Vitesse de phase     |   $c_p$    | (max) 38.52 | $\mathrm{ms}^{-1}$ | $c_p = g/\omega$          |
+| Vitesse de groupe    |   $c_g$    | (max) 19.26 | $\mathrm{ms}^{-1}$ | $c_g = c_p/2$             |
+| Pas de temps         | $\Delta t$ |       25.00 |         s          | $\Delta t < \Delta x/c^{max}_g$ |
+|                      |            |             |                    |                           |
+
+
+* Bibliographie
+#+print_bibliography:

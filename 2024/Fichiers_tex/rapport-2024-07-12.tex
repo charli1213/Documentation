@@ -1,4 +1,4 @@
-% Created 2024-08-20 Tue 16:12
+% Created 2024-09-03 Tue 12:35
 % Intended LaTeX compiler: pdflatex
 \documentclass[10pt]{article}
 % =================================BASE====================================%
@@ -13,11 +13,13 @@
 \usepackage{lmodern} % Pour les maths? Lmodern pour les maths
 \usepackage{cfr-lm}
 % Use lmodern for sans-serif
-\usepackage{mathrsfs} % Permet la command \mathscr (Lettres attachées genre) \mathscr(B)
+\usepackage{mathrsfs} % Permet la command \mathscr (Lettres attachées genre) \mathscr(ABC)
+\usepackage{eucal}   % Vient changer le \mathcal{ABC} parce que celui de base est laid.
+
 
 % Bibliographie
-\usepackage[backend=bibtex,style=apa,sorting=ynt]{biblatex}
-%\usepackage[backend=biber,sorting=ynt,style=authoryear-comp]{biblatex} % N'est pas utilisé par le compilateur org-mode, mais NÉCESSAIRE. Voir le fichier init.el pour changer le style. 
+\usepackage[backend=biber,style=apa,sorting=ynt]{biblatex}
+%\usepackage[backend=biber,sorting=ynt,style=authoryear]{biblatex} % Ça semble tout changer.
 \addbibresource{master-bibliography.bib}
 
 
@@ -194,7 +196,7 @@ Police d'écriture : \textbf{CMU Serif Roman}
 \renewcommand{\headrulewidth}{0.025pt} % Ligne horizontale en haut
 
 \fancyhead[R]{\textit{\thetitle}}
-\fancyhead[L]{\ \thepage}
+\fancyhead[L]{\quad\thepage}
 \fancyfoot[R]{\textit{\theauthor}}
 \fancyfoot[L]{}
 \fancyfoot[C]{} 

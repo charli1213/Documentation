@@ -1,6 +1,9 @@
-%%% ----- Livres importants ----- %%%
+%%% ======================================= %%%
+%%% ========== LIVRES IMPORTANTS ========== %%%
+%%% ======================================= %%%
 
 
+% --- Le Vallis ---
 @book{vallis_2006,
   author    = {K. Vallis, Goeffrey}, 
   title     = {Atmospheric and Oceanic Fluid Dynamic : Fundamentals and Large-scale Circulation},
@@ -9,9 +12,9 @@
   address   = {The Edinburg Building, Cambridge CB2 2RU, UK},
   edition   = {Second Edition},
 }
+                  
 
-
-
+% --- Le Gill --- 
 @book{gill-atmosphere-ocean,
   title={Atmosphere-Ocean Dynamics},
   author={Gill, Adrian E},
@@ -20,17 +23,7 @@
 }
 
 
-@book{riley_hobson_bence_2006,
-place      = {Cambridge},
-edition    = {3},
-title      = {Mathematical Methods for Physics and Engineering: A Comprehensive Guide},
-DOI        = {10.1017/CBO9780511810763},
-publisher  = {Cambridge University Press},
-author     = {Riley, K. F. and Hobson, M. P. and Bence, S. J.},
-year       = {2006},
-}
-
-
+% --- La documentation de Wavewatch ---
 @article{wwiii2016user,
   title={User manual and system documentation of WAVEWATCH III$^{\tiny{\circledR}}$ version 5.16},
   author={{The WAVEWATCH III$^{\tiny{\circledR}}$ Development Group :} WW3DG},
@@ -42,7 +35,7 @@ year       = {2006},
 }
 
 
-
+% --- Les notes de Fabrice Ardhuin --- 
 @book{Ardhuin2024ocean,
 author = {Ardhuin, Fabrice},
 year = {2024},
@@ -52,7 +45,60 @@ title = {Ocean waves in geosciences},
 doi = {10.13140/RG.2.2.16019.78888/11}
 }
 
-%%% ----- Articles importants ----- %%%
+
+% --- Le livre de Janssen ---
+@book{janssen2004interaction,
+  year        = {2004},
+  booktitle   = {The Interaction of Ocean Waves and Wind},
+  title       = {The interaction of ocean waves and wind},
+  author      = {Janssen, Peter A.E.M.},
+  publisher   = {Cambridge University Press},
+  address     = {Cambridge},
+  doi         = {10.1017/CBO9780511525018}
+}
+% -> Chapitre 4 sur les interactions vagues-vagues (S_nl).
+@inbook{Janssen2004chap4,
+  crossref    = {janssen2004interaction},
+  author      = {Janssen, Peter A.E.M.},
+  title       = {Nonlinear wave–wave interactions and wave dissipation},
+  pages       = {129-208},
+  chapter     = {4},
+  doi         = {10.1017/cbo9780511525018.005}
+  }
+
+
+
+
+% --- Le meilleur livre de math au monde ---
+@book{riley_hobson_bence_2006,
+title      = {Mathematical Methods for Physics and Engineering: A Comprehensive Guide},
+author     = {Riley, K. F. and Hobson, M. P. and Bence, S. J.},
+publisher  = {Cambridge University Press},
+year       = {2006},
+place      = {Cambridge},
+edition    = {3},
+DOI        = {10.1017/CBO9780511810763},
+}
+
+
+% Très bon livre sur la création des vagues et toute la physique qui y est reliée, en fait
+@book{kinsman1965their,
+  title      = {Wind Waves},
+  subtitle   = {Their Generation and Propagation on the Ocean Surface},
+  author     = {Kinsman, Blair},
+  publisher  = {Dover Publications},
+  year       = {1982-1965},
+  place      = {Englewood Cliffs, N.J.},
+  isbn       = {0–486–64652–1},
+  note       = {Première édition de Dover : Réimpression du livre de 1965 avec nouvelle préface de l'auteur}
+}
+
+
+%%% ========================================= %%%
+%%% ========== ARTICLES IMPORTANTS ========== %%%
+%%% ========================================= %%%
+
+
 
 
 % Premier scientifique à relier la Roughness Lenght avec la friction velocity.
@@ -112,8 +158,20 @@ doi = {10.13140/RG.2.2.16019.78888/11}
 }
 
 
+% 
+@article{Hasselmann_1962,
+title={On the non-linear energy transfer in a gravity-wave spectrum Part 1. General theory},
+volume={12},
+number={4},
+journal={Journal of Fluid Mechanics},
+author={Hasselmann, Klaus},
+year={1962},
+pages={481–500},
+DOI={10.1017/S0022112062000373}
+}
 
-%%% Le final report du spectre JONSWAP.
+
+%%% Le final report du spectre JONSWAP -- il parle aussi en décrivant  le spectre de P.-M.
 % Cité par Bismuth, mais tout le monde au final. 
 @article{hasselmann1973measurements,
   title={Measurements of wind-wave growth and swell decay during the Joint North Sea Wave Project (JONSWAP).},
@@ -127,13 +185,16 @@ doi = {10.13140/RG.2.2.16019.78888/11}
 % Gros article de Hasselman sur le whitecapping
 % Cité par Eliot Bismuth.
 @article{hasselmann1974spectral,
-  title={On the spectral dissipation of ocean waves due to white capping},
-  author={Hasselmann, Klaus},
-  journal={Boundary-Layer Meteorology},
-  volume={6},
-  pages={107--127},
-  year={1974},
-  publisher={Springer}
+  title     = {On the spectral dissipation of ocean waves due to white capping},
+  author    = {Hasselmann, Klaus},
+  journal   = {Boundary-Layer Meteorology},
+  volume    = {6},
+  pages     = {107--127},
+  year      = {1974},
+  publisher = {Springer},
+  doi       =  10.1007/BF00232479
+
+
 }
 
 % Cité par Dany Dumont en 2022.
@@ -228,6 +289,43 @@ doi = {10.13140/RG.2.2.16019.78888/11}
   publisher={Wiley Online Library},
   DOI={10.1029/JC088iC05p02813}
 }
+
+
+% Cité par Sebastien Dugas
+% Simplification du calcul de l'intégrale de Boltzmann associé aux quadruplètes.
+@article { Hasselman1985computation,
+      author = "Hasselmann, Suzanne and Hasselmann, Klauss",
+      title = "Computations and Parameterizations of the Nonlinear Energy Transfer in a Gravity-Wave Spectrum. Part I: A New Method for Efficient Computations of the Exact Nonlinear Transfer Integral",
+      journal = "Journal of Physical Oceanography",
+      year = "1985",
+      publisher = "American Meteorological Society",
+      address = "Boston MA, USA",
+      volume = "15",
+      number = "11",
+      doi = "10.1175/1520-0485(1985)015<1369:CAPOTN>2.0.CO;2",
+      pages=      "1369 - 1377",
+      url = "https://journals.ametsoc.org/view/journals/phoc/15/11/1520-0485_1985_015_1369_capotn_2_0_co_2.xml"
+}
+
+
+
+
+% Article cité par Sebastien Dugas pour décrire l'utilisation du spectre JONSWAP
+% dans WIM et par Bismuth. 
+% Grossièrement, il relie le JONSWAP avec la hauteur significative des vagues.
+@article{goda1988variablity,
+author = {Goda, Yoshimi},
+title = {Statistical Variability of Sea State Parameters as a Function of Wave Spectrum},
+journal = {Coastal Engineering in Japan},
+volume = {31},
+number = {1},
+pages = {39--52},
+year = {1988},
+publisher = {Taylor \& Francis},
+doi = {10.1080/05785634.1988.11924482},
+}
+
+
 
 
 

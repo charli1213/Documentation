@@ -1,0 +1,31 @@
+#+title: TItre
+#+author: blabla
+#+STARTUP: latexpreview
+
+
+
+* test
+
+
+\begin{equation}
+   \frac{1}{2}
+\end{equation}
+
+
+
+
+
+
+
+
+
+
+$123$
+
+
+
+
+
+
+
+

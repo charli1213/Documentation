@@ -1,4 +1,4 @@
-% Created 2024-08-28 Wed 13:35
+% Created 2024-09-03 Tue 13:02
 % Intended LaTeX compiler: pdflatex
 \documentclass[10pt]{article}
 % =================================BASE====================================%
@@ -13,11 +13,13 @@
 \usepackage{lmodern} % Pour les maths? Lmodern pour les maths
 \usepackage{cfr-lm}
 % Use lmodern for sans-serif
-\usepackage{mathrsfs} % Permet la command \mathscr (Lettres attachées genre) \mathscr(B)
+\usepackage{mathrsfs} % Permet la command \mathscr (Lettres attachées genre) \mathscr(ABC)
+\usepackage{eucal}   % Vient changer le \mathcal{ABC} parce que celui de base est laid.
+
 
 % Bibliographie
-\usepackage[backend=bibtex,style=apa,sorting=ynt]{biblatex}
-%\usepackage[backend=biber,sorting=ynt,style=authoryear-comp]{biblatex} % Ça semble tout changer.
+\usepackage[backend=biber,style=apa,sorting=ynt]{biblatex}
+%\usepackage[backend=biber,sorting=ynt,style=authoryear]{biblatex} % Ça semble tout changer.
 \addbibresource{master-bibliography.bib}
 
 
@@ -194,7 +196,7 @@ Police d'écriture : \textbf{CMU Serif Roman}
 \renewcommand{\headrulewidth}{0.025pt} % Ligne horizontale en haut
 
 \fancyhead[R]{\textit{\thetitle}}
-\fancyhead[L]{\ \thepage}
+\fancyhead[L]{\quad\thepage}
 \fancyfoot[R]{\textit{\theauthor}}
 \fancyfoot[L]{}
 \fancyfoot[C]{} 
@@ -245,9 +247,6 @@ En 1 dimension, ça se traduirait par
    \boxed{\venti\quad\beta = \max \qty{0,\pt0.25\frac{\rho_a}{\rho_o} \qty[28\frac{u_\star}{C} - 1]},\quad}
 \end{equation}
 et c'est bien ce qu'on a! Par contre, je n'ai pas vu le \emph{max} dans le code de Bismuth\ldots{}
-\subsection{Whitecapping}
-\label{sec:org25601d5}
-
 \subsection{Pierson-Moskowitz}
 \label{sec:orgaccf29c}
 
@@ -258,10 +257,12 @@ Donc Pierson-Moskowitz, c'est
 \begin{equation}
    E_{PM}(f) = \alpha g^2 (2\pi)^4 f^{-5} \exp[- \frac{5}{4} \qty(\frac{f}{f_m})^{-4}],
 \end{equation}
-mais si on prend le spectre JONSWAP, on multiplie par une composante qu'on appelle le \emph{peak enhancement factor},
-\begin{equation}
-   E_{JONSWAP}(f) = E_{PM}(f)\times\gamma^{\huge\exp[ \frac{-(f-f_m)^2}{2\sigma^2f_m^2}]},
-\end{equation}
+mais si on prend le spectre JONSWAP, on multiplie par une composante qu'on appelle le \emph{peak enhancement factor} \(\left(\pt\gamma^{g(f,\sigma)}\pt\right)\),
+\begin{align}
+   && E_{JONSWAP}(f) = E_{PM}(f)\times\gamma^{g(f,\sigma)}
+   && \text{de sorte que} 
+   && g(f,\sigma) = \exp[ \frac{-(f-f_m)^2}{2\sigma^2f_m^2}], &&
+\end{align}
 ce qui nous laisse 5 paramètres flottant, soient \(f_m, \alpha, \gamma, \sigma_a, \sigma_b\).
 Où l'on relit les derniers facteurs à l'aide de
 \begin{equation}
@@ -323,7 +324,7 @@ Dans le cas qui nous intéresse (\href{https://en.wikipedia.org/wiki/Flux\_limit
 \end{align}
 où le limiteur est exprimé par
 \begin{equation}
-   &\phi = \mathrm{max} \qty{\begin{matrix}
+   \phi = \mathrm{max} \qty{\begin{matrix}
        \pt\mathrm{min}(1, 2r)\\
        \mathrm{min}(2,\ r)\\
    \end{matrix}

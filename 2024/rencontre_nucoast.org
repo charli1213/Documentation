@@ -1,0 +1,120 @@
+#+title: Rencontre Nu-Coast
+#+author: Charles-Édouard Lizotte
+#+date: 09/09/2024
+
+* Introduction
+
+** Nos deux zones à l'intérêt 
+
+*** Grise-Fjord
+
+*La  problématique* : Gros problèmes d'inondations à cause de la fonte du pergilisol et la force des tempêtes et des événements extrêmes. S'il y a trop d'errosion, la pente de la côte devient trop raide et les habitant-e-s ne peuvent tout simplement pas mettre leur bateau à l'eau. Il y a donc des impacts directs sur la communauté. Il y a aussi des mentions que l'eau est bien plus chaude qu'avant.
+
+*** Kugluktuk
+
+*La problématique* : Gros problèmes d'érosion sur les plages. Essentiellement, les plages sont utilisées par les communautés pour
+- se promener en 4-roues (étant donnée ce sont des terrains plats);
+- lieu commun pour tous. 
+Essentiellement, le territoire est en constant changement et on peut voir les marques de l'érosion, déjà. Mentionnons que l'été il fait quand même chaud à Kugluktuk, comparativement à Grise-Fjord.
+
+** Le projet sur lequel David travaillait initialement
+
+Développement de cartes globales de l'érosion côtière, du pergilisol et de la hauteur de la côte pour l'océan arctique (toutes les variables de la /coastal migration/). Malheureusement, c'est très difficile de monitorer toute la côte arctique -- on parle d'un territoire immense, c'est pourquoi notre étude se réduit aux lieux indiqués, précédemment. 
+
+*Des visions différentes s'opposent*. En terme de /coastal management/, il n'y aurait visiblement pas de problème selon Ressources Naturelles Canada. L'équipe tente de démontrer le contraire aux vues des observations.
+
+Un objectif secondaire de ce groupe de recherche serait justement de mettre en évidence ces problèmes-là (on parle de /coastal hasards/). Les acteurs du milieu sont des organisations de chasseurs -- situé à Kugluktuk -- l'UQAR, l'INRS, une institut de recherche de Norvège et des associations de développement du tourisme.
+
+* Le projet Nu-Coast dans son ensemble
+
+** Objectifs du projet
+
+- Développer des actions d'innovation dans le but de réduire les risques climatiques.
+- Travailler ensemble et réunir les acteurs du milieu.
+- Travailler au bien être de la communauté, notamment en redant accessible les travaux de recherche et en développant des objectifs de résilience.
+  
+  
+** Développement des tâches et des agréments
+
+- Plan de recherche;
+- Site Web (Bien important d'avoir un support visuel concrèt selon David);
+- Produits de communication et outils de vulgarisation;
+
+Et aussi ... 
+- Rencontres bi-annuelles avec les acteurs du milieu; 
+- Documenter la vie des communautés, leurs problèmes et leurs moyens d'adaptation en lien avec ces changements.
+- Développer des cartes sur les hasards climatiques pour toutes les communautés impliquées -- pas de /deadlines/, mais il va falloir le faire.
+  Va aussi falloir que ces cartes soient orientées vers les besoins de ces communautés (sites culturels, pêche, etc.)
+  
+* Organisation
+
+** Coastal Assessment and Monitoring
+
+On va conceptuellement avoir besoin d'espace pour ajuster le projet tout au long du parcours.
+
+** On a quoi et on a besoin de quoi?
+- Satellites pour améliorer le « ice coverage » (/SAR data/ de al NASA).
+  « /Ice charts are interpretations of SAR data/ ». Ça serait cool de rendre ça accessible à la communauté. Ça pourrait rentrer dans le délivrable.
+- On a des bouées Spotter, donc on a des information sur les paramètres des vagues.
+  En plus on les a en temps réel sur SOFAR (?)
+- /Bottom roughness/ : on s'en fout -- ça rentre dans le /incertitude assessment/.
+  
+** Data management
+- Il faut trouver un moyen que tout le monde aient un système clair d'entreposage de données pour tout le projet. David parle de Sabre, mais s'il y a quelque chose à faire à l'OGSL, au moins des données pré-interprétées ou géorectifiées, etc -- parce qu'il faut mentionner qu'il y aura des Tera-octets de données.
+- Les membres de la communauté ne veulent pas nécessairement les données brutes. Il faudrait vraiment que ces données soient pré-interprétées *pour* la communauté. 
+
+* Notre intérêt dans le projet
+
+- *Baird* -- la compagnie d'ingénierie -- prévoit faire rouler Wavewatch III dans les lieux à l'étude.
+- On ne sait pas quelle résolution ils veulent faire ça.
+- Il faut ancrer notre recherche sur les interactions vagues-glace là-dedans *avant* qu'ils roulent leur modèle aux grandes échelles. Donc, il va falloir savoir c'est qui ce monde-là chez *Baird*.
+  
+** Ice-wave modeling
+/Ice is mainly used as a boundary between land and water/. Faudrait voir quelles /switches/ils utilisent pour Wavewatch III. Faut vraiment qu'ils restent en contact avec nous parce qu'ils savent pas trop comment rouler Wavewatch III avec de la glace. De ce que j'en comprend, ils prévoyaient probablement rouler Wavewatch III 45 ans avec une config minimale. Nous on avait une résolution de 1km.
+
+De notre côté, il faut vraiment qu'on
+
+* Visite de Tristan et ses constats
+
+** Communautés nordiques 
+
+Les communautés nordiques sont caractérisées par la /résilience/ ;
+Ils et elles cherchent profondément à créer des opportunités par rapport à la communauté, c'est leur intérêt principal ;
+Se foutent des outils, ils veulent surtout des données ou des réponses par rapport au bien être de la communauté. Il veulent qu'on leur montre en quoi ce qu'on fait est utile pour elles et eux ;
+Veulent qu'on soit présent tout au long. On est pas là pour les étudier, mais pour travailler avec eux-elles. C'est une question d'inclusion du projet dans le temps. Y'a vraiment une dimension temporelle dans la balance.
+
+** Utilisation de l'information
+
+Si on fait juste prendre des données, on va tout perdre les opportunités, les chances ou les privilèges qu'on nous donne par rapport au territoire.
+Tristan mentionne qu'il faudrait qu'on leur montre justement l'impact de ces données-là tout au long du processus.
+Y'a peut-être une question d'échelle aussi (scale). Faudrait pas nécessairement pas que ça soit juste pour eux. Ils ne sont pas «égoïstes» dans leur demandes. Au contraire, c'est à nous de mettre une dimension d'échelle à notre travail, au final. 
+
+** Que se passe-t-il récemment?
+
+Selon Tristan, de plus en plus de gens vont dans l'Arctique. C'est nouveau, donc les scientifiques ne sont pas nécessairement au devant des interactions. Il faut donc être gentil et offrir quelque chose, les communautés font des choix et c'est dans leur intérêt de choisir. 
+Selon Tristan, on fait quand même une bonne job à Grise Fjord (At least, we agree).
+
+* Matériel côtier (David - Dany - Simon)
+
+Selon David, nous avons l'accord de la communauté pour poser des ADCP à Grise-Fjord -- mais ça doit avant tout passer par un comité d'éthique de l'UQAR. Au niveau où nous en sommes, on peut respectivement faire ce qu'on veut, considérant que la communauté est aussi elle-même véritablement intéressée dans le projet et ses impacts. Mentionnons que, si l'on veut vraiment prendre des données en continue,  ça nous prendrait aussi un AWAC autour de 50m de profond dans la baie. 
+
+Concrétement, *ça nous prendrait des données toute l'année*. Car dans les faits, ça prendre des données
+l'année, sinon on n'a pas un portrait global des saisons. Faudrait donc voir pour ça. 
+
+* Methodologie
+
+** Word package 1
+
+- Mention du /World café model/ comme moyen de communication et d'approche de la part de Tristan. 
+- /« Generating new information to facilitate decision making/ » semble être un mot d'ordre important, même si la tournure de phrase est très sur-utilisée. 
+- Essentiellement, il faut engager avec la matière en même temps que la communauté, de sorte à ce que ça soit des intérêts bilatéraux et qui satisfont les deux parties.
+
+** Word package 2
+
+- Collecter des données, raffiner les données. *Scope of data collected* : Particulièrement de la modélisation. Il faut mentionner qu'on a deux aspects en terme de données : celles collectées et celles produites par des modèles. Bien qu'on ait pas nécessairement de « délivrables », les données sont un peu les « délivrables », donc ça reste encore à développer.
+
+- Déjà, on peut mettre le /early warning system/. Améliorer le système de modélisation, améliorer notre aperçu avec les données SAR. Grossièrement, on a tous des objectifs et des perspectives différentes par rapport aux collectes de données, donc ce sera du cas par cas.
+
+- Donc il va y avoir des *sous-groupes* car tous les résultats sont interconnectés. Il faudra aussi que quelqu'un puisse s'assurer que tout le monde travaille de manière cohérente.
+
+- Déjà, pouvons-nous nous rencontrer dès l'hiver prochain? Si c'est une rencontre de discussion, tout le monde serait dispo, mais les avancées du projet seront toujours très préliminaires à cette étape.

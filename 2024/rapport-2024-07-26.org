@@ -36,9 +36,9 @@ La hauteur de la surface est ainsi illustrée par
 #+name:eq:onde:basique
 \begin{equation}
    h(\vb{x},t) = \sum_{i,j,k} A_{i,j,k}\cdot\sin(k_{x,i} \cdot x + k_{y,i}\cdot y - \omega_j t + \phi_k)\quad
-    \mathrm{où}\quad\left\lbrace\begin{matrix}
+    \text{où}\quad\left\lbrace\begin{matrix}
       k_{x,i} = k\cos(\theta_{i}), \\
-      k_{y,i} = k\sin(\theta_{i}).
+      k_{y,i} = k\sin(\theta_{i}). \\
     \end{matrix}\right.
 \end{equation}
 Par contre, il existe une relation de dispersion (voir [[eq:relation:dispersion]] à la sous-section suivante), de sorte que [[eq:onde:basique]] devienne
@@ -132,7 +132,7 @@ C'est pourquoi on ne tend pas vraiment à l'ajouter directement dans l'advection
 
 Donc, en suivant [[eq:lax]], ont voit que le terme
 \begin{equation}
-   c_g \pdv{E}{x} = \pdv{}{x} \qty(c_g E) = \pdv{}{x} \qty(f(E(x,t))) \quad\quad \mathrm{où} \quad\quad f\qty(E(x,t)) = c_g E.
+   c_g \pdv{E}{x} = \pdv{}{x} \qty(c_g E) = \pdv{}{x} \qty(f(E(x,t))) \quad\quad \text{où} \quad\quad f\qty(E(x,t)) = c_g E.
 \end{equation}
 C'est *un cas linéaire* où $f(u) = A\cdot u$, soit
 \begin{equation}
@@ -180,7 +180,7 @@ En premier lieu, on retrouve $u_*$ à l'aide de sa définition
 Pour trouver la valeur de $c_D$, on travaille avec la relation de Charnok [cite:@charnock1955wind] aussi tirée de [cite/t/c:@gill-atmosphere-ocean p.30], de sorte que 
 #+name:cd
 \begin{align}
-   &&c_D = \qty[\frac{\kappa}{\ln(z/z_{\pt0})}]_{\ z=10\pt m}^2
+   &&c_D = \qty[\frac{\kappa}{\ln(z/z_{\pt0})}]_{\pt z=10\pt m}^2
    && \text{où} &&
    z_0 = \frac{\alpha_{Ch}\tau_a}{\rho_a g} = \frac{\alpha_{Ch} c_D |u_{10}|^2}{g}. &&
 \end{align}
@@ -221,15 +221,15 @@ On calcule $\tilde{\omega}$ et $\tilde{k}$ à l'aide des expressions
 \end{subequations}
 Bismuth résoud les intrégrales précédentes à l'aide de la méthode des trapèzes (audacieux).
 
-|       <c>        | <l>                     | <l>              | <l>                                      |
-|     Variable     | Valeur                  | Unités           | Description                              |
-|------------------+-------------------------+------------------+------------------------------------------|
-|       \mu        | À déterminer            | --               | Rapport d'échelle avec Pierson-Moskowitz |
-|   $\tilde{s}$    | À déterminer            | ?                | Pente ou /steepness/                       |
-|      s_{PM}      | \sqrt{3.02\times10^°-3} | ?                | Pente pour Pierson-Moskowitz             |
-| $\tilde{\omega}$ | À déterminer            | \rad\cdot s^{-1} | Fréquence moyenne                        |
-|   $\tilde{k}$    | À déterminer            | \rad\cdot m^{-1} | Nombre d'onde moyen                      |
-|       m_0        | À déterminer            | J                | Énergie totale (premier moment)          |
+|       <c>        | <l>                      | <l>                         | <l>                                      |
+|     Variable     | Valeur                   | Unités                      | Description                              |
+|------------------+--------------------------+-----------------------------+------------------------------------------|
+|       \mu        | À déterminer             | --                          | Rapport d'échelle avec Pierson-Moskowitz |
+|   $\tilde{s}$    | À déterminer             | ?                           | Pente ou /steepness/                       |
+|     $s_{PM}$     | $\sqrt{3.02\times10^-3}$ | ?                           | Pente pour Pierson-Moskowitz             |
+| $\tilde{\omega}$ | À déterminer             | $\rad\cdot \mathrm{s}^{-1}$ | Fréquence moyenne                        |
+|   $\tilde{k}$    | À déterminer             | $\rad\cdot \mathrm{m}^{-1}$ | Nombre d'onde moyen                      |
+|      $m_0$       | À déterminer             | J                           | Énergie totale (premier moment)          |
 
 *** Atténuation par la glace
 
@@ -246,12 +246,12 @@ Officiellement les quantités précédentes sont
 + $\expval{D}$, la taille moyenne des floes.
 Il faut résoudre un polynôme pour obtenir la quantité $\bar{\alpha}$, malheureusement.
 
-|      <c>       | <l>          | <l>    | <l>                                   |
-|    Variable    | Valeur       | Unités | Description                           |
-|----------------+--------------+--------+---------------------------------------|
-|     \alpha     | À déterminer | m^{-1} | Coefficient d'atténuation             |
-| $\bar{\alpha}$ | À déterminer | ?      | Autre coefficient qui dépend de tout. |
-|  $\expval{D}$  | À déterminer | m      | Taille moyenne des floes              |
+|      <c>       | <l>          | <l>               | <l>                                   |
+|    Variable    | Valeur       | Unités            | Description                           |
+|----------------+--------------+-------------------+---------------------------------------|
+|     \alpha     | À déterminer | $\mathrm{m}^{-1}$ | Coefficient d'atténuation             |
+| $\bar{\alpha}$ | À déterminer | ?                 | Autre coefficient qui dépend de tout. |
+|  $\expval{D}$  | À déterminer | m                 | Taille moyenne des floes              |
 
 
 

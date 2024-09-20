@@ -1,0 +1,372 @@
+% Created 2024-09-16 Mon 11:26
+% Intended LaTeX compiler: pdflatex
+\documentclass[10pt]{article}
+% =================================BASE====================================%
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry} % Marges
+\usepackage[T1]{fontenc} % Nécessaire avec FrenchBabel
+\usepackage[utf8]{inputenc} % Important pour symboles Francophones, é,à,etc
+\usepackage{csquotes} % Recommandé par PDFLatex lors de la compilation. 
+
+% Calligraphie
+%\usepackage{pxfonts} % Met le texte ET les maths en Palatino + donne accès à des symboles math
+%\usepackage{palatino} % Cette commande met seulement le texte en police palatino
+\usepackage{lmodern} % Pour les maths? Lmodern pour les maths
+\usepackage{cfr-lm}
+% Use lmodern for sans-serif
+\usepackage{mathrsfs} % Permet la command \mathscr (Lettres attachées genre) \mathscr(ABC)
+\usepackage{eucal}   % Vient changer le \mathcal{ABC} parce que celui de base est laid.
+
+% Bibliographie
+\usepackage[backend=biber,style=alphabetic,sorting=ynt,maxbibnames=99]{biblatex}
+%\usepackage[backend=biber,sorting=ynt,style=authoryear]{biblatex} % Ça semble tout changer.
+
+
+
+\usepackage{amsmath, amssymb, amsthm} % Symb. math. (Mathmode+Textmode) + Beaux théorèmes.
+\usepackage{mathtools,cancel,xfrac} % Utilisation de boîtes \boxed{} + \cancelto{}{}, xfrac
+\usepackage{graphicx, wrapfig} % Géstion des figures.
+\usepackage{hyperref} % Permettre l'utilisation d'hyperliens.
+\usepackage{color} % Permettre l'utilisation des couleurs.
+\usepackage{colortbl} % Color tables
+\usepackage[dvipsnames]{xcolor} % Couleurs avancées.
+
+% Physique
+\usepackage{physics} % Meilleur package pour physicien. 
+
+% Style
+\usepackage{lipsum} % For fun
+\usepackage{tikz} % Realisation de figures TIKZ.
+\usetikzlibrary{arrows.meta,bending, shapes.geometric, automata, positioning} % Arrow heads et les formes de noeuds
+\usepackage{empheq} % Boite autour de MULTIPLE équations
+\usepackage{bbding}
+
+% Français
+\usepackage[french, english]{babel} % Environnements en Français.
+
+\usepackage{titling} % Donne accès à \theauthor, \thetitle, \thedate
+% ==============================BASE-(END)=================================%
+
+
+
+
+
+% ================================SETTINGS=================================%
+% Pas d'indentation en début de paragraphe :
+\setlength\parindent{0pt}
+\setlength{\parskip}{0.15cm}
+
+% Tableaux/tabular
+% Espace vertical dans les tabular/tableaux
+\renewcommand{\arraystretch}{1.2}
+% Couleur des tableaux/tabular
+% \rowcolors{3}{violet!5}{}
+
+% Couleurs de hyperliens :
+\definecolor{mypink}{RGB}{147, 0, 255}
+\hypersetup{colorlinks, 
+             filecolor=mypink,
+             urlcolor=mypink, 
+             citecolor=mypink, 
+             linkcolor=mypink, 
+             anchorcolor=mypink}
+
+
+% Numéros d'équations suivent les sections :
+\numberwithin{equation}{section} 
+
+% Les « captions » sont en italique et largeur limitée
+\usepackage[textfont = it]{caption} 
+\captionsetup[wrapfigure]{margin=0.5cm}
+
+% Retirer l'écriture en gras dans la table des matières
+\usepackage{tocloft}
+\renewcommand{\cftsecfont}{\normalfont}
+\renewcommand{\cftsecpagefont}{\normalfont}
+
+
+% On a des lignes à droite des sections et sous-sections
+\usepackage[explicit]{titlesec}
+    % Raised Rule Command:
+    % Arg 1 (Optional) - How high to raise the rule
+    % Arg 2 - Thickness of the rule
+    \newcommand{\raisedrulefill}[2][0ex]{\leaders\hbox{\rule[#1]{1pt}{#2}}\hfill}
+    \titleformat{\section}{\Large\bfseries}{\thesection. }{0em}{#1\;\raisedrulefill[0.4ex]{0.25pt}}
+    \titleformat{\subsection}{\large\bfseries}{\thesubsection. }{0em}{#1\;\raisedrulefill[0.4ex]{0.10pt}}
+
+
+% Change bullet style
+%\usepackage{pifont}
+\usepackage{enumitem}
+%\setlist[itemize,1]{label=\ding{224}}
+%\setlist[itemize,1]{label=\ding{239}}
+%\setlist[itemize,1]{label=$\cdot$}
+\renewcommand{\boxtimes}{\blacksquare}
+% ================================SETTINGS=================================%
+
+
+
+% ==============================NEWCOMMANDS================================%
+% CQFD symbol
+\renewcommand{\qedsymbol}{$\hfill\blacksquare$}
+\newcommand{\cqfd}{\hfill$\blacktriangleleft$}
+
+% Vecteurs de base :
+\newcommand{\nvf}{\vb{\hat{n}}}
+\newcommand{\evf}{\vb{\hat{e}}}
+\newcommand{\ivf}{\vb{\hat{i}}}
+\newcommand{\jvf}{\vb{\hat{j}}}
+\newcommand{\kvf}{\vb{\hat{k}}}
+\newcommand{\uu}{\vb{u}}
+\newcommand{\vv}{\vb{v}}
+\newcommand{\ust}{\vb{u}_{\ast}}
+\newcommand{\xx}{\vb{x}}
+\newcommand{\rad}{\text{Rad}}
+
+% Physics empty spaces 
+\newcommand{\short}{\vphantom{pA}}
+\newcommand{\tall}{\vphantom{pA^{x^x}_p}}
+\newcommand{\grande}{\vphantom{\frac{1}{xx}}}
+\newcommand{\venti}{\vphantom{\sum_x^x}}
+\newcommand{\pt}{\hspace{1pt}} % One horizontal pt space
+
+% Moyenne numérique entre deux points de grilles. 
+\newcommand{\xmean}[1]{\overline{#1}^x}
+\newcommand{\ymean}[1]{\overline{#1}^y}
+\newcommand{\zmean}[1]{\overline{#1}^z}
+\newcommand{\xymean}[1]{\overline{#1}^{xy}}
+
+% Tilde over psi
+\newcommand{\tpsi}{\tilde{\psi}}
+\newcommand{\tphi}{\tilde{\phi}}
+
+% Nota Bene env : (\ding{89})
+%\newcommand{\nb}{$\boxed{\text{\footnotesize\EightStarConvex}\pt \mathfrak{N. B.}}$\hspace{4pt}}
+\newcommand{\nb}{\underline{{\footnotesize\EightStarConvex}\pt $\mathfrak{N.B.}$\vphantom{p}}\hspace{3pt}}
+
+\newcommand{\exemple}{
+\parbox[center]{2.2cm}{\begin{tcolorbox}[sharp corners, rounded corners=northeast, rounded corners=southeast,
+colback=Violet!2, colframe=black,
+size=small, width=2cm, left=-0.25pt, bottom=-0.5pt,
+arc is angular, arc=2.5mm, boxrule=0.35pt, leftrule=4pt, %bottomrule=1pt,
+after={\enskip}] Exemple \end{tcolorbox}}}
+
+% Define the nota bene environment
+\usepackage{tcolorbox}
+\newtcolorbox{notabene}{
+     colback=blue!5,
+     colframe=black,
+     boxrule=0.5pt,
+     arc=2pt,
+     left=5pt,
+     right=5pt,
+     top=5pt,
+     bottom=5pt,
+}
+
+
+\newcommand{\cmark}{\ding{52}}
+\newcommand{\xmark}{\ding{55}}
+
+%\newcommand{\fourier}[1]{\raisebox{-0.4em}{\resizebox{2em}{!}{$\mathscr{F}$}\,}\qty[#1]}
+\newcommand{\fourier}{\operatorname{\raisebox{-0.4em}{\resizebox{2em}{!}{$\mathscr{F}$}}}}
+% Mettre (a,b) à la suite d'une série d'équations horizontales.
+\newcommand{\ab}{\refstepcounter{equation}\tag{\theequation a,b}}
+% ==============================NEWCOMMANDS================================%
+
+
+
+% ==============================PAGE-TITRE=================================%
+% Titlepage 
+\newcommand{\mytitlepage}{
+\begin{titlepage}
+\begin{center}
+{\Huge \thesubtitle \par}
+\vspace{2cm}
+{\Huge \MakeUppercase{\thetitle} \par}
+\vspace{2cm}
+RÉALISÉ DANS LE CADRE\\ D'UN PROJET POUR \par
+\vspace{2cm}
+{\Huge ISMER--UQAR \par}
+\vspace{2cm}
+{\thedate}
+\end{center}
+\vfill
+Rédaction \\
+{\theauthor}\\
+\url{charles-edouard.lizotte@uqar.ca}\\
+ISMER-UQAR\\
+Police d'écriture : \textbf{CMU Serif Roman}
+\end{titlepage}
+}
+% ==============================PAGE-TITRE=================================%
+
+
+
+% =================================ENTÊTE==================================%
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\setlength{\headheight}{13pt}
+\renewcommand{\headrulewidth}{0.0pt} % Ligne horizontale en haut
+
+\fancyhead[R]{\underline{\textit{Section \thesubsection}}}
+\fancyhead[L]{\underline{\textit{\thepage}}}
+\fancyfoot[R]{\textit{\theauthor}}
+\fancyfoot[L]{}
+\fancyfoot[C]{} 
+% =================================ENTÊTE==================================%
+\author{Charles-Édouard Lizotte}
+\date{09/09/2024}
+\title{Rencontre Nu-Coast}
+\hypersetup{
+ pdfauthor={Charles-Édouard Lizotte},
+ pdftitle={Rencontre Nu-Coast},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.4 (Org mode 9.7.8)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Introduction}
+\label{sec:org61d7a34}
+
+\subsection{Nos deux zones à l'intérêt}
+\label{sec:orgc219520}
+
+\subsubsection{Grise-Fjord}
+\label{sec:org4f44e67}
+
+\textbf{La  problématique} : Gros problèmes d'inondations à cause de la fonte du pergilisol et la force des tempêtes et des événements extrêmes. S'il y a trop d'errosion, la pente de la côte devient trop raide et les habitant-e-s ne peuvent tout simplement pas mettre leur bateau à l'eau. Il y a donc des impacts directs sur la communauté. Il y a aussi des mentions que l'eau est bien plus chaude qu'avant.
+\subsubsection{Kugluktuk}
+\label{sec:org7cd734d}
+
+\textbf{La problématique} : Gros problèmes d'érosion sur les plages. Essentiellement, les plages sont utilisées par les communautés pour
+\begin{itemize}
+\item se promener en 4-roues (étant donnée ce sont des terrains plats);
+\item lieu commun pour tous.
+\end{itemize}
+Essentiellement, le territoire est en constant changement et on peut voir les marques de l'érosion, déjà. Mentionnons que l'été il fait quand même chaud à Kugluktuk, comparativement à Grise-Fjord.
+\subsection{Le projet sur lequel David travaillait initialement}
+\label{sec:orged1cc52}
+
+Développement de cartes globales de l'érosion côtière, du pergilisol et de la hauteur de la côte pour l'océan arctique (toutes les variables de la \emph{coastal migration}). Malheureusement, c'est très difficile de monitorer toute la côte arctique -- on parle d'un territoire immense, c'est pourquoi notre étude se réduit aux lieux indiqués, précédemment. 
+
+\textbf{Des visions différentes s'opposent}. En terme de \emph{coastal management}, il n'y aurait visiblement pas de problème selon Ressources Naturelles Canada. L'équipe tente de démontrer le contraire aux vues des observations.
+
+Un objectif secondaire de ce groupe de recherche serait justement de mettre en évidence ces problèmes-là (on parle de \emph{coastal hasards}). Les acteurs du milieu sont des organisations de chasseurs -- situé à Kugluktuk -- l'UQAR, l'INRS, une institut de recherche de Norvège et des associations de développement du tourisme.
+\section{Le projet Nu-Coast dans son ensemble}
+\label{sec:org557eed4}
+
+\subsection{Objectifs du projet}
+\label{sec:org4f823cf}
+
+\begin{itemize}
+\item Développer des actions d'innovation dans le but de réduire les risques climatiques.
+\item Travailler ensemble et réunir les acteurs du milieu.
+\item Travailler au bien être de la communauté, notamment en redant accessible les travaux de recherche et en développant des objectifs de résilience.
+\end{itemize}
+\subsection{Développement des tâches et des agréments}
+\label{sec:org4cf8779}
+
+\begin{itemize}
+\item Plan de recherche;
+\item Site Web (Bien important d'avoir un support visuel concrèt selon David);
+\item Produits de communication et outils de vulgarisation;
+\end{itemize}
+
+Et aussi \ldots{} 
+\begin{itemize}
+\item Rencontres bi-annuelles avec les acteurs du milieu;
+\item Documenter la vie des communautés, leurs problèmes et leurs moyens d'adaptation en lien avec ces changements.
+\item Développer des cartes sur les hasards climatiques pour toutes les communautés impliquées -- pas de \emph{deadlines}, mais il va falloir le faire.
+Va aussi falloir que ces cartes soient orientées vers les besoins de ces communautés (sites culturels, pêche, etc.)
+\end{itemize}
+\section{Organisation}
+\label{sec:orgd90e304}
+
+\subsection{Coastal Assessment and Monitoring}
+\label{sec:org189d0e6}
+
+On va conceptuellement avoir besoin d'espace pour ajuster le projet tout au long du parcours.
+\subsection{On a quoi et on a besoin de quoi?}
+\label{sec:org84ad2f9}
+\begin{itemize}
+\item Satellites pour améliorer le « ice coverage » (\emph{SAR data} de al NASA).
+« \emph{Ice charts are interpretations of SAR data} ». Ça serait cool de rendre ça accessible à la communauté. Ça pourrait rentrer dans le délivrable.
+\item On a des bouées Spotter, donc on a des information sur les paramètres des vagues.
+En plus on les a en temps réel sur SOFAR (?)
+\item \emph{Bottom roughness} : on s'en fout -- ça rentre dans le \emph{incertitude assessment}.
+\end{itemize}
+\subsection{Data management}
+\label{sec:orga06e296}
+\begin{itemize}
+\item Il faut trouver un moyen que tout le monde aient un système clair d'entreposage de données pour tout le projet. David parle de Sabre, mais s'il y a quelque chose à faire à l'OGSL, au moins des données pré-interprétées ou géorectifiées, etc -- parce qu'il faut mentionner qu'il y aura des Tera-octets de données.
+\item Les membres de la communauté ne veulent pas nécessairement les données brutes. Il faudrait vraiment que ces données soient pré-interprétées \textbf{pour} la communauté.
+\end{itemize}
+\section{Notre intérêt dans le projet}
+\label{sec:org841b834}
+
+\begin{itemize}
+\item \textbf{Baird} -- la compagnie d'ingénierie -- prévoit faire rouler Wavewatch III dans les lieux à l'étude.
+\item On ne sait pas quelle résolution ils veulent faire ça.
+\item Il faut ancrer notre recherche sur les interactions vagues-glace là-dedans \textbf{avant} qu'ils roulent leur modèle aux grandes échelles. Donc, il va falloir savoir c'est qui ce monde-là chez \textbf{Baird}.
+\end{itemize}
+\subsection{Ice-wave modeling}
+\label{sec:org6a44e90}
+\emph{Ice is mainly used as a boundary between land and water}. Faudrait voir quelles /switches/ils utilisent pour Wavewatch III. Faut vraiment qu'ils restent en contact avec nous parce qu'ils savent pas trop comment rouler Wavewatch III avec de la glace. De ce que j'en comprend, ils prévoyaient probablement rouler Wavewatch III 45 ans avec une config minimale. Nous on avait une résolution de 1km.
+
+De notre côté, il faut vraiment qu'on
+\section{Visite de Tristan et ses constats}
+\label{sec:org343f474}
+
+\subsection{Communautés nordiques}
+\label{sec:org8e1d561}
+
+Les communautés nordiques sont caractérisées par la \emph{résilience} ;
+Ils et elles cherchent profondément à créer des opportunités par rapport à la communauté, c'est leur intérêt principal ;
+Se foutent des outils, ils veulent surtout des données ou des réponses par rapport au bien être de la communauté. Il veulent qu'on leur montre en quoi ce qu'on fait est utile pour elles et eux ;
+Veulent qu'on soit présent tout au long. On est pas là pour les étudier, mais pour travailler avec eux-elles. C'est une question d'inclusion du projet dans le temps. Y'a vraiment une dimension temporelle dans la balance.
+\subsection{Utilisation de l'information}
+\label{sec:org1576aae}
+
+Si on fait juste prendre des données, on va tout perdre les opportunités, les chances ou les privilèges qu'on nous donne par rapport au territoire.
+Tristan mentionne qu'il faudrait qu'on leur montre justement l'impact de ces données-là tout au long du processus.
+Y'a peut-être une question d'échelle aussi (scale). Faudrait pas nécessairement pas que ça soit juste pour eux. Ils ne sont pas «égoïstes» dans leur demandes. Au contraire, c'est à nous de mettre une dimension d'échelle à notre travail, au final. 
+\subsection{Que se passe-t-il récemment?}
+\label{sec:org50f065c}
+
+Selon Tristan, de plus en plus de gens vont dans l'Arctique. C'est nouveau, donc les scientifiques ne sont pas nécessairement au devant des interactions. Il faut donc être gentil et offrir quelque chose, les communautés font des choix et c'est dans leur intérêt de choisir. 
+Selon Tristan, on fait quand même une bonne job à Grise Fjord (At least, we agree).
+\section{Matériel côtier (David - Dany - Simon)}
+\label{sec:orgf2cda3b}
+
+Selon David, nous avons l'accord de la communauté pour poser des ADCP à Grise-Fjord -- mais ça doit avant tout passer par un comité d'éthique de l'UQAR. Au niveau où nous en sommes, on peut respectivement faire ce qu'on veut, considérant que la communauté est aussi elle-même véritablement intéressée dans le projet et ses impacts. Mentionnons que, si l'on veut vraiment prendre des données en continue,  ça nous prendrait aussi un AWAC autour de 50m de profond dans la baie. 
+
+Concrétement, \textbf{ça nous prendrait des données toute l'année}. Car dans les faits, ça prendre des données
+l'année, sinon on n'a pas un portrait global des saisons. Faudrait donc voir pour ça. 
+\section{Methodologie}
+\label{sec:org510477b}
+
+\subsection{Word package 1}
+\label{sec:org8b2f29e}
+
+\begin{itemize}
+\item Mention du \emph{World café model} comme moyen de communication et d'approche de la part de Tristan.
+\item \emph{« Generating new information to facilitate decision making} » semble être un mot d'ordre important, même si la tournure de phrase est très sur-utilisée.
+\item Essentiellement, il faut engager avec la matière en même temps que la communauté, de sorte à ce que ça soit des intérêts bilatéraux et qui satisfont les deux parties.
+\end{itemize}
+\subsection{Word package 2}
+\label{sec:orgc2c9b4c}
+
+\begin{itemize}
+\item Collecter des données, raffiner les données. \textbf{Scope of data collected} : Particulièrement de la modélisation. Il faut mentionner qu'on a deux aspects en terme de données : celles collectées et celles produites par des modèles. Bien qu'on ait pas nécessairement de « délivrables », les données sont un peu les « délivrables », donc ça reste encore à développer.
+
+\item Déjà, on peut mettre le \emph{early warning system}. Améliorer le système de modélisation, améliorer notre aperçu avec les données SAR. Grossièrement, on a tous des objectifs et des perspectives différentes par rapport aux collectes de données, donc ce sera du cas par cas.
+
+\item Donc il va y avoir des \textbf{sous-groupes} car tous les résultats sont interconnectés. Il faudra aussi que quelqu'un puisse s'assurer que tout le monde travaille de manière cohérente.
+
+\item Déjà, pouvons-nous nous rencontrer dès l'hiver prochain? Si c'est une rencontre de discussion, tout le monde serait dispo, mais les avancées du projet seront toujours très préliminaires à cette étape.
+\end{itemize}
+\end{document}

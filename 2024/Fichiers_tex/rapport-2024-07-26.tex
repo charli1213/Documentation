@@ -1,4 +1,4 @@
-% Created 2024-08-20 Tue 16:12
+% Created 2024-09-03 Tue 12:35
 % Intended LaTeX compiler: pdflatex
 \documentclass[10pt]{article}
 % =================================BASE====================================%
@@ -13,11 +13,13 @@
 \usepackage{lmodern} % Pour les maths? Lmodern pour les maths
 \usepackage{cfr-lm}
 % Use lmodern for sans-serif
-\usepackage{mathrsfs} % Permet la command \mathscr (Lettres attachées genre) \mathscr(B)
+\usepackage{mathrsfs} % Permet la command \mathscr (Lettres attachées genre) \mathscr(ABC)
+\usepackage{eucal}   % Vient changer le \mathcal{ABC} parce que celui de base est laid.
+
 
 % Bibliographie
-\usepackage[backend=bibtex,style=apa,sorting=ynt]{biblatex}
-%\usepackage[backend=biber,sorting=ynt,style=authoryear-comp]{biblatex} % N'est pas utilisé par le compilateur org-mode, mais NÉCESSAIRE. Voir le fichier init.el pour changer le style. 
+\usepackage[backend=biber,style=apa,sorting=ynt]{biblatex}
+%\usepackage[backend=biber,sorting=ynt,style=authoryear]{biblatex} % Ça semble tout changer.
 \addbibresource{master-bibliography.bib}
 
 
@@ -194,7 +196,7 @@ Police d'écriture : \textbf{CMU Serif Roman}
 \renewcommand{\headrulewidth}{0.025pt} % Ligne horizontale en haut
 
 \fancyhead[R]{\textit{\thetitle}}
-\fancyhead[L]{\ \thepage}
+\fancyhead[L]{\quad\thepage}
 \fancyfoot[R]{\textit{\theauthor}}
 \fancyfoot[L]{}
 \fancyfoot[C]{} 
@@ -242,9 +244,9 @@ La hauteur de la surface est ainsi illustrée par
 \begin{equation}
 \label{eq:orga4ed0fb}
    h(\vb{x},t) = \sum_{i,j,k} A_{i,j,k}\cdot\sin(k_{x,i} \cdot x + k_{y,i}\cdot y - \omega_j t + \phi_k)\quad
-    \mathrm{où}\quad\left\lbrace\begin{matrix}
+    \text{où}\quad\left\lbrace\begin{matrix}
       k_{x,i} = k\cos(\theta_{i}), \\
-      k_{y,i} = k\sin(\theta_{i}).
+      k_{y,i} = k\sin(\theta_{i}). \\
     \end{matrix}\right.
 \end{equation}
 Par contre, il existe une relation de dispersion (voir \ref{eq:org282f871} à la sous-section suivante), de sorte que \ref{eq:orga4ed0fb} devienne
@@ -338,7 +340,7 @@ C'est pourquoi on ne tend pas vraiment à l'ajouter directement dans l'advection
 
 Donc, en suivant \ref{eq:orgfa16c26}, ont voit que le terme
 \begin{equation}
-   c_g \pdv{E}{x} = \pdv{}{x} \qty(c_g E) = \pdv{}{x} \qty(f(E(x,t))) \quad\quad \mathrm{où} \quad\quad f\qty(E(x,t)) = c_g E.
+   c_g \pdv{E}{x} = \pdv{}{x} \qty(c_g E) = \pdv{}{x} \qty(f(E(x,t))) \quad\quad \text{où} \quad\quad f\qty(E(x,t)) = c_g E.
 \end{equation}
 C'est \textbf{un cas linéaire} où \(f(u) = A\cdot u\), soit
 \begin{equation}
@@ -387,7 +389,7 @@ En premier lieu, on retrouve \(u_*\) à l'aide de sa définition
 Pour trouver la valeur de \(c_D\), on travaille avec la relation de Charnok \autocite{charnock1955wind} aussi tirée de \Textcite[p.30]{gill-atmosphere-ocean}, de sorte que 
 \begin{align}
 \label{eq:orge7515bd}
-   &&c_D = \qty[\frac{\kappa}{\ln(z/z_{\pt0})}]_{\ z=10\pt m}^2
+   &&c_D = \qty[\frac{\kappa}{\ln(z/z_{\pt0})}]_{\pt z=10\pt m}^2
    && \text{où} &&
    z_0 = \frac{\alpha_{Ch}\tau_a}{\rho_a g} = \frac{\alpha_{Ch} c_D |u_{10}|^2}{g}. &&
 \end{align}
@@ -438,10 +440,10 @@ Variable & Valeur & Unités & Description\\
 \hline
 \(\mu\) & À déterminer & -- & Rapport d'échelle avec Pierson-Moskowitz\\
 \(\tilde{s}\) & À déterminer & ? & Pente ou \emph{steepness}\\
-s\textsubscript{PM} & \sqrt{3.02\times10^°-3} & ? & Pente pour Pierson-Moskowitz\\
-\(\tilde{\omega}\) & À déterminer & \rad\(\cdot\) s\textsuperscript{-1} & Fréquence moyenne\\
-\(\tilde{k}\) & À déterminer & \rad\(\cdot\) m\textsuperscript{-1} & Nombre d'onde moyen\\
-m\textsubscript{0} & À déterminer & J & Énergie totale (premier moment)\\
+\(s_{PM}\) & \(\sqrt{3.02\times10^-3}\) & ? & Pente pour Pierson-Moskowitz\\
+\(\tilde{\omega}\) & À déterminer & \(\rad\cdot \mathrm{s}^{-1}\) & Fréquence moyenne\\
+\(\tilde{k}\) & À déterminer & \(\rad\cdot \mathrm{m}^{-1}\) & Nombre d'onde moyen\\
+\(m_0\) & À déterminer & J & Énergie totale (premier moment)\\
 \end{tabular}
 \end{center}
 \subsubsection{Atténuation par la glace}
@@ -466,7 +468,7 @@ Il faut résoudre un polynôme pour obtenir la quantité \(\bar{\alpha}\), malhe
 \begin{tabular}{clll}
 Variable & Valeur & Unités & Description\\
 \hline
-\(\alpha\) & À déterminer & m\textsuperscript{-1} & Coefficient d'atténuation\\
+\(\alpha\) & À déterminer & \(\mathrm{m}^{-1}\) & Coefficient d'atténuation\\
 \(\bar{\alpha}\) & À déterminer & ? & Autre coefficient qui dépend de tout.\\
 \(\expval{D}\) & À déterminer & m & Taille moyenne des floes\\
 \end{tabular}

@@ -38,8 +38,6 @@ En 1 dimension, ça se traduirait par
 \end{equation}
 et c'est bien ce qu'on a! Par contre, je n'ai pas vu le /max/ dans le code de Bismuth...
 
-** Whitecapping
-
 ** Pierson-Moskowitz
 
 Y'a quelque chose de louche dans la maîtrise de Bismuth, c'est vraiment pas clair si les fréquences utilisées sont en $\mathrm{s}^{-1}$ ou en $\mathrm{Rad}\cdot\mathrm{s}^{-1}$.
@@ -49,10 +47,12 @@ Donc Pierson-Moskowitz, c'est
 \begin{equation}
    E_{PM}(f) = \alpha g^2 (2\pi)^4 f^{-5} \exp[- \frac{5}{4} \qty(\frac{f}{f_m})^{-4}],
 \end{equation}
-mais si on prend le spectre JONSWAP, on multiplie par une composante qu'on appelle le /peak enhancement factor/,
-\begin{equation}
-   E_{JONSWAP}(f) = E_{PM}(f)\times\gamma^{\huge\exp[ \frac{-(f-f_m)^2}{2\sigma^2f_m^2}]},
-\end{equation}
+mais si on prend le spectre JONSWAP, on multiplie par une composante qu'on appelle le /peak enhancement factor/ $\left(\pt\gamma^{g(f,\sigma)}\pt\right)$,
+\begin{align}
+   && E_{JONSWAP}(f) = E_{PM}(f)\times\gamma^{g(f,\sigma)}
+   && \text{de sorte que} 
+   && g(f,\sigma) = \exp[ \frac{-(f-f_m)^2}{2\sigma^2f_m^2}], &&
+\end{align}
 ce qui nous laisse 5 paramètres flottant, soient $f_m, \alpha, \gamma, \sigma_a, \sigma_b$.
 Où l'on relit les derniers facteurs à l'aide de
 \begin{equation}
@@ -114,7 +114,7 @@ Dans le cas qui nous intéresse ([[https://en.wikipedia.org/wiki/Flux_limiter][l
 \end{align}
 où le limiteur est exprimé par
 \begin{equation}
-   &\phi = \mathrm{max} \qty{\begin{matrix}
+   \phi = \mathrm{max} \qty{\begin{matrix}
        \pt\mathrm{min}(1, 2r)\\
        \mathrm{min}(2,\ r)\\
    \end{matrix}
