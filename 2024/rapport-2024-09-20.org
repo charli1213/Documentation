@@ -15,10 +15,10 @@
 ** Développer une « config » préliminaire de Wavewatch [1/1]
 
 + [X] Il faut premièrement installer Wavewatch III sur mes machines (On teste sur la mienne en premier, comme ça je pourrai exporter mon environnement sur les machines du PolR ou de /Compute Canada/;
-+ [0/4] Faut vérifier que Wavewatch III fonctionne bien.
-  - [ ] /grid input/ main genre une ligne; Si je me souviens bien, j'ai déjà une fonction Python qui réalise ce genre de fichiers d'entrée (Voir les codes de la maîtrise);
-  - [ ] /startfile/;
-  - [ ] /NetCDF input/ genre un courant et un vent;
++ [2/4] Faut vérifier que Wavewatch III fonctionne bien.
+  - [X] /grid input/ main genre une ligne. Si je me souviens bien, j'ai déjà une fonction Python qui réalise ce genre de fichiers d'entrée (Voir les codes de la maîtrise);
+  - [X] /startfile/;
+  - [ ] /NetCDF input/ genre un courant et un vent. On peut clairement prendre la fonction que j'ai développée (/build current.py/);
   - [ ] /Shell input/; 
 
 ** Mettre le terme non-linéaire dans le code Julia  [2/3]
@@ -132,17 +132,26 @@ C'est pourquoi le tableau suivant est important.
 
 #+attr_latex: :placement [!h]
 #+caption: D'autres quantités qui seraient importante lors de la modélisation avec Wavewatch III.
-|----------------------+------------+-------------+--------------------+---------------------------|
-|----------------------+------------+-------------+--------------------+---------------------------|
-| <l>                  |    <c>     |         <r> |        <c>         | <l>                       |
-| Description          |  Symbole   |      Valeur |       Unités       | Note                      |
-|----------------------+------------+-------------+--------------------+---------------------------|
-| Champ gravitationnel |    $g$     |        9.81 | $\mathrm{ms}^{-2}$ | --                        |
-| Vitesse de phase     |   $c_p$    | (max) 38.52 | $\mathrm{ms}^{-1}$ | $c_p = g/\omega$          |
-| Vitesse de groupe    |   $c_g$    | (max) 19.26 | $\mathrm{ms}^{-1}$ | $c_g = c_p/2$             |
-| Pas de temps         | $\Delta t$ |       25.00 |         s          | $\Delta t < \Delta x/c^{max}_g$ |
-|                      |            |             |                    |                           |
+|------------------------+------------+-------------+--------------------+----------------------------------------|
+|------------------------+------------+-------------+--------------------+----------------------------------------|
+| <l>                    |    <c>     |         <r> |        <c>         | <l>                                    |
+| Description            |  Symbole   |      Valeur |       Unités       | Note                                   |
+|------------------------+------------+-------------+--------------------+----------------------------------------|
+| Champ gravitationnel   |    $g$     |        9.81 | $\mathrm{ms}^{-2}$ | --                                     |
+| Vitesse de phase       |   $c_p$    | (max) 38.52 | $\mathrm{ms}^{-1}$ | $c_p = g/\omega$                       |
+| Vitesse de groupe      |   $c_g$    | (max) 19.26 | $\mathrm{ms}^{-1}$ | $c_g = c_p/2$                          |
+| Pas de temps           | $\Delta t$ |       25.00 |         s          | $\Delta t < \Delta x/c^{max}_g$        |
+|------------------------+------------+-------------+--------------------+----------------------------------------|
+| Nombre de fréquences   |    $nf$    |          40 |         --         | [cite:Voir @wwiii2016user switch NL2 ] |
+| /Freq. Increment Factor/ |    $IF$    |        1.07 |         --         | [cite:Voir @wwiii2016user switch NL2 ] |
+| Fréquence initiale     | $f_{min}$  |        0.05 | $\mathrm{s}^{-1}$  | Comme suggéré par Eliot Bismuth        |
+| Fréquences maximale    | $f_{max}$  |          -- | $\mathrm{s}^{-1}$  | $f_{max} = f_{min}\cdot(IF)^{nf}$      |
+| Nombre de directions   | $n_\theta$ |          36 |         --         | [cite:Voir @wwiii2016user switch NL2 ] |
+|------------------------+------------+-------------+--------------------+----------------------------------------|
 
+Mentionnons que dans Wavewatch III, il est impossible d'avoir un vecteur de fréquence dont les $\Delta f$ sont les même, comme chaque fréquence est le produit d'une ancienne fréquence avec le /Frequency increment factor/ (ce qui est un peu débile selon moi).
+Il semble que j'ai clairement fait des erreurs avec ça dans le modèle avec Louis-Philippe.
+Ça sera définitivement à vérifier. 
 
 * Bibliographie
 #+print_bibliography:

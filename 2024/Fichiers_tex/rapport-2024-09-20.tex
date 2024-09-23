@@ -1,4 +1,4 @@
-% Created 2024-09-20 Fri 10:28
+% Created 2024-09-20 Fri 15:37
 % Intended LaTeX compiler: pdflatex
 \documentclass[10pt]{article}
 % =================================BASE====================================%
@@ -374,9 +374,19 @@ Champ gravitationnel & \(g\) & 9.81 & \(\mathrm{ms}^{-2}\) & --\\
 Vitesse de phase & \(c_p\) & (max) 38.52 & \(\mathrm{ms}^{-1}\) & \(c_p = g/\omega\)\\
 Vitesse de groupe & \(c_g\) & (max) 19.26 & \(\mathrm{ms}^{-1}\) & \(c_g = c_p/2\)\\
 Pas de temps & \(\Delta t\) & 25.00 & s & \(\Delta t < \Delta x/c^{max}_g\)\\
- &  &  &  & \\
+\hline
+Nombre de fréquences & \(nf\) & 40 & -- & \autocite[Voir][switch NL2]{wwiii2016user}\\
+\emph{Freq. Increment Factor} & \(IF\) & 1.07 & -- & \autocite[Voir][switch NL2]{wwiii2016user}\\
+Fréquence initiale & \(f_{min}\) & 0.05 & \(\mathrm{s}^{-1}\) & Comme suggéré par Eliot Bismuth\\
+Fréquences maximale & \(f_{max}\) & -- & \(\mathrm{s}^{-1}\) & \(f_{max} = f_{min}\cdot(IF)^{nf}\)\\
+Nombre de directions & \(n_\theta\) & 36 & -- & \autocite[Voir][switch NL2]{wwiii2016user}\\
+\hline
 \end{tabular}
 \end{table}
+
+Mentionnons que dans Wavewatch III, il est impossible d'avoir un vecteur de fréquence dont les \(\Delta f\) sont les même, comme chaque fréquence est le produit d'une ancienne fréquence avec le \emph{Frequency increment factor} (ce qui est un peu débile selon moi).
+Il semble que j'ai clairement fait des erreurs avec ça dans le modèle avec Louis-Philippe.
+Ça sera définitivement à vérifier. 
 \section{Bibliographie}
 \label{sec:org4e3e49d}
 \printbibliography
