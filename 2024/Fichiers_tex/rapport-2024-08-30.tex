@@ -1,4 +1,4 @@
-% Created 2024-09-16 Mon 11:23
+% Created 2024-10-09 Wed 20:13
 % Intended LaTeX compiler: pdflatex
 \documentclass[10pt]{article}
 % =================================BASE====================================%
@@ -36,7 +36,7 @@
 % Style
 \usepackage{lipsum} % For fun
 \usepackage{tikz} % Realisation de figures TIKZ.
-\usetikzlibrary{arrows.meta,bending, shapes.geometric, automata, positioning} % Arrow heads et les formes de noeuds
+\usetikzlibrary{arrows.meta,bending, shapes.geometric, automata, positioning, decorations.pathreplacing} % Arrow heads et les formes de noeuds
 \usepackage{empheq} % Boite autour de MULTIPLE équations
 \usepackage{bbding}
 
@@ -223,7 +223,7 @@ Police d'écriture : \textbf{CMU Serif Roman}
  pdftitle={Rapport hebdomadaire},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 29.4 (Org mode 9.7.8)}, 
+ pdfcreator={Emacs 29.4 (Org mode 9.7.11)}, 
  pdflang={French}}
 \begin{document}
 
@@ -416,11 +416,21 @@ Dans le \href{rapport-2024-08-23.pdf}{rapport du 23 juillet}, nous ne savions pa
 \label{eq:org797fb6c}
    E_{JONSWAP}(\omega) = 0.2H_s^2 \qty(\frac{\omega_p^4}{\omega^5}) \exp{-\frac{5}{4}\qty(\frac{\omega_p}{\omega})^4} \times 3.3^{\exp{\frac{-(\omega-\omega_p)^2}{2\sigma^2 \omega_p^2}}},
 \end{equation}
-On ne savait pas vraiment d'où ça venait.
-pourtant, Sebastien Dugas a réussi à trouver le lien entre le spectre de l'article de JONSWAP et l'utilisation de Bismuth (\ref{eq:org797fb6c}).
+On ne savait pas vraiment d'où ça venait, mais on sait maintenant qu'il y a une erreur dans cette formulation.
+On devrait plutôt avoir
+\begin{equation}
+   \boxed{E_{JONSWAP}(\omega) = 0.2H_s^2 (2\pi) \qty(\frac{\omega_p^4}{\omega^5}) \exp{-\frac{5}{4}\qty(\frac{\omega_p}{\omega})^4} \times 3.3^{\exp{\frac{-(\omega-\omega_p)^2}{2\sigma^2 \omega_p^2}}}.}
+\end{equation}
+
+Donc, Sebastien Dugas a réussi à trouver le lien entre le spectre de l'article de JONSWAP et l'utilisation de Bismuth (\ref{eq:org797fb6c}) (Voir \Textcite{goda1988variablity}).
+Puis, si l'on transfert en fréquence pures sans radians, on a
+\begin{equation}
+   \boxed{E_{JONSWAP-Goda}(f) = 0.2H_s^2 \qty(\frac{f_p^4}{f^5}) \exp{-\frac{5}{4}\qty(\frac{f_p}{f})^4} \times 3.3^{\exp{\frac{-(f-f_p)^2}{2\sigma^2 f_p^2}}}.}   
+\end{equation}
+Nottons l'absence du \(2\pi\).
 Normalement, nous devrions avoir le spectre de \Textcite{hasselmann1973measurements}, soit
 \begin{align}
-   && E_{JONSWAP}(f) = \alpha g^2 (2\pi)^4 f^{-5} \exp[- \frac{5}{4} \qty(\frac{f}{f_m})^{-4}]\times \gamma^{g(f,\sigma)}
+   && \boxed{E_{JONSWAP}(f) = \alpha g^2 (2\pi)^{-4} f^{-5} \exp[- \frac{5}{4} \qty(\frac{f}{f_m})^{-4}]\times \gamma^{g(f,\sigma)}}
    && \text{où}
    && g(f,\sigma) = \exp[ \frac{-(f-f_m)^2}{2\sigma^2f_m^2}]. &&
 \end{align}

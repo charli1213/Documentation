@@ -74,14 +74,16 @@ Selon [cite/t/c:@hasselmann1973measurements], on devrait avoir les valeurs
 \end{align}
 à l'équilibre -- c'est d'ailleur ce que Bismuth a mis.\bigskip
 
-Donc, l'erreur vient du fait que dans son manuscrit, tout est en $\mathrm{Rad}\cdot\mathrm{s}^{-1}$ quand tout devrait être en $\mathrm{s}^{-1}$, ce qui se traduit par
+Donc, l'erreur vient du fait que dans son manuscrit, tout est en $\mathrm{Rad}\cdot\mathrm{s}^{-1}$ quand tout devrait être en $\mathrm{s}^{-1}$, ce qui se traduit par l'équation 2.15 de la maîtrise de Bismuth, soit
 \begin{equation}
    E_{JONSWAP}(f) = 0.2\qty(\venti\frac{H_s^2}{2\pi}) \qty(\frac{f^4_p}{f^5}) \exp{-\frac{5}{4}\qty(\frac{f_p}{f})^4} \times 3.3^{\exp{\frac{-(\omega-\omega_p)^2}{2\sigma^2 \omega_p^2}}}.
 \end{equation}
-On en fait justement mention sur [[https://wikiwaves.org/Ocean-Wave_Spectra][l'article de Wikiwaves sur le JONSWAP]] en mentionnant que
+C'est une faute d'inattention. Dans les faits, il aurait du avoir
 \begin{equation}
-   S(\omega) = S(2\pi f) = 2\pi\cdot S(f)
+   \boxed{E_{JONSWAP}(f) = 0.2 \venti H_s^2 \qty(\frac{f^4_p}{f^5}) \exp{-\frac{5}{4}\qty(\frac{f_p}{f})^4} \times 3.3^{\exp{\frac{-(\omega-\omega_p)^2}{2\sigma^2 \omega_p^2}}}.}
 \end{equation}
+D'ailleurs, il ne cite pas que sa formulation vient de [cite/t/c:@goda1988variablity].
+On en fait justement mention sur [[https://wikiwaves.org/Ocean-Wave_Spectra][l'article de Wikiwaves sur le JONSWAP]] en mentionnant qu'il faut faire attention à la conversion.
 
 ** Retour sur la méthode de Lax-Wendroff
 

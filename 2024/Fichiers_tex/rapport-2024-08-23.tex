@@ -1,4 +1,4 @@
-% Created 2024-09-03 Tue 13:02
+% Created 2024-10-09 Wed 20:04
 % Intended LaTeX compiler: pdflatex
 \documentclass[10pt]{article}
 % =================================BASE====================================%
@@ -16,9 +16,8 @@
 \usepackage{mathrsfs} % Permet la command \mathscr (Lettres attachées genre) \mathscr(ABC)
 \usepackage{eucal}   % Vient changer le \mathcal{ABC} parce que celui de base est laid.
 
-
 % Bibliographie
-\usepackage[backend=biber,style=apa,sorting=ynt]{biblatex}
+\usepackage[backend=biber,style=alphabetic,sorting=ynt,maxbibnames=99]{biblatex}
 %\usepackage[backend=biber,sorting=ynt,style=authoryear]{biblatex} % Ça semble tout changer.
 \addbibresource{master-bibliography.bib}
 
@@ -37,7 +36,7 @@
 % Style
 \usepackage{lipsum} % For fun
 \usepackage{tikz} % Realisation de figures TIKZ.
-\usetikzlibrary{arrows.meta,bending} % Arrow heads 
+\usetikzlibrary{arrows.meta,bending, shapes.geometric, automata, positioning, decorations.pathreplacing} % Arrow heads et les formes de noeuds
 \usepackage{empheq} % Boite autour de MULTIPLE équations
 \usepackage{bbding}
 
@@ -45,7 +44,6 @@
 \usepackage[french]{babel} % Environnements en Français.
 
 \usepackage{titling} % Donne accès à \theauthor, \thetitle, \thedate
-
 % ==============================BASE-(END)=================================%
 
 
@@ -85,11 +83,23 @@
 \renewcommand{\cftsecfont}{\normalfont}
 \renewcommand{\cftsecpagefont}{\normalfont}
 
+
+% On a des lignes à droite des sections et sous-sections
+\usepackage[explicit]{titlesec}
+    % Raised Rule Command:
+    % Arg 1 (Optional) - How high to raise the rule
+    % Arg 2 - Thickness of the rule
+    \newcommand{\raisedrulefill}[2][0ex]{\leaders\hbox{\rule[#1]{1pt}{#2}}\hfill}
+    \titleformat{\section}{\Large\bfseries}{\thesection. }{0em}{#1\;\raisedrulefill[0.4ex]{0.25pt}}
+    \titleformat{\subsection}{\large\bfseries}{\thesubsection. }{0em}{#1\;\raisedrulefill[0.4ex]{0.10pt}}
+
+
 % Change bullet style
-\usepackage{pifont}
+%\usepackage{pifont}
 \usepackage{enumitem}
 %\setlist[itemize,1]{label=\ding{224}}
-\setlist[itemize,1]{label=\ding{239}}
+%\setlist[itemize,1]{label=\ding{239}}
+%\setlist[itemize,1]{label=$\cdot$}
 \renewcommand{\boxtimes}{\blacksquare}
 % ================================SETTINGS=================================%
 
@@ -98,6 +108,7 @@
 % ==============================NEWCOMMANDS================================%
 % CQFD symbol
 \renewcommand{\qedsymbol}{$\hfill\blacksquare$}
+\newcommand{\cqfd}{\hfill$\blacktriangleleft$}
 
 % Vecteurs de base :
 \newcommand{\nvf}{\vb{\hat{n}}}
@@ -108,6 +119,8 @@
 \newcommand{\uu}{\vb{u}}
 \newcommand{\vv}{\vb{v}}
 \newcommand{\ust}{\vb{u}_{\ast}}
+\newcommand{\xx}{\vb{x}}
+\newcommand{\rad}{\text{Rad}}
 
 % Physics empty spaces 
 \newcommand{\short}{\vphantom{pA}}
@@ -137,11 +150,6 @@ size=small, width=2cm, left=-0.25pt, bottom=-0.5pt,
 arc is angular, arc=2.5mm, boxrule=0.35pt, leftrule=4pt, %bottomrule=1pt,
 after={\enskip}] Exemple \end{tcolorbox}}}
 
-\newcommand{\rad}{\text{Rad}}
-
-
-\newcommand{\cqfd}{\hfill$\blacktriangleleft$}
-
 % Define the nota bene environment
 \usepackage{tcolorbox}
 \newtcolorbox{notabene}{
@@ -158,6 +166,11 @@ after={\enskip}] Exemple \end{tcolorbox}}}
 
 \newcommand{\cmark}{\ding{52}}
 \newcommand{\xmark}{\ding{55}}
+
+%\newcommand{\fourier}[1]{\raisebox{-0.4em}{\resizebox{2em}{!}{$\mathscr{F}$}\,}\qty[#1]}
+\newcommand{\fourier}{\operatorname{\raisebox{-0.4em}{\resizebox{2em}{!}{$\mathscr{F}$}}}}
+% Mettre (a,b) à la suite d'une série d'équations horizontales.
+\newcommand{\ab}{\refstepcounter{equation}\tag{\theequation a,b}}
 % ==============================NEWCOMMANDS================================%
 
 
@@ -193,10 +206,10 @@ Police d'écriture : \textbf{CMU Serif Roman}
 \usepackage{fancyhdr}
 \pagestyle{fancy}
 \setlength{\headheight}{13pt}
-\renewcommand{\headrulewidth}{0.025pt} % Ligne horizontale en haut
+\renewcommand{\headrulewidth}{0.0pt} % Ligne horizontale en haut
 
-\fancyhead[R]{\textit{\thetitle}}
-\fancyhead[L]{\quad\thepage}
+\fancyhead[R]{\underline{\textit{Section \thesubsection}}}
+\fancyhead[L]{\underline{\textit{\thepage}}}
 \fancyfoot[R]{\textit{\theauthor}}
 \fancyfoot[L]{}
 \fancyfoot[C]{} 
@@ -210,7 +223,7 @@ Police d'écriture : \textbf{CMU Serif Roman}
  pdftitle={Rapport hebdomadaire},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 29.4 (Org mode 9.7.8)}, 
+ pdfcreator={Emacs 29.4 (Org mode 9.7.11)}, 
  pdflang={French}}
 \begin{document}
 
@@ -284,14 +297,16 @@ Selon \Textcite{hasselmann1973measurements}, on devrait avoir les valeurs
 \end{align}
 à l'équilibre -- c'est d'ailleur ce que Bismuth a mis.\bigskip
 
-Donc, l'erreur vient du fait que dans son manuscrit, tout est en \(\mathrm{Rad}\cdot\mathrm{s}^{-1}\) quand tout devrait être en \(\mathrm{s}^{-1}\), ce qui se traduit par
+Donc, l'erreur vient du fait que dans son manuscrit, tout est en \(\mathrm{Rad}\cdot\mathrm{s}^{-1}\) quand tout devrait être en \(\mathrm{s}^{-1}\), ce qui se traduit par l'équation 2.15 de la maîtrise de Bismuth, soit
 \begin{equation}
    E_{JONSWAP}(f) = 0.2\qty(\venti\frac{H_s^2}{2\pi}) \qty(\frac{f^4_p}{f^5}) \exp{-\frac{5}{4}\qty(\frac{f_p}{f})^4} \times 3.3^{\exp{\frac{-(\omega-\omega_p)^2}{2\sigma^2 \omega_p^2}}}.
 \end{equation}
-On en fait justement mention sur \href{https://wikiwaves.org/Ocean-Wave\_Spectra}{l'article de Wikiwaves sur le JONSWAP} en mentionnant que
+C'est une faute d'inattention. Dans les faits, il aurait du avoir
 \begin{equation}
-   S(\omega) = S(2\pi f) = 2\pi\cdot S(f)
+   \boxed{E_{JONSWAP}(f) = 0.2 \venti H_s^2 \qty(\frac{f^4_p}{f^5}) \exp{-\frac{5}{4}\qty(\frac{f_p}{f})^4} \times 3.3^{\exp{\frac{-(\omega-\omega_p)^2}{2\sigma^2 \omega_p^2}}}.}
 \end{equation}
+D'ailleurs, il ne cite pas que sa formulation vient de \Textcite{goda1988variablity}.
+On en fait justement mention sur \href{https://wikiwaves.org/Ocean-Wave\_Spectra}{l'article de Wikiwaves sur le JONSWAP} en mentionnant qu'il faut faire attention à la conversion.
 \subsection{Retour sur la méthode de Lax-Wendroff}
 \label{sec:org60cc8dc}
 

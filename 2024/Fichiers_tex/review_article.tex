@@ -1,0 +1,339 @@
+% Created 2024-10-09 Wed 19:54
+% Intended LaTeX compiler: pdflatex
+\documentclass[10pt]{article}
+% =================================BASE====================================%
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry} % Marges
+\usepackage[T1]{fontenc} % Nécessaire avec FrenchBabel
+\usepackage[utf8]{inputenc} % Important pour symboles Francophones, é,à,etc
+\usepackage{csquotes} % Recommandé par PDFLatex lors de la compilation. 
+
+% Calligraphie
+%\usepackage{pxfonts} % Met le texte ET les maths en Palatino + donne accès à des symboles math
+%\usepackage{palatino} % Cette commande met seulement le texte en police palatino
+\usepackage{lmodern} % Pour les maths? Lmodern pour les maths
+\usepackage{cfr-lm}
+% Use lmodern for sans-serif
+\usepackage{mathrsfs} % Permet la command \mathscr (Lettres attachées genre) \mathscr(ABC)
+\usepackage{eucal}   % Vient changer le \mathcal{ABC} parce que celui de base est laid.
+
+% Bibliographie
+\usepackage[backend=biber,style=alphabetic,sorting=ynt,maxbibnames=99]{biblatex}
+%\usepackage[backend=biber,sorting=ynt,style=authoryear]{biblatex} % Ça semble tout changer.
+
+
+
+\usepackage{amsmath, amssymb, amsthm} % Symb. math. (Mathmode+Textmode) + Beaux théorèmes.
+\usepackage{mathtools,cancel,xfrac} % Utilisation de boîtes \boxed{} + \cancelto{}{}, xfrac
+\usepackage{graphicx, wrapfig} % Géstion des figures.
+\usepackage{hyperref} % Permettre l'utilisation d'hyperliens.
+\usepackage{color} % Permettre l'utilisation des couleurs.
+\usepackage{colortbl} % Color tables
+\usepackage[dvipsnames]{xcolor} % Couleurs avancées.
+
+% Physique
+\usepackage{physics} % Meilleur package pour physicien. 
+
+% Style
+\usepackage{lipsum} % For fun
+\usepackage{tikz} % Realisation de figures TIKZ.
+\usetikzlibrary{arrows.meta,bending, shapes.geometric, automata, positioning, decorations.pathreplacing} % Arrow heads et les formes de noeuds
+\usepackage{empheq} % Boite autour de MULTIPLE équations
+\usepackage{bbding}
+
+% Français
+\usepackage[french, english]{babel} % Environnements en Français.
+
+\usepackage{titling} % Donne accès à \theauthor, \thetitle, \thedate
+% ==============================BASE-(END)=================================%
+
+
+
+
+
+% ================================SETTINGS=================================%
+% Pas d'indentation en début de paragraphe :
+\setlength\parindent{0pt}
+\setlength{\parskip}{0.15cm}
+
+% Tableaux/tabular
+% Espace vertical dans les tabular/tableaux
+\renewcommand{\arraystretch}{1.2}
+% Couleur des tableaux/tabular
+% \rowcolors{3}{violet!5}{}
+
+% Couleurs de hyperliens :
+\definecolor{mypink}{RGB}{147, 0, 255}
+\hypersetup{colorlinks, 
+             filecolor=mypink,
+             urlcolor=mypink, 
+             citecolor=mypink, 
+             linkcolor=mypink, 
+             anchorcolor=mypink}
+
+
+% Numéros d'équations suivent les sections :
+\numberwithin{equation}{section} 
+
+% Les « captions » sont en italique et largeur limitée
+\usepackage[textfont = it]{caption} 
+\captionsetup[wrapfigure]{margin=0.5cm}
+
+% Retirer l'écriture en gras dans la table des matières
+\usepackage{tocloft}
+\renewcommand{\cftsecfont}{\normalfont}
+\renewcommand{\cftsecpagefont}{\normalfont}
+
+
+% On a des lignes à droite des sections et sous-sections
+\usepackage[explicit]{titlesec}
+    % Raised Rule Command:
+    % Arg 1 (Optional) - How high to raise the rule
+    % Arg 2 - Thickness of the rule
+    \newcommand{\raisedrulefill}[2][0ex]{\leaders\hbox{\rule[#1]{1pt}{#2}}\hfill}
+    \titleformat{\section}{\Large\bfseries}{\thesection. }{0em}{#1\;\raisedrulefill[0.4ex]{0.25pt}}
+    \titleformat{\subsection}{\large\bfseries}{\thesubsection. }{0em}{#1\;\raisedrulefill[0.4ex]{0.10pt}}
+
+
+% Change bullet style
+%\usepackage{pifont}
+\usepackage{enumitem}
+%\setlist[itemize,1]{label=\ding{224}}
+%\setlist[itemize,1]{label=\ding{239}}
+%\setlist[itemize,1]{label=$\cdot$}
+\renewcommand{\boxtimes}{\blacksquare}
+% ================================SETTINGS=================================%
+
+
+
+% ==============================NEWCOMMANDS================================%
+% CQFD symbol
+\renewcommand{\qedsymbol}{$\hfill\blacksquare$}
+\newcommand{\cqfd}{\hfill$\blacktriangleleft$}
+
+% Vecteurs de base :
+\newcommand{\nvf}{\vb{\hat{n}}}
+\newcommand{\evf}{\vb{\hat{e}}}
+\newcommand{\ivf}{\vb{\hat{i}}}
+\newcommand{\jvf}{\vb{\hat{j}}}
+\newcommand{\kvf}{\vb{\hat{k}}}
+\newcommand{\uu}{\vb{u}}
+\newcommand{\vv}{\vb{v}}
+\newcommand{\ust}{\vb{u}_{\ast}}
+\newcommand{\xx}{\vb{x}}
+\newcommand{\rad}{\text{Rad}}
+
+% Physics empty spaces 
+\newcommand{\short}{\vphantom{pA}}
+\newcommand{\tall}{\vphantom{pA^{x^x}_p}}
+\newcommand{\grande}{\vphantom{\frac{1}{xx}}}
+\newcommand{\venti}{\vphantom{\sum_x^x}}
+\newcommand{\pt}{\hspace{1pt}} % One horizontal pt space
+
+% Moyenne numérique entre deux points de grilles. 
+\newcommand{\xmean}[1]{\overline{#1}^x}
+\newcommand{\ymean}[1]{\overline{#1}^y}
+\newcommand{\zmean}[1]{\overline{#1}^z}
+\newcommand{\xymean}[1]{\overline{#1}^{xy}}
+
+% Tilde over psi
+\newcommand{\tpsi}{\tilde{\psi}}
+\newcommand{\tphi}{\tilde{\phi}}
+
+% Nota Bene env : (\ding{89})
+%\newcommand{\nb}{$\boxed{\text{\footnotesize\EightStarConvex}\pt \mathfrak{N. B.}}$\hspace{4pt}}
+\newcommand{\nb}{\underline{{\footnotesize\EightStarConvex}\pt $\mathfrak{N.B.}$\vphantom{p}}\hspace{3pt}}
+
+\newcommand{\exemple}{
+\parbox[center]{2.2cm}{\begin{tcolorbox}[sharp corners, rounded corners=northeast, rounded corners=southeast,
+colback=Violet!2, colframe=black,
+size=small, width=2cm, left=-0.25pt, bottom=-0.5pt,
+arc is angular, arc=2.5mm, boxrule=0.35pt, leftrule=4pt, %bottomrule=1pt,
+after={\enskip}] Exemple \end{tcolorbox}}}
+
+% Define the nota bene environment
+\usepackage{tcolorbox}
+\newtcolorbox{notabene}{
+     colback=blue!5,
+     colframe=black,
+     boxrule=0.5pt,
+     arc=2pt,
+     left=5pt,
+     right=5pt,
+     top=5pt,
+     bottom=5pt,
+}
+
+
+\newcommand{\cmark}{\ding{52}}
+\newcommand{\xmark}{\ding{55}}
+
+%\newcommand{\fourier}[1]{\raisebox{-0.4em}{\resizebox{2em}{!}{$\mathscr{F}$}\,}\qty[#1]}
+\newcommand{\fourier}{\operatorname{\raisebox{-0.4em}{\resizebox{2em}{!}{$\mathscr{F}$}}}}
+% Mettre (a,b) à la suite d'une série d'équations horizontales.
+\newcommand{\ab}{\refstepcounter{equation}\tag{\theequation a,b}}
+% ==============================NEWCOMMANDS================================%
+
+
+
+% ==============================PAGE-TITRE=================================%
+% Titlepage 
+\newcommand{\mytitlepage}{
+\begin{titlepage}
+\begin{center}
+{\Huge \thesubtitle \par}
+\vspace{2cm}
+{\Huge \MakeUppercase{\thetitle} \par}
+\vspace{2cm}
+RÉALISÉ DANS LE CADRE\\ D'UN PROJET POUR \par
+\vspace{2cm}
+{\Huge ISMER--UQAR \par}
+\vspace{2cm}
+{\thedate}
+\end{center}
+\vfill
+Rédaction \\
+{\theauthor}\\
+\url{charles-edouard.lizotte@uqar.ca}\\
+ISMER-UQAR\\
+Police d'écriture : \textbf{CMU Serif Roman}
+\end{titlepage}
+}
+% ==============================PAGE-TITRE=================================%
+
+
+
+% =================================ENTÊTE==================================%
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\setlength{\headheight}{13pt}
+\renewcommand{\headrulewidth}{0.0pt} % Ligne horizontale en haut
+
+\fancyhead[R]{\underline{\textit{Section \thesubsection}}}
+\fancyhead[L]{\underline{\textit{\thepage}}}
+\fancyfoot[R]{\textit{\theauthor}}
+\fancyfoot[L]{}
+\fancyfoot[C]{} 
+% =================================ENTÊTE==================================%
+\author{Charles-Édouard Lizotte}
+\date{October 2, 2024}
+\title{Review of the article from Fogarty et al (2024)}
+\hypersetup{
+ pdfauthor={Charles-Édouard Lizotte},
+ pdftitle={Review of the article from Fogarty et al (2024)},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.4 (Org mode 9.7.11)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{My short review of the article}
+\label{sec:org0fff042}
+
+In this article, Fogarty et al use satelite and theoretical ice maps to simulate the effect of several ice metrics : ice roughness (\(r\)), patch density (\(p_d\)), ice fraction (\(f_i\)), fractal dimension (\(D\)) and floes size splitting index (\(S\)) on the atmospheric boundary layer behavior. This study focuses on the effect on momentum, dispersive and heat transfer between the marginal ice zone (MIZ) and the atmospheric boundary layer (ABL).
+\subsection{Choosing ice maps for the simulations and initial conditions}
+\label{sec:orgd69587d}
+
+To make sure that they choose good values for each metrics in each map, Fogarty et al isolate each metric value with a sorting equation. Therefore each metric can stand out before the other in the choice of satelite maps. Fogarty et al also define theoretical ice maps with the ice "pushed to one side" in the goal of keeping the same ice fraction in each chosen maps to see the resulting effect.
+Each maps are tested with two winds, one in the principal direction -- chosen by the eigendirection of a principal components analysis (PCA) of the geostrophic wind -- and the other in the secondary direction, which represents a 90 degrees rotation from the principal direction. In accordance to the strenght of the geostrophic wind, the magnitude of the wind is 2 \(\mathrm{ms}^{-1}\). Therefore there is 12 simulations in the study.
+\subsection{Initial conditions for the temperature}
+\label{sec:org19243b9}
+
+As a boundary condition, the ice and water temperature are set to 255 and 271K. As stated in the appendice B, they choose the initial bulk air temperature by equating the horizontal heat flux over the ice and the horizontal mean flux coming from the water, therefore resulting in a bulk air temperature between the one of the water and the ice.
+\subsection{Large Eddy Simulations}
+\label{sec:orga66de50}
+
+Maps are periodic in each direction. Fogarty et al use Large Eddy Simulations (LES) to simulate the circulation over the MIZ-ABL with a spin up of 2 inertial periods. This result in several wind-states over the MIZ. Averaging are done on inertial periods after equilibrium is reached.
+\subsection{Results}
+\label{sec:org7479e4c}
+
+Ice pattern have several effects on the state of the wind. A bigger fractal dimension results in a more turbulent flow which maximize turbulent and heat transfer in the MIZ-ABL zone. With a low fractal dimension, we observe the creation of an organized secondary wind following the big ice structures, limiting heat and turbulent transfer at the MIZ-ABL interface.\bigskip
+
+For the ice fraction, a smaller ice fraction creates an unstable atmospheric boundary layer.
+A strong ice fraction creates the conditions for a stable atmospheric boundary layer, which is already known, according to Fogarty et al.\bigskip
+
+As for the ice patches density, we observe similar results as the fractal dimension, because patches density and fractal dimension are similar metrics. A higher patch density on a map could possibly results in a statisticaly homogeneous ice-water interface, leading to a highly turbulent heat fluxes and low dispersive fluxes. The opposite (low patch density) results in the opposite as we have seen with the fractal dimension.\bigskip
+
+Finaly, for the splitting index, which represents the variability in patch size. A high value of \(S\) describes a surface with multiples ice patch sizes. \bigskip
+
+A high splitting index results in more dispersion and more momentum transfer at the MIZ-ABL interface. This is due to the chaotic nature of the surface and its secondary circulation. Whereas a small splitting index seems to result in a high heat transfer at the MIZ-ABL interface and high turbulent transfer in the middle of the ABL.
+\subsection{Roughness lenght}
+\label{sec:org9218520}
+
+Fogarty et al to make ice rougher than the water and vice-versa, resulting in no significant changes, showing that the heterogeneity of ice map have a bigger impact than the roughness.
+\subsection{Parameterization}
+\label{sec:org1d4895d}
+
+Finaly, they suggest a way to parameterize the results of the simulations with a multiple linear regression model containing all metrics and tried to see the result of removing metrics from this parameterisation. They applied this model for the momentum flux, the heat transfer and the momentum surface flux.
+\begin{itemize}
+\item We can remove patch density in the parameterisation of the heat flux model, and also patch dimension or splitting index.
+\item For the surface momentum flux, it seems that we can remove the fractal dimension without a great loss of quality.
+\end{itemize}
+
+If we have only ice or only water, we cannot really remove the splitting index, therefore the variability of ice floe size is important when predicting these surface heat fluxes.
+\section{Notes on the article}
+\label{sec:org98f5b05}
+
+\subsection{General critique of the article}
+\label{sec:org735df2e}
+
+The research presented in the paper of Fogarty et al is quite worthy of interest.
+While I'm not an expert on the subject of atmospheric boundary layer (ABL) momentum, dispersive and heat transfers in the marginal ice zone (MIZ), I think the relation between ice pattern and and atmospheric-sea state is of interest. Overall, Fogarty et al did a good job at sumarizing the subject, the scope of the research and their own methodology. Furthermore, their procedure for reaching key metrics in satelite ice maps are also noteworthy. \bigskip
+
+Fogarty and al accomplish their goal of showing that the ice fraction is a limited metric in explaining the behavior of the ABL over ice coverage. The results from the simulations presented in this paper might sound typical and expected. However, the way they parameterize the products of these simulations are quite interesting in my opinion and are worthy of being published.\bigskip
+
+Overall, I think the research presented by Fogarty et al is worthy of publishing after small to medium corrections and clarifications on key concepts of the study.\bigskip
+
+First of all, the authors don't use a good definition of the marginal ice zone (MIZ) in the whole article. As we can see in figure 1, the majority of ice maps are not in the 20 to 80\% interval of ice coverage. Secondly, the MIZ is defined by it's proximity to large open bodies of water, which entails the relation between ice fragmentation, waves and circulation. It isn't clear to me if the ice maps are in this state. I suggest the authors use a different definition, such as "over polynas and leads" and "in sea ice patterns" only, instead of "over the MIZ".\bigskip
+
+It might be of interest to check whether the roughness length of the ice and water is in the good range. This article (\url{https://doi.org/10.1029/JZ070i018p04573}) seems to give a value between 0.02 and 2 centimeters above artic sea ice, therefore the range used in the artcicle from Fogarty et al are good. The ECMWF team (\url{https://doi.org/10.1175/20}) tends to use values around 1mm over the ocean. But they mention it might be too high. It would be interesting to add information about this key concept because there isn't much information about why there isn't much influence. 
+\subsection{Corrections and clarifications}
+\label{sec:org4657633}
+
+\subsubsection{Introduction}
+\label{sec:org8bdbba5}
+\begin{itemize}
+\item \textbf{L.36} : I would say "complex horizontal structure" instead of "complex structure".
+\item \textbf{L.87 to 99} : The metrics used in this study don't really make a distinction between leads and polynas, may be we could talk about this in metrics sections or mention it here.
+\end{itemize}
+\subsubsection{Data and Methods}
+\label{sec:org3137f57}
+\begin{itemize}
+\item \textbf{L.168} : I'm not sure we defined the acronym ESM previously.
+\item \textbf{L.180} : The word "the" is repeated 2 times.
+\item \textbf{L.181} : We could say firstly that "while the roughness lenght is variables and each suite of simulations, two different roughness lengths are use for sea points and ice points".
+\end{itemize}
+\subsubsection{Physical Role of Ice Fraction}
+\label{sec:org4bd44eb}
+\begin{itemize}
+\item \textbf{Figure 2.b)} : Blue arrows should be oriented according to the principal directions not parallele to the x-y plane (even if it is the case here), such that we could see the angle \(\alpha_g\) and understand clearly.
+\item Also the arrows shouldn't be blue. On printed paper, the variance in color is really limited. It would be really hard for a colorblind person to see arrows over the water body in the image. I suggest we change the color.
+\item \textbf{L.218} : It isn't clear to me if we refer to the water, the ice or both roughness length, here.
+\item \textbf{L.221} : I suggest a bit of explications on the MOST technique to initialize the equilibrium state, even if everything is explained in the Appendix B.
+\end{itemize}
+\subsubsection{Surface Characteristic Analysis}
+\label{sec:orgfbe7251}
+\begin{itemize}
+\item \textbf{Figure 3.} : I suggest we change the distinctions between "strip simulations" and "regular simulations". Principals should be the same color and secondaries should also be the same color, but stripped. No need to put dots on the principals. \textbf{I'm a big fan of the "goofieness" of the bar plot}.
+\item \textbf{L.269} : No citations for the equations for the fractal dimension? There is a lot of definitions for the fractal dimension. Also what is "c"? Yes, some constant, but for what purpose? Might be interesting to add a line here.
+\item \textbf{L.302} : No explanation for the "one-primed" variables, only for double-prime.
+\item \textbf{L.303 to 318} : Might be of interest to link the fetch to the results.
+\item \textbf{L.356 to 361} : This paragraph is a good mention.
+\item \textbf{Figure 4.} : I suggest you find a way to synthetise those 12 pictures in a more concise manner, not by removing any of them, but by adding information. Adding a small legend with the color and the metric of interest in the top-right corner of each right pannels of each rows would be helping a lot. Furthermore, the names of the maps used (esiberian1, beaufort2, etc)  could be on the left instead of the right and more clearly indicated.
+\end{itemize}
+\subsubsection{Impact of Roughness on the MIZ-ABL}
+\label{sec:orga9a83b5}
+\begin{itemize}
+\item Overall good, but there isn't much explanation for why roughness doesn't have a lot of influence on the results, as stated in my general critique.
+\end{itemize}
+\subsubsection{A path to parameterization}
+\label{sec:org96ea3c4}
+\begin{itemize}
+\item Not a lot to add here. In my opinion, this section is quite clear, well thought and wee explained.
+\end{itemize}
+\subsubsection{Conclusion}
+\label{sec:org80cec69}
+Fogarty et al clearly state the limits of their reasearch in an honest manner and the conclusion review the article with a good opening to further study. I don't have much to add in the conclusion.
+\end{document}

@@ -1,4 +1,4 @@
-% Created 2024-10-09 Wed 19:54
+% Created 2024-10-10 Thu 15:06
 % Intended LaTeX compiler: pdflatex
 \documentclass[10pt]{article}
 % =================================BASE====================================%
@@ -215,7 +215,7 @@ Police d'écriture : \textbf{CMU Serif Roman}
 \fancyfoot[C]{} 
 % =================================ENTÊTE==================================%
 \author{Charles-Édouard Lizotte}
-\date{20/09/2024}
+\date{11/10/2024}
 \title{Rapport hebdomadaire}
 \newcommand{\thesubtitle}{Contrat Été 2024}
 \hypersetup{
@@ -227,153 +227,44 @@ Police d'écriture : \textbf{CMU Serif Roman}
  pdflang={French}}
 \begin{document}
 
-\mytitlepage
-\tableofcontents\newpage
-\section{{\bfseries\sffamily DONE} Objectifs principaux des prochaines semaines}
-\label{sec:org5e827ef}
-
-\subsection{Développer une « config » préliminaire de Wavewatch [1/1]}
-\label{sec:org84be140}
+\section{Tâches à accomplir pour la semaine}
+\label{sec:org3ede40e}
 
 \begin{itemize}
-\item[{$\boxtimes$}] Il faut premièrement installer Wavewatch III sur mes machines (On teste sur la mienne en premier, comme ça je pourrai exporter mon environnement sur les machines du PolR ou de \emph{Compute Canada};
-\item\relax [5/5] Faut vérifier que Wavewatch III fonctionne bien.
+\item\relax [2/4] \textbf{Terminer la reproduction des résultats de Bismuth avec le set-up de Jeremy et Dany} : J'ai eu quelques problèmes avec Wavewatch à l'installation. Par la suite, les \emph{switches} de \emph{Wavewatch III} que Jérémy m'a fournit ont activé quelques champs dont je ne connaissais pas l'existence.
 \begin{itemize}
-\item[{$\boxtimes$}] \emph{grid input} main genre une ligne. Si je me souviens bien, j'ai déjà une fonction Python qui réalise ce genre de fichiers d'entrée (Voir les codes de la maîtrise);
-\item[{$\boxtimes$}] \emph{Startfile}, il faut s'assurer que ça marche;
-\item\relax [1/1] \emph{NetCDF input} genre un courant et un vent. On peut clairement prendre la fonction que j'ai développée (\emph{build current.py});
+\item[{$\boxtimes$}] Il faut reproduire le motif de glace d'Éliot Bismuth;
+\item[{$\boxtimes$}] S'assurer que le données NetCDF entrent bien dans le modèle de vagues;
+\item\relax [0/1] Trouver un moyen de forcer le champ de vagues d'un seul côté seulement;
 \begin{itemize}
-\item[{$\boxtimes$}] Il a fallu remanier la fonction pour un domaine plus petit, le frontières ne marchainet pas vraiment.
+\item[{$\square$}] Modifier la fonction \emph{ww3 grid} pour changer la \emph{mapsta} et inclure des points frontière;
+\item[{$\square$}] Inclusion des points frontière;
 \end{itemize}
-\item[{$\boxtimes$}] Problème de NetCDF avec Fortran? Le problème semble venir de \emph{nc-config}. Finalement, ça venait de l'environnement \emph{NetCDF} que j'utilisais. IL faut impérativement activer l'environnement \emph{wavenv} pour faire fonctionner le module Fortran \emph{NetCDF};
-\item[{$\boxtimes$}] Les \emph{inputs} du shell, faut que ça rentre bel et bien dans la \emph{run};
-\item[{$\boxtimes$}] La \emph{run} du modèle;
+\item[{$\square$}] Il faut aussi terminer la fonction de distribution de la glace pour lancer plusieurs tâches en même temps en série;
+\item[{$\square$}] Conceptualiser un moyen de lire les données sortantes pour le champ de glace. Eliot Bismuth utilisait un rapport du premier moment « \(m_0\) »
+\end{itemize}
+
+\item\relax [0/1] \textbf{Retour à Daniella pour la réalisation du «Word Package II»} : Daniella avait pas mal accepté mon aide par courriel. Elle m'a rajouté dans le Teams du \emph{Word Package II}.
 \begin{itemize}
-\item Problème avec les \emph{inputs} ou les \emph{switches}? Il semble que \emph{WW3} ne produise pas de vagues.
+\item[{$\square$}] Recontacter l'équipe, dont Jérémy.
 \end{itemize}
-\end{itemize}
-\end{itemize}
-\subsection{Mettre le terme non-linéaire dans le code Julia  [3/4]}
-\label{sec:org0392e1c}
 
+\item\relax [0/2] \textbf{Lecture du code de Sebastien Dugas pour WAM} :
 \begin{itemize}
-\item[{$\boxtimes$}] Je doit impérativement contacter Sébastien Dugas;
-\item[{$\boxtimes$}] Voir la preuve fournie dans le livre \autocite{kinsman1965their};
-\item[{$\boxtimes$}] Répondre à Sébastien Dugas;
-\item[{$\square$}] Trouver un équivalent en 1 dimension;
-\end{itemize}
-\subsection{Caractérisation des distributions de floes}
-\label{sec:orgce40586}
-
-\begin{itemize}
-\item[{$\square$}] Il faut créer une fonction en Python qui crée des distributions de glaces avec les paramètres nécessaires;
-\begin{itemize}
-\item Concentration de glace \(C_g\),
-\item Taille des \emph{patches},
-\item Orientation de la distribution
+\item[{$\square$}] Il faut repenser les axes de développement pour s'assurer que le but de ma recherche passe dans les enjeux du milieu.
+\item[{$\square$}] Il faut avoir plus d'information de la part de l'ingénieur de Blair. On a très peu d'information sur la manière qu'il fera ses simulation de vagues et de glace.
 \end{itemize}
 \end{itemize}
-\section{Config de Wavewatch III}
-\label{sec:org4c4df03}
+\section{Retour sur l'expérience de Bismuth avec Wavewatch III}
+\label{sec:org717717b}
 
-\subsection{Installation de Wavewatch}
-\label{sec:orge67bc0a}
+\subsection{Ce qu'on doit implémenter en terme de glace dans Wavewatch III}
+\label{sec:org6693ef6}
 
-J'ai déjà écrit tout ça dans un rapport avec Louis-Philippe, mais je trouve que c'est important de faire une petite mise à jour avant de se remettre dedans. De plus, ça pourrait être utile à tous les nouveaux employés qui me poseront une question là-dessus.
-
-Avant tout, il faut aller sur \url{https://polar.ncep.noaa.gov/waves/wavewatch/distribution/}, c'est là qu'on peut télécharger le modèle sous forme de fichier \emph{.tar} avec les informations
-\begin{verbatim}
- >>> username: converter1091
- >>> password: contractor8409
-\end{verbatim}
-On s'assure d'avoir la version la plus à jour, dans mon cas, c'est la 5.16. Une fois que c'est téléchargé, on peut ouvrir le fichier compressé dans un dossier au choix,
-\begin{verbatim}
- >>> tar -xvf wwatch3.v5.16.tar.gz -C wavewatch3
-\end{verbatim}
-On va dans le dossier, on rend l'installateur executable avec
-\begin{verbatim}
- >>> chmod +x install_ww3_tar 
-\end{verbatim}
-On peut essayer, mais si nous n'avons pas de compilateur Fortran ou C, ça ne sert pas à grand chose. Pour Arch Linux, on peut tout simplement installer \emph{Gfortran} à l'aide de la commande
-\begin{verbatim}
- >>> sudo pacman -Syyu gcc-fortran
-\end{verbatim}
-Mentionnons qu'on a besoin de NetCDF aussi, alors -- si l'on ne l'a pas déjà -- on peut l'installer à l'aide de
-\begin{verbatim}
- >>> sudo pacman -S netcdf-fortran 
-\end{verbatim}
-et on peut vérifier l'installation à l'aide de
-\begin{verbatim}
- >>> nc-config --version
- OUT /usr/bin/nc-config
-\end{verbatim}
-puis trouver où il est installé à l'aide
-\begin{verbatim}
- >>> which nc-config
- OUT /usr/bin/nc-config
-\end{verbatim}
-Finalement, il faut ajouter quelques lignes à notre fichier bash. Grossièrement, on ajoute le dossier \emph{bin} et le dossier \emph{exe} à notre \emph{\$PATH}, ainsi que les configurations pour utiliser NetCDF. Donc, on met
-\begin{verbatim}
- >>> export WWATCH3_NETCDF=NC4
- >>> export NETCDF_CONFIG=/usr/bin/nc-config
- >>> PATH=$PATH:/home/charlesedouard/Desktop/Travail/ww3/bin
- >>> PATH=$PATH:/home/charlesedouard/Desktop/Travail/ww3/exe
- >>> export PATH
-\end{verbatim}
-Et tout devrait être dans la poche, même s'il y aura certainnement quelques ajustement à faire.
-\subsection{Compilation du modèle}
-\label{sec:orgd950d23}
-
-Dans le dossier \emph{bin}, on peut faire
-\begin{verbatim}
- >>> ./w3_setup /home/charlesedouardl/Desktop/Travail/wavewatch3 -c gfortran -s lizotte
-\end{verbatim}
-pour s'assurer qu'on utilise les switches désirées. Ensuite, on peut faire le fameux
-\begin{verbatim}
- >>> ./w3_make
-\end{verbatim}
-Finalement, il faut souvent repartir le terminal parce que le \emph{.bashrc} n'a pas été mis à jour.
-Mentionnons aussi qu'il arrive souvent que le fichier de compilation ne fonctionne vraiment pas bien. Pour régler le problème, il faut s'assurer que la compilation fonctionne bien à l 'aide de \emph{w3 make}, comme mentionné plus haut.\bigskip
-
-Dans le cas qui nous intéresse, j'ai du revoir les options de compilation en ajoutant la ligne
-\begin{verbatim}
-`$NETCDF_CONFIG --fflags`
-\end{verbatim}
-dans le fichier de compilation \emph{comp.gfortran}, comme on peut le voir à la ligne suivante.
-\begin{verbatim}
-# netcdf include dir
-if [ "$netcdf_compile" = 'yes']
-then
-    case $WWATCH3_NETCDF in
-	NC3) opt="$opt -I$NETCDF_INCDIR" ;;
-	NC4) if [ "$mpi_mod" = 'no' ]; then comp="`$NETCDF_CONFIG --fc`"; fi
-	     opt="$opt -I`$NETCDF_CONFIG --includedir` `$NETCDF_CONFIG --fflags`" ;;
-    esac
-fi
-\end{verbatim}
-Maintenant, ça marche très bien. Sommairement, mon compilateur \emph{gfortran} était incapable de trouver les modules \emph{NetCDF} étant donné que le fichier \emph{netcdf.mod} n'était pas dans mon répertoire courant, tout en étant bien installé. Par contre, la commande
-\begin{verbatim}
- >>> nc-config --fflags
-\end{verbatim}
-nous amenait directement au bon dossier. C'est pourquoi elle a été ajouté. C'est un peu ridicule de perdre du temps là-dessus, considérant que sur une grappe de calcul ou un système universitaire, je n'aurais jamais eu ce problème.
-\subsection{Switches du modèle}
-\label{sec:org81ffd2f}
-
-Alors maintenant, il faut les bonnes \emph{switches}, mais c'est un peu ça le coeur de la question, on est là pour faire un ménage là-dedans. Donc, je ne m'étendrai pas dans les détails, seulement mentionner que nos input sont des fichiers de type \emph{NetCDF} et donc que ça nous prend la \emph{switch} NC4, d'où le problème de la section précédente. \bigskip
-
-Nous utilisons les \emph{switches} 
-\begin{verbatim}
-F90 SHRD LRB4 NOPA NOGRB PR3 FLX2 LN0 ST2 NL1 BT0 IC0 IS0 REF1 DB0 TR0 BS0 NC4
-TRKNC UQ XX0 WNT1 WNX0 CRT1 CRX0 O0 O1 O2 02c 
-\end{verbatim}
-\subsection{Paramètres du modèle (Surtout pour la grille)}
-\label{sec:org8436cb7}
-
-On se souvient de la maîtrise de Eliot Bismuth, on doit donc garder en mémoire le tableau 4 qui contient toutes les infos (Voir tableau \ref{tab:org9290584} suivant).
-La plupart de ces infos vont servir à décrire la fonction \emph{ww3 grid.inp}., genre avec le pas de temps, le nombre de fréquences, etc. 
+Dans le \href{Fichiers\_pdf/rapport-2024-09-20.pdf}{rapport du 20 septembre}, nous avions un petit tableau qui résumait les expériences de Bismuth.
 
 \begin{table}[!h]
-\caption{\label{tab:org9290584}Tableau tiré de la maîtrise d'Éliot Bimuth.}
+\caption{\label{tab:org2298faf}Tableau tiré de la maîtrise d'Éliot Bimuth.}
 \centering
 \begin{tabular}{lcrc}
 \hline
@@ -396,9 +287,6 @@ Nombre de fréquences du modèle & \(n_f\) & 61 & --\\
 \end{table}
 
 
-Mentionnons aussi que d'autres quantités sont importantes lorsqu'on crée la configuration du modèle.
-C'est pourquoi le tableau suivant est important.
-
 \begin{table}[!h]
 \caption{D'autres quantités qui seraient importante lors de la modélisation avec Wavewatch III.}
 \centering
@@ -420,20 +308,28 @@ Nombre de directions & \(n_\theta\) & 36 & -- & \autocite[Voir][switch NL2]{wwii
 \hline
 \end{tabular}
 \end{table}
+\subsubsection{Carte de points de Wavewatch III}
+\label{sec:org0863776}
 
-Mentionnons que dans Wavewatch III, il est impossible d'avoir un vecteur de fréquence dont les \(\Delta f\) sont les même, comme chaque fréquence est le produit d'une ancienne fréquence avec le \emph{Frequency increment factor} (ce qui est un peu débile selon moi).
-Il semble que j'ai clairement fait des erreurs avec ça dans le modèle avec Louis-Philippe.
-Ça sera définitivement à vérifier.
-\subsection{Grille}
-\label{sec:orgf6eae44}
+Grossièrement, on voudrait que l'entrée et la sortie de notre canal ne soit pas dans le modèle. Concrétement, ça se traduit pas l'abscence de murs sur les côtés ouest et est, mais des murs sur les côtés nord et sud. Ainsi, la \emph{mapsta} devrait ressembler à
+\[
+\begin{matrix}
+ 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+ 3 & 2 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 3 \\
+ 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+\end{matrix}
+\]
 
-Dans la figure suivante, on retrouve toute l'information nécessaire pour recréer le fichier \emph{ww3 grid.inp}.
+Donc visuellement, on voit déjà le canal. Visuellement, on se souvient de ça dans le rapport d'octobre :
 
 \begin{figure}
 \begin{center}
 \begin{tikzpicture}
-   \fill [red!10] (0,0) rectangle (10,3);
-   \fill [blue!10] (1,1) rectangle (9,2);
+   \fill [ForestGreen!10] (0,0) rectangle (10,3);
+   \fill [blue!15] (1,1) rectangle (9,2);
+   \fill [white] (0,1) rectangle (1,2);
+   \fill [white] (9,1) rectangle (10,2);
+   \fill [red!15] (1,1) rectangle (2,2);
    \draw[dotted] (0,0) grid (10,3);
    \draw[thick] (0,0) rectangle (10,3);
 %%%
@@ -456,13 +352,47 @@ Dans la figure suivante, on retrouve toute l'information nécessaire pour recré
    \draw (0.5,0.5) node [right] {(25m,25m)};
 \end{tikzpicture}
 \end{center}
-\caption{\label{org231cb10}Grille initiale fournie à Wavewatch III.}
+\caption{\label{org8d5f46a}Grille initiale fournie à Wavewatch III.}
 \end{figure}
-\subsection{Vent}
-\label{sec:org144c21d}
+\subsubsection{Introduction des conditions frontières dans Wavewatch III}
+\label{sec:orgbf8cb5d}
 
-Même chose qu'en haut, mais en format NetCDF. Mentionnons qu'on met un vent homogène de 10 à 20 \(\mathrm{ms}^{-1}\) sur tout le domaine pour l'instant. Par contre, il semble que le modèle ne le prenne pas en compte. C'est surement un problème de flux d'énergie. 
-\section{Bibliographie}
-\label{sec:org4e3e49d}
+En premier lieu, il faut le mentionner dans la création de notre fichier \emph{mapsta}. Le nombre 2 permet de dire au modèle qu'on veut des points frontière. Ensuite, selon la documentation de Wavewatch : \medskip
+\begin{quote}
+\emph{If the actual input data is not defined in the actual wave model run, the initial conditions will be applied as constant boundary conditions.}\medskip
+\end{quote}
+Par conséquent, on peut ne rien définir dans le fichier \emph{ww3 grid}, puis ensuite changer les conditions initiales. L'idée derrière serait donc de laisser le modèle se stabiliser graduellement autour des conditions initiales.\bigskip
+
+Il faut donc créer un spectre Jonswap \autocite{hasselmann1973measurements}. Nous avions pris quelques notes dans notre \href{rapport-2024-08-23.pdf}{rapport du 23 aout 2024} pour synthétiser les données entrantes d'Eliot Bismuth.
+
+\begin{center}
+\begin{tabular}{lcccl}
+\hline
+\hline
+Description & Symbole & Valeur & Unités & Notes\\
+\hline
+Constante pour Goda & -- & 0.205 & ? & \Textcite{goda1988variablity}\\
+\emph{Energy level of PM spectrum} & \(\alpha\) & 0.0081 & -- & \Textcite{wwiii2016user} (Constante de Phillips)\\
+\emph{Peak frequency} & \(f_m\) & 1/6 & Hz & (Maîtrise d'Eliot Bismuth)\\
+\emph{Peak enhancement factor} & \(\gamma\) & 3.3 & -- & \Textcite{hasselmann1973measurements,wwiii2016user}\\
+\emph{Spread with GAMMA} & \(\sigma_A\) & 0.07 & -- & \Textcite{hasselmann1973measurements,wwiii2016user}\\
+\emph{Spread with GAMMA} & \(\sigma_B\) & 0.09 & -- & \Textcite{hasselmann1973measurements,wwiii2016user}\\
+Moyenne directionnelle & \(\overline{\theta}\) & 90 & degrés & \Textcite{wwiii2016user} (Convention océanographique)\\
+\hline
+\end{tabular}
+\end{center}
+
+L'Équation devrait ressembler à (selon la version de \Textcite{goda1988variablity}),
+\begin{equation}
+   E_{JONSWAP-Goda}(f) = 0.205 H_s^2 \qty(\frac{f_p^4}{f^5}) \exp{-\frac{5}{4}\qty(\frac{f_p}{f})^4} \times 3.3^{\exp{\frac{-(f-f_p)^2}{2\sigma^2 f_p^2}}},
+\end{equation}
+ou plutôt (selon la version \Textcite{hasselmann1973measurements}), 
+\begin{align}
+   && E_{JONSWAP}(f) = \alpha g^2 (2\pi)^{-4} f^{-5} \exp[- \frac{5}{4} \qty(\frac{f}{f_m})^{-4}]\times \gamma^{g(f,\sigma)}
+   && \text{où}
+   && g(f,\sigma) = \exp[ \frac{-(f-f_m)^2}{2\sigma^2f_m^2}]. &&
+\end{align}
+Selon \Textcite{goda1988variablity} et \Textcite{hasselmann1973measurements}, \(\alpha = 0.205\), mais selon Dugas \(\alpha = 0.2044\). Il a surement une citation que je n'ai pas.
+
 \printbibliography
 \end{document}
