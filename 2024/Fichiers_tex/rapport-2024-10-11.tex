@@ -1,4 +1,4 @@
-% Created 2024-10-10 Thu 15:06
+% Created 2024-10-21 Mon 14:56
 % Intended LaTeX compiler: pdflatex
 \documentclass[10pt]{article}
 % =================================BASE====================================%
@@ -231,28 +231,28 @@ Police d'écriture : \textbf{CMU Serif Roman}
 \label{sec:org3ede40e}
 
 \begin{itemize}
-\item\relax [2/4] \textbf{Terminer la reproduction des résultats de Bismuth avec le set-up de Jeremy et Dany} : J'ai eu quelques problèmes avec Wavewatch à l'installation. Par la suite, les \emph{switches} de \emph{Wavewatch III} que Jérémy m'a fournit ont activé quelques champs dont je ne connaissais pas l'existence.
+\item\relax [3/4] \textbf{Terminer la reproduction des résultats de Bismuth avec le set-up de Jeremy et Dany} : J'ai eu quelques problèmes avec Wavewatch à l'installation. Par la suite, les \emph{switches} de \emph{Wavewatch III} que Jérémy m'a fournit ont activé quelques champs dont je ne connaissais pas l'existence.
 \begin{itemize}
 \item[{$\boxtimes$}] Il faut reproduire le motif de glace d'Éliot Bismuth;
 \item[{$\boxtimes$}] S'assurer que le données NetCDF entrent bien dans le modèle de vagues;
-\item\relax [0/1] Trouver un moyen de forcer le champ de vagues d'un seul côté seulement;
+\item\relax [2/2] Trouver un moyen de forcer le champ de vagues d'un seul côté seulement;
 \begin{itemize}
-\item[{$\square$}] Modifier la fonction \emph{ww3 grid} pour changer la \emph{mapsta} et inclure des points frontière;
-\item[{$\square$}] Inclusion des points frontière;
+\item[{$\boxtimes$}] Modifier la fonction \emph{ww3 grid} pour changer la \emph{mapsta} et inclure des points frontière;
+\item[{$\boxtimes$}] Inclusion des points frontière;
 \end{itemize}
-\item[{$\square$}] Il faut aussi terminer la fonction de distribution de la glace pour lancer plusieurs tâches en même temps en série;
+\item[{$\boxtimes$}] Il faut aussi terminer la fonction de distribution de la glace pour lancer plusieurs tâches en même temps en série;
 \item[{$\square$}] Conceptualiser un moyen de lire les données sortantes pour le champ de glace. Eliot Bismuth utilisait un rapport du premier moment « \(m_0\) »
 \end{itemize}
 
-\item\relax [0/1] \textbf{Retour à Daniella pour la réalisation du «Word Package II»} : Daniella avait pas mal accepté mon aide par courriel. Elle m'a rajouté dans le Teams du \emph{Word Package II}.
+\item\relax [1/2] \textbf{Retour à Daniella pour la réalisation du «Word Package II»} : Daniella avait pas mal accepté mon aide par courriel. Elle m'a rajouté dans le Teams du \emph{Word Package II}.
 \begin{itemize}
-\item[{$\square$}] Recontacter l'équipe, dont Jérémy.
+\item[{$\boxtimes$}] Recontacter l'équipe, dont Jérémy.
+\item[{$\square$}] Il faut avoir plus d'information de la part de l'ingénieur de Blair. On a très peu d'information sur la manière qu'il fera ses simulation de vagues et de glace.
 \end{itemize}
 
-\item\relax [0/2] \textbf{Lecture du code de Sebastien Dugas pour WAM} :
+\item\relax [0/1] \textbf{Lecture du code de Sebastien Dugas pour WAM} :
 \begin{itemize}
 \item[{$\square$}] Il faut repenser les axes de développement pour s'assurer que le but de ma recherche passe dans les enjeux du milieu.
-\item[{$\square$}] Il faut avoir plus d'information de la part de l'ingénieur de Blair. On a très peu d'information sur la manière qu'il fera ses simulation de vagues et de glace.
 \end{itemize}
 \end{itemize}
 \section{Retour sur l'expérience de Bismuth avec Wavewatch III}
@@ -393,6 +393,17 @@ ou plutôt (selon la version \Textcite{hasselmann1973measurements}),
    && g(f,\sigma) = \exp[ \frac{-(f-f_m)^2}{2\sigma^2f_m^2}]. &&
 \end{align}
 Selon \Textcite{goda1988variablity} et \Textcite{hasselmann1973measurements}, \(\alpha = 0.205\), mais selon Dugas \(\alpha = 0.2044\). Il a surement une citation que je n'ai pas.
+\subsubsection{Lancement de Wavewatch III}
+\label{sec:org34fa489}
+
+Lorsqu'on lance le modèle, on voit apparaître l'avertissement suivant
+\begin{quote}
+\textbf{*} WAVEWATCH III WARNING IN W3IOBC : 
+    INPUT FILE WITH BOUNDARY CONDITIONS NOT FOUND
+    BOUNDARY CONDITIONS WILL NOT BE UPDATED     1
+\end{quote}
+donc on en déduit que la méthode employée plus haut pour y mettre nos \emph{boundary conditions} est bonne. Il ne reste qu'à tester le modèle, en fait.
+
 
 \printbibliography
 \end{document}

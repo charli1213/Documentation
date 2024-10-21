@@ -10,20 +10,20 @@
 
 * Tâches à accomplir pour la semaine
 
-+ [2/4] *Terminer la reproduction des résultats de Bismuth avec le set-up de Jeremy et Dany* : J'ai eu quelques problèmes avec Wavewatch à l'installation. Par la suite, les /switches/ de /Wavewatch III/ que Jérémy m'a fournit ont activé quelques champs dont je ne connaissais pas l'existence.
++ [3/4] *Terminer la reproduction des résultats de Bismuth avec le set-up de Jeremy et Dany* : J'ai eu quelques problèmes avec Wavewatch à l'installation. Par la suite, les /switches/ de /Wavewatch III/ que Jérémy m'a fournit ont activé quelques champs dont je ne connaissais pas l'existence.
   - [X] Il faut reproduire le motif de glace d'Éliot Bismuth;
   - [X] S'assurer que le données NetCDF entrent bien dans le modèle de vagues;
-  - [2/2] Trouver un moyen de forcer le champ de vagues d'un seul côté seulement;
+  - [1/2] Trouver un moyen de forcer le champ de vagues d'un seul côté seulement;
     - [X] Modifier la fonction /ww3 grid/ pour changer la /mapsta/ et inclure des points frontière;
-    - [X] Inclusion des points frontière;
-  - [ ] Il faut aussi terminer la fonction de distribution de la glace pour lancer plusieurs tâches en même temps en série;
+    - [ ] Inclusion des points frontière;
+  - [X] Il faut aussi terminer la fonction de distribution de la glace pour lancer plusieurs tâches en même temps en série;
   - [ ] Conceptualiser un moyen de lire les données sortantes pour le champ de glace. Eliot Bismuth utilisait un rapport du premier moment « $m_0$ »
     
-+ [0/1] *Retour à Daniella pour la réalisation du «Word Package II»* : Daniella avait pas mal accepté mon aide par courriel. Elle m'a rajouté dans le Teams du /Word Package II/.
-  - [ ] Recontacter l'équipe, dont Jérémy. 
++ [1/2] *Retour à Daniella pour la réalisation du «Word Package II»* : Daniella avait pas mal accepté mon aide par courriel. Elle m'a rajouté dans le Teams du /Word Package II/.
+  - [X] Recontacter l'équipe, dont Jérémy. 
   - [ ] Il faut avoir plus d'information de la part de l'ingénieur de Blair. On a très peu d'information sur la manière qu'il fera ses simulation de vagues et de glace.
     
-+ [0/2] *Lecture du code de Sebastien Dugas pour WAM* :
++ [0/1] *Lecture du code de Sebastien Dugas pour WAM* :
   - [ ] Il faut repenser les axes de développement pour s'assurer que le but de ma recherche passe dans les enjeux du milieu.
 
 
@@ -155,5 +155,16 @@ ou plutôt (selon la version [cite/t/c:@hasselmann1973measurements]),
    && g(f,\sigma) = \exp[ \frac{-(f-f_m)^2}{2\sigma^2f_m^2}]. &&
 \end{align}
 Selon [cite/t/c:@goda1988variablity] et [cite/t/c:@hasselmann1973measurements], $\alpha = 0.205$, mais selon Dugas $\alpha = 0.2044$. Il a surement une citation que je n'ai pas.
+
+*** Lancement de Wavewatch III
+
+Lorsqu'on lance le modèle, on voit apparaître l'avertissement suivant
+#+begin_quote
+ *** WAVEWATCH III WARNING IN W3IOBC : 
+     INPUT FILE WITH BOUNDARY CONDITIONS NOT FOUND
+     BOUNDARY CONDITIONS WILL NOT BE UPDATED     1
+#+end_quote
+donc on en déduit que la méthode employée plus haut pour y mettre nos /boundary conditions/ est bonne. Il ne reste qu'à tester le modèle, en fait.
+
 
 #+print_bibliography:
