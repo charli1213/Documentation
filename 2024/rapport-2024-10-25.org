@@ -7,4 +7,70 @@
 #+OPTIONS: toc:nil title:nil 
 #+LaTeX_class: org-report
 
+* Point frontières de Wavewatch
 
+** Ce qui a été fait jusqu'à maintenant
+
+Grossièrement, la configuration est terminée, donc on a des forçage, une carte, etc. Tout ce qu'il reste à faire c'est de créer un spectre permanent qui sera toujours actif aux points frontière. Le gros problème auquel j'ai du faire face la semaine dernière a été de s'assurer que Wavewatch puisse prendre les données entrantes aux points frontières. Donc, cette tache se déclinait en deux parties :
+- *Créer un spectre de vagues sous forme de fichiers NetCDF*. Ça ne m'a pas pris beaucoup de temps, même s'il y a eu ajustements à faire pour s'ajuster à des [[https://wavespectra.readthedocs.io/en/latest/conventions.html][conventions]] sur les données sortantes et entrantes dans les modèles de vagues.
+- *S'assurer que Wavewatch puisse s'accaparer ces données dans son fonctionnement*. Malheureusement, ça ne marche toujours pas, car il semble y avoir des problèmes de compatibilité entre le langage Fortran et Python.
+
+Donc, nous en sommes là. J'ai communiqué avec Jeremy dans le but d'obtenir des fichiers NetCDF entrantes pour comprendre d'où venait mon erreur. J'attend un réponse de sa part.
+
+Entre temps, il existe un module Python qui permet de créer et lire des spectres provenant des plus gros modèles de vagues (SWAN, WW3, etc.) nommé [[https://wavespectra.readthedocs.io/en/latest/index.html][wavespectra]]. Il permet aussi de créer des fonctions de /spreading/, des Jonswap et des Pierson-Moskowitz. J'étais réticent à l'utiliser la semaines dernières, car je croyais être capable de solver le problème de compatibilité, mais je vais mettre mon energie ailleurs.
+
+
+** Module Wavespectra
+
+*** Spectre de Jonswap 
+
+Eliot avait ça : 
+
+#+name:tab:bismuth
+#+attr_latex: :placement [!h]
+#+caption: Tableau tiré de la maîtrise d'Éliot Bimuth.
+|----------------------------------+--------------+--------+-------------------|
+|----------------------------------+--------------+--------+-------------------|
+| <l>                              |     <c>      |    <r> |        <c>        |
+| Description de la variable       |   Symbole    | Valeur |      Unités       |
+|----------------------------------+--------------+--------+-------------------|
+| Taille de la grille              |    $L_x$     |      5 |        km         |
+| Taille des points de grille      |  $\Delta x$  |    500 |         m         |
+| Nombre de points de grille       |    $n_x$     |     10 |        --         |
+| Épaisseur des floes              |     $h$      |    0.5 |         m         |
+| Diamètre moyen des floes         | $\expval{D}$ |    200 |         m         |
+| Période du maximum spectral      |    $T_p$     |      6 |         s         |
+| Fréquence du maximum spectral    |    $f_p$     |    1/6 | $\mathrm{s}^{-1}$ |
+| Hauteur significative des vagues |    $H_s$     |      1 |         m         |
+| Minimum de fréquence du modèle   |  $f_{min}$   |   1/20 | $\mathrm{s}^{-1}$ |
+| Maximum de fréquence du modèle   |  $f_{max}$   |  1/2.5 | $\mathrm{s}^{-1}$ |
+| Nombre de fréquences du modèle   |     $n_f$    |     61 |        --         |
+|----------------------------------+--------------+--------+-------------------|
+
+Bien que Wavewatch propose lui-même une fonction Jonswap comme condition initiale, il ne permet pas vraiment de l'appliquer aux points de conditions frontières. Par contre, le module Python /wavespectra/ le permet. Le module [[https://wavespectra.readthedocs.io/en/latest/index.html][wavespectra]] prend l'équation de Hasselmann, donc
+\begin{equation}
+   E(f) = \alpha g^2(2\pi)^{-4} f^{-5} \exp(\frac{5}{4}\qty(\frac{f}{f_p})^{-4})\cdot\gamma^{[\cdots]}
+\end{equation}
+avec les classique de [cite/t/c:@hasselmann1973measurements], soit
+\begin{align}
+   && \alpha = 0.0081 && \sigma_A = 0.07 && \sigma_B = 0.09 && \gamma = 3.3 &&
+\end{align}
+Le module mentionne que $4\sqrt{m_0} = h_s$, donc qu'il y ait un rapport avec la hauteur significative des vagues. Ça donne ceci, donc ça marche :
+#+attr_latex: :width 0.7\textwidth
+[[file:Figures/figures/jonswap-wavespectra.png]]
+
+*** Spreading (Étalement dans les fréquences)
+
+Avec la fonction tirée de l'article de Cartwright (1963), on obtient un étalement directionnel de la forme (voir le [[https://wavespectra.readthedocs.io/en/latest/construction.html#cartwright-symmetrical-spread][module en ligne]]) : 
+#+attr_latex: :width 0.7\textwidth
+[[file:Figures/figures/spreading.png]]
+
+
+Pour aucune raison, nous prendre un $\sigma$ de 30 degrés. Grossièrement, la fonction d'étalement dans les fréquences devrait avoir la forme : 
+\begin{equation}
+   G(\theta,f)=F(s)cos^{2}\frac{1}{2}(\theta-\theta_{m}),
+\end{equation}
+et on a un spectre résultant  :
+
+#+attr_latex: :width 0.7\textwidth
+file:Figures/figures/jonswap-wavespectra2.png

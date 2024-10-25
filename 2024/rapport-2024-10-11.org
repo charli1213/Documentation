@@ -13,9 +13,9 @@
 + [3/4] *Terminer la reproduction des résultats de Bismuth avec le set-up de Jeremy et Dany* : J'ai eu quelques problèmes avec Wavewatch à l'installation. Par la suite, les /switches/ de /Wavewatch III/ que Jérémy m'a fournit ont activé quelques champs dont je ne connaissais pas l'existence.
   - [X] Il faut reproduire le motif de glace d'Éliot Bismuth;
   - [X] S'assurer que le données NetCDF entrent bien dans le modèle de vagues;
-  - [1/2] Trouver un moyen de forcer le champ de vagues d'un seul côté seulement;
+  - [2/2] Trouver un moyen de forcer le champ de vagues d'un seul côté seulement;
     - [X] Modifier la fonction /ww3 grid/ pour changer la /mapsta/ et inclure des points frontière;
-    - [ ] Inclusion des points frontière;
+    - [X] Inclusion des points frontière;
   - [X] Il faut aussi terminer la fonction de distribution de la glace pour lancer plusieurs tâches en même temps en série;
   - [ ] Conceptualiser un moyen de lire les données sortantes pour le champ de glace. Eliot Bismuth utilisait un rapport du premier moment « $m_0$ »
     
@@ -23,8 +23,8 @@
   - [X] Recontacter l'équipe, dont Jérémy. 
   - [ ] Il faut avoir plus d'information de la part de l'ingénieur de Blair. On a très peu d'information sur la manière qu'il fera ses simulation de vagues et de glace.
     
-+ [0/1] *Lecture du code de Sebastien Dugas pour WAM* :
-  - [ ] Il faut repenser les axes de développement pour s'assurer que le but de ma recherche passe dans les enjeux du milieu.
++ [1/1] *Lecture du code de Sebastien Dugas pour WAM* :
+  - [X] Il faut repenser les axes de développement pour s'assurer que le but de ma recherche passe dans les enjeux du milieu.
 
 
 * Retour sur l'expérience de Bismuth avec Wavewatch III

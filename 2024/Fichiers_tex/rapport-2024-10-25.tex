@@ -1,4 +1,4 @@
-% Created 2024-10-21 Mon 16:33
+% Created 2024-10-22 Tue 14:10
 % Intended LaTeX compiler: pdflatex
 \documentclass[10pt]{article}
 % =================================BASE====================================%
@@ -215,7 +215,7 @@ Police d'écriture : \textbf{CMU Serif Roman}
 \fancyfoot[C]{} 
 % =================================ENTÊTE==================================%
 \author{Charles-Édouard Lizotte}
-\date{11/10/2024}
+\date{25/10/2024}
 \title{Rapport hebdomadaire}
 \newcommand{\thesubtitle}{Contrat Été 2024}
 \hypersetup{
@@ -227,44 +227,31 @@ Police d'écriture : \textbf{CMU Serif Roman}
  pdflang={French}}
 \begin{document}
 
-\section{Tâches à accomplir pour la semaine}
-\label{sec:org3ede40e}
+\section{Point frontières de Wavewatch}
+\label{sec:orgf09cdfc}
 
+\subsection{Ce qui a été fait jusqu'à maintenant}
+\label{sec:orgae0363a}
+
+Grossièrement, la configuration est terminée, donc on a des forçage, une carte, etc. Tout ce qu'il reste à faire c'est de créer un spectre permanent qui sera toujours actif aux points frontière. Le gros problème auquel j'ai du faire face la semaine dernière a été de s'assurer que Wavewatch puisse prendre les données entrantes aux points frontières. Donc, cette tache se déclinait en deux parties :
 \begin{itemize}
-\item\relax [3/4] \textbf{Terminer la reproduction des résultats de Bismuth avec le set-up de Jeremy et Dany} : J'ai eu quelques problèmes avec Wavewatch à l'installation. Par la suite, les \emph{switches} de \emph{Wavewatch III} que Jérémy m'a fournit ont activé quelques champs dont je ne connaissais pas l'existence.
-\begin{itemize}
-\item[{$\boxtimes$}] Il faut reproduire le motif de glace d'Éliot Bismuth;
-\item[{$\boxtimes$}] S'assurer que le données NetCDF entrent bien dans le modèle de vagues;
-\item\relax [1/2] Trouver un moyen de forcer le champ de vagues d'un seul côté seulement;
-\begin{itemize}
-\item[{$\boxtimes$}] Modifier la fonction \emph{ww3 grid} pour changer la \emph{mapsta} et inclure des points frontière;
-\item[{$\square$}] Inclusion des points frontière;
-\end{itemize}
-\item[{$\boxtimes$}] Il faut aussi terminer la fonction de distribution de la glace pour lancer plusieurs tâches en même temps en série;
-\item[{$\square$}] Conceptualiser un moyen de lire les données sortantes pour le champ de glace. Eliot Bismuth utilisait un rapport du premier moment « \(m_0\) »
+\item \textbf{Créer un spectre de vagues sous forme de fichiers NetCDF}. Ça ne m'a pas pris beaucoup de temps, même s'il y a eu ajustements à faire pour s'ajuster à des \href{https://wavespectra.readthedocs.io/en/latest/conventions.html}{conventions} sur les données sortantes et entrantes dans les modèles de vagues.
+\item \textbf{S'assurer que Wavewatch puisse s'accaparer ces données dans son fonctionnement}. Malheureusement, ça ne marche toujours pas, car il semble y avoir des problèmes de compatibilité entre le langage Fortran et Python.
 \end{itemize}
 
-\item\relax [1/2] \textbf{Retour à Daniella pour la réalisation du «Word Package II»} : Daniella avait pas mal accepté mon aide par courriel. Elle m'a rajouté dans le Teams du \emph{Word Package II}.
-\begin{itemize}
-\item[{$\boxtimes$}] Recontacter l'équipe, dont Jérémy.
-\item[{$\square$}] Il faut avoir plus d'information de la part de l'ingénieur de Blair. On a très peu d'information sur la manière qu'il fera ses simulation de vagues et de glace.
-\end{itemize}
+Donc, nous en sommes là. J'ai communiqué avec Jeremy dans le but d'obtenir des fichiers NetCDF entrantes pour comprendre d'où venait mon erreur. J'attend un réponse de sa part.
 
-\item\relax [0/1] \textbf{Lecture du code de Sebastien Dugas pour WAM} :
-\begin{itemize}
-\item[{$\square$}] Il faut repenser les axes de développement pour s'assurer que le but de ma recherche passe dans les enjeux du milieu.
-\end{itemize}
-\end{itemize}
-\section{Retour sur l'expérience de Bismuth avec Wavewatch III}
-\label{sec:org717717b}
+Entre temps, il existe un module Python qui permet de créer et lire des spectres provenant des plus gros modèles de vagues (SWAN, WW3, etc.) nommé \href{https://wavespectra.readthedocs.io/en/latest/index.html}{wavespectra}. Il permet aussi de créer des fonctions de \emph{spreading}, des Jonswap et des Pierson-Moskowitz. J'étais réticent à l'utiliser la semaines dernières, car je croyais être capable de solver le problème de compatibilité, mais je vais mettre mon energie ailleurs.
+\subsection{Module Wavespectra}
+\label{sec:org63a6326}
 
-\subsection{Ce qu'on doit implémenter en terme de glace dans Wavewatch III}
-\label{sec:org6693ef6}
+\subsubsection{Spectre de Jonswap}
+\label{sec:org970aafa}
 
-Dans le \href{Fichiers\_pdf/rapport-2024-09-20.pdf}{rapport du 20 septembre}, nous avions un petit tableau qui résumait les expériences de Bismuth.
+Eliot avait ça : 
 
 \begin{table}[!h]
-\caption{\label{tab:org2298faf}Tableau tiré de la maîtrise d'Éliot Bimuth.}
+\caption{\label{tab:org698965d}Tableau tiré de la maîtrise d'Éliot Bimuth.}
 \centering
 \begin{tabular}{lcrc}
 \hline
@@ -286,124 +273,34 @@ Nombre de fréquences du modèle & \(n_f\) & 61 & --\\
 \end{tabular}
 \end{table}
 
-
-\begin{table}[!h]
-\caption{D'autres quantités qui seraient importante lors de la modélisation avec Wavewatch III.}
-\centering
-\begin{tabular}{lcrcl}
-\hline
-\hline
-Description & Symbole & Valeur & Unités & Note\\
-\hline
-Champ gravitationnel & \(g\) & 9.81 & \(\mathrm{ms}^{-2}\) & --\\
-Vitesse de phase & \(c_p\) & (max) 38.52 & \(\mathrm{ms}^{-1}\) & \(c_p = g/\omega\)\\
-Vitesse de groupe & \(c_g\) & (max) 19.26 & \(\mathrm{ms}^{-1}\) & \(c_g = c_p/2\)\\
-Pas de temps & \(\Delta t\) & 25.00 & s & \(\Delta t < \Delta x/c^{max}_g\)\\
-\hline
-Nombre de fréquences & \(nf\) & 40 & -- & \autocite[Voir][switch NL2]{wwiii2016user}\\
-\emph{Freq. Increment Factor} & \(IF\) & 1.07 & -- & \autocite[Voir][switch NL2]{wwiii2016user}\\
-Fréquence initiale & \(f_{min}\) & 0.05 & \(\mathrm{s}^{-1}\) & Comme suggéré par Eliot Bismuth\\
-Fréquences maximale & \(f_{max}\) & -- & \(\mathrm{s}^{-1}\) & \(f_{max} = f_{min}\cdot(IF)^{nf}\)\\
-Nombre de directions & \(n_\theta\) & 36 & -- & \autocite[Voir][switch NL2]{wwiii2016user}\\
-\hline
-\end{tabular}
-\end{table}
-\subsubsection{Carte de points de Wavewatch III}
-\label{sec:org0863776}
-
-Grossièrement, on voudrait que l'entrée et la sortie de notre canal ne soit pas dans le modèle. Concrétement, ça se traduit pas l'abscence de murs sur les côtés ouest et est, mais des murs sur les côtés nord et sud. Ainsi, la \emph{mapsta} devrait ressembler à
-\[
-\begin{matrix}
- 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
- 3 & 2 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 3 \\
- 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
-\end{matrix}
-\]
-
-Donc visuellement, on voit déjà le canal. Visuellement, on se souvient de ça dans le rapport d'octobre :
-
-\begin{figure}
-\begin{center}
-\begin{tikzpicture}
-   \fill [ForestGreen!10] (0,0) rectangle (10,3);
-   \fill [blue!15] (1,1) rectangle (9,2);
-   \fill [white] (0,1) rectangle (1,2);
-   \fill [white] (9,1) rectangle (10,2);
-   \fill [red!15] (1,1) rectangle (2,2);
-   \draw[dotted] (0,0) grid (10,3);
-   \draw[thick] (0,0) rectangle (10,3);
-%%%
-   \draw[|{latex}-{latex}|] (10.25,0) -- (10.25,3);
-   \draw (10.25,1.5) node [rotate=90,below] {$150$ m};
-   \draw[|{latex}-{latex}|] (0,-0.25) -- (10,-0.25);
-   \draw (5,-0.5) node [below] {$500$ m};
-%%%
-   \filldraw [dotted] (-0.25,0.5) -- (0.5,0.5);
-   \filldraw [dotted] (-0.25,2.5) -- (0.5,2.5) circle (1pt);
-   \draw [decoration={brace}, decorate, thick] (-0.25,0.5) -- (-0.25,2.5);
-   \draw (-0.5,1.5) node [rotate=90,above] { 25m à 125m};
-%%%
-   \filldraw [dotted] (0.5,3.25) -- (0.5,2.5);
-   \filldraw [dotted] (9.5,3.25) -- (9.5,2.5) circle (1pt);
-   \draw [decoration={brace}, decorate, thick] (0.5,3.25) -- (9.5,3.25);
-   \draw (5,3.5) node [above] { 25m à 475m};
- %%%
-   \filldraw (0.5,0.5) circle (1pt);
-   \draw (0.5,0.5) node [right] {(25m,25m)};
-\end{tikzpicture}
-\end{center}
-\caption{\label{org8d5f46a}Grille initiale fournie à Wavewatch III.}
-\end{figure}
-\subsubsection{Introduction des conditions frontières dans Wavewatch III}
-\label{sec:orgbf8cb5d}
-
-En premier lieu, il faut le mentionner dans la création de notre fichier \emph{mapsta}. Le nombre 2 permet de dire au modèle qu'on veut des points frontière. Ensuite, selon la documentation de Wavewatch : \medskip
-\begin{quote}
-\emph{If the actual input data is not defined in the actual wave model run, the initial conditions will be applied as constant boundary conditions.}\medskip
-\end{quote}
-Par conséquent, on peut ne rien définir dans le fichier \emph{ww3 grid}, puis ensuite changer les conditions initiales. L'idée derrière serait donc de laisser le modèle se stabiliser graduellement autour des conditions initiales.\bigskip
-
-Il faut donc créer un spectre Jonswap \autocite{hasselmann1973measurements}. Nous avions pris quelques notes dans notre \href{rapport-2024-08-23.pdf}{rapport du 23 aout 2024} pour synthétiser les données entrantes d'Eliot Bismuth.
-
-\begin{center}
-\begin{tabular}{lcccl}
-\hline
-\hline
-Description & Symbole & Valeur & Unités & Notes\\
-\hline
-Constante pour Goda & -- & 0.205 & ? & \Textcite{goda1988variablity}\\
-\emph{Energy level of PM spectrum} & \(\alpha\) & 0.0081 & -- & \Textcite{wwiii2016user} (Constante de Phillips)\\
-\emph{Peak frequency} & \(f_m\) & 1/6 & Hz & (Maîtrise d'Eliot Bismuth)\\
-\emph{Peak enhancement factor} & \(\gamma\) & 3.3 & -- & \Textcite{hasselmann1973measurements,wwiii2016user}\\
-\emph{Spread with GAMMA} & \(\sigma_A\) & 0.07 & -- & \Textcite{hasselmann1973measurements,wwiii2016user}\\
-\emph{Spread with GAMMA} & \(\sigma_B\) & 0.09 & -- & \Textcite{hasselmann1973measurements,wwiii2016user}\\
-Moyenne directionnelle & \(\overline{\theta}\) & 90 & degrés & \Textcite{wwiii2016user} (Convention océanographique)\\
-\hline
-\end{tabular}
-\end{center}
-
-L'Équation devrait ressembler à (selon la version de \Textcite{goda1988variablity}),
+Bien que Wavewatch propose lui-même une fonction Jonswap comme condition initiale, il ne permet pas vraiment de l'appliquer aux points de conditions frontières. Par contre, le module Python \emph{wavespectra} le permet. Le module \href{https://wavespectra.readthedocs.io/en/latest/index.html}{wavespectra} prend l'équation de Hasselmann, donc
 \begin{equation}
-   E_{JONSWAP-Goda}(f) = 0.205 H_s^2 \qty(\frac{f_p^4}{f^5}) \exp{-\frac{5}{4}\qty(\frac{f_p}{f})^4} \times 3.3^{\exp{\frac{-(f-f_p)^2}{2\sigma^2 f_p^2}}},
+   E(f) = \alpha g^2(2\pi)^{-4} f^{-5} \exp(\frac{5}{4}\qty(\frac{f}{f_p})^{-4})\cdot\gamma^{[\cdots]}
 \end{equation}
-ou plutôt (selon la version \Textcite{hasselmann1973measurements}), 
+avec les classique de \Textcite{hasselmann1973measurements}, soit
 \begin{align}
-   && E_{JONSWAP}(f) = \alpha g^2 (2\pi)^{-4} f^{-5} \exp[- \frac{5}{4} \qty(\frac{f}{f_m})^{-4}]\times \gamma^{g(f,\sigma)}
-   && \text{où}
-   && g(f,\sigma) = \exp[ \frac{-(f-f_m)^2}{2\sigma^2f_m^2}]. &&
+   && \alpha = 0.0081 && \sigma_A = 0.07 && \sigma_B = 0.09 && \gamma = 3.3 &&
 \end{align}
-Selon \Textcite{goda1988variablity} et \Textcite{hasselmann1973measurements}, \(\alpha = 0.205\), mais selon Dugas \(\alpha = 0.2044\). Il a surement une citation que je n'ai pas.
-\subsubsection{Lancement de Wavewatch III}
-\label{sec:org34fa489}
+Le module mentionne que \(4\sqrt{m_0} = h_s\), donc qu'il y ait un rapport avec la hauteur significative des vagues. Ça donne ceci, donc ça marche :
+\begin{center}
+\includegraphics[width=0.7\textwidth]{Figures/figures/jonswap-wavespectra.png}
+\end{center}
+\subsubsection{Spreading (Étalement dans les fréquences)}
+\label{sec:orgb3b3a3d}
 
-Lorsqu'on lance le modèle, on voit apparaître l'avertissement suivant
-\begin{quote}
-\textbf{*} WAVEWATCH III WARNING IN W3IOBC : 
-    INPUT FILE WITH BOUNDARY CONDITIONS NOT FOUND
-    BOUNDARY CONDITIONS WILL NOT BE UPDATED     1
-\end{quote}
-donc on en déduit que la méthode employée plus haut pour y mettre nos \emph{boundary conditions} est bonne. Il ne reste qu'à tester le modèle, en fait.
+Avec la fonction tirée de l'article de Cartwright (1963), on obtient un étalement directionnel de la forme (voir le \href{https://wavespectra.readthedocs.io/en/latest/construction.html\#cartwright-symmetrical-spread}{module en ligne}) : 
+\begin{center}
+\includegraphics[width=0.7\textwidth]{Figures/figures/spreading.png}
+\end{center}
 
 
-\printbibliography
+Pour aucune raison, nous prendre un \(\sigma\) de 30 degrés. Grossièrement, la fonction d'étalement dans les fréquences devrait avoir la forme : 
+\begin{equation}
+   G(\theta,f)=F(s)cos^{2}\frac{1}{2}(\theta-\theta_{m}),
+\end{equation}
+et on a un spectre résultant  :
+
+\begin{center}
+\includegraphics[width=0.7\textwidth]{Figures/figures/jonswap-wavespectra2.png}
+\end{center}
 \end{document}
