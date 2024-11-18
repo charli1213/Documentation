@@ -1,4 +1,4 @@
-% Created 2024-11-12 Tue 12:21
+% Created 2024-11-13 Wed 13:09
 % Intended LaTeX compiler: pdflatex
 \documentclass[10pt]{article}
 % =================================BASE====================================%
@@ -215,7 +215,7 @@ Police d'écriture : \textbf{CMU Serif Roman}
 \fancyfoot[C]{} 
 % =================================ENTÊTE==================================%
 \author{Charles-Édouard Lizotte}
-\date{11/10/2024}
+\date{15/11/2024}
 \title{Rapport hebdomadaire}
 \newcommand{\thesubtitle}{Contrat Été 2024}
 \hypersetup{
@@ -227,100 +227,126 @@ Police d'écriture : \textbf{CMU Serif Roman}
  pdflang={French}}
 \begin{document}
 
-\section{Tâches à accomplir pour la semaine}
-\label{sec:org3ede40e}
+\mytitlepage
+\tableofcontents\newpage
+\section{Switches de glace et le modèle}
+\label{sec:orga7e46d6}
 
-\begin{itemize}
-\item\relax [3/4] \textbf{Terminer la reproduction des résultats de Bismuth avec le set-up de Jeremy et Dany} : J'ai eu quelques problèmes avec Wavewatch à l'installation. Par la suite, les \emph{switches} de \emph{Wavewatch III} que Jérémy m'a fournit ont activé quelques champs dont je ne connaissais pas l'existence.
-\begin{itemize}
-\item[{$\boxtimes$}] Il faut reproduire le motif de glace d'Éliot Bismuth;
-\item[{$\boxtimes$}] S'assurer que le données NetCDF entrent bien dans le modèle de vagues;
-\item\relax [2/2] Trouver un moyen de forcer le champ de vagues d'un seul côté seulement;
-\begin{itemize}
-\item[{$\boxtimes$}] Modifier la fonction \emph{ww3 grid} pour changer la \emph{mapsta} et inclure des points frontière;
-\item[{$\boxtimes$}] Inclusion des points frontière;
-\end{itemize}
-\item[{$\boxtimes$}] Il faut aussi terminer la fonction de distribution de la glace pour lancer plusieurs tâches en même temps en série;
-\item[{$\square$}] Conceptualiser un moyen de lire les données sortantes pour le champ de glace. Eliot Bismuth utilisait un rapport du premier moment « \(m_0\) »
-\end{itemize}
+\subsection{Mise en contexte}
+\label{sec:org17366ad}
 
-\item\relax [1/2] \textbf{Retour à Daniella pour la réalisation du «Word Package II»} : Daniella avait pas mal accepté mon aide par courriel. Elle m'a rajouté dans le Teams du \emph{Word Package II}.
+\textit{<2024-11-11 Mon> } Où en sommes-nous aujourd'hui? Le modèle est capable d'assimiler tous les fichiers d'input de ma configuration. Par contre, la routine du modèle \emph{ww3 shel} est incapable d'assimiler certains fichiers de glace, comme le diamètre moyen des floes dans une case \(\expval{D}\).\bigskip
+
+Essentiellement, la routine \emph{ww3 shel} prend 4 fichiers d'input, soit
 \begin{itemize}
-\item[{$\boxtimes$}] Recontacter l'équipe, dont Jérémy.
-\item[{$\square$}] Il faut avoir plus d'information de la part de l'ingénieur de Blair. On a très peu d'information sur la manière qu'il fera ses simulation de vagues et de glace.
+\item \textbf{Ice param. 1} : La \emph{ice thickness}.
+\item \textbf{Ice param. 5} : Le \emph{mean ice diameter}.
+\item \textbf{Wind} : Le vent.
+\item \textbf{Ice field} : La concentration de glace.
 \end{itemize}
 
-\item\relax [1/1] \textbf{Lecture du code de Sebastien Dugas pour WAM} :
+J'ai pris les \emph{switches} que Jeremy m'avait données. Donc,la \emph{switch} de glace, c'est \textbf{IC4}, par contre je n'ai pas pris letemps de définir une \emph{Ice method} dans la routine \emph{ww3 grid}. La \emph{switch} IC4 propose six méthodes différentes. Je vais prendre celle qui ressemble le plus à la maîtrise d'Eliot Bismuth, soit le \emph{scaling} polynomial de \Textcite{kohout2008elastic}.\bigskip
+
+Donc, est-ce que ça vient des \emph{switches} ou est-ce que mes fichiers d'input sont mal construits? Je pense que ça vient des \emph{switches}, c'est pourquoi, je refais la mise à niveau que Dany voulait, juste ici. \medskip
+
+\textit{<2024-11-13 Wed> } Il a malheureusement été prouvé que mon problème venait de mes \emph{inputs}, plutôt que des \emph{switches}\ldots{}
+\subsection{Remise en contexte sur les switches}
+\label{sec:orgb72351f}
+
+Selon la documentation de Wavewatch \autocite[p.16]{wwiii2016user}, tous les termes sont \emph{scalés} par la concentration de glace \(f_i\). Lorsqu'on lance la routine d'assimilation de la grille \emph{ww3 grid}, on obtient
+
+\begin{quote}
+\emph{Dissipation via ice parameters (SIC4).}
+
+\emph{Sice will be calculated using Empirical method.}
+
+\emph{Required field input: ice parameters (varies).}
+
+\emph{\&SIC4}
+
+\emph{IC4METHOD=1          ,}
+
+\emph{IC4KI= 10*0.00000000      ,}
+
+\emph{IC4FC= 10*0.00000000      ,}
+\end{quote}
+
+Donc, c'est très peu d'information. Selon la documentation, il nous faut quand même l'épaisseur de la glace. Pourtant, selon la documentation \autocite{wwiii2016user}, 
+\subsection{Switch IC4}
+\label{sec:org46e973d}
+
+Dans la version que Jeremy m'avait donnée, il utilisait la \emph{switch} IC4. Selon la documentation,
+
+\begin{quote}
+\emph{Frequency-dependent damping by sea ice.}
+\end{quote}
+
+Voyons ce que cette \emph{switch} nous demande en terme d'inputs, parce le modèle ne semble pas avoir besoin du \emph{ice parameter 5}, soit le diamètre moyen des floes (\emph{ice diameter}). En fait, ça tombe sous le sens, parce qu'il n'y a aucune mention de la taille des floes dans la documentation, même si initialement ça venait de l'article de \Textcite{kohout2008elastic}, il me semble. \medskip
+
+Selon la documentation, la méthode \emph{frequency dependent} semble venir de C. Collins et E. Rogers (Faudrait vérifier cette info). Il faut mettre un ICE4METHOD dans la \emph{namelist} de la routine \emph{ww3 grid}. Les méthodes 1 à 6 existent.
 \begin{itemize}
-\item[{$\boxtimes$}] Il faut repenser les axes de développement pour s'assurer que le but de ma recherche passe dans les enjeux du milieu.
+\item 1) an exponential fit to the field data of Wadhams et al. (1988),
+\item 2) the polynomial fit in Meylan et al. (2014),
+\item 3) a quadratic fit to the calculations of Kohout and Meylan (2008) given in Horvat and Tziperman (2015),
+\item 4) Eq. 1 of Kohout et al. (2014) qui reprend les polynomes de \Textcite{kohout2008elastic}.
+\item 5) a simple step function with up to 4 steps (maybe nonstationary and non-uniform), and
+\item 6) a simple step function with up to 10 steps (must be stationary and uniform).
 \end{itemize}
-\end{itemize}
-\section{Retour sur l'expérience de Bismuth avec Wavewatch III}
-\label{sec:org717717b}
+\subsection{Inputs}
+\label{sec:orgc19de2a}
 
-\subsection{Ce qu'on doit implémenter en terme de glace dans Wavewatch III}
-\label{sec:org6693ef6}
+\textit{<2024-11-05 Tue> } Je crois que j'ai trouvé la source du problème. Tout viendrait peut-être de la convention océanographique. Si c'est le cas, je trouve ça génant. Selon la documentation du module \emph{wavespectra},
 
-Dans le \href{Fichiers\_pdf/rapport-2024-09-20.pdf}{rapport du 20 septembre}, nous avions un petit tableau qui résumait les expériences de Bismuth.
+\begin{quote}
+\emph{Wave direction coordinate in coming-from convention, with name dir, defined in (required for 2D spectra and directional methods).}
+\end{quote}
+
+Donc il va falloir réévaluer les directions : la routine \emph{ww3 shell} nous permet de définir des champs homogènes -- comme le vent par exemple -- avec une direction. Aussi, la routine \emph{ww3 strt} nous permet de définir un spectre directionnel \(E(f,\theta)\), de JONSWAP ou Pierson-Moskowitz en utilisant la convention océanographique. Par contre, dans cette sous-routine, on nous mentionne explicitement que \(270^\circ\) représente l'ouest. Reste à savoir si on définit nos quantités en amont ou en aval de l'écoulement.\bigskip
+
+\begin{figure}[!h]
+\begin{center}
+\includegraphics[width=0.7\textwidth]{Figures/figures/jonswap-wavespectra3.png}
+\begin{minipage}{0.7\textwidth}
+\caption{Spectre de JONSWAP orienté à 270 degré (convention océanographique). Concrètement, ça signifit que les vagues proviennent de l"ouest et se propagent à l'est.}
+\label{fig:jonswap}
+\end{minipage}
+\end{center}
+\end{figure}
+
+
+\textit{<2024-11-13 Wed> } Après mure inspection, si je construit un fichier NetCDF dans lequel le vent s'écoule en x-y vers l'est, j'obtiens des \emph{output} de directions moyennes des vagues \(\expval{\theta}\) de \(270^\circ\). Donc, on a notre réponse, je crois. On définit la provenance des vagues et non la direction de propagation moyenne des vagues c'est ce qui explique tous les problèmes que j'ai eu jusqu'à maintenant.
+\subsubsection{Grille du modèle}
+\label{sec:org873a8b3}
+
+Toutes les quantités importantes pour la création de la grille de notre simulation sont compilées dans le tableau \ref{tab:org81d7176}. 
 
 \begin{table}[!h]
-\caption{\label{tab:org2298faf}Tableau tiré de la maîtrise d'Éliot Bimuth.}
-\centering
-\begin{tabular}{lcrc}
-\hline
-\hline
-Description de la variable & Symbole & Valeur & Unités\\
-\hline
-Taille de la grille & \(L_x\) & 5 & km\\
-Taille des points de grille & \(\Delta x\) & 500 & m\\
-Nombre de points de grille & \(n_x\) & 10 & --\\
-Épaisseur des floes & \(h\) & 0.5 & m\\
-Diamètre moyen des floes & \(\expval{D}\) & 200 & m\\
-Période du maximum spectral & \(T_p\) & 6 & s\\
-Fréquence du maximum spectral & \(f_p\) & 1/6 & \(\mathrm{s}^{-1}\)\\
-Hauteur significative des vagues & \(H_s\) & 1 & m\\
-Minimum de fréquence du modèle & \(f_{min}\) & 1/20 & \(\mathrm{s}^{-1}\)\\
-Maximum de fréquence du modèle & \(f_{max}\) & 1/2.5 & \(\mathrm{s}^{-1}\)\\
-Nombre de fréquences du modèle & \(n_f\) & 61 & --\\
-\hline
-\end{tabular}
-\end{table}
-
-
-\begin{table}[!h]
-\caption{D'autres quantités qui seraient importante lors de la modélisation avec Wavewatch III.}
+\caption{\label{tab:org81d7176}Quantités importantes en ce qui a trait à la grille de Wavewatch III.}
 \centering
 \begin{tabular}{lcrcl}
 \hline
 \hline
 Description & Symbole & Valeur & Unités & Note\\
 \hline
-Champ gravitationnel & \(g\) & 9.81 & \(\mathrm{ms}^{-2}\) & --\\
-Vitesse de phase & \(c_p\) & (max) 38.52 & \(\mathrm{ms}^{-1}\) & \(c_p = g/\omega\)\\
-Vitesse de groupe & \(c_g\) & (max) 19.26 & \(\mathrm{ms}^{-1}\) & \(c_g = c_p/2\)\\
-Pas de temps & \(\Delta t\) & 25.00 & s & \(\Delta t < \Delta x/c^{max}_g\)\\
-\hline
-Nombre de fréquences & \(nf\) & 40 & -- & \autocite[Voir][switch NL2]{wwiii2016user}\\
 \emph{Freq. Increment Factor} & \(IF\) & 1.07 & -- & \autocite[Voir][switch NL2]{wwiii2016user}\\
-Fréquence initiale & \(f_{min}\) & 0.05 & \(\mathrm{s}^{-1}\) & Comme suggéré par Eliot Bismuth\\
-Fréquences maximale & \(f_{max}\) & -- & \(\mathrm{s}^{-1}\) & \(f_{max} = f_{min}\cdot(IF)^{nf}\)\\
+Fréquence initiale & \(f_{min}\) & 0.05 & \(\mathrm{s}^{-1}\) & Suggéré dans la maîtrise de Bismuth.\\
+Fréquences maximale & \(f_{max}\) & 0.749 & \(\mathrm{s}^{-1}\) & \(f_{max} = f_{min}\cdot(IF)^{nf}\)\\
+Nombre de fréquences & \(nf\) & 40 & -- & \autocite[Voir][switch NL2]{wwiii2016user}\\
 Nombre de directions & \(n_\theta\) & 36 & -- & \autocite[Voir][switch NL2]{wwiii2016user}\\
+Pas de temps & \(\Delta t\) & 20.00 & s & \(\Delta t < \Delta x/c^{max}_g\)\\
+\hline
+Taille de la grille & \(L_x\) & 5 & km & Point de grille d'un GCM.\\
+Taille des points de grille & \(\Delta x\) & 500 & m & 10 divisions.\\
+Nombre de points en x & \(n_x\) & 10 & -- & Petit domaine.\\
+Nombre de points en y & \(n_x\) & 3 & -- & Petit domaine.\\
+points de mer & \(n_{sea}\) & 8 & -- & Voir figure \ref{org45c81c3}\\
+Profondeur du domaine & \(L_z\) & 200 & m & Pas très profond.\\
 \hline
 \end{tabular}
 \end{table}
-\subsubsection{Carte de points de Wavewatch III}
-\label{sec:org0863776}
 
-Grossièrement, on voudrait que l'entrée et la sortie de notre canal ne soit pas dans le modèle. Concrétement, ça se traduit pas l'abscence de murs sur les côtés ouest et est, mais des murs sur les côtés nord et sud. Ainsi, la \emph{mapsta} devrait ressembler à
-\[
-\begin{matrix}
- 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
- 3 & 2 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 3 \\
- 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
-\end{matrix}
-\]
+Concrètement, la grille de fonction ou la \emph{mapsta} devrait ressembler à la figure \ref{org45c81c3}. 
 
-Donc visuellement, on voit déjà le canal. Visuellement, on se souvient de ça dans le rapport d'octobre :
 
 \begin{figure}
 \begin{center}
@@ -352,57 +378,66 @@ Donc visuellement, on voit déjà le canal. Visuellement, on se souvient de ça 
    \draw (0.5,0.5) node [right] {(25m,25m)};
 \end{tikzpicture}
 \end{center}
-\caption{\label{org8d5f46a}Grille initiale fournie à Wavewatch III.}
+\caption{\label{org45c81c3}MAPSTA ou grille de fonction de Wavewatch III.}
 \end{figure}
-\subsubsection{Introduction des conditions frontières dans Wavewatch III}
-\label{sec:orgbf8cb5d}
 
-En premier lieu, il faut le mentionner dans la création de notre fichier \emph{mapsta}. Le nombre 2 permet de dire au modèle qu'on veut des points frontière. Ensuite, selon la documentation de Wavewatch : \medskip
-\begin{quote}
-\emph{If the actual input data is not defined in the actual wave model run, the initial conditions will be applied as constant boundary conditions.}\medskip
-\end{quote}
-Par conséquent, on peut ne rien définir dans le fichier \emph{ww3 grid}, puis ensuite changer les conditions initiales. L'idée derrière serait donc de laisser le modèle se stabiliser graduellement autour des conditions initiales.\bigskip
 
-Il faut donc créer un spectre Jonswap \autocite{hasselmann1973measurements}. Nous avions pris quelques notes dans notre \href{rapport-2024-08-23.pdf}{rapport du 23 aout 2024} pour synthétiser les données entrantes d'Eliot Bismuth.
+On remaque qu'on s'éloigne des bords, parce que ce n'est pas très clair ce que le modèle fait sur les bords. 
+\subsubsection{Conditions frontières (Boundary points)}
+\label{sec:org440527e}
 
-\begin{center}
-\begin{tabular}{lcccl}
+
+\begin{table}[htbp]
+\caption{\label{tab:org729db58}Paramètres du spectre de vagues assimilié comme conditions frontière à l'ouest du domaine.}
+\centering
+\begin{tabular}{lcrcl}
 \hline
 \hline
 Description & Symbole & Valeur & Unités & Notes\\
 \hline
 Constante pour Goda & -- & 0.205 & ? & \Textcite{goda1988variablity}\\
 \emph{Energy level of PM spectrum} & \(\alpha\) & 0.0081 & -- & \Textcite{wwiii2016user} (Constante de Phillips)\\
-\emph{Peak frequency} & \(f_m\) & 1/6 & Hz & (Maîtrise d'Eliot Bismuth)\\
 \emph{Peak enhancement factor} & \(\gamma\) & 3.3 & -- & \Textcite{hasselmann1973measurements,wwiii2016user}\\
 \emph{Spread with GAMMA} & \(\sigma_A\) & 0.07 & -- & \Textcite{hasselmann1973measurements,wwiii2016user}\\
 \emph{Spread with GAMMA} & \(\sigma_B\) & 0.09 & -- & \Textcite{hasselmann1973measurements,wwiii2016user}\\
-Moyenne directionnelle & \(\overline{\theta}\) & 90 & degrés & \Textcite{wwiii2016user} (Convention océanographique)\\
+Moyenne directionnelle & \(\theta_m\) & 90 & degrés & \Textcite{wwiii2016user} (Convention océanographique)\\
+\hline
+\emph{Peak frequency} & \(f_m\) & 1/6 & Hz & (Maîtrise d'Eliot Bismuth)\\
+Hauteur significative des vagues & \(h_s\) & 1 & m & (Maîtrise d'Eliot Bismuth)\\
 \hline
 \end{tabular}
-\end{center}
+\end{table}
 
-L'Équation devrait ressembler à (selon la version de \Textcite{goda1988variablity}),
+
+Selon la \href{https://wavespectra.readthedocs.io/en/latest/construction.html\#jonswap}{documentation du module Wavespectra}, l'équation pour le spectre JONSWAP \autocite{hasselmann1973measurements} est codée de sorte à ce que 
 \begin{equation}
-   E_{JONSWAP-Goda}(f) = 0.205 H_s^2 \qty(\frac{f_p^4}{f^5}) \exp{-\frac{5}{4}\qty(\frac{f_p}{f})^4} \times 3.3^{\exp{\frac{-(f-f_p)^2}{2\sigma^2 f_p^2}}},
+   S(f) = \alpha g^2 (2\pi)^{-4} f^{-5} \exp{-\frac{5}{4} \left (\frac{f}{f_p} \right)^{-4} } \gamma^{\exp{\frac{(f-f_p)^2}{2\sigma^2f_p^2}}},
 \end{equation}
-ou plutôt (selon la version \Textcite{hasselmann1973measurements}), 
-\begin{align}
-   && E_{JONSWAP}(f) = \alpha g^2 (2\pi)^{-4} f^{-5} \exp[- \frac{5}{4} \qty(\frac{f}{f_m})^{-4}]\times \gamma^{g(f,\sigma)}
-   && \text{où}
-   && g(f,\sigma) = \exp[ \frac{-(f-f_m)^2}{2\sigma^2f_m^2}]. &&
-\end{align}
-Selon \Textcite{goda1988variablity} et \Textcite{hasselmann1973measurements}, \(\alpha = 0.205\), mais selon Dugas \(\alpha = 0.2044\). Il a surement une citation que je n'ai pas.
-\subsubsection{Lancement de Wavewatch III}
-\label{sec:org34fa489}
+soit dépendant de la hauteur des vagues. Toujours selon la documentation de Wavespectra, si la hauteur significative des vagues est fournie, alors le spectre de JONSWAP est normalisé de sorte à ce que \(4\sqrt{m_0} = Hs\), sinon le spectre est normalisé par \(\alpha\) comme dans l'équation précédente.
+Puis l'étalement directionnel est donné par
+\begin{equation}
+   G(\theta,f)=F(s)cos^2\qty[\frac{1}{2}(\theta-\theta_{m})],
+\end{equation}
+où \(F(s)\) est seulement un paramètre de normalisation. Le résultat, c'est la figure \ref{fig:jonswap}.
+\subsubsection{Présence de glace}
+\label{sec:orgef44bf7}
 
-Lorsqu'on lance le modèle, on voit apparaître l'avertissement suivant
-\begin{quote}
-\textbf{*} WAVEWATCH III WARNING IN W3IOBC : 
-    INPUT FILE WITH BOUNDARY CONDITIONS NOT FOUND
-    BOUNDARY CONDITIONS WILL NOT BE UPDATED     1
-\end{quote}
-donc on en déduit que la méthode employée plus haut pour y mettre nos \emph{boundary conditions} est bonne. Il ne reste qu'à tester le modèle, en fait.
+Pas grand chose à dire ici, a part que les champs ont les valeurs mentionnées dans le tableau \ref{tab:org7fbccd4}.
+
+\begin{table}[!h]
+\caption{\label{tab:org7fbccd4}Tableau tiré de la maîtrise d'Éliot Bimuth.}
+\centering
+\begin{tabular}{lcrc}
+\hline
+\hline
+Description de la variable & Symbole & Valeur & Unités\\
+\hline
+Épaisseur des floes & \(h\) & 0.5 & m\\
+Diamètre moyen des floes & \(\expval{D}\) & 200 & m\\
+Hauteur significative des vagues & \(H_s\) & 1 & m\\
+\hline
+\end{tabular}
+\end{table}
 
 
 \printbibliography

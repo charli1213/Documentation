@@ -1,0 +1,232 @@
+#+title: Rapport hebdomadaire
+#+subtitle: Contrat Été 2024
+#+author: Charles-Édouard Lizotte
+#+date:15/11/2024
+#+LANGUAGE: fr
+#+BIBLIOGRAPHY: master-bibliography.bib
+#+OPTIONS: toc:nil title:nil 
+#+LaTeX_class: org-report
+
+\mytitlepage
+\tableofcontents\newpage
+
+
+* Switches de glace et le modèle
+
+** Mise en contexte
+
+<2024-11-11 Mon> Où en sommes-nous aujourd'hui? Le modèle est capable d'assimiler tous les fichiers d'input de ma configuration. Par contre, la routine du modèle /ww3 shel/ est incapable d'assimiler certains fichiers de glace, comme le diamètre moyen des floes dans une case $\expval{D}$.\bigskip
+
+Essentiellement, la routine /ww3 shel/ prend 4 fichiers d'input, soit
+- *Ice param. 1* : La /ice thickness/.
+- *Ice param. 5* : Le /mean ice diameter/.
+- *Wind* : Le vent.
+- *Ice field* : La concentration de glace.
+
+J'ai pris les /switches/ que Jeremy m'avait données. Donc,la /switch/ de glace, c'est *IC4*, par contre je n'ai pas pris letemps de définir une /Ice method/ dans la routine /ww3 grid/. La /switch/ IC4 propose six méthodes différentes. Je vais prendre celle qui ressemble le plus à la maîtrise d'Eliot Bismuth, soit le /scaling/ polynomial de [cite/t/c:@kohout2008elastic].\bigskip
+
+Donc, est-ce que ça vient des /switches/ ou est-ce que mes fichiers d'input sont mal construits? Je pense que ça vient des /switches/, c'est pourquoi, je refais la mise à niveau que Dany voulait, juste ici. \medskip
+
+<2024-11-13 Wed> Il a malheureusement été prouvé que mon problème venait de mes /inputs/, plutôt que des /switches/...
+
+** Remise en contexte sur les switches
+
+Selon la documentation de Wavewatch [cite:@wwiii2016user p.16], tous les termes sont /scalés/ par la concentration de glace $f_i$. Lorsqu'on lance la routine d'assimilation de la grille /ww3 grid/, on obtient
+
+#+begin_quote
+   /Dissipation via ice parameters (SIC4)./
+    
+   /Sice will be calculated using Empirical method./
+    
+   /Required field input: ice parameters (varies)./
+    
+   /&SIC4/
+    
+   /IC4METHOD=1          ,/
+    
+   /IC4KI= 10*0.00000000      ,/
+    
+   /IC4FC= 10*0.00000000      ,/
+#+end_quote
+
+Donc, c'est très peu d'information. Selon la documentation, il nous faut quand même l'épaisseur de la glace. Pourtant, selon la documentation [cite:@wwiii2016user], 
+
+
+** Switch IC4
+
+Dans la version que Jeremy m'avait donnée, il utilisait la /switch/ IC4. Selon la documentation,
+
+#+begin_quote
+   /Frequency-dependent damping by sea ice./
+#+end_quote
+
+Voyons ce que cette /switch/ nous demande en terme d'inputs, parce le modèle ne semble pas avoir besoin du /ice parameter 5/, soit le diamètre moyen des floes (/ice diameter/). En fait, ça tombe sous le sens, parce qu'il n'y a aucune mention de la taille des floes dans la documentation, même si initialement ça venait de l'article de [cite/t/c:@kohout2008elastic], il me semble. \medskip
+
+Selon la documentation, la méthode /frequency dependent/ semble venir de C. Collins et E. Rogers (Faudrait vérifier cette info). Il faut mettre un ICE4METHOD dans la /namelist/ de la routine /ww3 grid/. Les méthodes 1 à 6 existent.
+- 1) an exponential fit to the field data of Wadhams et al. (1988),
+- 2) the polynomial fit in Meylan et al. (2014),
+- 3) a quadratic fit to the calculations of Kohout and Meylan (2008) given in Horvat and Tziperman (2015),
+- 4) Eq. 1 of Kohout et al. (2014) qui reprend les polynomes de [cite/t/c:@kohout2008elastic].
+- 5) a simple step function with up to 4 steps (maybe nonstationary and non-uniform), and
+- 6) a simple step function with up to 10 steps (must be stationary and uniform).
+
+Concrètement, nous avons pris la *méthode 3*, car c'est celle qu'Eliot Bismuth avait empruntée.
+
+
+** Inputs
+
+<2024-11-05 Tue> Je crois que j'ai trouvé la source du problème. Tout viendrait peut-être de la convention océanographique. Si c'est le cas, je trouve ça génant. Selon la documentation du module /wavespectra/,
+
+#+begin_quote
+   /Wave direction coordinate in coming-from convention, with name dir, defined in (required for 2D spectra and directional methods)./
+#+end_quote
+
+Donc il va falloir réévaluer les directions : la routine /ww3 shell/ nous permet de définir des champs homogènes -- comme le vent par exemple -- avec une direction. Aussi, la routine /ww3 strt/ nous permet de définir un spectre directionnel $E(f,\theta)$, de JONSWAP ou Pierson-Moskowitz en utilisant la convention océanographique. Par contre, dans cette sous-routine, on nous mentionne explicitement que $270^\circ$ représente l'ouest. Reste à savoir si on définit nos quantités en amont ou en aval de l'écoulement.\bigskip
+
+\begin{figure}[!h]
+\begin{center}
+\includegraphics[width=0.7\textwidth]{Figures/figures/jonswap-wavespectra3.png}
+\begin{minipage}{0.7\textwidth}
+\caption{Spectre de JONSWAP orienté à 270 degré (convention océanographique). Concrètement, ça signifit que les vagues proviennent de l"ouest et se propagent à l'est.}
+\label{fig:jonswap}
+\end{minipage}
+\end{center}
+\end{figure}
+
+
+<2024-11-13 Wed> Après mure inspection, si je construit un fichier NetCDF dans lequel le vent s'écoule en x-y vers l'est, j'obtiens des /output/ de directions moyennes des vagues $\expval{\theta}$ de $270^\circ$. Donc, on a notre réponse, je crois. On définit la provenance des vagues et non la direction de propagation moyenne des vagues c'est ce qui explique tous les problèmes que j'ai eu jusqu'à maintenant.
+
+
+*** Grille du modèle
+
+Toutes les quantités importantes pour la création de la grille de notre simulation sont compilées dans le tableau [[tab:grille]]. 
+
+#+attr_latex: :placement [!h]
+#+caption: Quantités importantes en ce qui a trait à la grille de Wavewatch III.
+#+name: tab:grille
+|-----------------------------+------------+--------+-------------------+----------------------------------------|
+|-----------------------------+------------+--------+-------------------+----------------------------------------|
+| <l>                         |    <c>     |    <r> |        <c>        | <l>                                    |
+| Description                 |  Symbole   | Valeur |      Unités       | Note                                   |
+|-----------------------------+------------+--------+-------------------+----------------------------------------|
+| /Freq. Increment Factor/      |    $IF$    |   1.07 |        --         | [cite:Voir @wwiii2016user switch NL2 ] |
+| Fréquence initiale          | $f_{min}$  |   0.05 | $\mathrm{s}^{-1}$ | Suggéré dans la maîtrise de Bismuth. |
+| Fréquences maximale         | $f_{max}$  |  0.749 | $\mathrm{s}^{-1}$ | $f_{max} = f_{min}\cdot(IF)^{nf}$      |
+| Nombre de fréquences        |    $nf$    |     40 |        --         | [cite:Voir @wwiii2016user switch NL2 ] |
+| Nombre de directions        | $n_\theta$ |     36 |        --         | [cite:Voir @wwiii2016user switch NL2 ] |
+| Pas de temps                | $\Delta t$ |  20.00 |         s         | $\Delta t < \Delta x/c^{max}_g$        |
+|-----------------------------+------------+--------+-------------------+----------------------------------------|
+| Taille de la grille         |   $L_x$    |      5 |        km         | Point de grille d'un GCM.              |
+| Taille des points de grille | $\Delta x$ |    500 |         m         | 10 divisions.                          |
+| Nombre de points en x       |   $n_x$    |     10 |        --         | Petit domaine.                         |
+| Nombre de points en y       |   $n_x$    |      3 |        --         | Petit domaine.                         |
+| points de mer               | $n_{sea}$  |      8 |        --         | Voir figure [[fig:mapsta]]                 |
+| Profondeur du domaine       |   $L_z$    |    200 |         m         | Pas très profond.                      |
+|-----------------------------+------------+--------+-------------------+----------------------------------------|
+
+Concrètement, la grille de fonction ou la /mapsta/ devrait ressembler à la figure [[fig:mapsta]]. 
+
+
+#+attr_latex: :placement [!h]
+#+name:fig:mapsta
+#+caption: MAPSTA ou grille de fonction de Wavewatch III. 
+\begin{figure}
+\begin{center}
+\begin{tikzpicture}
+   \fill [ForestGreen!10] (0,0) rectangle (10,3);
+   \fill [blue!15] (1,1) rectangle (9,2);
+   \fill [white] (0,1) rectangle (1,2);
+   \fill [white] (9,1) rectangle (10,2);
+   \fill [red!15] (1,1) rectangle (2,2);
+   \draw[dotted] (0,0) grid (10,3);
+   \draw[thick] (0,0) rectangle (10,3);
+%%%
+   \draw[|{latex}-{latex}|] (10.25,0) -- (10.25,3);
+   \draw (10.25,1.5) node [rotate=90,below] {$150$ m};
+   \draw[|{latex}-{latex}|] (0,-0.25) -- (10,-0.25);
+   \draw (5,-0.5) node [below] {$500$ m};
+%%%
+   \filldraw [dotted] (-0.25,0.5) -- (0.5,0.5);
+   \filldraw [dotted] (-0.25,2.5) -- (0.5,2.5) circle (1pt);
+   \draw [decoration={brace}, decorate, thick] (-0.25,0.5) -- (-0.25,2.5);
+   \draw (-0.5,1.5) node [rotate=90,above] { 25m à 125m};
+%%%
+   \filldraw [dotted] (0.5,3.25) -- (0.5,2.5);
+   \filldraw [dotted] (9.5,3.25) -- (9.5,2.5) circle (1pt);
+   \draw [decoration={brace}, decorate, thick] (0.5,3.25) -- (9.5,3.25);
+   \draw (5,3.5) node [above] { 25m à 475m};
+ %%%
+   \filldraw (0.5,0.5) circle (1pt);
+   \draw (0.5,0.5) node [right] {(25m,25m)};
+\end{tikzpicture}
+\end{center}
+\end{figure}
+
+
+On remaque qu'on s'éloigne des bords, parce que ce n'est pas très clair ce que le modèle fait sur les bords. 
+
+*** Conditions frontières (Boundary points)
+
+
+#+name: tab:condinit
+#+caption: Paramètres du spectre de vagues assimilié comme conditions frontière à l'ouest du domaine.
+| <l>                              |    <c>     |    <r> |  <c>   | <l>                                                    |
+|----------------------------------+------------+--------+--------+--------------------------------------------------------|
+|----------------------------------+------------+--------+--------+--------------------------------------------------------|
+| Description                      |  Symbole   | Valeur | Unités | Notes                                                  |
+|----------------------------------+------------+--------+--------+--------------------------------------------------------|
+| Constante pour Goda              |     --     |  0.205 |   ?    | [cite/t/c:@goda1988variablity]                         |
+| /Energy level of PM spectrum/      |  $\alpha$  | 0.0081 |   --   | [cite/t/c:@wwiii2016user] (Constante de Phillips)      |
+| /Peak enhancement factor/          |  $\gamma$  |    3.3 |   --   | [cite/t/c:@hasselmann1973measurements;@wwiii2016user]  |
+| /Spread with GAMMA/                | $\sigma_A$ |   0.07 |   --   | [cite/t/c:@hasselmann1973measurements;@wwiii2016user]  |
+| /Spread with GAMMA/                | $\sigma_B$ |   0.09 |   --   | [cite/t/c:@hasselmann1973measurements;@wwiii2016user]  |
+| Moyenne directionnelle           | $\theta_m$ |     90 | degrés | [cite/t/c:@wwiii2016user] (Convention océanographique) |
+|----------------------------------+------------+--------+--------+--------------------------------------------------------|
+| /Peak frequency/                   |   $f_m$    |    1/6 |   Hz   | (Maîtrise d'Eliot Bismuth)                             |
+| Hauteur significative des vagues |   $h_s$    |      1 |   m    | (Maîtrise d'Eliot Bismuth)                             |
+|----------------------------------+------------+--------+--------+--------------------------------------------------------|
+
+
+Selon la [[https://wavespectra.readthedocs.io/en/latest/construction.html#jonswap][documentation du module Wavespectra]], l'équation pour le spectre JONSWAP [cite:@hasselmann1973measurements] est codée de sorte à ce que 
+\begin{equation}
+   S(f) = \alpha g^2 (2\pi)^{-4} f^{-5} \exp{-\frac{5}{4} \left (\frac{f}{f_p} \right)^{-4} } \gamma^{\exp{\frac{(f-f_p)^2}{2\sigma^2f_p^2}}},
+\end{equation}
+soit dépendant de la hauteur des vagues. Toujours selon la documentation de Wavespectra, si la hauteur significative des vagues est fournie, alors le spectre de JONSWAP est normalisé de sorte à ce que $4\sqrt{m_0} = Hs$, sinon le spectre est normalisé par $\alpha$ comme dans l'équation précédente.
+Puis l'étalement directionnel est donné par
+\begin{equation}
+   G(\theta,f)=F(s)cos^2\qty[\frac{1}{2}(\theta-\theta_{m})],
+\end{equation}
+où $F(s)$ est seulement un paramètre de normalisation. Le résultat, c'est la figure \ref{fig:jonswap}.
+
+*** Présence de glace 
+
+Pas grand chose à dire ici, a part que les champs ont les valeurs mentionnées dans le tableau [[tab:bismuth]].
+
+#+name:tab:bismuth
+#+attr_latex: :placement [!h]
+#+caption: Tableau tiré de la maîtrise d'Éliot Bimuth.
+|----------------------------------+--------------+--------+-------------------|
+|----------------------------------+--------------+--------+-------------------|
+| <l>                              |     <c>      |    <r> |        <c>        |
+| Description de la variable       |   Symbole    | Valeur |      Unités       |
+|----------------------------------+--------------+--------+-------------------|
+| Épaisseur des floes              |     $h$      |    0.5 |         m         |
+| Diamètre moyen des floes         | $\expval{D}$ |    200 |         m         |
+| Hauteur significative des vagues |    $H_s$     |      1 |         m         |
+|----------------------------------+--------------+--------+-------------------|
+
+
+*** Gestion de la « spectral tail »
+
+Nous y sommes! Enfin, la /spectral tail/ commence à nous faire des siennes. Regardons de plus près nos /switches/ :
+
++ On emprunte la méthode NL1, donc l'utilisation des DIA, comme dans la méthode de Sébastien Dugas. Déjà, nous ne devrions pas tant avoir de problème de /spectral tail/. Il semble qu'une partie du spectre soit non-définit lorsque le vent est trop fort, comme nous avions dans le cas du modèle Julia.\bigskip
+
+  Avec des vents de moyenne amplitude, ça ne semble pas être le cas dutout. Peut-être que la méthode des DIA est à revoir pour de fort vents. 
+
+
+*** Problèmes de génération de vagues?
+
+<2024-11-18 Mon> Même lorsqu'il n'y a pas de vent -- donc aucune génération de vagues -- il y a des vagues qui s'accumulent sur la partie est de notre config. Heureusement, je pense que j'ai trouvé le problème en soufflant sur mon gateau de fête de 30 ans.
+
+#+print_bibliography:

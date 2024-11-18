@@ -7,6 +7,9 @@
 #+OPTIONS: toc:nil title:nil 
 #+LaTeX_class: org-report
 
+\mytitlepage
+\tableofcontents\newpage
+
 * Point frontières de Wavewatch
 
 ** Ce qui a été fait jusqu'à maintenant
