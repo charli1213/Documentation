@@ -34,7 +34,7 @@ Donc, est-ce que ça vient des /switches/ ou est-ce que mes fichiers d'input son
 Selon la documentation de Wavewatch [cite:@wwiii2016user p.16], tous les termes sont /scalés/ par la concentration de glace $f_i$. Lorsqu'on lance la routine d'assimilation de la grille /ww3 grid/, on obtient
 
 #+begin_quote
-   /Dissipation via ice parameters (SIC4)./
+   *Dissipation via ice parameters (SIC4).*
     
    /Sice will be calculated using Empirical method./
     
@@ -216,17 +216,57 @@ Pas grand chose à dire ici, a part que les champs ont les valeurs mentionnées 
 |----------------------------------+--------------+--------+-------------------|
 
 
-*** Gestion de la « spectral tail »
+** Gestion de la « spectral tail »
 
 Nous y sommes! Enfin, la /spectral tail/ commence à nous faire des siennes. Regardons de plus près nos /switches/ :
 
-+ On emprunte la méthode NL1, donc l'utilisation des DIA, comme dans la méthode de Sébastien Dugas. Déjà, nous ne devrions pas tant avoir de problème de /spectral tail/. Il semble qu'une partie du spectre soit non-définit lorsque le vent est trop fort, comme nous avions dans le cas du modèle Julia.\bigskip
++ On emprunte la méthode NL1, donc l'utilisation des DIA, comme dans la méthode de Sébastien Dugas. Déjà, nous ne devrions pas tant avoir de problème de /spectral tail/. Il semble qu'une partie du spectre soit non-définit lorsque le vent est trop fort, comme nous avions dans le cas du modèle Julia.
 
-  Avec des vents de moyenne amplitude, ça ne semble pas être le cas dutout. Peut-être que la méthode des DIA est à revoir pour de fort vents. 
+Avec des vents de moyenne amplitude, ça ne semble pas être le cas dutout. Peut-être que la méthode des DIA est à revoir pour de fort vents. Mentionnons qu'à la formation de la grille, le modèle nous signale que
+
+#+begin_quote
+   /Triad interactions not defined./
+#+end_quote
+
+ce qui veut dire que les triades ne sont tout simplement pas définies. Pourtant, les DIA sont super bien définies :
+
+#+begin_quote
+   *Nonlinear interactions (DIA) (default values) :*\\
+       /Lambda                      :    0.25/\\
+       /Prop. constant              : 0.278E+08/\\
+       /kd conversion factor        :    0.75/\\
+       /minimum kd                  :    0.50/\\
+       /shallow water constants     :    5.50  0.83 -1.25/
+#+end_quote
 
 
-*** Problèmes de génération de vagues?
 
-<2024-11-18 Mon> Même lorsqu'il n'y a pas de vent -- donc aucune génération de vagues -- il y a des vagues qui s'accumulent sur la partie est de notre config. Heureusement, je pense que j'ai trouvé le problème en soufflant sur mon gateau de fête de 30 ans.
+
+** Problèmes de génération de vagues?
+
+<2024-11-18 Mon> Même lorsqu'il n'y a pas de vent -- donc aucune génération de vagues -- il y a des vagues qui s'accumulent sur la partie est de notre config. Pourtant, à l'extrémité est de notre config, il n'y a pas de frontière, c'est seulement un « point ouvert ». Voici quelques pistes de solution. 
+
++ *Est-ce que le modèle voit des murs? Si oui, quel est l'effet du coefficient de réflexion. Essayons de l'enlever dans un cas sans glace et aucun vent.* Aucune différence. Il semble que les vagues s'accumulent toujours à l'est. Ce n'est pas ce que nous devrions voir. Plutôt, on devrait voir c'est un motif ressemblant à ce qu'on retrouve à l'ouest. Du moins, on devrait voir un spectre décroissant à l'inverse de ce qu'on a ici.
+  
++ *Malgré le fait que notre point sur le bord est un point ouvert, j'ai l'impression que le modèle voit ce point là comme une frontière physique, ce qui pourrait expliquer l'accumulation de vagues dans ce coin là.* Après avoir testé, nous sommes dans la même situation. Les vagues s'accumulent dans l'extrémité est de notre domaine sans aucune raison. Ce sont des vagues avec une plus grande période, ce qui pourrait nous donner l'impression que ça vient de notre spectre initial, mais avec un trasfert d'énergie progressif.
+
++ *Est-ce que c'est vraiment du à une réflexion? Testons avec beaucoup plus de points pour voir*. On a le même problème. Même que le problème semble de plus en plus fort. J'ai aussi testé avec une frontière physique et aucune réflexion, le résultat est le même. Donc, il faudrait commencer à vérifier les /switches/ probablement.
+
++ *Réessayons sans aucun /input/ à la frontière ouest, donc les vagues sont nulles. On revient à 12 points de long, avec réflexions, puis on enlève le point frontière.* Le problème ne semble plus exister. Ce que j'en déduis, c'est qu'une partie de l'énergie sert à créer de petites vagues qui vont croître en se déplaçant vers l'est. C'est bizarre, car il n'y a pas de vent qui causerait la création de vages.
+
++ *Enlevons la switch de réflexion*. Même problème! Ce n'est donc *pas un problème de réflexion*.
+
++ *Mettons des conditions frontière bien plus intenses pour voir*. Ça ne change rien.
+
+
+** Dénouement du problème 
+
++ Le problème n'est pas causé par les réflexions;
++ Le problème n'est pas causé par la présence de points non-définit à l'extrémité est;
++ Bien que le fait de retirer les conditions frontières à l'ouest semble éliminer le problème.
+
+*Solution :* J'ai réussi, il semble. C'était un problème de pas de temps et de longueur e domaine. Lorsqu'on mettait un très long domaine, on obtenait des oscillations bizarres dans le spectre vers l'extrémité « est ». Pourtant, je croyais que ma condition CFL était bonne.
+
+- Maintenant, il n'a pas d'lair de se passer grand chose, mais on est de retour avec le problème de la /spectral tail/. 
 
 #+print_bibliography:
