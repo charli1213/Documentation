@@ -1,0 +1,364 @@
+#+title: Rapport hebdomadaire
+#+subtitle: Contrat Été 2024
+#+author: Charles-Édouard Lizotte
+#+date:15/11/2024
+#+LANGUAGE: fr
+#+BIBLIOGRAPHY: master-bibliography.bib
+#+OPTIONS: toc:nil title:nil 
+#+LaTeX_class: org-report
+
+
+\mytitlepage
+\tableofcontents\newpage
+
+* Rencontre avec Dany
+
++ Le cas que nous avions créé dans le but d'immiter les expériences d'Eliot Bismuth ne couvraient qu'un seul point de grille avec un bon nombre (10) de points sous-grille. Il faut drait plutôt plusieurs points de grille avec un nombre plus grand de points de grilles, selon Dany.
+
++ Le cas sans glace n'a aucune valeur selon Dany. En outre, dans le cas sans glace, la /spectral tail/ prend une trop grande ampleur et l'on perd un peu. Ce cas n'est seulement important que pour comparer l'effet de la résolution sur le modèle de vagues.
+
++ Encore une fois, il faudrait bien poser la question, mais la présentation que j'ai fait couvre bien l'enjeu du problème.
+
++ Il a aussi été mentionné que la taille des points de grille sur les modèle globaux tournent autour de 5 km, donc il faudrait mettre un peu d'effort là. \newpage
+
+* Retour sur la méthode 
+
+Rapidement, toutes les sous-mailles (lorsqu'on augmente la résolution) sont des multiples de 2, de sorte qu'on peut augmenter la résolution avec la méthode ci-bas : 
+
+\tikzmath{\lx=28;\ly=3;}
+
+\begin{figure}[!h]
+\begin{center}
+   \begin{tikzpicture}[scale=0.6]
+      % Green!25
+      \fill [color=Green!25] (0,0) rectangle (\lx,1);
+      \fill [color=Green!25] (0,2) rectangle (\lx,3);
+      \fill [color=Aquamarine!75] (8,1) rectangle (\lx-4,2);
+      \fill [BrickRed!35] (4,1) rectangle (8,2);
+      \fill [Dandelion!35] (0,1) rectangle (4,2);
+      \fill [Dandelion!35] (24,1) rectangle (28,2);
+      \foreach \y in {0,...,\ly} {
+         \draw [ultra thick, white] (0,\y) -- (\lx,\y);
+         \foreach \x in {0,4,...,\lx} {
+            \draw [ultra thick, white] (\x,0) -- (\x,3);
+            }
+         }
+      \draw [black, ultra thin] (0,0) rectangle (\lx,\ly);
+      \draw [black,|{latex}-{latex}|] (0,3.5) -- (28,3.5);
+      \draw (14,3.5) node [above] {$L_x$};
+      \draw (26,1.5) node [] {$nx=7$};
+   \end{tikzpicture}\medskip
+   
+   \begin{tikzpicture}[scale=0.6]
+      \fill [color=Green!25] (0,0) rectangle (\lx,1);
+      \fill [color=Green!25] (0,2) rectangle (\lx,3);
+      \fill [color=Aquamarine!75] (8,1) rectangle (\lx-4,2);
+      \fill [BrickRed!35] (2,1) rectangle (8,2);
+      \fill [Dandelion!35] (24,1) rectangle (28,2);
+      \fill [Dandelion!35] (0,1) rectangle (6,2);
+      \foreach \y in {0,...,\ly} {
+         \draw [ultra thick, white] (0,\y) -- (\lx,\y);
+         \foreach \x in {0,2,...,\lx} {
+            \draw [ultra thick, white] (\x,0) -- (\x,3);
+            }
+         }
+      \draw [black, ultra thin] (0,0) rectangle (\lx,\ly);
+      \draw (26,1.5) node [] {$nx=14$};
+   \end{tikzpicture}\medskip
+   
+   \begin{tikzpicture}[scale=0.6]
+      \fill [color=Green!25] (0,0) rectangle (\lx,1);
+      \fill [color=Green!25] (0,2) rectangle (\lx,3);
+      \fill [color=Aquamarine!75] (8,1) rectangle (\lx-4,2);
+      \fill [BrickRed!35] (3,1) rectangle (8,2);
+      \fill [Dandelion!35] (24,1) rectangle (28,2);
+      \fill [Dandelion!35] (0,1) rectangle (7,2);
+      \foreach \y in {0,...,\ly} {
+         \draw [ultra thick, white] (0,\y) -- (\lx,\y);
+         \foreach \x in {0,1,...,\lx} {
+            \draw [ultra thick, white] (\x,0) -- (\x,3);
+            }
+         }
+      \draw [black, ultra thin] (0,0) rectangle (\lx,\ly);
+      \draw [black,|{latex}-{latex}|] (8,-1) -- (16.5,-1) node [fill=white] {$n_{x,m} = (n_0-3)\times2^k = 4\times 2^n$} -- (24,-1);
+      \draw (26,1.5) node [] {$nx=28$};
+   \end{tikzpicture}
+   \begin{minipage}{0.8\linewidth}
+      \caption{Schéma conceptuelle de la carte d'allocation des sous-mailles lorsqu'on augmente la résolution.}
+   \end{minipage}
+\end{center}
+\end{figure}
+
++ Pourquoi cette forme étrange? Selon la documentation de /wavewatch/, 
+#+begin_quote
+   « /Outer grid lines are always defined as land points/ »
+#+end_quote
+Et tous les paramètres de l'expériences sont tabulés dans le tableau ci-dessous : 
+
+|     <c>     | <l>                                           | <l>                |   <c>   |
+|-------------+-----------------------------------------------+--------------------+---------|
+|-------------+-----------------------------------------------+--------------------+---------|
+|  Variables  | Description                                   | Valeur             | Unités  |
+|-------------+-----------------------------------------------+--------------------+---------|
+|  $n_{x,0}$  | Nombre initial de points                      | 11                 |   --    |
+|  $n_{x.m}$  | Nombre de points de mer (/inner nx/)            | {8,16,32,64}       |         |
+|    $kx$     | Multiplicateur de 2                           | {0,1,2,...}        |   --    |
+|   $sdfx$    | /Scaling (divison) factor/ ($2^k$)              | {1,2,4,...}        |   --    |
+|    $n_x$    | Nombre de points de grille                    | $n_{x,0}\times2^k$ |   --    |
+| $\max(n_x)$ | Nombre de points de grille (haute résolution) | 88                 |   --    |
+| $\min(n_x)$ | Nombre de points de grille (haute résolution) | 11                 |   --    |
+|-------------+-----------------------------------------------+--------------------+---------|
+|    $L_x$    | Longueur totale du domaine                    | 8800               |    m    |
+|    $L_y$    | Largeur totale du domaine                     | 300                |    m    |
+| $\Delta x$  | Longueur horizontale des sous-mailles         | {800,100}          |    m    |
+| $\Delta y$  | Longueur verticale des sous-mailles           | 100                |    m    |
+|-------------+-----------------------------------------------+--------------------+---------|
+|  $u_{10}$   | Vent à 10m au dessus de la surface            | 10                 | ms^{-1} |
+|    $u_o$    | Vitesse du courant à la surface               | 0                  | ms^{-1} |
+| $ice frac$  | Fraction de glace du domaine                  | {0,0.25,0.5,0.75}  |   --    |
+|    $f_i$    | Fraction de glace des points de grille        | {0,0.25,0.5,0.75}  |   --    |
+|-------------+-----------------------------------------------+--------------------+---------|
+
+ + Lorsqu'on fait mention de la /ice fraction/, on parle de
+  \begin{equation}
+     \mathit{ice\, frac} = \expval{f_i} = \frac{1}{n_{x,mer}}\sum_i f_i.
+  \end{equation}
+
+
+
+** Retour sur les conditions frontière
+
+
+Tirée de la [[https://wavespectra.readthedocs.io/en/latest/construction.html#jonswap][documentation du module Wavespectra]], le spectre d'énergie du JONSWAP [cite:voir @hasselmann1973measurements] est donnée par
+#+name:eq:jonswap
+\begin{equation}
+   S(f) = \alpha g^2 (2\pi)^{-4} f^{-5} \exp{-\frac{5}{4} \left (\frac{f}{f_p} \right)^{-4} } \gamma^{\exp{\frac{(f-f_p)^2}{2\sigma^2f_p^2}}}.
+\end{equation}
+Cette version est totalement indépendante de la hauteur significative des vagues, contrairement à la version d'Eliot Bismuth. Par contre, toujours selon la documentation du module Wavespectra, lorsque la hauteur significative des vagues est fournie, le spectre [[eq:jonswap]] est normalisé de sorte à ce que $4\sqrt{m_0} = Hs$. Autrement, le spectre est normalisé par $\alpha$ comme précédemment.\bigskip
+
+Finalement, la fonction de l'étalement directionnel $G(\theta,f)$ est exprimée par
+\begin{equation}
+   G(\theta,f)=F(s)cos^2\qty[\frac{1}{2}(\theta-\theta_{m})],
+\end{equation}
+où $F(s)$ est seulement un paramètre de normalisation -- car l'intégrale sur le domaine doit être de 1. Le résultat, c'est la figure \ref{fig:jonswap}. Les paramètre des conditions frontière sont tabulés dans le tableau [[tab:condinit]]. 
+
+\begin{figure}[!h]
+\begin{center}
+\begin{minipage}{0.5\textwidth}
+\begin{center}
+\includegraphics[width=0.8\linewidth]{Figures/figures/jonswap-wavespectra3.png}
+\end{center}
+\end{minipage}\begin{minipage}{0.48\textwidth}
+\caption{Spectre de JONSWAP orienté à 270 degré selon la convention océanographique (les vagues se propagent de l'ouest vers l'est).}\label{fig:jonswap}
+\end{minipage}
+\end{center}
+\end{figure}
+
+#+name: tab:condinit
+#+caption: Paramètres du spectre de vagues assimilié comme conditions frontière à l'ouest du domaine.
+| <l>                              |    <c>     |    <r> |  <c>   | <l>                                                    |
+|----------------------------------+------------+--------+--------+--------------------------------------------------------|
+|----------------------------------+------------+--------+--------+--------------------------------------------------------|
+| Description                      |  Symbole   | Valeur | Unités | Notes                                                  |
+|----------------------------------+------------+--------+--------+--------------------------------------------------------|
+| Constante pour Goda              |     --     |  0.205 |   ?    | [cite/t/c:@goda1988variablity]                         |
+| /Energy level of PM spectrum/      |  $\alpha$  | 0.0081 |   --   | [cite/t/c:@wwiii2016user] (Constante de Phillips)      |
+| /Peak enhancement factor/          |  $\gamma$  |    3.3 |   --   | [cite/t/c:@hasselmann1973measurements;@wwiii2016user]  |
+| /Spread with GAMMA/                | $\sigma_A$ |   0.07 |   --   | [cite/t/c:@hasselmann1973measurements;@wwiii2016user]  |
+| /Spread with GAMMA/                | $\sigma_B$ |   0.09 |   --   | [cite/t/c:@hasselmann1973measurements;@wwiii2016user]  |
+| Moyenne directionnelle           | $\theta_m$ |     90 | degrés | [cite/t/c:@wwiii2016user] (Convention océanographique) |
+|----------------------------------+------------+--------+--------+--------------------------------------------------------|
+| /Peak frequency/                   |   $f_m$    |    1/6 |   Hz   | (Maîtrise d'Eliot Bismuth)                             |
+| Hauteur significative des vagues |   $h_s$    |      1 |   m    | (Maîtrise d'Eliot Bismuth)                             |
+|----------------------------------+------------+--------+--------+--------------------------------------------------------|
+
+
+
+
+** (À faire) Mise en oeuvre de la grille variable (Création de l'architecture)
+
+*Sous-mailles* : On a vu des grilles avec des mailles de 25 $\mathrm{km}^2$. Est-ce qu'on peut se permettre de faire des sous-mailles? Je pense que c'est assez simple avec /Wavewatch/, car il y a un facteur de division. Au final, il faut modifier :
+  + Le *facteur de division*;
+  + La *longueur du domaine*;
+  + La *largeur du domaine*.
+
+Que faut-il transformer pour avoir plusieurs résolutions :
+  + [X] Il faut qu'on ait un *dossier pour chaque résolutions individuelles*. Ainsi, on va avoir besoin d'une fonction /create cases/ qui permet de /dispatcher/ ou distribuer les dossiers tout en créant de nouvelles séries de paramètres.
+  + [X] Il faut modifier tous les /build grids/ car les MAPSTA vont être différentes, tout en gardant la même longueur horizontale. On a donc besoin de
+    - « /nx/ »  : le nombre de points dans la grille en x.
+    - « /sdf/ » : le /scaling (division) factor/.
+    - « $\Delta x$  : la longueur horizontale des mailles. 
+  + [X] Il faut modifier les /boundary points/, car les coordonnées aussi vont être asses différentes, il faut que le point soit toujours situé au /scaling division factor/ techniquement..
+  + [X] Faudrait aussi trouver un moyen que les paramètres soient intégrés dans le cas pour avoir de l'information, donc tous les sous-routine Python doivent pouvoir être exécutées à partir du dossier courant.
+    - On peut les copier [C'est ça que j'ai du faire, même si ça implique de la redondance].
+    - On peut aussi créer un lien symbolique (J'ai essayé et ça ne marche pas, car ça utilise son propre répertoire courant).
+  + [X] Faut reconstruire l'architecture des dossiers et des /launchers/ en langage /bash/ pour que tout soit harmonisé. Donc, on a maintenant un dossier /cases/ où l'on retrouve tous les cas individuels. On utilise seulement le /work/ comme endroit de départ pour copier les nouveaux fichiers lorsqu'on utilise la routine /bash/ « /create cases/ ». Cette sous-routine va aussi copier tous les paramètres nécessaires dans le module Python /PARAMS.py/. 
+  + [X] Finalement, il faut reconstruire le système de /dispatchage/ des floes (la fonction Python /build ice.py/), de sorte à ce qu'on puisse controler les sous-mailles (donc la concentration de glace et les endroits où la glace se trouve).
+  + [ ] Il faut aussi vérifier comment la /ice concentration cutoff/ a un effet sur nos /runs/. Je pense que ça va nous gosser tout au long du parcours, car je ne sais pas trop comment la modifier.
+
+
+* Résultats 1
+Quelques cas intéressants...
+
+[[file:Figures/figures/analyse_spec_ww3_001.png]]
+
+Comparaison des spectres initiaux et finaux. 
+
+[[file:Figures/figures/spectre001.png]]
+
+Raisons du pourquoi on a ça : 
++ Il y a un /ice concentration cutoff/ que je viens de trouver.
+  #+begin_quote
+   /Miscellaneous (user def. values) :/
+
+      ==================================================
+    
+      /WAVEWATCH-III WARNING IN W3GRID :/
+    
+        /CICE0.NE.CICEN requires FLAGTR>2/
+        
+        /Parameters corrected: CICE0 = CICEN/
+   
+          /Ice concentration cut-offs  :    1.00  1.00/
+          
+          /Wind input reduction factor in presence of ice :  1.00/
+
+          /(0.0==> no reduction and 1.0==> no wind input with 100% ice cover)/
+
+          /Space-time extremes DX-Y set to default 1000 m/
+
+          /Space-time extremes Dt set to default 1200 s/
+#+end_quote
+
+
+Nos switches (En ce moment, on prend IC4 avec la /ICE method 1/ : 
+#+begin_quote
+   /F90 NOGRB NOPA LRB4 NC4 SHRD PR3 UQ FLX0 LN1 ST3 NL1 BT1 DB1 TR0 BS0 IC4 IS0 REF1 XX0 WNT2 WNX2 CRT2 CRX2 O0 O1 O2 O3 O5 O7 O11/
+#+end_quote
+Donc on a
+\begin{equation}
+   \alpha = \exp{\frac{-2\pi C_{ice,1}}{\sigma} - C_{ice,2}}
+\end{equation}
+
+
+
+* Résultats 2 : Distribution de glace (ICEM1)
+
+
+
+\begin{figure}[!h]
+\begin{center}
+\begin{minipage}{\linewidth}
+\begin{center}
+\includegraphics[width=\linewidth]{Figures/figures/ice_distributions001.png}
+\includegraphics[width=\linewidth]{Figures/figures/analyse_spec_ww3_002.png}
+\end{center}
+\end{minipage}
+\begin{minipage}{0.8\textwidth}
+\caption{En haut, les 8 distributions de glace à l'étude. En bas, Rapport de l'énerge initiale (au point frontière) versus l'endroit sur le domaine. Autrement dit, énergie normalisée par la valeur en « \textit{input} ».}
+\label{fig:jonswap}
+\end{minipage}
+\end{center}
+\end{figure}
+
+Et quelques spectres
+
+[[file:Figures/figures/analyse_spec_ww3_003.png]]
+[[file:Figures/figures/analyse_spec_ww3_004.png]]
+
+
+
+* Généralisation du modèle en 2 dimensions
+
+
+
+\tikzmath{\lx=24;\ly=6;}
+\tikzmath{\lxm=20;\lym=4;}
+
+
+#+attr_latex: :placement [!h]
+#+name:fig:mapsta2d
+#+caption: Schématisation de la grille sous-jacente du modèle lors de la généralisation en 3 dimentions. 
+\begin{figure}[!h]
+\begin{center}
+   \begin{tikzpicture}[scale=0.7]
+      % MidnightBlue!25
+      % BrickRed!25
+      % Green!25
+      \fill [color=Green!25] (0,0) rectangle (\lx,2);
+      \fill [color=Green!25] (0,\ly-2) rectangle (\lx,\ly);
+      \fill [color=Aquamarine!75] (4,2) rectangle (\lx-4,4);
+      \fill [color=BrickRed!35] (7,2) rectangle (8,4);
+      \fill [Dandelion!35] (20,2) rectangle (24,4);
+      \fill [Dandelion!35] (0,2) rectangle (7,4);
+      % Lignes blanches : 
+      \foreach \y in {0,...,\ly} {
+         \draw [ultra thick, white] (0,\y) -- (\lx,\y);
+         \foreach \x in {0,1,...,\lx} {
+            \draw [ultra thick, white] (\x,0) -- (\x,\ly);
+            }
+         }
+      % Grille lignée
+      \foreach \y in {2,4,...,\lym} {
+         \draw [ultra thin, gray] (0,\y) -- (\lx,\y);
+         \foreach \x in {4,8,...,\lxm} {
+            \draw [ultra thin, black] (\x,0) -- (\x,\ly);
+            }
+         }
+      % Annotations : 
+      \draw [black] (0,0) rectangle (\lx,\ly);
+      \draw [black,|{latex}-{latex}|] (8,-0.5) -- (14,-.5) node[fill=white] {$(n_{x,0}-3)\times2^k = 4\times 2^n$} --(20,-0.5);
+      \draw [black,|{latex}-{latex}|] (0,7) -- (12,7) node[fill=white] {$n_{x,0}=6$} --(24,7);
+      \draw [black,|{latex}-{latex}|] (0,7) -- (12,7) node[fill=white] {$n_x=24$} --(24,7);
+      %\draw ;
+      \draw (22,1.5) node [] {$nx=24$};
+      % Légende
+      \draw [thin] (7,-1.8) rectangle (17,-4);
+      \filldraw[Green!25] (8,-2) rectangle (8.8,-2.8);
+      \draw (9,-2.4) node [right] {Terre};
+      \filldraw[Aquamarine!75] (8,-3) rectangle (8.8,-3.8);
+      \draw (9,-3.4) node [right] {Mer};
+      \filldraw[BrickRed!25]  (12,-2) rectangle (12.8,-2.8);
+      \draw (13,-2.4) node [right] {Points frontière};
+      \filldraw[Dandelion!35]  (12,-3) rectangle (12.8,-3.8);
+      \draw (13,-3.4) node [right] {Non-définit};
+   \end{tikzpicture}
+   \begin{minipage}{0.8\linewidth}
+   \end{minipage}
+\end{center}
+\end{figure}
+
+
+Pour que tous nos modèles puissent fonctionner en deux dimensions, il faut absolument ajouter un /sdf/ (/scaling division factor/) en /x/ et un /sdf/ en /y/. C'est ce qui nous permet de diviser les cases en plus petites sections individuelles (les sous-mailles), de sorte à pouvoir évaluer l'effet de la résolution sur le modèle, comme on peut l'observer à la figure [[fig:mapsta2d]]. \medskip
+
+*Modification nécessaires* pour passer en 2 dimensions : 
++ [X] /ww3 grid.inp/ ;
+  - La grille doit abolument sortir en 2 dimensions, de sorte qu'on puisse avoir un mur de points frontière à l'ouest.
+  - Le résultat serait la /mapsta/ qu'on obtient à la figure [[fig:mapsta2d]].
++ [X] /PARAMS EMPTY.py/ ;
+  - C'est notre fichier central de paramètres. C'est à cet endroit que toutes nos fonctions en Python doivent utiliser pour créer les grilles, etc. 
++ [X] /create cases.sh/ ;
+  - La routine /bash/ dans le dossier /cases/ qui doit créer toutes les /runs/ nécessaire avec toutes les longueurs physique et paramètres nécessaire.
+  - Cette routine vient justement modifier toutes les autres, comme /PARAMS/ par exemple.
++ [X] /build grid.py/ ;
+  - On doit s'assurer que la fonction /create cases.sh/ vienne bien modifier ce fichier Python d'/inputs/.
+  - C'est ici qu'on crée la grille pour Wavewatch III, donc on mentionne le $\Delta x$, le /nx/ et la largeur du domaine $L_x$ et $L_y$, puis finalement la position du premier point dans le quadrant x-y. 
++ [X] /build ice.py/ ;
+  - Crée nos cartes de glace. On passe de 1D à 2D.
+  - Pour l'instant on a trois quantités produites par cette routine Python, soit la /ice fraction/ ($f_i$),la /ice thickness/ ($h$) et le diamètre moyen des floes, soit $\expval{D}$.
++ [X] /build spectrum.py/ ;
+  - [X] Il faut que ça crée un nombre /sdfy/ de points frontière, donc la création de multiples fichiers NetCDF de /boundary points/ ;
+  - [X] Il faut aussi que la position de ces fichiers NetCDF soit précise de manière à être générale avec les deux dimensions du domaine, donc il va falloir que ça prenne des informations variables du module /PARAMS.py/.
++ [X] /ww3 bounc.inp/ : Il faut s'assurer que la sous-routine Python /ww3 bounc/ puisse bien incorporer tous nos fichiers de spectre pour les points frontière.
+  - [X] Donc, il faut aussi que la routine /bash/ /create cases.sh/ puisse rajouter des fichiers dans le fichier d'/input/ /ww3 bounc.inp/ du même coup. Alors, il faut trouver un moyen de padder du texte dans tout ça.
+
+  
+** À faire lorsque le modèle est set-up en 2D
++ [X] Vérifier que les résultats sont semblables pour 2 résolutions différentes.
+  - On refait cette expérience avec un ligne. 
++ [X] Intégrer le vent dans la routine /create cases.sh/, de sorte à ce qu'on puisse regénérer une figure comme Éliot Bismuth.
+  - La figure, c'est la concentration de glace vs la force du vent.
++ [ ] Finalement, vérifier que les expériences sont les mêmes pour une plus grande résolution en 2 dimensions.
+
+
+#+print_bibliography:
